@@ -5,6 +5,9 @@ env/
 
 # Python
 __pycache__/
+*.egg-info/
+build/
+dist/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
@@ -28,6 +31,7 @@ Thumbs.db
 
 # HTML exports (rendered notebooks, Plotly/Streamlit exports)
 *.html
+*_files/          # Quarto/Pandoc HTML render assets
 
 # Logs
 logs/

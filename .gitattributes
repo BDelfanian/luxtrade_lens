@@ -1,0 +1,7 @@
+# Normalise line endings across Windows/macOS/Linux
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.pdf binary
+*.parquet binary
+*.png binary
