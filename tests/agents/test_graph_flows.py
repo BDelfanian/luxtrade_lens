@@ -1,5 +1,6 @@
 """End-to-end graph flows with a scripted LLM (no network)."""
 
+import pytest
 from conftest import insight_from_facts
 
 from luxtrade.agents.llm import LLMError
@@ -133,7 +134,10 @@ def test_follow_up_inherits_context_and_is_traced(make_assistant, fake_llm):
     ]
     second = assistant.ask("And for imports?", session_id=first.session_id)
     assert second.origin == "followup" and second.turn == 2
-    assert second.followup_of == first.run_id and second.inherited == ["intent", "breakdown"]
+    assert second.followup_of == first.run_id and second.inherited[:2] == ["intent", "breakdown"]
+    # fields the follow-up left open come from the first turn's resolved spec
+    assert {"freq", "product_level", "top_n", "period_start", "period_end"} <= set(second.inherited)
+    assert second.spec["period_start"] == first.spec["period_start"]
     assert second.spec["flow"] == "import"
     assert first.run_id in llm.calls[-2][1]  # the interpreter saw the previous turn in its context
 
@@ -244,3 +248,73 @@ def test_blocked_topic_wins_over_an_unclear_interpretation(make_assistant, fake_
     assert rec.status == "blocked"
     assert "S02" in {lim["id"] for lim in rec.limitations}
     assert [t["node"] for t in rec.trace] == ["interpret", "guard_pre", "optimise"]
+
+
+def test_follow_up_never_filters_on_the_previous_result_codes(make_assistant, fake_llm):
+    first_spec = dict(intent="ranking", breakdown="product", flow="export", period_start="2024")
+    llm = fake_llm(interpret=[interp(**first_spec)])
+    assistant = make_assistant(llm)
+    first = assistant.ask("Main export products in 2024?")
+    result_codes = [r["key"] for r in first.frames["main"] if r.get("kind") == "item"]
+    llm.responses["interpret"] = [
+        interp(  # the LLM copies the ranked result into the filter (seen on real data)
+            **{**first_spec, "flow": "import", "products": result_codes},
+            followup_of=first.run_id,
+            inherited=["intent", "breakdown", "period_start", "products"],
+        )
+    ]
+    second = assistant.ask("and for imports?", session_id=first.session_id)
+    assert second.spec["products"] == [] and second.spec["flow"] == "import"
+
+
+def test_elliptical_question_is_a_follow_up_even_if_the_llm_misses_it(make_assistant, fake_llm):
+    first_spec = dict(
+        intent="ranking", breakdown="product", flow="import", period_start="2024", period_end="2024"
+    )
+    llm = fake_llm(interpret=[interp(**first_spec)])
+    assistant = make_assistant(llm)
+    first = assistant.ask("Main import products in 2024?")
+    llm.responses["interpret"] = [interp(intent="ranking", breakdown="product", partners=["BE"])]
+    second = assistant.ask("only from Belgium", session_id=first.session_id)
+    assert second.followup_of == first.run_id and second.origin == "followup"
+    assert second.spec["partners"] == ["BE"] and second.spec["flow"] == "import"
+    assert second.spec["period_start"] == second.spec["period_end"] == "2024"
+
+
+def test_unrelated_question_is_not_forced_into_a_follow_up(make_assistant, fake_llm):
+    llm = fake_llm(interpret=[interp(intent="ranking", breakdown="partner", flow="export")])
+    assistant = make_assistant(llm)
+    first = assistant.ask("Main export partners?")
+    llm.responses["interpret"] = [interp(intent="time_series", products=["27"])]
+    second = assistant.ask(
+        "How did imports of mineral fuels evolve since 2010?", session_id=first.session_id
+    )
+    assert second.followup_of is None and second.spec["flow"] != "export"
+
+
+def test_confidential_share_question_is_answered_with_the_confidential_part_first(
+    make_assistant, fake_llm
+):
+    llm = fake_llm(
+        interpret=interp(
+            intent="composition", breakdown="confidentiality", products=["27"], flow="import"
+        )
+    )
+    rec = make_assistant(llm).ask("How much of the mineral fuel imports is confidential?")
+    assert rec.status == "answered" and rec.view_kind == "bar"
+    main = rec.frame("main")
+    assert main.iloc[0]["key"] == "CONFIDENTIAL" and main["share"].sum() == pytest.approx(100)
+    assert rec.title.startswith("Confidential — imports")
+    assert rec.entities == {}  # split keys are not codes a follow-up could refer to
+
+
+def test_eu_share_question_is_answered_in_french(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(
+            language="fr", intent="composition", breakdown="partner_group", flow="import"
+        )
+    )
+    rec = make_assistant(llm).ask("Quelle est la part de l'UE dans les importations ?")
+    assert rec.status == "answered"
+    assert rec.frame("main").iloc[0]["key"] == "EU27"
+    assert rec.title.startswith("Pays de l'UE27 — importations")

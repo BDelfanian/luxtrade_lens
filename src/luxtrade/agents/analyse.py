@@ -15,11 +15,15 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 from luxtrade.agents.guard import make
-from luxtrade.agents.spec import Limitation, QuerySpec
+from luxtrade.agents.spec import MAX_SERIES, SPLIT_BREAKDOWNS, Limitation, QuerySpec
 from luxtrade.analytics import benchmark, forecast, rankings, seasonality, timeseries
 from luxtrade.semantic.layer import SemanticLayer
 
-MAX_SERIES = 8  # categorical palette size; more series fold into "Other"
+# The part a split question is about comes first (rank 1), whatever its size
+SPLIT_SUBJECT = {
+    "partner_group": ["EU27", "NON_EU27"],
+    "confidentiality": ["CONFIDENTIAL", "DISCLOSED"],
+}
 
 
 @dataclass
@@ -68,7 +72,7 @@ def _fold_series(df: pd.DataFrame, max_series: int) -> pd.DataFrame:
 
 
 def _entities(main: pd.DataFrame, spec: QuerySpec) -> dict[str, list[str]]:
-    if "key" not in main.columns:
+    if "key" not in main.columns or spec.breakdown in SPLIT_BREAKDOWNS:
         return {}
     items = main[~main["key"].isin([rankings.OTHER, rankings.UNDISCLOSED, rankings.CONFIDENTIAL])]
     if "rank" in items.columns:
@@ -77,7 +81,20 @@ def _entities(main: pd.DataFrame, spec: QuerySpec) -> dict[str, list[str]]:
     return {"partners" if spec.breakdown == "partner" else "products": codes}
 
 
+def _split(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
+    """Two-way split of each flow's total (EU27 vs non-EU27, confidential vs published)."""
+    df = df.assign(value=_measure(df, spec)).groupby(["flow", "key"], as_index=False)["value"].sum()
+    order = {k: i for i, k in enumerate(SPLIT_SUBJECT[spec.breakdown])}
+    df["share"] = 100 * df["value"] / df.groupby("flow")["value"].transform("sum")
+    df = df.sort_values(["flow", "key"], key=lambda c: c.map(order) if c.name == "key" else c)
+    df["rank"] = df.groupby("flow").cumcount() + 1
+    main = _label(df.assign(kind="item").reset_index(drop=True), spec, sem)
+    return Analysis(main=main, methods=["share of each flow's total in %"])
+
+
 def _ranking(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
+    if spec.breakdown in SPLIT_BREAKDOWNS:
+        return _split(df, spec, sem)
     df = df.assign(value=_measure(df, spec))[["key", "flow", "value"]]
     n = spec.top_n or 10
     if spec.flow == "balance":
