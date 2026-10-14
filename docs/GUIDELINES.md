@@ -68,7 +68,8 @@ src/luxtrade/
 │                      # evaluate.py
 ├── runs/              # store.py (run records, run_id, result_hash, replay),
 │                      # sessions.py (session_id, turns, resume)
-└── app/               # Home.py (layout, sidebar, thread) + components.py (answer card)
+└── app/               # Home.py (navigation, shared sidebar) + components.py (answer card)
+                       # app_pages/overview.py (landing page) + app_pages/ask.py (thread)
 tests/                 # mirrors src/luxtrade/ one-to-one; tests/golden/ for the question set
 ```
 

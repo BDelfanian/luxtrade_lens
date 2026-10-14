@@ -30,7 +30,7 @@ Every answer has a **run ID** and every conversation a **session ID**, so both c
 | Criterion | Where to see it |
 |---|---|
 | Reproducibility & Openness | Quick start below (3 commands); `data/raw/manifest.json`; any answer's **"How we got this"** tab → **Re-verify**; EUPL-1.2 |
-| Clarity & Quality of Presentation | Hosted app link · pitch deck in `docs/pitch/` |
+| Clarity & Quality of Presentation | Hosted app link: the **Overview** landing page (Luxembourg's trade at a glance, with evidence) · pitch deck in `docs/pitch/` |
 | Use of Data | [DATA_CARD.md](docs/DATA_CARD.md); CN8 drill-downs; EU benchmark; limitation messages in the app |
 | Innovation & Experimentation | Multilingual questions with follow-ups → automatic data product + grounded insight; question optimiser; projections with a baseline check ([SOLUTION_DESIGN.md](docs/SOLUTION_DESIGN.md)) |
 | Functional PoC | Hosted app; presets Q1–Q6; golden-set scores: *to be filled* (`python -m luxtrade.agents.evaluate`) |

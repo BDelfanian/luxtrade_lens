@@ -85,6 +85,8 @@ Everyone reviews each other's work and joins rehearsals.
 - [ ] Optimiser v2: the on-demand "Optimise" button and "Not what you meant?" link; routes for SQL failure and empty results (Behrooz + Mina)
 - [ ] LLM SQL fallback, only if Phase 2 is solid (Behrooz)
 - [ ] Golden set → 24 questions incl. 4 that must be refused + 4 follow-up chains + 6 vague questions; run `python -m luxtrade.agents.evaluate` (all)
+- [x] **Overview landing page** after the evaluators' feedback ("most effective representation"): headline figures, context cards, five business questions with evidence and "Explore in the assistant" ([SOLUTION_DESIGN §8a](SOLUTION_DESIGN.md#8a-overview-page-the-big-picture-first-added-14-oct-after-the-evaluators-feedback)) (Behrouz)
+- [ ] Re-check the overview texts on **real data** once Kasra's pipeline lands (takeaways are computed, but read them once) (all)
 - [ ] **Pitch coaching slot:** sessions run Thu 13:00–16:40
 - [ ] **Feature freeze at 18:00 → tag `v0.1-demo`**
 
@@ -100,7 +102,7 @@ Everyone reviews each other's work and joins rehearsals.
 6. Annual-series projection (keep monthly)
 7. Benchmark map (keep the bars)
 
-**Never cut:** the limitation guard, grounding check, rewrite validation, the inherited-context notice, trace tab, run/session IDs, presets and offline replay. They are the core of the traceability story.
+**Never cut:** the overview page, the limitation guard, grounding check, rewrite validation, the inherited-context notice, trace tab, run/session IDs, presets and offline replay. They are the core of the traceability story.
 
 ## Phase 4 — Polish, deploy, document (Thu evening → Fri 10:00)
 

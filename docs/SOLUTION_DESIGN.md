@@ -460,7 +460,7 @@ Question (as typed, detected language) + session ID and turn number
 ```
 
 UX principles applied:
-- **One clear entry point**, the ask box at the bottom of the thread (familiar chat pattern), with example chips for users who don't know what to ask.
+- **Overview first** (§8a): the landing page answers the five broad questions from the data. The ask box is the clear entry point for anything more specific: it sits at the bottom of the thread (familiar chat pattern), with example chips for users who don't know what to ask.
 - **Answer first:** the insight, then the evidence.
 - **Continuity:** follow-ups stay in the thread; context carried over is always shown.
 - **Help instead of failure:** vague or blocked questions get three validated rewrites, never a dead end.
@@ -471,6 +471,28 @@ UX principles applied:
 - **Accessibility:** colour-blind-safe palette, takeaway titles, and a data table behind every chart.
 
 The UI chrome is in English. Answers, suggestions and labels follow the question's language (EN/FR/DE, using Eurostat labels).
+
+### 8a. Overview page: the big picture first (added 14 Oct, after the evaluators' feedback)
+
+The evaluators reminded us of the brief: *"the most effective representation of Luxembourg's external trade data."* A chat box only helps someone who already knows what to ask. So the app now **opens on an Overview page** ("overview first, zoom and filter, then details on demand"), and the assistant becomes the drill-down.
+
+| Part | What it shows | Why it matters (business view) |
+|---|---|---|
+| Headline figures | Exports, imports and trade balance for the latest complete year (change vs the year before, sparkline since 2002); share of the top-5 partners (vs 10 years earlier, yearly sparkline) | Size of trade and **dependence** in one glance |
+| Context cards | The data (DS-045409, coverage, partners, products, records) · how to use the app · what the data can't tell (S01, S02, L06, L10, L04) | Users understand the dataset and its limits before reading numbers |
+| 1. Size and trend | Annual exports and imports with reference lines (2009, 2020, 2022), growth a year, deficit years, sharpest fall | How big, how fast, how resilient to shocks |
+| 2. Partners | World map + top-10 bars; largest partner, main market and supplier, top-5 share now vs 10 years ago | Who we depend on |
+| 3. Products | HS2 treemaps (exports, imports) + largest rises and falls in exports over 10 years | What we sell and buy, and where the momentum is |
+| 4. Seasonality | Raw vs seasonally adjusted exports + month × year heatmap; strongest and weakest month | Reading monthly figures without being fooled by the calendar |
+| 5. EU peers | Trade index vs BE, NL, DE, FR, AT (2015 = 100) + intra-EU share | How Luxembourg compares |
+
+**How it stays within our principles:**
+- **No LLM.** `agents/overview.py` runs fixed `QuerySpec`s through the preset path (defaults → compiled SQL → SQL guard → analysis). Every sentence is an EN/FR/DE template filled with numbers from that SQL.
+- **Evidence on every panel.** The SQL, the result table (CSV download) and the method are one click away. The dataset summary shows its own query.
+- **One engine, two views.** Each panel's **Explore in the assistant** button runs the same spec in the assistant, with origin `overview`. The numbers match exactly, and a test checks this (`tests/agents/test_overview.py`).
+- **Reference events** (financial crisis, COVID-19, energy crisis) are labelled as reading aids, not data.
+- **Language:** the sidebar language switch (EN/FR/DE) drives the overview texts and the presets. The UI chrome stays in English.
+- **Cost and speed:** about 10 queries and one STL fit per language, cached per data vintage (under 1 s on placeholder data).
 
 ## 9. Quality and evaluation
 
