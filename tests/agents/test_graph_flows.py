@@ -225,3 +225,22 @@ def test_custom_sql_prompt_contains_examples():
     assert "v_lu_trade" in p
     assert "LIMIT 1000" in p
 
+
+def test_custom_sql_prompt_receives_candidates_and_language(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(
+            intent="time_series", partners=["DE", "FR"], needs_custom_sql=True, language="fr"
+        ),
+        custom_sql=CustomSQL(
+            sql="SELECT period, sum(value_eur) AS value_eur FROM v_lu_trade_hs2 GROUP BY period",
+            explanation="Évolution mensuelle",
+        ),
+    )
+    rec = make_assistant(llm).ask("Mois inhabituels pour l'Allemagne et la France")
+    assert rec.status == "answered"
+    sql_call = next(prompt for step, prompt in llm.calls if step == "custom_sql")
+    assert "LANGUAGE: fr" in sql_call
+    assert "CANDIDATES:" in sql_call
+    assert "DE" in sql_call and "FR" in sql_call
+
+

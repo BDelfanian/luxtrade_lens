@@ -196,8 +196,27 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
             if custom:
                 if llm is None:
                     raise LLMError("custom SQL needs the LLM")
+                candidates: list[str] = []
+                if spec.partners:
+                    candidates.extend(
+                        f"partner: {p} ({sem.label(p, 'partner', spec.language)})"
+                        for p in spec.partners
+                    )
+                if spec.products:
+                    candidates.extend(
+                        f"product: {p} ({sem.label(p, 'product', spec.language)})"
+                        for p in spec.products
+                    )
+                candidates_block = ("\n\nCANDIDATES:\n" + "\n".join(candidates)) if candidates else ""
+
+                ctx_block = ""
+                ctx = state.get("context")
+                if ctx and ctx.turns:
+                    ctx_block = f"\n\nSESSION CONTEXT:\n{ctx.to_prompt()}"
+
                 user = (
-                    f"QUESTION: {state['question']}\n\n{coverage_text(sem)}"
+                    f"QUESTION: {state['question']}\nLANGUAGE: {spec.language}"
+                    f"{ctx_block}{candidates_block}\n\n{coverage_text(sem)}"
                     f"\n\nCATALOG:\n{catalog_text()}"
                 )
                 if state.get("sql_error"):
