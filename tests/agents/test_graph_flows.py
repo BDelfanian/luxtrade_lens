@@ -244,3 +244,26 @@ def test_custom_sql_prompt_receives_candidates_and_language(make_assistant, fake
     assert "DE" in sql_call and "FR" in sql_call
 
 
+def test_custom_sql_insight_with_partner_name_passes_grounding(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(intent="time_series", partners=["DE"], needs_custom_sql=True),
+        custom_sql=CustomSQL(
+            sql="SELECT 'DE' AS partner, 500.0 AS value_eur FROM v_lu_trade_hs2",
+            explanation="Exports to Germany",
+        ),
+        insight=InsightOutput(
+            sentences=[
+                "Exports to Germany were 500 EUR.",
+                "Trade remained steady across the period.",
+                "Germany was the primary destination.",
+                "Historical trends indicate stability.",
+                "See notes for confidential data limits.",
+            ]
+        ),
+    )
+    rec = make_assistant(llm).ask("Custom query for Germany")
+    assert rec.status == "answered"
+    assert rec.insight_source == "llm"
+
+
+

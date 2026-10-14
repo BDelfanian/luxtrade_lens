@@ -304,10 +304,17 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
         lims = state.get("limitations", [])
         if state.get("custom_sql"):
             rows = a.main.head(12).to_dict(orient="records") if a is not None else []
+            entities = list(spec.partners) + list(spec.products)
+            if a is not None and not a.main.empty:
+                for col in ("partner", "key", "reporter"):
+                    if col in a.main.columns:
+                        entities.extend(str(val) for val in a.main[col].dropna().unique())
+            entities = sorted(set(entities))
             sheet = FactSheet(
                 language=spec.language,
                 question=state["question"],
                 title=state.get("custom_explanation", "")[:90],
+                entities=entities,
                 facts=[
                     Fact(key=f"row{i}", text=json.dumps(r, default=str, ensure_ascii=False))
                     for i, r in enumerate(rows)
