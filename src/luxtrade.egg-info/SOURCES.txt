@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+src/luxtrade/__init__.py
+src/luxtrade/config.py
+src/luxtrade/logging_setup.py
+src/luxtrade.egg-info/PKG-INFO
+src/luxtrade.egg-info/SOURCES.txt
+src/luxtrade.egg-info/dependency_links.txt
+src/luxtrade.egg-info/top_level.txt
+src/luxtrade/analytics/__init__.py
+src/luxtrade/ingest/__init__.py
+src/luxtrade/process/__init__.py
+tests/test_logging_setup.py

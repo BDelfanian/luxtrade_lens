@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "luxtrade"
+version = "0.1.0"
+description = "Interactive exploration of Luxembourg's external trade in goods (STATEC Hackathon 2026, The Outliers)"
+readme = "README.md"
+license = "EUPL-1.2"
+requires-python = ">=3.12"
+authors = [{ name = "The Outliers (Behrooz Delfanian, Mina Naseh, Kasra)" }]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "PD", "D"]
+ignore = ["D100", "D104", "D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"notebooks/**" = ["D", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -m 'not slow and not network'"
+markers = [
+    "slow: long-running tests (deselected by default)",
+    "network: tests that call external services (deselected by default)",
+]
