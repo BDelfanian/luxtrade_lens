@@ -51,6 +51,8 @@ Figures marked *(measured)* were verified on the bulk files of **Dec 2025** and 
 
 Volume *(measured)*: one monthly file holds about 2.9 M rows for all EU reporters (240 MB unzipped, 26–45 MB as 7z). **Luxembourg has about 62,000 rows per month** with intra- and extra-EU combined.
 
+**Data shape (confirmed 14 Oct):** the source is **purely structured tabular data**: delimited text with a header, a fixed set of columns, and coded dimensions. There is no free text or document content. After processing, it is a star schema (one fact table + product and partner dimensions) that DuckDB can query with SQL. This is why the assistant uses natural language → structured query → SQL, and no document retrieval ([SOLUTION_DESIGN §2](SOLUTION_DESIGN.md#2-is-this-the-right-data-for-nl-to-sql-yes-structured-tabular-data-confirmed)).
+
 ## 3. Coverage
 
 | Dimension | Coverage |
@@ -158,7 +160,35 @@ Partners can be hidden too, using special `Q*` codes:
 ### 4.9 Small-economy volatility
 
 - Luxembourg's trade is concentrated: a few firms and products can create large monthly spikes. Confidentiality (§4.2) also hits Luxembourg harder than large countries.
-- **How we handle it:** spikes are **flagged and explained**, never deleted (see the Outlier Radar). Seasonally adjusted and 12-month rolling views are offered next to raw monthly data.
+- **How we handle it:** spikes are **flagged and explained**, never deleted (outlier flags; limitation L11). Seasonally adjusted and 12-month rolling views are offered next to raw monthly data.
+
+### 4.10 Limitation IDs used by the assistant
+
+The app doesn't only document these limits; it **applies them automatically**. Each limit below has an ID in the machine-readable registry `src/luxtrade/semantic/limitations.yaml`. The limitation guard checks every question and result against it and shows the matching message instead of guessing ([SOLUTION_DESIGN §5.3](SOLUTION_DESIGN.md#53-limitation-guard-rules-no-llm)). **IDs and this section must stay in sync.**
+
+| ID | Data Card section | Limit |
+|---|---|---|
+| L01 | §4.1 | Series start in 2002 |
+| L02 | §4.2 | Confidential product codes |
+| L03 | §4.2b | Confidential / unspecified partners |
+| L04 | §4.3 | Latest months are extra-EU only |
+| L05 | §4.4 | Product code changes over time |
+| L06 | §4.5 | Nominal values (no price adjustment) |
+| L07 | §4.5 | Incomplete quantities |
+| L08 | §4.6 | Derived partner aggregates; Brexit; fixed EU27 (2020) |
+| L09 | §4.7 | Revisions and vintages |
+| L10 | §4.8 | Mirror asymmetries; LU as reporter only |
+| L11 | §4.9 | Small-economy volatility |
+
+**Scope limits** (what the dataset can't answer at all):
+
+| ID | Limit |
+|---|---|
+| S01 | Goods only, no services |
+| S02 | No external variables (GDP, population, prices, employment) |
+| S03 | Other EU reporters only at HS2 summary level |
+| S04 | No causes and no firm-level information: the data describes flows, not why they happen |
+| S05 | Projections only extend past patterns. They include no external drivers and are not official forecasts |
 
 ---
 
@@ -202,3 +232,5 @@ Other data-model facts:
 - [ ] Measure the size of LU's processed Parquet → decide what can be committed or published for the hosted app
 - [ ] Re-measure the confidential share across all years (the Dec 2025 figures are one month only)
 - [ ] Extend the missing-value profile (§4b) to all years and to the EU27 summary data
+- [ ] Locate the Eurostat **CN and partner code lists in EN, FR and DE**, which the assistant needs to understand questions in all three languages. Record their source and version here (pending coach OK on classification metadata, [PROJECT_CONTEXT §7a](PROJECT_CONTEXT.md))
+- [ ] Write `limitations.yaml` from §4.10 and check every ID's trigger against a measured example
