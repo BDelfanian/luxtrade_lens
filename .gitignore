@@ -1,0 +1,33 @@
+# Environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Data (raw downloads are reproducible via src/download.py; never commit them)
+data/raw/
+data/interim/
+*.7z
+*.zip
+
+# Streamlit secrets / local config
+.streamlit/secrets.toml
+.env
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# HTML exports (rendered notebooks, Plotly/Streamlit exports)
+*.html
+
+# Logs
+logs/

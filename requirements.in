@@ -1,0 +1,22 @@
+# Top-level dependencies (edit this file, then regenerate requirements.txt — see README)
+# Data
+pandas
+pyarrow
+duckdb
+requests
+sdmx1
+# Analytics
+numpy
+statsmodels
+scipy
+ruptures
+# Visualisation / app
+plotly
+streamlit
+# Notebooks
+jupyterlab
+ipykernel
+nbformat
+# Dev / quality
+pytest
+ruff
