@@ -5,6 +5,8 @@ pyarrow
 duckdb
 requests
 sdmx1
+py7zr        # Comext bulk files are .7z (no stdlib support)
+pycountry    # ISO-2 -> ISO-3 partner codes for maps
 # Analytics
 numpy
 statsmodels

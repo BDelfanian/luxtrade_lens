@@ -158,6 +158,21 @@ def _ngrams(tokens: list[str], max_n: int = 4) -> list[str]:
     ]
 
 
+def _ratio_at_least(matcher: SequenceMatcher, text: str, threshold: float) -> float:
+    """``SequenceMatcher(None, text, seq2).ratio()``, or 0.0 when it cannot reach ``threshold``.
+
+    The length bound and ``quick_ratio`` are upper bounds of ``ratio``, so skipping on them
+    never changes a match; it keeps the lookup fast on ~5,000 real HS2/HS4 and partner labels.
+    """
+    n, m = len(text), len(matcher.b)
+    if not n + m or 2 * min(n, m) / (n + m) < threshold:
+        return 0.0
+    matcher.set_seq1(text)
+    if matcher.quick_ratio() < threshold:
+        return 0.0
+    return matcher.ratio()
+
+
 class EntityIndex:
     """Fuzzy index over partner and product labels in all three languages."""
 
@@ -250,10 +265,11 @@ class EntityIndex:
                     )
                 )
                 continue
+            label_matcher = SequenceMatcher(None, "", label_norm)
             for gram in grams:
                 if len(gram) < 4 or gram in _STOP:
                     continue
-                ratio = SequenceMatcher(None, gram, label_norm).ratio()
+                ratio = _ratio_at_least(label_matcher, gram, threshold)
                 if ratio >= threshold:
                     add(
                         Candidate(
@@ -266,10 +282,11 @@ class EntityIndex:
                         )
                     )
             for word in words:
+                word_matcher = SequenceMatcher(None, "", word)
                 for token in tokens:
                     if len(token) < 4 or token in _STOP:
                         continue
-                    ratio = SequenceMatcher(None, token, word).ratio()
+                    ratio = _ratio_at_least(word_matcher, token, max(threshold, 0.86))
                     if ratio >= max(threshold, 0.86):
                         add(
                             Candidate(
