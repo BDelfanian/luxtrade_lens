@@ -82,7 +82,9 @@ To protect individual companies, some flows are **not published at full CN8 deta
 | `CCXXXXXX` | Confidential within HS chapter `CC` | `27XXXXXX` (mineral fuels): **77.5 M€** in one month |
 | `CCCCXXXX` | Confidential within HS4 heading `CCCC` | `3920XXXX` (plastic plates/sheets): 4.4 M€ |
 | `99XXXXXX` | Confidential, chapter not disclosed | 7.0 M€ |
-| `PRODUCT_SECTION = XX`, `X` in SITC/BEC fields | Same confidentiality reflected in the other classifications | |
+| `PRODUCT_SECTION = XX` | Section of a confidential row not disclosed (52 rows) | |
+
+> ⚠️ **An `X` does not always mean confidential.** In `PRODUCT_BEC5` (e.g. `312XXX`) and `PRODUCT_CPA*` (e.g. `XXXX` for special code `99500000`), `X` is **padding for a higher-level or unassigned code**. Only use `PRODUCT_NC` (and `PRODUCT_SECTION = XX`) to flag confidentiality.
 
 Key facts *(measured, Dec 2025, LU)*:
 - **Nothing is lost at total level:** CN8 detail + masked codes = `TOTAL`, exactly, for every trade type and flow.
@@ -95,6 +97,24 @@ Key facts *(measured, Dec 2025, LU)*:
 - **At HS4, HS6 and CN8 level**, show masked value as a separate **"Confidential"** slice inside its parent, so drill-downs still add up.
 - **Never sum `TOTAL` rows together with detail rows** (double counting). `TOTAL` is only used for reconciliation tests.
 - **In the app:** a tooltip or footnote states *"x % of this value is confidential at this level of detail."*
+
+### 4.2b Confidential and unspecified **partners**
+
+Partners can be hidden too, using special `Q*` codes:
+
+| Code | Meaning | LU, Dec 2025 *(measured)* |
+|---|---|---|
+| `QY` / `QZ` | Not specified **for commercial or military reasons** (intra / extra) | QY: **78.4 M€ imports**, 12.9 M€ exports; QZ: 6.2 M€ imports |
+| `QV` / `QW` | Countries and territories **not specified** (intra / extra) | QV: 14.3 M€ exports; QW: 6.5 M€ exports |
+| `QQ` / `QR` / `QS` | Stores and provisions (ship and aircraft supplies) | QS: 0.3 M€ |
+| `QP`, `QU`, `QX` | High seas; not specified; secret (no intra/extra split) | — |
+
+**How we handle it:**
+- Flag with `partner_is_special = True` and keep these rows in all totals.
+- Show them as **"Undisclosed / not specified"**, never on the map.
+- Report their share in captions.
+
+> Note: real ISO codes can contain X or Q (`XK` Kosovo, `XS` Serbia, `MX` Mexico, `QA` Qatar). Use an **explicit list** of special codes, never a pattern.
 
 ### 4.3 The latest months have extra-EU trade only
 
@@ -142,6 +162,28 @@ Key facts *(measured, Dec 2025, LU)*:
 
 ---
 
+## 4b. Missing-value and placeholder profile (input for the data model)
+
+*(measured, LU, Dec 2025, 61,943 detail rows)*. **The file has no real nulls or empty strings.** "Missing" is always encoded as a **zero or a placeholder**, so every column needs its own rule:
+
+| Column | What "missing" looks like | Observed | Suggested rule |
+|---|---|---|---|
+| `PRODUCT_NC` | `CCXXXXXX`, `CCCCXXXX`, `99XXXXXX` | 371 rows | Confidential flag; keep (§4.2) |
+| `PARTNER` | `QY`, `QZ`, `QV`, `QW`, `QS`, … | ~350 rows | Special-partner flag; keep (§4.2b) |
+| `PRODUCT_SECTION` | `XX` (confidential), `TO` (total) | 52 rows | Map to "Undisclosed" |
+| `PRODUCT_BEC5`, `PRODUCT_CPA*` | Trailing `X` padding | 4,170 / 413 rows | **Not missing.** Keep as an aggregate-level code |
+| `VALUE_EUR` | `0` | 7 rows | Real zero (value rounds to 0); keep |
+| `QUANTITY_KG` | `0` | 2,583 rows (4.2 %) | **Unknown, not zero.** Set to null; exclude from unit values |
+| `QUANTITY_SUPPL_UNIT` | `0` with `SUPPL_UNIT = NO_SU` | 45,284 rows (73 %) | **Not applicable.** Null when `NO_SU` |
+| `QUANTITY_SUPPL_UNIT` | `0` with a real unit | 35 rows | Unknown; null |
+| `VALUE_NAC` | Duplicate of EUR for LU | — | Drop |
+
+Other data-model facts:
+- **Row grain:** `(REPORTER, PARTNER, TRADE_TYPE, PRODUCT_NC, FLOW, STAT_PROCEDURE, PERIOD)` is **not unique**. For example, `99XXXXXX` × `QY` repeats with different `PRODUCT_SITC` values. **Aggregate (sum) over the classification columns and `STAT_PROCEDURE`** to get one row per partner × product × flow × month.
+- No negative values were observed.
+- 4 rows have a value of 0 with quantity > 0 (rounding). Keep them.
+- Classification columns (SITC, CPA, BEC, BEC5, section) are **attributes of the CN8 code in a given year**. Store them in a product dimension table keyed by `(year, product)`, not in the fact table.
+
 ## 5. Processing summary (what we change, and what we don't)
 
 | Step | Action |
@@ -159,3 +201,4 @@ Key facts *(measured, Dec 2025, LU)*:
 - [ ] Decide whether `full_partxixu_v2_*` files are needed for the UK split after 2021
 - [ ] Measure the size of LU's processed Parquet → decide what can be committed or published for the hosted app
 - [ ] Re-measure the confidential share across all years (the Dec 2025 figures are one month only)
+- [ ] Extend the missing-value profile (§4b) to all years and to the EU27 summary data
