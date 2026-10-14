@@ -60,10 +60,12 @@ tests/                 # mirrors src/luxtrade/ one-to-one
 | `flow` | str | `import` or `export` |
 | `product` | str | `TOTAL` or HS/CN code as a **string** (keep leading zeros!) |
 | `level` | int8 | 0 = TOTAL, 2, 4, 6, 8 (digits) |
-| `value_eur` | float64 | `VALUE_IN_EUROS` |
-| `qty_100kg` | float64 | nullable |
+| `trade_type` | str | `intra` or `extra` (from bulk `TRADE_TYPE`) |
+| `is_confidential` | bool | masked code such as `27XXXXXX` (see [DATA_CARD §4.2](DATA_CARD.md)) |
+| `value_eur` | float64 | bulk `VALUE_EUR` |
+| `qty_kg` | float64 | bulk `QUANTITY_KG`; null when 0 or missing |
 
-Lookup tables: `products.parquet` (`product`, `level`, `parent`, `label`) and `partners.parquet` (`partner`, `label`, `iso3`, `is_aggregate`, `is_eu`).
+Lookup tables: `products.parquet` (`product`, `level`, `parent`, `label`, plus `section`, `sitc`, `bec`, `bec5`, `cpa` from the bulk files) and `partners.parquet` (`partner`, `label`, `iso3`, `is_aggregate`, `is_eu`).
 
 Until the real pipeline is ready, `tests/fixtures/` holds a **small synthetic file with the same schema**. The app and analytics are built against it from Day 1.
 

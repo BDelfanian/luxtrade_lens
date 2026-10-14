@@ -100,34 +100,23 @@ The jury is mostly STATEC heads of department and unit: macroeconomics, IT, data
 **Eurostat Comext, `DS-045409`: "EU trade since 1988 by HS2-4-6 and CN8".**
 Browser: <https://ec.europa.eu/eurostat/databrowser/view/ds-045409/legacyMultiFreq/table?category=ext_go.ext_go_detail>
 
-### Dimensions (to confirm when we first load the data)
+### Access decision (validated 14 Oct): **Comext bulk files**
 
-| Dimension | Values of interest |
-|-----------|--------------------|
-| `freq` | `M` (monthly), `A` (annual) |
-| `reporter` | `LU`, plus other EU members (for Q5) |
-| `partner` | ~250 countries plus aggregates (e.g. `EU27_2020_INTRA`, `EU27_2020_EXTRA`, `WORLD`) |
-| `product` | `TOTAL`, HS2 (2 digits), HS4, HS6, CN8 (8 digits) |
-| `flow` | `1` = import, `2` = export |
-| `indicators` | `VALUE_IN_EUROS`, `QUANTITY_IN_100KG`, `SUPPLEMENTARY_QUANTITY` |
+We tested both the API and the bulk download. The team chose the **bulk monthly files** (`full_v2_YYYYMM.7z`, Jan 2002 → Jul 2026), filtered to Luxembourg at download. The API is kept only for cross-checking totals. Reasons, file structure, coverage and measured figures are in **[DATA_CARD.md](DATA_CARD.md)**.
 
-### Access options (to validate on Day 1)
+Bulk-file dimensions: `REPORTER`, `PARTNER` (ISO-2, no aggregates), `TRADE_TYPE` (intra/extra), `PRODUCT_NC` (CN8), plus **SITC, CPA, BEC, BEC5 and HS section** per row, `FLOW`, `PERIOD`, `VALUE_EUR`, `QUANTITY_KG`, `QUANTITY_SUPPL_UNIT`.
 
-1. **Comext SDMX 2.1 API**, with filtered queries for LU only, e.g.
-   `https://ec.europa.eu/eurostat/api/comext/dissemination/sdmx/2.1/data/DS-045409/M.LU..TOTAL.2.VALUE_IN_EUROS`
-   (the exact key order must be checked against the DSD).
-2. **Comext bulk download**: monthly full files (all reporters, CN8). These are large but complete, and work best for the CN8 drill-down.
-3. **Data browser export (CSV/TSV)** as a fallback for quick prototyping.
+### Key data limitations (details and handling in [DATA_CARD.md §4](DATA_CARD.md#4-limitations-and-how-we-handle-them))
 
-### Known data caveats (we should state these explicitly; it shows statistical maturity)
-
-- **Belgium–Luxembourg Economic Union (BLEU):** Luxembourg was reported jointly with Belgium until 1998. LU-only series start in **1999**.
-- **Nomenclature changes:** CN8 codes change every year and HS is revised roughly every 5 years (2002, 2007, 2012, 2017, 2022). Long CN8 series can break. HS2 and HS4 are much more stable.
-- **Confidential trade:** some flows are suppressed or pooled (e.g. chapter 99 / special codes). Totals ≠ sum of detail.
-- **Intra-EU vs extra-EU:** intra-EU trade comes from Intrastat (with exemption thresholds), extra-EU from customs. Methods differ.
-- **Asymmetries:** LU exports to X ≠ X's imports from LU (CIF/FOB, timing, quasi-transit, the "Rotterdam effect").
-- **Small open economy:** a few large firms and products (e.g. steel, tyres, aircraft-related goods, pharmaceuticals) can create spikes. These are true outliers and need explanation, not removal.
-- **Revisions:** recent months are provisional.
+| Limitation | In short | Our handling |
+|---|---|---|
+| **Starts in 2002** | Bulk files begin Jan 2002 (LU-only data exists from 1999; joint with Belgium before that) | Series start in 2002 and this is stated in the app |
+| **Confidential codes** | Masked codes such as `27XXXXXX`, `3920XXXX`, `99XXXXXX`; about 4.9 % of imports and 1.7 % of exports hidden at CN8 level (Dec 2025) | Flag them, never drop them; "Confidential" slice in drill-downs; totals still reconcile |
+| **Latest months incomplete** | Intra-EU is published later; Jan–Jul 2026 are extra-EU only | Detect the latest complete month automatically |
+| **Code changes** | CN8 changes yearly, HS about every 5 years | Long trends at HS2/section level; CN8 for recent snapshots |
+| **No partner aggregates; Brexit** | World/intra/extra must be derived; UK switches in 2021 | Fixed EU27 (2020) composition |
+| **Nominal values, partial quantities** | Current euros; quantity is 0 in about 4 % of rows | Label as nominal; unit values only where valid |
+| **Revisions, asymmetries, volatility** | Provisional months; mirror flows differ; spikes from a few firms | Manifest + extraction date; LU as reporter only; flag spikes, don't delete them |
 
 ## 7a. The product dimension (priority one, coach tip 2)
 

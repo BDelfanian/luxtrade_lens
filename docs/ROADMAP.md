@@ -25,8 +25,8 @@ Everyone reviews each other's work and joins rehearsals.
 
 - [ ] Repository structure (below), `.gitignore` for `data/raw/`, **LICENSE (EUPL-1.2)**, README skeleton
 - [ ] `environment.yml` / `requirements.txt` (python ≥3.11, pandas, pyarrow, duckdb, plotly, streamlit, statsmodels, requests)
-- [ ] **Validate data access:** test the SDMX API query for `LU`; check the dimension codes (reporter, partner, product, flow, indicators); estimate data volumes
-- [ ] Decide the scope: years (1999→latest), reporters for benchmarking (all EU27 at TOTAL/HS2 level, LU only at CN8)
+- [x] **Validate data access:** API and bulk both tested; **bulk chosen** (see [DATA_CARD.md](DATA_CARD.md))
+- [x] Decide the scope: **2002 → latest complete month**; LU at full CN8 detail; EU27 reporters as summaries for benchmarking
 
 ```
 ├── data/            raw/ (git-ignored)  processed/ (small Parquet aggregates)
@@ -47,8 +47,8 @@ Everyone reviews each other's work and joins rehearsals.
 - [ ] **Product-dimension audit** (coach tip 2, see [PROJECT_CONTEXT §7a](PROJECT_CONTEXT.md)): available levels × years × frequencies; labels; hierarchy reconciliation (CN8→…→TOTAL); confidential and special codes; CN/HS code changes; quantity coverage. **Write the findings into `docs/DATA_CARD.md` right away.**
 - [ ] Build the HS2 → 21 HS **sections** mapping as a friendly top level
 - [ ] Ask the coach: are Eurostat classification metadata (labels, CN correspondence tables) OK to use?
-- [ ] `download.py`: LU × all partners × flows {1,2} × products (TOTAL, HS2, HS4, HS6, CN8) × M and A
-- [ ] `download.py`: benchmark set of EU27 reporters × TOTAL/HS2 × partner aggregates (intra/extra/world)
+- [ ] `download.py`: stream the 295 monthly bulk files (2002 → latest). For each: download → manifest (SHA-256) → extract → keep LU rows + EU27 reporter summaries (reporter × trade type × flow × HS2 × month) → delete raw. **Start it early, in the background (~1–1.5 h).**
+- [ ] Reconciliation test: detail + confidential = `TOTAL` per month; spot-check against the API
 - [ ] `process.py`: tidy long table → Parquet; product hierarchy table (CN8→HS6→HS4→HS2) with labels; partner table with ISO codes and labels for the maps
 - [ ] Data-quality checks: totals vs sum of children, confidential codes, missing months, the 1999 BLEU start
 - [ ] Quick EDA notebook: top partners, top chapters, monthly series. **Write down 5 candidate insights.**
@@ -111,7 +111,8 @@ Everyone reviews each other's work and joins rehearsals.
 
 | Risk | Mitigation |
 |------|------------|
-| API slow / rate-limited / large CN8 volumes | Filter queries to LU; cache Parquet early; fall back to bulk files; limit CN8 to recent years if needed |
+| Bulk download slow or interrupted (11 GB) | Resumable script (skips files already in the manifest); filter while downloading; start on Day 1 |
+| Data limitations misread (confidential codes, incomplete recent months, 2002 start) | Handled and documented in [DATA_CARD.md §4](DATA_CARD.md); visible footnotes in the app |
 | Nomenclature breaks distort CN8 time series | Analyse long series at HS2/HS4; use CN8 for recent cross-sections; document it |
 | Scope creep / over-complexity | Feature freeze Thu 18:00; follow the MoSCoW table; every feature must pass the WHAT/WHY test and be explainable in one sentence |
 | Wrong or misunderstood product data | Product audit first (Phase 1); reconcile totals; document gaps in the Data Card |
