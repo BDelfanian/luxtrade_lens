@@ -3,6 +3,12 @@
 **Hard deadline:** pitch on **Fri 16 Oct, 10:30** (5 minutes). The repository link is shared at the end of the hackathon.
 Background, requirements and the concept are in [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md).
 
+> **Coach principles. Check them at every stand-up:**
+> 1. The questions are samples, so build a **general who × what × when × flow tool** with presets, not six one-off answers.
+> 2. **Product data comes first.** Get it right before building views.
+> 3. Always ask **WHAT problem, and WHY** it matters ([PROJECT_CONTEXT §1a](PROJECT_CONTEXT.md)).
+> 4. **Make grading easy. Avoid complexity.**
+
 ## Suggested roles (adjust freely)
 
 | Person | Primary | Secondary |
@@ -36,8 +42,11 @@ Everyone reviews each other's work and joins rehearsals.
 
 **Exit criterion:** raw LU data lands on disk via a script.
 
-## Phase 1 — Data foundation (Wed 14 Oct, 14:00–18:00)
+## Phase 1 — Data foundation, product first (Wed 14 Oct, 14:00–18:00)
 
+- [ ] **Product-dimension audit** (coach tip 2, see [PROJECT_CONTEXT §7a](PROJECT_CONTEXT.md)): available levels × years × frequencies; labels; hierarchy reconciliation (CN8→…→TOTAL); confidential and special codes; CN/HS code changes; quantity coverage. **Write the findings into `docs/DATA_CARD.md` right away.**
+- [ ] Build the HS2 → 21 HS **sections** mapping as a friendly top level
+- [ ] Ask the coach: are Eurostat classification metadata (labels, CN correspondence tables) OK to use?
 - [ ] `download.py`: LU × all partners × flows {1,2} × products (TOTAL, HS2, HS4, HS6, CN8) × M and A
 - [ ] `download.py`: benchmark set of EU27 reporters × TOTAL/HS2 × partner aggregates (intra/extra/world)
 - [ ] `process.py`: tidy long table → Parquet; product hierarchy table (CN8→HS6→HS4→HS2) with labels; partner table with ISO codes and labels for the maps
@@ -52,7 +61,9 @@ Everyone reviews each other's work and joins rehearsals.
 - [ ] **Overview** (Q1, Q2): KPI tiles, partner/chapter evolution, rank bump chart
 - [ ] **Partner Explorer** (Q1, Q4): choropleth, partner profile, HS2→CN8 drill-down with Pareto / Top-N + "Other"
 - [ ] **Product Explorer** (Q2, Q3): hierarchy selector → partner ranking + map
-- [ ] Global filters: flow (import/export/balance), frequency (M/A), period, metric (value/quantity/unit value)
+- [ ] **Core engine:** one set of filters (who × what × when × flow, plus frequency and metric) drives every view
+- [ ] **Question presets:** the sample questions as one-click buttons that set the filters (shows generality without extra code)
+- [ ] Each chart gets a title that states its takeaway, plus a source caption
 
 **Exit criterion:** Q1–Q4 answerable end-to-end in the app.
 
@@ -60,16 +71,17 @@ Everyone reviews each other's work and joins rehearsals.
 
 - [ ] **Seasonality Lab** (Q6): STL decomposition (statsmodels), month×year heatmap, seasonal subseries, raw vs seasonally adjusted. Per product category.
 - [ ] **Benchmark** (Q5): LU vs EU peers. Intra-EU share, partner HHI, product diversification, indexed growth (2015=100), map of the EU.
-- [ ] **Outlier Radar** (signature): robust z-score / STL residuals for spikes; change-point detection for structural breaks; "new and vanishing" partners/products; unit-value anomalies
+- [ ] **Outlier Radar** (optional, keep simple): one explainable rule (robust z-score on seasonally adjusted series) plus "new and vanishing" partners/products. Only if Q1–Q6 are solid.
 - [ ] **Pitch coaching slot:** register on Day 1. Sessions run Thu 13:00–16:40.
 - [ ] **Feature freeze at 18:00 Thursday.**
 
-**Exit criterion:** all six questions plus the Outlier Radar demo-ready.
+**Exit criterion:** all sample questions answerable through the general engine and presets; Outlier Radar only if time allows.
 
 ## Phase 4 — Polish, deploy, document (Thu evening → Fri 10:00)
 
 - [ ] Deploy the app (Streamlit Community Cloud or similar). Keep a **local fallback** and a **recorded screen video**.
-- [ ] README: purpose, quick start (`make all` or 3 commands), screenshots, app link
+- [ ] README: purpose (WHAT/WHY), quick start (3 commands), screenshots, app link
+- [ ] README **"For the jury" table:** each evaluation criterion → where to see it (app tab / file / command)
 - [ ] `docs/DATA_CARD.md`: source, licence/attribution, coverage, caveats (BLEU, CN changes, confidentiality, asymmetries)
 - [ ] `docs/METHODOLOGY.md`: significance filtering, STL settings, outlier rules, metric definitions
 - [ ] Methodology notebook that reproduces the key figures
@@ -79,7 +91,7 @@ Everyone reviews each other's work and joins rehearsals.
 
 **5-minute structure:**
 1. **Hook (30 s):** one surprising Luxembourg trade fact from the data
-2. **Problem (30 s):** rich data, but hard to explore. The 6 questions.
+2. **WHAT and WHY (30 s):** rich data locked in tables; why trade dependence matters for Luxembourg; who the tool is for
 3. **Live demo (2 min 30 s):** story mode. Overview → partner drill-down to CN8 → seasonality (raw vs adjusted) → Outlier Radar → LU vs EU map
 4. **Method and openness (45 s):** pipeline, statistical methods, EUPL, reproducibility
 5. **Value for STATEC and close (45 s):** reusable for other datasets; next steps
@@ -93,7 +105,7 @@ Everyone reviews each other's work and joins rehearsals.
 
 | Must | Should | Could | Won't (this time) |
 |------|--------|-------|-------------------|
-| Q1–Q4 in app, map, time slider, monthly+annual, reproducible repo, licence, pitch | Seasonality Lab (Q6), Benchmark (Q5), deployment | Outlier Radar depth, Sankey, unit values, NL query box, story mode | External data (GDP, population), forecasting models, services trade |
+| Q1–Q4 in app, map, time slider, monthly+annual, reproducible repo, licence, pitch | Seasonality Lab (Q6), Benchmark (Q5), deployment | Simple Outlier Radar, Sankey, unit values, story mode | External data (GDP, population), forecasting/ML models, change-point algorithms, NL query box, services trade |
 
 ## Risk register
 
@@ -101,6 +113,7 @@ Everyone reviews each other's work and joins rehearsals.
 |------|------------|
 | API slow / rate-limited / large CN8 volumes | Filter queries to LU; cache Parquet early; fall back to bulk files; limit CN8 to recent years if needed |
 | Nomenclature breaks distort CN8 time series | Analyse long series at HS2/HS4; use CN8 for recent cross-sections; document it |
-| Scope creep | Feature freeze Thu 18:00; follow the MoSCoW table |
+| Scope creep / over-complexity | Feature freeze Thu 18:00; follow the MoSCoW table; every feature must pass the WHAT/WHY test and be explainable in one sentence |
+| Wrong or misunderstood product data | Product audit first (Phase 1); reconcile totals; document gaps in the Data Card |
 | Live demo failure | Recorded video + local instance + screenshots |
 | Misreading LU specifics (spikes, transit) | Label them as observations from the data, not causal claims; check with Kasra's EDA |

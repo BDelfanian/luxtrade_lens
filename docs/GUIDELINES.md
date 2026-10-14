@@ -4,6 +4,8 @@ These are the rules we follow while building the project. They support the jury 
 
 > **Golden rule:** a fresh clone must go `setup → pipeline → app` with no manual steps, and every number shown in the app must be traceable to a Eurostat query.
 
+> **Simplicity rule (coach):** before writing code, ask *what problem does this solve, and why does it matter?* Choose the simplest solution that answers it. Prefer standard charts, transparent rules and fewer features done well. If a method can't be explained to the jury in one sentence, don't ship it.
+
 ---
 
 ## 1. Architecture
@@ -168,6 +170,7 @@ Ownership means *you are responsible for it and you review changes to it*, not t
 
 ## 8. Definition of Done (per task)
 
+- [ ] The feature passes the WHAT/WHY test and is the simplest workable solution
 - [ ] Code sits in the right layer and module, with type hints and docstrings
 - [ ] `ruff check` and `ruff format` are clean
 - [ ] Tests are added or updated and `pytest` passes
