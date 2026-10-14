@@ -53,6 +53,24 @@ def _label(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> pd.DataFram
     df["label"] = [sem.label(str(k), kind, spec.language) for k in df["key"]]
     if spec.breakdown == "partner":
         df["iso3"] = df["key"].map(lambda k: sem.partners["iso3"].get(k))
+    elif spec.breakdown == "product":
+        parents = []
+        parent_labels = []
+        for k in df["key"]:
+            code = str(k)
+            parent = ""
+            if (
+                code in sem.products.index
+                and sem.products.loc[code, "parent"]
+                and sem.products.loc[code, "parent"] != "TOTAL"
+            ):
+                parent = str(sem.products.loc[code, "parent"])
+            elif len(code) > 2 and code[:2] in sem.products.index:
+                parent = code[:2]
+            parents.append(parent)
+            parent_labels.append(sem.label(parent, "product", spec.language) if parent else "")
+        df["parent"] = parents
+        df["parent_label"] = parent_labels
     return df
 
 
