@@ -59,6 +59,8 @@ def after_query(state: dict) -> str:
             return "query"
         return "optimise"
     if state.get("status") == "no_data":
+        if state.get("custom_sql") and _retries(state, "query") <= MAX_RETRIES:
+            return "query"
         return "optimise"
     return "guard_post"
 

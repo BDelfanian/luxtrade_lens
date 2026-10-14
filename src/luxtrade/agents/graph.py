@@ -37,6 +37,7 @@ from luxtrade.agents.spec import (
     TraceEvent,
 )
 from luxtrade.agents.sql_guard import SQLRejectedError, check_sql
+from luxtrade.config import MAX_RETRIES
 from luxtrade.semantic.catalog import catalog_text
 from luxtrade.semantic.layer import QueryError, SemanticLayer
 from luxtrade.semantic.lookup import EntityIndex
@@ -265,7 +266,16 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
             "_detail": f"{len(df)} rows" + (" · LLM-written SQL" if custom else ""),
         }
         if df.empty:
-            update.update(status="no_data", _outcome="routed")
+            if custom and retries.get("query", 1) <= MAX_RETRIES:
+                update.update(
+                    sql_error=(
+                        "Query returned 0 rows. Verify filter conditions (e.g. check date bounds, "
+                        "flow casing 'import'/'export', and partner/product codes)."
+                    ),
+                    _outcome="retry",
+                )
+            else:
+                update.update(status="no_data", _outcome="routed")
         return update
 
     def guard_post_node(state: RunState) -> dict:

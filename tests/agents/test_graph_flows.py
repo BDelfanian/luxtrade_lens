@@ -266,4 +266,25 @@ def test_custom_sql_insight_with_partner_name_passes_grounding(make_assistant, f
     assert rec.insight_source == "llm"
 
 
+def test_custom_sql_retries_on_empty_result_before_optimising(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(intent="time_series", needs_custom_sql=True),
+        custom_sql=[
+            CustomSQL(
+                sql="SELECT period, sum(value_eur) AS value_eur FROM v_lu_trade_hs2 WHERE year = 1990 GROUP BY period",
+                explanation="empty year",
+            ),
+            CustomSQL(
+                sql="SELECT period, sum(value_eur) AS value_eur FROM v_lu_trade_hs2 WHERE year = 2024 GROUP BY period ORDER BY period",
+                explanation="valid year",
+            ),
+        ],
+    )
+    rec = make_assistant(llm).ask("Trade in an unusual period")
+    assert rec.status == "answered"
+    query_traces = [t for t in rec.trace if t["node"] == "query"]
+    assert len(query_traces) == 2
+
+
+
 
