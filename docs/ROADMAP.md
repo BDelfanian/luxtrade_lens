@@ -13,9 +13,9 @@ Background, requirements and the concept are in [PROJECT_CONTEXT.md](PROJECT_CON
 
 | Person | Primary | Secondary |
 |--------|---------|-----------|
-| **Behrooz** | Data pipeline (download, cleaning, Parquet/DuckDB), analytics (seasonality, outliers) | Repo hygiene, reproducibility |
+| **Behrooz** | Bulk download pipeline; analytics (rankings, benchmark, seasonality, outliers) | README, methodology, reproducibility |
 | **Mina** | App and visualisation (Streamlit/Plotly, maps, drill-down) | UX, deployment |
-| **Kasra** | Insights and storytelling (EDA, benchmark, key findings) | Pitch deck, rehearsal, demo video |
+| **Kasra** | **Data management:** data model, data contract, missing-value rules, cleaning and validation, DATA_CARD | EDA and key insights |
 
 Everyone reviews each other's work and joins rehearsals.
 

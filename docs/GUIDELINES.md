@@ -47,6 +47,8 @@ tests/                 # mirrors src/luxtrade/ one-to-one
 
 ### 1.3 Data contract (lets work happen in parallel)
 
+> **Draft. Kasra owns the final data model.** The columns below are a starting point. See [DATA_CARD §4b](DATA_CARD.md) for the measured missing-value profile and row-grain findings.
+
 `data/processed/` is the **interface between the pipeline and the app**. The schema is fixed. Changes to it need agreement from the team (see §7).
 
 **`trade.parquet`**, long format, one row per observation:
@@ -150,19 +152,19 @@ Ownership means *you are responsible for it and you review changes to it*, not t
 
 | Area | Owner | Reviewer | Paths |
 |---|---|---|---|
-| Ingest + manifest | **Behrooz** | Kasra | `ingest/`, `tests/ingest/` |
-| Processing + validation + data contract | **Behrooz** | Mina | `process/`, `queries.py`, `tests/process/` |
-| Seasonality + outlier analytics | **Behrooz** | Kasra | `analytics/seasonality.py`, `analytics/outliers.py` |
+| Ingest (bulk download, manifest) | **Behrooz** | Kasra | `ingest/`, `tests/ingest/` |
+| **Data management:** data model, data contract, cleaning, missing-value rules, validation, DATA_CARD | **Kasra** | Behrooz | `process/`, `queries.py`, `tests/process/`, `docs/DATA_CARD.md` |
+| EDA notebooks and key insights | **Kasra** | All | `notebooks/` |
+| Analytics: rankings, composition, benchmark (Q5), seasonality (Q6), outliers | **Behrooz** | Kasra | `analytics/`, `tests/analytics/` |
 | App shell, navigation, styling, deployment | **Mina** | Behrooz | `app/Home.py`, `app/components/` |
-| Overview, Partner, Product pages (Q1–Q4) + significance drill-down | **Mina** | Kasra | `app/pages/`, `analytics/significance.py` |
-| Rankings, composition, benchmark analytics (Q5) | **Kasra** | Behrooz | `analytics/rankings.py`, `composition.py`, `benchmark.py` |
-| Seasonality & Benchmark pages | **Kasra** | Mina | `app/pages/` |
-| EDA notebooks, insights, METHODOLOGY.md, pitch deck | **Kasra** | All | `notebooks/`, `docs/` |
-| README, DATA_CARD, licence, reproducibility test | **Behrooz** | All | root, `docs/` |
+| All app pages (Q1–Q6) + significance drill-down | **Mina** | Kasra | `app/pages/`, `analytics/significance.py` |
+| METHODOLOGY.md | **Behrooz** | Kasra | `docs/` |
+| README, licence, reproducibility test | **Behrooz** | All | root |
+| Pitch deck and rehearsal | **All** (lead to be decided) | All | `docs/pitch/` |
 
 **Working agreements:**
 - **Shared interfaces need agreement:** the data contract (§1.3), `config.py` and `queries.py` signatures. Announce the change and get one teammate's OK.
-- **Parallel by default:** Mina and Kasra build against `tests/fixtures/` while Behrooz finishes the real pipeline. They swap to real data with no code changes.
+- **Parallel by default:** Mina (app) and Behrooz (analytics) build against `tests/fixtures/` while Kasra finalises the data model and Behrooz runs the download. They swap to real data with no code changes.
 - **Stand-ups (5 min):** at the start of each block (09:00, 14:00) and before leaving.
   - What did I finish?
   - What am I doing next?
