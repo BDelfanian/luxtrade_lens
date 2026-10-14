@@ -215,3 +215,13 @@ def test_session_history_is_stored_and_searchable(make_assistant):
     assert sessions.search(second.run_id)[0].session_id == first.session_id
     assert sessions.search("seasonal")[0].session_id == first.session_id
     assert assistant.runs.load(second.run_id).turn == 2
+
+
+def test_custom_sql_prompt_contains_examples():
+    from luxtrade.agents.interpret import prompt
+
+    p = prompt("custom_sql")
+    assert "Examples:" in p
+    assert "v_lu_trade" in p
+    assert "LIMIT 1000" in p
+
