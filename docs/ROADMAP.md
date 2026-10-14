@@ -13,9 +13,9 @@ Background, requirements and the concept are in [PROJECT_CONTEXT.md](PROJECT_CON
 
 | Person | Primary | Secondary |
 |--------|---------|-----------|
-| **Behrooz** | Bulk download pipeline; analytics (rankings, benchmark, seasonality, outliers) | README, methodology, reproducibility |
-| **Mina** | App and visualisation (Streamlit/Plotly, maps, drill-down) | UX, deployment |
-| **Kasra** | **Data management:** data model, data contract, missing-value rules, cleaning and validation, DATA_CARD | EDA and key insights |
+| **Behrooz** | **General solution design:** architecture, interfaces, integration, technical decisions | Methodology, README, reproducibility, reviews |
+| **Mina** | **Solution components:** analytics modules and app pages/visuals (Streamlit/Plotly, maps, drill-down) | Deployment, UX |
+| **Kasra** | **All data tasks:** bulk download, data model, data contract, missing values, cleaning, validation, DATA_CARD | EDA and data insights |
 
 Everyone reviews each other's work and joins rehearsals.
 

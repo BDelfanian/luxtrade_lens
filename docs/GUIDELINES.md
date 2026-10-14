@@ -47,7 +47,7 @@ tests/                 # mirrors src/luxtrade/ one-to-one
 
 ### 1.3 Data contract (lets work happen in parallel)
 
-> **Draft. Kasra owns the final data model.** The columns below are a starting point. See [DATA_CARD §4b](DATA_CARD.md) for the measured missing-value profile and row-grain findings.
+> **Draft. Kasra owns the final data model; Behrooz reviews it for fit with the overall design.** The columns below are a starting point. See [DATA_CARD §4b](DATA_CARD.md) for the measured missing-value profile and row-grain findings.
 
 `data/processed/` is the **interface between the pipeline and the app**. The schema is fixed. Changes to it need agreement from the team (see §7).
 
@@ -152,19 +152,17 @@ Ownership means *you are responsible for it and you review changes to it*, not t
 
 | Area | Owner | Reviewer | Paths |
 |---|---|---|---|
-| Ingest (bulk download, manifest) | **Behrooz** | Kasra | `ingest/`, `tests/ingest/` |
-| **Data management:** data model, data contract, cleaning, missing-value rules, validation, DATA_CARD | **Kasra** | Behrooz | `process/`, `queries.py`, `tests/process/`, `docs/DATA_CARD.md` |
-| EDA notebooks and key insights | **Kasra** | All | `notebooks/` |
-| Analytics: rankings, composition, benchmark (Q5), seasonality (Q6), outliers | **Behrooz** | Kasra | `analytics/`, `tests/analytics/` |
-| App shell, navigation, styling, deployment | **Mina** | Behrooz | `app/Home.py`, `app/components/` |
-| All app pages (Q1–Q6) + significance drill-down | **Mina** | Kasra | `app/pages/`, `analytics/significance.py` |
-| METHODOLOGY.md | **Behrooz** | Kasra | `docs/` |
-| README, licence, reproducibility test | **Behrooz** | All | root |
+| **Solution design:** architecture, module boundaries, interfaces between layers, integration, technical decisions, these guidelines | **Behrooz** | All | `docs/GUIDELINES.md`, `src/luxtrade/config.py`, `logging_setup.py` |
+| Methodology, README, reproducibility test, code-review coordination | **Behrooz** | All | `docs/METHODOLOGY.md`, root |
+| **All data tasks:** bulk download + manifest, data model, data contract, cleaning, missing-value rules, validation, DATA_CARD | **Kasra** | Behrooz | `ingest/`, `process/`, `queries.py`, `tests/ingest/`, `tests/process/`, `docs/DATA_CARD.md` |
+| EDA notebooks and data insights | **Kasra** | All | `notebooks/` |
+| **Solution components:** analytics modules (rankings, composition, significance drill-down, benchmark, seasonality, outliers) | **Mina** | Behrooz | `analytics/`, `tests/analytics/` |
+| **Solution components:** app shell, pages (Q1–Q6), visual components, deployment | **Mina** | Behrooz | `app/`, `tests/app/` |
 | Pitch deck and rehearsal | **All** (lead to be decided) | All | `docs/pitch/` |
 
 **Working agreements:**
 - **Shared interfaces need agreement:** the data contract (§1.3), `config.py` and `queries.py` signatures. Announce the change and get one teammate's OK.
-- **Parallel by default:** Mina (app) and Behrooz (analytics) build against `tests/fixtures/` while Kasra finalises the data model and Behrooz runs the download. They swap to real data with no code changes.
+- **Parallel by default:** Mina builds components against `tests/fixtures/` while Kasra runs the download and finalises the data model. Behrooz keeps the interfaces (data contract, `queries.py`, module APIs) stable so the two sides meet without rework. They swap to real data with no code changes.
 - **Stand-ups (5 min):** at the start of each block (09:00, 14:00) and before leaving.
   - What did I finish?
   - What am I doing next?
