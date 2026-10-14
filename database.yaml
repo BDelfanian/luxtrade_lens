@@ -1,0 +1,5 @@
+database:
+  driver: duckdb
+  path: data/database/comext.duckdb
+  memory_limit: 1GB
+  threads: 1

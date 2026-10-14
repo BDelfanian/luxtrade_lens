@@ -5,6 +5,11 @@ pyarrow
 duckdb
 requests
 sdmx1
+# Comext importer
+SQLAlchemy>=2,<3
+duckdb-engine>=0.17,<1
+pydantic-settings>=2,<3
+py7zr>=1,<2
 # Analytics
 numpy
 statsmodels
