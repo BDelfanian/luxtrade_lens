@@ -9,8 +9,10 @@ def app_env(processed_dir, tmp_path, monkeypatch):
     monkeypatch.setattr(config, "DB_PATH", processed_dir / config.DUCKDB_FILE)
     monkeypatch.setattr(config, "RUNS_DIR", tmp_path / "runs")
     monkeypatch.setattr(config, "DEMO_RUNS_DIR", tmp_path / "demo")
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr("luxtrade.agents.llm.default_llm", lambda: None)
+    for var in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "OPENAI_API_KEY"):
+        monkeypatch.delenv(var, raising=False)
+    # offline: the Assistant must never reach a real LLM from this test
+    monkeypatch.setattr("luxtrade.agents.service.default_llm", lambda: None)
 
 
 def test_app_loads_and_answers_a_preset(app_env):

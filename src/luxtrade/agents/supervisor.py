@@ -36,6 +36,8 @@ def after_interpret(state: dict) -> str:
     if state.get("status") == "error":
         return END
     interp = state["interpretation"]
+    if is_blocked(state.get("limitations", [])):
+        return "guard_pre"  # out-of-scope topics are explained first (then optimised)
     if interp.unresolved and _retries(state, "interpret") < 2:
         return "interpret"
     if interp.unresolved or core_ambiguities(state):

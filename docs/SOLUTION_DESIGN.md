@@ -87,7 +87,14 @@ What this means for the design:
 
 Every number is produced by SQL or by tested Python. Routing, chart choice, limitation checks, rewrite validation and forecasting are deterministic rules. This keeps the tool **explainable in one sentence per step** (coach tip 4) and makes hallucinated numbers detectable (§7).
 
-**LLM:** Claude **Sonnet 4.6** (`claude-sonnet-4-6`) for every LLM step, called through the official `anthropic` SDK with structured outputs (Pydantic models) and adaptive thinking. The effort level is set per step (low / medium). The model is configurable through `LUXTRADE_LLM_MODEL`.
+**LLM:** one interface, two providers ([`agents/llm.py`](../src/luxtrade/agents/llm.py)), chosen by `LUXTRADE_LLM_PROVIDER`:
+
+| Provider | Default model | Structured output | Notes |
+|---|---|---|---|
+| `openai` (**current default**) | `gpt-4.1-mini` | Strict JSON schema (`response_format`), validated by the same Pydantic models | Temperature 0; not a reasoning model, so the per-step effort is ignored |
+| `anthropic` | `claude-sonnet-4-6` | `messages.parse` with Pydantic models, adaptive thinking | Effort per step (low / medium) |
+
+`LUXTRADE_LLM_MODEL` overrides the model. Every step below names its effort level; it applies only to the Anthropic provider. The prompts were written provider-neutral, but they must be re-checked on the golden set after any switch (§9).
 
 ### Why LangGraph, and why not more "agents"
 
@@ -186,7 +193,7 @@ Runs after every node and decides the next step.
 - **Entity candidates (computed before the call, no tool loop):** [`semantic/lookup.py`](../src/luxtrade/semantic/lookup.py) runs a fuzzy search over `dim_partner` and `dim_product` labels in **EN/FR/DE** (plus codes like *HS 84*, groups like *EU*, and common adjectives like *French*). The top matches with codes go into the prompt. If terms stay unresolved, the supervisor retries once with a wider search.
 - **Output:** a validated `Interpretation` object (the spec plus follow-up links, ambiguities and unresolved terms).
 - **Rule:** the LLM may only use codes returned by the lookup tool or present in the session context, so it can't invent a code. Language is detected by the same call, and the answer is written in that language.
-- Model: `claude-sonnet-4-6` at `effort: low`.
+- Effort: `low`.
 
 ### 5.3 Limitation guard (rules, no LLM)
 
@@ -217,7 +224,7 @@ The guard runs **twice**: before the query, on the spec (fast blocks), and after
 1. **Spec → SQL compiler (deterministic).** Each `intent` has a parameterised SQL template over the semantic views. This covers all sample questions Q1–Q6 and most variants, and is unit-tested against hand-written SQL.
 2. **LLM SQL (fallback)** for questions the spec can't express, e.g. *"months in which imports from China exceeded exports to France"*.
    - **Input:** the question, the view catalogue (columns, types and one-line descriptions) and 5 example question/SQL pairs.
-   - Model: `claude-sonnet-4-6` at `effort: medium`.
+   - Effort: `medium`.
 3. **SQL guard** on *every* query, compiled or generated:
 
    | Check | Rule |
@@ -308,7 +315,7 @@ Every chart has a **title stating the takeaway** and a source caption (*"Source:
   - Every number in the paragraph must match a fact-sheet value after locale-aware parsing (`1,2 Mrd €` = `1.2 bn €`), within rounding.
   - Every country and product named must be in the result.
   - On failure: rewrite once, then fall back to a deterministic template.
-- Model: `claude-sonnet-4-6` at `effort: low`.
+- Effort: `low`.
 
 ### 5.8 Question optimiser (LLM + validation)
 
@@ -332,7 +339,7 @@ Instead of guessing, the tool **offers three optimised versions of the question*
 1. **Generate (LLM, one call):** input is the question, the session context, the reason it was routed here (ambiguity, unresolved term, blocking limitation ID, or SQL error), the schema summary and the label matches. Output is **three rewrites, each with its `QuerySpec`**, in the user's language.
    - Each rewrite resolves the problem in a different direction, e.g. *exports by partner* / *imports by partner* / *trade balance over time*.
    - Rewrites are concrete and short: they name the partner, product, flow and period.
-   - Model: `claude-sonnet-4-6` at `effort: low`.
+   - Effort: `low`.
 2. **Validate (code), so that only answerable suggestions are shown.** For each rewrite:
    - the spec parses
    - every code exists in `dim_*`
@@ -489,7 +496,7 @@ The UI chrome is in English. Answers, suggestions and labels follow the question
 | Charts and maps | Plotly | Interactive by default (zoom, hover, legend filtering); choropleth maps |
 | Pivot | pandas `pivot_table` + `st.dataframe` with user-selected axes | No extra component; sortable; CSV export |
 | Orchestration | LangGraph (MIT) `StateGraph` with conditional edges | Explicit state graph, bounded retries, streaming per node, trace (§3) |
-| LLM | **Claude Sonnet 4.6** (`claude-sonnet-4-6`) via the `anthropic` SDK (MIT), adaptive thinking, effort per step; overridable with `LUXTRADE_LLM_MODEL` | Structured outputs map directly to `Interpretation`, rewrites and the fact sheet. Timeouts and errors are handled (§5.1). The key is in `.env` (git-ignored) |
+| LLM | **OpenAI `gpt-4.1-mini`** via the `openai` SDK (Apache-2.0) by default; Claude Sonnet 4.6 via the `anthropic` SDK (MIT) as the alternative (`LUXTRADE_LLM_PROVIDER`) | Structured outputs map directly to `Interpretation`, rewrites and the fact sheet. Timeouts, refusals and out-of-credit errors are handled (§5.1). The key is in `.env` (git-ignored) |
 | Query engine | DuckDB over Parquet, read-only | Fast, file-based, no server |
 | SQL validation | `sqlglot` (MIT) | Parse, whitelist and rewrite (`LIMIT`) |
 | Statistics | `statsmodels` | STL and ETS; widely known and citable |
