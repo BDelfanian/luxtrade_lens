@@ -13,7 +13,7 @@ dist/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# Data (raw downloads are reproducible via src/download.py; never commit them)
+# Data (raw downloads are reproducible via python -m luxtrade.ingest.download; never commit them)
 data/raw/
 data/interim/
 *.7z
@@ -36,3 +36,10 @@ Thumbs.db
 
 # Logs
 logs/
+
+# Run records (answers are regenerated or replayed locally; demo runs live in demo/runs/)
+data/runs/
+
+# Generated data: placeholder (python -m luxtrade.process.placeholder) or the real pipeline
+data/processed/*
+!data/processed/.gitkeep

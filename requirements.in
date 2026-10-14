@@ -10,6 +10,13 @@ numpy
 statsmodels
 scipy
 ruptures
+# Agents / LLM (SOLUTION_DESIGN §10)
+langgraph
+anthropic
+sqlglot
+pydantic
+python-dotenv
+pyyaml
 # Visualisation / app
 plotly
 streamlit

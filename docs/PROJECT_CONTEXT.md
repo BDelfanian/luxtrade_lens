@@ -19,9 +19,9 @@ Build the **most effective (smart, interactive) visual representation of Luxembo
 - **Shocks show up in trade first**, e.g. COVID-19 and the 2022 energy crisis. Seasonality can hide or fake such signals unless it is filtered out.
 - STATEC wants to become a **data-engineering institute** that turns numbers into "levers for understanding and action" (slide 10). A reusable, open tool directly supports that mission.
 
-**For whom:** STATEC analysts first, then policymakers, journalists and curious citizens. The tool must work for someone who doesn't know what "CN8" means.
+**For whom:** an **employee of a Luxembourg public institution**: STATEC, a ministry (Economy, Finance, Foreign & European Affairs), the central bank (BCL) or a public agency. They know the economy, but not Comext codes, SQL or the HS nomenclature, and they work in **English, French or German**. Policymakers, journalists and citizens come second. The tool must work for someone who doesn't know what "CN8" means.
 
-**Our answer in one line:** *a simple tool where any trade question becomes a choice of **who × what × when × which flow**, answered by a clear chart and a sentence in plain language.*
+**Our answer in one line:** *ask a trade question in your own words (EN/FR/DE). The tool turns it into a choice of **who × what × when × which flow** and answers with an interactive chart, table or pivot table, a short plain-language insight, the data limits that apply, and a trace showing where every number comes from.* Full design: **[SOLUTION_DESIGN.md](SOLUTION_DESIGN.md)**.
 
 ## 1b. Coach guidance (14 Oct)
 
@@ -29,6 +29,12 @@ Build the **most effective (smart, interactive) visual representation of Luxembo
 2. **The product dimension matters most.** Finding and preparing the right product data (levels, labels, code changes) is the critical first task (§7a).
 3. **Always keep WHAT and WHY in mind** (§1a). The pitch opens with them.
 4. **Make grading easy for the jury.** We avoid complex solutions: fewer features, done well, with each one obviously tied to a criterion (§6).
+
+**How the natural-language design (decided 14 Oct) respects these tips:**
+- *Tip 1:* the language layer only fills in the general who × what × when × flow query. Presets and filters use the same engine.
+- *Tip 2:* product labels and the hierarchy, in EN/FR/DE, are what make entity resolution work, so product data is still the first task.
+- *Tip 3:* WHAT and WHY stay the opening of the pitch.
+- *Tip 4:* **LLMs translate, code computes.** LLMs only interpret the question, word the insight and, when needed, suggest rewrites of vague questions or write SQL for unusual ones. Every number comes from SQL or tested Python. Routing, chart choice, limitation checks, rewrite validation and forecasting are transparent rules. Each step can be explained in one sentence ([SOLUTION_DESIGN §3](SOLUTION_DESIGN.md#3-architecture-overview)).
 
 ## 2. Official sample questions (brochure, slides 18–19)
 
@@ -81,11 +87,11 @@ Licensing rules:
 
 | Criterion | Our answer |
 |-----------|------------|
-| **Reproducibility & Openness** | One-command pipeline (`download → process → app`), pinned environment, EUPL-1.2, Data Card, documented method |
-| **Clarity & Quality of Presentation** | A 5-minute story built around 3–4 "wow" insights, rehearsed and timed, with a live demo and a recorded backup |
-| **Use of Data** | Use the full depth: monthly and annual data, HS2→CN8, value and quantity (unit values), all EU reporters for benchmarking |
-| **Innovation & Experimentation** | The general "who × what × when × flow" engine with question presets, smart significance filtering, seasonal adjustment, simple outlier flags (our team name!) |
-| **Functional PoC** | A working interactive app with all six questions reachable from one interface, deployed online |
+| **Reproducibility & Openness** | One-command pipeline (`download → process → app`), pinned environment, EUPL-1.2, Data Card. **Every answer has a run ID that replays and re-verifies its result** (result hash), and the SQL is shown |
+| **Clarity & Quality of Presentation** | A 5-minute story built around 3–4 "wow" insights, asked live in FR/DE/EN, rehearsed and timed, with recorded runs as a backup |
+| **Use of Data** | Use the full depth: monthly and annual data, HS2→CN8, value and quantity (unit values), all EU reporters for benchmarking. Data limits are shown, not hidden (limitations registry) |
+| **Innovation & Experimentation** | Multilingual natural-language questions with follow-ups in context → automatically chosen data product + grounded insight; a question optimiser that turns vague questions into validated, answerable ones; a traceable agent graph; statistical projections with a baseline check; smart significance filtering; seasonal adjustment |
+| **Functional PoC** | A working interactive app: ask box, presets for all six questions, Refine filters, history, deployed online. Accuracy measured on a golden question set |
 
 **Make grading easy** (coach tip 4):
 - The README opens with a **"For the jury" table** that maps each criterion to where it is shown: an app page, a file or a command.
@@ -100,34 +106,23 @@ The jury is mostly STATEC heads of department and unit: macroeconomics, IT, data
 **Eurostat Comext, `DS-045409`: "EU trade since 1988 by HS2-4-6 and CN8".**
 Browser: <https://ec.europa.eu/eurostat/databrowser/view/ds-045409/legacyMultiFreq/table?category=ext_go.ext_go_detail>
 
-### Dimensions (to confirm when we first load the data)
+### Access decision (validated 14 Oct): **Comext bulk files**
 
-| Dimension | Values of interest |
-|-----------|--------------------|
-| `freq` | `M` (monthly), `A` (annual) |
-| `reporter` | `LU`, plus other EU members (for Q5) |
-| `partner` | ~250 countries plus aggregates (e.g. `EU27_2020_INTRA`, `EU27_2020_EXTRA`, `WORLD`) |
-| `product` | `TOTAL`, HS2 (2 digits), HS4, HS6, CN8 (8 digits) |
-| `flow` | `1` = import, `2` = export |
-| `indicators` | `VALUE_IN_EUROS`, `QUANTITY_IN_100KG`, `SUPPLEMENTARY_QUANTITY` |
+We tested both the API and the bulk download. The team chose the **bulk monthly files** (`full_v2_YYYYMM.7z`, Jan 2002 → Jul 2026), filtered to Luxembourg at download. The API is kept only for cross-checking totals. Reasons, file structure, coverage and measured figures are in **[DATA_CARD.md](DATA_CARD.md)**.
 
-### Access options (to validate on Day 1)
+Bulk-file dimensions: `REPORTER`, `PARTNER` (ISO-2, no aggregates), `TRADE_TYPE` (intra/extra), `PRODUCT_NC` (CN8), plus **SITC, CPA, BEC, BEC5 and HS section** per row, `FLOW`, `PERIOD`, `VALUE_EUR`, `QUANTITY_KG`, `QUANTITY_SUPPL_UNIT`.
 
-1. **Comext SDMX 2.1 API**, with filtered queries for LU only, e.g.
-   `https://ec.europa.eu/eurostat/api/comext/dissemination/sdmx/2.1/data/DS-045409/M.LU..TOTAL.2.VALUE_IN_EUROS`
-   (the exact key order must be checked against the DSD).
-2. **Comext bulk download**: monthly full files (all reporters, CN8). These are large but complete, and work best for the CN8 drill-down.
-3. **Data browser export (CSV/TSV)** as a fallback for quick prototyping.
+### Key data limitations (details and handling in [DATA_CARD.md §4](DATA_CARD.md#4-limitations-and-how-we-handle-them))
 
-### Known data caveats (we should state these explicitly; it shows statistical maturity)
-
-- **Belgium–Luxembourg Economic Union (BLEU):** Luxembourg was reported jointly with Belgium until 1998. LU-only series start in **1999**.
-- **Nomenclature changes:** CN8 codes change every year and HS is revised roughly every 5 years (2002, 2007, 2012, 2017, 2022). Long CN8 series can break. HS2 and HS4 are much more stable.
-- **Confidential trade:** some flows are suppressed or pooled (e.g. chapter 99 / special codes). Totals ≠ sum of detail.
-- **Intra-EU vs extra-EU:** intra-EU trade comes from Intrastat (with exemption thresholds), extra-EU from customs. Methods differ.
-- **Asymmetries:** LU exports to X ≠ X's imports from LU (CIF/FOB, timing, quasi-transit, the "Rotterdam effect").
-- **Small open economy:** a few large firms and products (e.g. steel, tyres, aircraft-related goods, pharmaceuticals) can create spikes. These are true outliers and need explanation, not removal.
-- **Revisions:** recent months are provisional.
+| Limitation | In short | Our handling |
+|---|---|---|
+| **Starts in 2002** | Bulk files begin Jan 2002 (LU-only data exists from 1999; joint with Belgium before that) | Series start in 2002 and this is stated in the app |
+| **Confidential codes** | Masked codes such as `27XXXXXX`, `3920XXXX`, `99XXXXXX`; about 4.9 % of imports and 1.7 % of exports hidden at CN8 level (Dec 2025) | Flag them, never drop them; "Confidential" slice in drill-downs; totals still reconcile |
+| **Latest months incomplete** | Intra-EU is published later; Jan–Jul 2026 are extra-EU only | Detect the latest complete month automatically |
+| **Code changes** | CN8 changes yearly, HS about every 5 years | Long trends at HS2/section level; CN8 for recent snapshots |
+| **No partner aggregates; Brexit** | World/intra/extra must be derived; UK switches in 2021 | Fixed EU27 (2020) composition |
+| **Nominal values, partial quantities** | Current euros; quantity is 0 in about 4 % of rows | Label as nominal; unit values only where valid |
+| **Revisions, asymmetries, volatility** | Provisional months; mirror flows differ; spikes from a few firms | Manifest + extraction date; LU as reporter only; flag spikes, don't delete them |
 
 ## 7a. The product dimension (priority one, coach tip 2)
 
@@ -139,31 +134,54 @@ Every view depends on the product data being right, so this gets checked **befor
 | **Product labels** (Eurostat code lists) for every level, in English | No one can read "8703"; everyone can read "Motor cars" |
 | **Hierarchy consistency:** does CN8 → HS6 → HS4 → HS2 → TOTAL add up? Where are the gaps (confidential trade, special codes like chapter 99)? | Totals must reconcile, or the "Other" bucket has to explain the gap |
 | **Code changes over time** (yearly CN changes, HS revisions) | Decides how far back each level can be trusted as a time series |
-| **Quantity coverage** (`QUANTITY_IN_100KG`, supplementary units) by level | Decides whether unit values (price proxy) are feasible |
+| **Quantity coverage** (`QUANTITY_KG` in the bulk files, supplementary units) by level | Decides whether unit values (price proxy) are feasible |
 | **Higher-level groupings:** the 21 HS **sections** built from HS2 chapters (e.g. "Base metals", "Machinery") | A friendlier top level than 97 chapters. This is part of the HS nomenclature itself, not external data |
 
-**Open question for the coach:** are Eurostat's own classification metadata allowed (code lists/labels, CN correspondence tables, HS sections)? We assume **yes**, since they describe the provided dataset rather than adding new data.
+| **Labels in EN, FR and DE** for products and partners | The assistant resolves *"Allemagne"*, *"Maschinen"* or *"cars"* to codes by looking them up in these labels ([SOLUTION_DESIGN §5.2](SOLUTION_DESIGN.md#52-interpreter-llm-structured-output)) |
 
-## 8. Our concept (working title: *"LuxTrade Lens"*)
+**Open question for the coach:** are Eurostat's own classification metadata allowed (code lists/labels in EN/FR/DE, CN correspondence tables, HS sections)? We assume **yes**, since they describe the provided dataset rather than adding new data.
 
-**One general engine, not six answers.** Every trade question is a choice along four dimensions:
+## 8. Our concept: *LuxTrade Lens*, ask a question and get a data product
+
+**One general engine, not six answers.** Every trade question becomes a choice along four dimensions:
 
 ```
 WHO (partner / country group) × WHAT (product, any level) × WHEN (period, M/A) × FLOW (import/export/balance)
 ```
 
-The app is a set of filters over these dimensions plus a few chart types that suit each combination. The sample questions become **presets**: one click sets the filters. New questions need no new code. That way we address coach tip 1 *and* keep things simple (coach tip 4).
+We reach that engine through **several doors, all producing the same structured query** (`QuerySpec`):
+1. **Ask:** a question in EN/FR/DE. A small agent graph interprets it, checks it against the data limits, queries, analyses, picks the right view and writes the insight.
+2. **Follow up:** *"and for imports?"*, *"only Germany"*, *"zoom in on the second one"*. The question is interpreted in the context of the session's earlier answers. The context carried over is always shown.
+3. **Optimise:** when a question is too vague, ambiguous or beyond the data, the tool offers **three precise rewrites**, each checked as answerable, or lets the user ask more specifically. It never guesses.
+4. **Presets:** the sample questions Q1–Q6 as one-click buttons (no LLM needed).
+5. **Refine:** filters on every answer (period, flow, partner, product, level, top-N) that re-run the query instantly (no LLM needed).
 
-An **interactive web app** (Streamlit/Plotly) with a short guided story for the pitch and free exploration for the jury. The modules below are **views of the same engine**, ordered by priority. The lower ones are optional.
+Every answer is a **data product** chosen automatically from the shape of the result. It can be:
+- a KPI tile
+- a line or area chart
+- a ranked bar chart
+- a choropleth map
+- a treemap drill-down
+- a pivot table
+- a seasonality heatmap
+- a projection with an uncertainty band
 
-| Module | Questions | Key visuals |
-|--------|-----------|-------------|
-| **Overview** | Q1, Q2 | KPI tiles (exports, imports, balance, YoY), stacked area of top partners/chapters, bump chart of rank changes |
-| **Partner Explorer** | Q1, Q4 | World choropleth (geospatial), partner profile, HS2→CN8 drill-down treemap/sunburst with automatic "Top-N + Other" |
-| **Product Explorer** | Q2, Q3 | Product hierarchy picker, partner map for the selected product, Sankey (partners ↔ product groups) |
-| **Seasonality Lab** | Q6 | STL decomposition, month×year heatmap, seasonal-subseries plot, raw vs seasonally adjusted overlay |
-| **Benchmark** | Q5 | LU vs EU reporters: intra/extra-EU share, partner concentration (HHI), product diversification, growth indices (all computed from the same dataset) |
-| **Outlier Radar** *(optional signature, kept simple)* | Extra | One simple, explainable rule: flag months that deviate strongly from their seasonally adjusted trend (robust z-score), plus newly emerging or vanishing partners and products. No black-box models. |
+It always comes with an interactive table, a **4–5 sentence insight** in the user's language, **the limitations that apply** and a **"How we got this" trace**. Every answer has a run ID, and every conversation has a session ID, both used for history, recall and resuming.
+
+The architecture, agents, rules and UI are in **[SOLUTION_DESIGN.md](SOLUTION_DESIGN.md)**.
+
+### Which answer covers which sample question
+
+| Answer type (intent) | Questions | Default data product |
+|---|---|---|
+| Ranking / evolution | Q1, Q2 | Ranked bars + choropleth; lines or stacked area over time; rank changes |
+| Partner → product drill-down | Q4 | Treemap HS2 → HS4 → HS6 → CN8 with automatic Top-N + "Other" + "Confidential" |
+| Product → partner | Q3 | Partner map + ranked bars for the selected product |
+| Benchmark | Q5 | LU vs EU reporters: intra-EU share, partner concentration (HHI), indexed growth (2015 = 100), EU map |
+| Seasonality | Q6 | Month × year heatmap; raw vs seasonally adjusted (STL) |
+| Projection *(where applicable)* | Extra | ETS projection with 80/95 % intervals, checked against a "same month last year" baseline |
+| Pivot | Extra | Two dimensions × measure, user-selected axes |
+| Simple outlier flags *(optional)* | Extra | Months that deviate strongly from the seasonally adjusted trend (robust z-score) |
 
 ### Methods for "highlighting only the most significant flows" (Q4)
 
@@ -174,9 +192,12 @@ An **interactive web app** (Streamlit/Plotly) with a short guided story for the 
 ## 9. Constraints and principles
 
 - **Simple beats clever.** Prefer a clear bar or line chart over an exotic one, and a transparent rule over a model. Add complexity only when it clearly makes the answer easier to see.
+- **LLMs translate, code computes.** An LLM may interpret the question (in its session context), suggest rewrites of vague questions, write SQL for unusual questions, and phrase the insight. It never produces a number, and its rewrites are shown only after code has checked that they are answerable. Every figure comes from SQL or tested Python, and the insight is checked against those figures.
+- **Say the limit, don't guess.** When a question goes beyond the data (pre-2002, services, GDP, mirror flows, causes), the tool says so plainly and offers the nearest answerable question ([DATA_CARD §4](DATA_CARD.md#4-limitations-and-how-we-handle-them), [SOLUTION_DESIGN §5.3](SOLUTION_DESIGN.md#53-limitation-guard-rules-no-llm)).
+- **Traceable by default.** Every answer shows its assumptions, SQL, data vintage and methods, and has a run ID that replays and re-verifies it.
 - **Every feature must pass the WHAT/WHY test** (§1a).
-
-- **Only the provided Eurostat data.** Every metric is derived from DS-045409: no GDP, population or external sources. If a normalisation needs external data, we drop it or flag it clearly as optional.
-- **Values in EUR, current prices.** Unit values (EUR/100 kg) serve as a price proxy where quantities exist.
-- **Reproducible first:** the pipeline should work from a clean clone.
-- **Time-box:** the build window is about 2.5 days, so anything not demo-ready by Thursday evening gets cut.
+- **Only the provided Eurostat data.** Every metric is derived from DS-045409: no GDP, population or external sources. The LLM's general knowledge is not a data source. Eurostat's own code lists and labels describe the dataset, so we use them (pending coach confirmation, §7a).
+- **Values in EUR, current prices.** Unit values (EUR/kg) serve as a price proxy where quantities exist.
+- **Forecasts are projections, not predictions.** Classical statistical models only (exponential smoothing), on aggregated series, with intervals and a baseline check. No ML models and no external drivers.
+- **Reproducible first:** the pipeline and the app work from a clean clone. Presets and stored runs work without an LLM key.
+- **Time-box:** the build window is about 2.5 days. Anything not demo-ready by Thursday 18:00 gets cut, following the cut order in [ROADMAP.md](ROADMAP.md).
