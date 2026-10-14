@@ -39,28 +39,29 @@ with st.container(horizontal=True):
         )
 
 # --- context: the data, how to use the app, what the data can't tell ------------------------
-with st.container(horizontal=True):
-    with st.container(border=True):
-        st.markdown("**:material/database: The data**")
-        st.markdown(
-            f"- **{about['dataset']}** (Eurostat Comext): Luxembourg's declared trade in goods\n"
-            f"- Monthly, {about['first_period']:%b %Y} → "
-            f"{about['latest_complete_period']:%b %Y} complete ({about['months']} months)\n"
-            f"- {about['partners']} partner countries × {about['products']:,} CN8 products × "
-            "exports and imports\n"
-            f"- {about['records']:,} records · extracted {about['extraction_date']}"
-        )
-    with st.container(border=True):
-        st.markdown("**:material/route: How to use this app**")
-        st.markdown(
-            "1. **Start here** for the big picture: five questions, answered from the data.\n"
-            "2. **Explore** a section to open the same question in the assistant, with "
-            "filters, tables and a full trace.\n"
-            "3. **Ask** your own question in English, French or German."
-        )
-    with st.container(border=True):
-        st.markdown("**:material/block: What the data can't tell you**")
-        st.markdown("\n".join(f"- {m}" for m in ov.limits))
+# columns, not a horizontal container: three across on desktop, fully stacked on a phone
+data_col, use_col, limits_col = st.columns(3)
+with data_col, st.container(border=True, height="stretch"):
+    st.markdown("**:material/database: The data**")
+    st.markdown(
+        f"- **{about['dataset']}** (Eurostat Comext): Luxembourg's declared trade in goods\n"
+        f"- Monthly, {about['first_period']:%b %Y} → "
+        f"{about['latest_complete_period']:%b %Y} complete ({about['months']} months)\n"
+        f"- {about['partners']} partner countries × {about['products']:,} CN8 products × "
+        "exports and imports\n"
+        f"- {about['records']:,} records · extracted {about['extraction_date']}"
+    )
+with use_col, st.container(border=True, height="stretch"):
+    st.markdown("**:material/route: How to use this app**")
+    st.markdown(
+        "1. **Start here** for the big picture: five questions, answered from the data.\n"
+        "2. **Explore** a section to open the same question in the assistant, with "
+        "filters, tables and a full trace.\n"
+        "3. **Ask** your own question in English, French or German."
+    )
+with limits_col, st.container(border=True, height="stretch"):
+    st.markdown("**:material/block: What the data can't tell you**")
+    st.markdown("\n".join(f"- {m}" for m in ov.limits))
 
 # --- five business questions ----------------------------------------------------------------
 for i, p in enumerate(ov.panels, start=1):
