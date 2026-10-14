@@ -39,3 +39,7 @@ logs/
 
 # Run records (answers are regenerated or replayed locally; demo runs live in demo/runs/)
 data/runs/
+
+# Generated data: placeholder (python -m luxtrade.process.placeholder) or the real pipeline
+data/processed/*
+!data/processed/.gitkeep

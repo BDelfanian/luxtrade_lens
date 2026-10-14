@@ -14,6 +14,9 @@ authors = [{ name = "The Outliers (Behrooz Delfanian, Mina Naseh, Kasra)" }]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+luxtrade = ["semantic/limitations.yaml", "agents/prompts/*.md"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
@@ -21,11 +24,15 @@ extend-include = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "PD", "D"]
-ignore = ["D100", "D104", "D203", "D213"]
+ignore = ["D100", "D104", "D107", "D203", "D213", "D401"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["D"]
+"tests/**" = ["D", "PD008"]
 "notebooks/**" = ["D", "E501"]
+# multilingual label and template tables: long translated strings stay on one line
+"src/luxtrade/process/nomenclature.py" = ["E501"]
+"src/luxtrade/agents/facts.py" = ["E501"]
+"src/luxtrade/semantic/catalog.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

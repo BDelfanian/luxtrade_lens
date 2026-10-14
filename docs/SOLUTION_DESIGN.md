@@ -1,6 +1,6 @@
 # Solution Design — LuxTrade Lens
 
-**Owner:** Behrooz (solution design) · **Status:** proposed 14 Oct 2026, to be confirmed at the 14:00 stand-up
+**Owner:** Behrooz (solution design) · **Status:** implemented as a skeleton on placeholder data, 14 Oct 2026 (`src/luxtrade/`)
 Related: [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) (WHAT/WHY, requirements) · [DATA_CARD.md](DATA_CARD.md) (data and its limits) · [GUIDELINES.md](GUIDELINES.md) (engineering rules) · [ROADMAP.md](ROADMAP.md) (plan)
 
 > **In one sentence:** a public-sector employee asks a trade question in English, French or German. They get back a **data product** (an interactive chart, table or pivot table) with a **4–5 sentence insight**, a **list of the data limits that apply**, and a **full trace** of how the answer was produced. They can then **ask follow-up questions in the same session**. When a question is too vague, they get **three answerable rewrites** of it.
@@ -95,7 +95,7 @@ Every number is produced by SQL or by tested Python. Routing, chart choice, limi
 |---|---|
 | Conditional paths: blocked, vague, forecast or not, SQL fallback | Explicit graph edges we can draw on a slide |
 | Self-correction: SQL error → retry; failed grounding → rewrite | Bounded loops (max 2 retries per step) |
-| Session state for follow-ups | A per-session thread (checkpointer) holding the previous turns' specs and results (§5.9) |
+| Session state for follow-ups | Typed state per run; the session context is rebuilt from stored run records before each run, so no checkpointer is needed (§5.9) |
 | Traceability | Typed shared state; every node's input and output is logged into the run record |
 | Streaming progress in the UI | Node-by-node events ("Understanding… Querying… Writing insight…") |
 
@@ -105,40 +105,47 @@ Every number is produced by SQL or by tested Python. Routing, chart choice, limi
 
 The interpreter turns any question into this object. The manual filters, the presets, the follow-ups, the optimiser's rewrites and the "Refine" controls all produce **the same object**, so there is one engine (coach tip 1: *who × what × when × flow*).
 
+Implemented in [`agents/spec.py`](../src/luxtrade/agents/spec.py). `None` means "use the default" (§ below):
+
 ```python
 class QuerySpec(BaseModel):
-    language: Literal["en", "fr", "de"]
+    language: Literal["en", "fr", "de"] = "en"
     intent: Literal["ranking", "time_series", "composition", "drilldown",
                     "benchmark", "seasonality", "forecast", "single_value", "pivot"]
+    breakdown: Literal["partner", "product", "none"] = "none"   # what to rank or split by
     # WHO
     partners: list[str] = []            # ISO-2 codes, resolved via dim_partner
-    partner_group: Literal["WORLD", "EU27_2020", "EXTRA_EU27_2020"] | None = "WORLD"
+    partner_group: Literal["WORLD", "EU27_2020", "EXTRA_EU27_2020"] = "WORLD"
     compare_reporters: list[str] = []   # benchmark only: other EU reporters
     # WHAT
     products: list[str] = []            # codes at any level, resolved via dim_product
-    product_level: Literal["TOTAL", "SECTION", "HS2", "HS4", "HS6", "CN8"] = "HS2"
+    product_level: Literal["TOTAL", "SECTION", "HS2", "HS4", "HS6", "CN8"] | None = None
     # WHEN
-    freq: Literal["M", "A"] = "A"
-    period_start: str | None = None     # "YYYY" or "YYYY-MM"; None → default by intent
-    period_end: str | None = None       # None → latest complete period
-    # FLOW and MEASURE
-    flow: Literal["import", "export", "both", "balance"] = "both"
+    freq: Literal["M", "A"] | None = None
+    period_start: str | None = None     # "YYYY" or "YYYY-MM"
+    period_end: str | None = None
+    # FLOW, MEASURE, PRESENTATION
+    flow: Literal["import", "export", "both", "balance"] | None = None
     measure: Literal["value_eur", "qty_kg", "unit_value", "share", "growth_yoy"] = "value_eur"
-    top_n: int | None = 10
+    top_n: int | None = None
     seasonal_adjust: bool = False
-    forecast_horizon: int | None = None   # months; set only when the user asks about the future
-    assumptions: list[str] = []         # every default the interpreter applied, shown to the user
+    forecast_horizon: int | None = None   # months; only when the user asks about the future
+    view: Literal["auto", "table", "bar", "line", "area", "map", "treemap", "pivot", "kpi"] = "auto"
+    assumptions: list[str] = []         # every default applied, shown to the user
 
 
 class Interpretation(BaseModel):
-    """What the interpreter returns: the spec plus how sure it is and where it came from."""
     spec: QuerySpec
     followup_of: str | None = None      # run_id of the turn this question builds on (§5.9)
-    inherited: list[str] = []           # spec fields carried over from that turn, e.g. ["partners", "period"]
-    view_only: bool = False             # "show it as a table" → re-render, no new query
-    ambiguities: list[str] = []         # e.g. "'trade' could mean exports, imports or balance"
-    unresolved: list[str] = []          # text that matched no partner or product label
+    inherited: list[str] = []           # spec fields carried over from that turn
+    view_only: bool = False             # "show it as a table" → re-render, no new insight
+    ambiguities: list[Ambiguity] = []   # {dimension: who|what|intent|when|flow|other, text}
+    unresolved: list[str] = []          # text that matched no partner or product code
+    out_of_scope: list[str] = []        # S01, S02, S03, S04, L10 flagged by the interpreter
+    needs_custom_sql: bool = False      # the spec can't express the question → LLM SQL (§5.4)
 ```
+
+Defaults are applied by [`agents/defaults.py`](../src/luxtrade/agents/defaults.py) after interpretation, for every way of asking.
 
 **Defaults are stated, not hidden.** If the user doesn't say which period or flow they mean, the interpreter fills in a default from a fixed table, for example:
 - *ranking or composition* → the last complete year, both flows, HS2, top 10
@@ -176,7 +183,7 @@ Runs after every node and decides the next step.
   - the question
   - the **session context** (§5.9)
   - a compact schema description and the defaults table
-- **Tool:** `lookup_entity(text, kind)` runs a fuzzy search over `dim_partner` and `dim_product` labels in **EN/FR/DE** and returns the top matches with codes.
+- **Entity candidates (computed before the call, no tool loop):** [`semantic/lookup.py`](../src/luxtrade/semantic/lookup.py) runs a fuzzy search over `dim_partner` and `dim_product` labels in **EN/FR/DE** (plus codes like *HS 84*, groups like *EU*, and common adjectives like *French*). The top matches with codes go into the prompt. If terms stay unresolved, the supervisor retries once with a wider search.
 - **Output:** a validated `Interpretation` object (the spec plus follow-up links, ambiguities and unresolved terms).
 - **Rule:** the LLM may only use codes returned by the lookup tool or present in the session context, so it can't invent a code. Language is detected by the same call, and the answer is written in that language.
 - Model: `claude-sonnet-4-6` at `effort: low`.
@@ -366,7 +373,7 @@ This keeps prompts small and deterministic, and every carried field shows up in 
 **Making inheritance visible:** the answer card shows *"Kept from your previous question: partner DE, period 2015–2025"* with a **"Start fresh"** link. That link re-runs the question without context. Wrong context is the main risk of follow-ups, so it is never hidden.
 
 **Storage:**
-- LangGraph's checkpointer keeps the live session state, as one thread per session.
+- Before each run, the session context is rebuilt from the session's stored run records (last 5 turns). The run records are the single source of truth, so a resumed session behaves exactly like a live one.
 - On disk, each turn's run record carries `session_id`, `turn`, `followup_of` and `origin` (`ask` · `followup` · `optimiser` · `refine` · `preset`).
 - A session file `data/runs/sessions/<session_id>.json` lists its run IDs in order. A session can be **resumed** later from the history panel or with `?session=<id>`, and the context is rebuilt from the stored run records.
 - **Scope:** context lives within one session only. There is no memory across sessions and no user profile.
@@ -391,7 +398,7 @@ Question (as typed, detected language) + session ID and turn number
 ### Run records, history and IDs (the "hash")
 
 - Each run is saved as one JSON file, `data/runs/<run_id>.json`, holding all the fields above.
-- **`run_id`** = the first 10 hex characters of the SHA-256 of `{normalised question, QuerySpec, SQL, data vintage, git commit}`. It is content-addressed: the same resolved query on the same data and code gives the same ID. A follow-up's spec already contains its inherited context, so it gets its own ID.
+- **`run_id`** = the first 10 hex characters of the SHA-256 of `{session ID, turn, normalised question, QuerySpec, SQL, data vintage, git commit}`. Session and turn are included, so two sessions asking the same thing never overwrite each other's records. `result_hash` is what proves the same query on the same data gives the same result.
 - **`result_hash`** = the SHA-256 of the result table (sorted, canonical CSV).
 - **`session_id`** = a random short ID created when a session starts. It groups the turns.
 - **History panel** (sidebar):
@@ -481,7 +488,7 @@ The UI chrome is in English. Answers, suggestions and labels follow the question
 | UI | Streamlit (`st.chat_input`, `st.chat_message`, `st.status`) | Already planned; native chat-thread layout; easy to deploy |
 | Charts and maps | Plotly | Interactive by default (zoom, hover, legend filtering); choropleth maps |
 | Pivot | pandas `pivot_table` + `st.dataframe` with user-selected axes | No extra component; sortable; CSV export |
-| Orchestration | LangGraph (MIT) with a checkpointer per session | Explicit state graph, bounded retries, session threads, streaming, trace (§3) |
+| Orchestration | LangGraph (MIT) `StateGraph` with conditional edges | Explicit state graph, bounded retries, streaming per node, trace (§3) |
 | LLM | **Claude Sonnet 4.6** (`claude-sonnet-4-6`) via the `anthropic` SDK (MIT), adaptive thinking, effort per step; overridable with `LUXTRADE_LLM_MODEL` | Structured outputs map directly to `Interpretation`, rewrites and the fact sheet. Timeouts and errors are handled (§5.1). The key is in `.env` (git-ignored) |
 | Query engine | DuckDB over Parquet, read-only | Fast, file-based, no server |
 | SQL validation | `sqlglot` (MIT) | Parse, whitelist and rewrite (`LIMIT`) |

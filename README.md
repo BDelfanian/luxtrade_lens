@@ -75,9 +75,15 @@ Without a key, the presets, the Refine filters and the stored runs and sessions 
 
 ### Run
 ```bash
-python -m luxtrade.ingest.download      # fetch Eurostat bulk files + manifest (~1–1.5 h, resumable)
-python -m luxtrade.process.build        # build Parquet + DuckDB views + quality report
+python -m luxtrade.process.placeholder  # synthetic placeholder data + semantic layer (~20 s)
 streamlit run src/luxtrade/app/Home.py  # launch the app
+pytest                                  # 116 tests, no network needed
+```
+The app shows a **"Placeholder data"** banner until the real data is in place. To switch to real data, Kasra's pipeline writes the same files ([GUIDELINES §1.3](docs/GUIDELINES.md)):
+```bash
+python -m luxtrade.ingest.download      # fetch Eurostat bulk files + manifest (~1–1.5 h, resumable)
+python -m luxtrade.process.build        # build the contract Parquet files + quality report
+python -m luxtrade.semantic.build       # rebuild the DuckDB semantic layer
 ```
 
 For notebooks, register the kernel once:
@@ -93,7 +99,7 @@ For notebooks, register the kernel once:
 
 ```
 data/raw/         downloaded Eurostat data (git-ignored, recreated by scripts)
-data/processed/   cleaned Parquet + DuckDB views (the data contract)
+data/processed/   contract Parquet + luxtrade.duckdb (generated, git-ignored)
 data/runs/        run records, one JSON file per answer (git-ignored)
 demo/runs/        recorded demo runs for offline replay
 src/luxtrade/     package: ingest, process, semantic, analytics, viz, agents, runs, app

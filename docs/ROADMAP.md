@@ -43,15 +43,16 @@ Everyone reviews each other's work and joins rehearsals.
   Write the findings into `docs/DATA_CARD.md` right away.
 - [ ] `ingest/download.py`: stream the 295 monthly files. For each: download → manifest (SHA-256) → extract → keep LU + EU27 HS2 summaries → delete raw. **Start it early in the background (~1–1.5 h).**
 - [ ] `process/`: tidy Parquet + `dim_product`, `dim_partner` (with ISO-3 for maps) + reconciliation test (detail + confidential = `TOTAL`)
-- [ ] `semantic/views.sql`: the six views in [SOLUTION_DESIGN §5.4](SOLUTION_DESIGN.md#54-query-builder-spec-first-sql-fallback-nl2sql), including `meta_coverage` (latest complete month)
-- [ ] `tests/fixtures/`: a small synthetic Parquet set with the same schema, **first thing**, so others can build against it
+- [x] `semantic/build.py`: the six views in [SOLUTION_DESIGN §5.4](SOLUTION_DESIGN.md#54-query-builder-spec-first-sql-fallback-nl2sql), including `meta_coverage` (latest complete month)
+- [x] Placeholder data in the exact contract (`python -m luxtrade.process.placeholder`), also used by the tests
 
 **Behrooz (design and integration)**
-- [ ] Freeze the `QuerySpec` and run-record schemas (Pydantic) and the defaults table
-- [ ] LangGraph skeleton: supervisor + 6 nodes as stubs, end-to-end on the fixture
-- [ ] LLM wrapper (`anthropic` SDK, **`claude-sonnet-4-6`**, structured output, timeouts, offline fallback); `.env` handling
-- [ ] Session model: `session_id`, turn records, LangGraph checkpointer per session
-- [ ] Dependencies: add `langgraph`, `anthropic`, `sqlglot`, `pydantic`, `python-dotenv`; remove `ruptures` if it stays unused; regenerate `requirements.txt`
+- [x] Freeze the `QuerySpec` and run-record schemas (Pydantic) and the defaults table
+- [x] LangGraph graph: supervisor + 7 nodes, end-to-end on placeholder data
+- [x] LLM wrapper (`anthropic` SDK, **`claude-sonnet-4-6`**, structured output, timeouts, offline fallback); `.env` handling
+- [x] Session model: `session_id`, turn records, context rebuilt from run records
+- [x] Dependencies: add `langgraph`, `anthropic`, `sqlglot`, `pydantic`, `python-dotenv`, `pyyaml`; regenerate `requirements.txt`
+- [ ] Remove `ruptures` (unused) and decide on `sdmx1` (API cross-check only)
 
 **Mina (components)**
 - [ ] Streamlit shell: conversation thread (`st.chat_message`) with answer cards (Insight / Chart / Table / Pivot / How we got this), ask box + "Optimise" button + suggestion chips, sidebar (presets, sessions & history, data status), all against dummy run records

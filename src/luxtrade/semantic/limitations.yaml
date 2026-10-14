@@ -1,0 +1,87 @@
+# Limitations registry (owner: Kasra). IDs and keys must match DATA_CARD §4.10.
+# Messages are shown to the user in English; the insight writer translates them.
+# Thresholds are data and live here; the triggers are code in agents/guard.py.
+# `key` is the slug used by tests/golden/questions.yaml (expected_limitations).
+
+- id: L01
+  key: series_start_2002
+  section: DATA_CARD §4.1
+  message: "The data starts in January 2002 (Comext bulk files), so earlier periods can't be shown."
+
+- id: L02
+  key: confidential_in_chapters
+  section: DATA_CARD §4.2
+  threshold_pct: 1.0
+  message: "{value:.1f} % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+
+- id: L03
+  key: special_partners_kept
+  section: DATA_CARD §4.2b
+  threshold_pct: 1.0
+  message: "{value:.1f} % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+
+- id: L04
+  key: latest_months_incomplete
+  section: DATA_CARD §4.3
+  message: "Months after {latest} only contain extra-EU trade so far (intra-EU data is published later)."
+
+- id: L05
+  key: code_changes
+  section: DATA_CARD §4.4
+  max_years: 3
+  message: "CN8 and HS6 codes change over time, so series longer than {max_years} years at this level may break. HS4 or HS2 give a stable series."
+
+- id: L06
+  key: nominal_values
+  section: DATA_CARD §4.5
+  message: "Values are in current euros (nominal), not adjusted for price changes."
+
+- id: L07
+  key: partial_quantities
+  section: DATA_CARD §4.5
+  message: "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity."
+
+- id: L08
+  key: fixed_eu27
+  section: DATA_CARD §4.6
+  message: "Intra/extra-EU uses the fixed EU27 (2020) composition; the United Kingdom counts as extra-EU throughout."
+
+- id: L09
+  key: revisions
+  section: DATA_CARD §4.7
+  message: "Recent months are provisional and may still be revised by Eurostat."
+
+- id: L10
+  key: mirror_flows
+  section: DATA_CARD §4.8
+  message: "Only Luxembourg's own declarations are available; partner countries' mirror statistics are not in this data."
+
+- id: L11
+  key: volatility
+  section: DATA_CARD §4.9
+  message: "One month ({value_label}) is far above the usual level; spikes like this often come from a few large shipments. It is flagged, not removed."
+
+- id: S01
+  key: goods_only
+  section: DATA_CARD §4.10
+  message: "This data covers trade in goods only; services are not included."
+
+- id: S02
+  key: no_external_data
+  section: DATA_CARD §4.10
+  message: "GDP, population, prices or employment are not part of this dataset, so ratios to them can't be computed."
+
+- id: S03
+  key: benchmark_hs2_only
+  section: DATA_CARD §4.10
+  message: "Other EU reporters are available only as HS2 totals over all partners, not at finer product or partner detail."
+
+- id: S04
+  key: no_causes
+  section: DATA_CARD §4.10
+  message: "The data describes trade flows, not why they happen; no company-level information is available."
+
+- id: S05
+  key: projection_only
+  section: DATA_CARD §4.10
+  message: "The projection only extends past patterns. It is not an official forecast and includes no prices, policy or company decisions."

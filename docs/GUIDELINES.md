@@ -53,19 +53,22 @@ src/luxtrade/
 ├── config.py          # paths, constants, settings (single source of truth)
 ├── logging_setup.py   # logging configuration
 ├── ingest/            # download.py, manifest.py
-├── process/           # clean.py, hierarchy.py, validate.py, build.py
-├── semantic/          # views.sql, catalog.py (schema + descriptions for the LLM),
-│                      # lookup.py (EN/FR/DE label search), limitations.yaml
+├── process/           # clean.py, hierarchy.py, validate.py, build.py (real pipeline, Kasra)
+│                      # placeholder.py + nomenclature.py (synthetic data in the contract)
+├── semantic/          # build.py (DuckDB views), layer.py (read-only queries, coverage,
+│                      # labels), catalog.py (schema for the LLM), lookup.py (EN/FR/DE
+│                      # label search), limitations.yaml
 ├── analytics/         # rankings.py, composition.py, significance.py,
 │                      # seasonality.py, forecast.py, benchmark.py, outliers.py
 ├── viz/               # selector.py (rules table), charts.py (Plotly), pivot.py
-├── agents/            # spec.py (QuerySpec, Interpretation, RunState), graph.py,
-│                      # supervisor.py, interpret.py, context.py (session context),
-│                      # optimise.py (rewrites + validation), guard.py, compile_sql.py,
-│                      # sql_guard.py, insight.py, grounding.py, llm.py, prompts/, evaluate.py
+├── agents/            # spec.py (QuerySpec, Interpretation), defaults.py, graph.py,
+│                      # supervisor.py, service.py (Assistant), interpret.py, context.py,
+│                      # optimise.py, guard.py, compile_sql.py, sql_guard.py, analyse.py,
+│                      # facts.py, insight.py, grounding.py, presets.py, llm.py, prompts/,
+│                      # evaluate.py
 ├── runs/              # store.py (run records, run_id, result_hash, replay),
 │                      # sessions.py (session_id, turns, resume)
-└── app/               # Home.py (ask + answer card) + pages/ (History, Data status)
+└── app/               # Home.py (layout, sidebar, thread) + components.py (answer card)
 tests/                 # mirrors src/luxtrade/ one-to-one; tests/golden/ for the question set
 ```
 
@@ -91,9 +94,19 @@ tests/                 # mirrors src/luxtrade/ one-to-one; tests/golden/ for the
 | `value_eur` | float64 | bulk `VALUE_EUR` |
 | `qty_kg` | float64 | bulk `QUANTITY_KG`; null when 0 or missing |
 
-Lookup tables: `products.parquet` (`product`, `level`, `parent`, `label`, plus `section`, `sitc`, `bec`, `bec5`, `cpa` from the bulk files) and `partners.parquet` (`partner`, `label`, `iso3`, `is_aggregate`, `is_eu`).
+Lookup tables:
+- `products.parquet`: `product`, `level`, `parent`, `label`, **`label_en`, `label_fr`, `label_de`**, `section`, `is_confidential`, plus `sitc`, `bec`, `bec5`, `cpa` from the bulk files.
+- `partners.parquet`: `partner`, `label`, **`label_en`, `label_fr`, `label_de`**, `iso3`, `is_aggregate`, **`is_eu27_2020`, `is_special`**.
 
-Until the real pipeline is ready, `tests/fixtures/` holds a **small synthetic file with the same schema**. The app and analytics are built against it from Day 1.
+The EN/FR/DE labels are what let the assistant understand questions in all three languages.
+
+Two more files:
+- `benchmark.parquet`: EU reporter summaries, with columns `reporter`, `trade_type`, `flow`, `hs2`, `period` and `value_eur`.
+- `meta.json`: `extraction_date`, `source` and `is_placeholder`.
+
+**Placeholder data:** `python -m luxtrade.process.placeholder` writes all five files in exactly this contract with synthetic values (`is_placeholder: true`), so the semantic layer, agents and app run before the real pipeline exists. Kasra's pipeline replaces these files. Nothing else changes.
+
+Until the real pipeline is ready, the tests generate a **small placeholder set with the same schema** (`process/placeholder.py`, `SMALL` config) in a temporary folder.
 
 **Second contract: the semantic layer.** The agents never read Parquet files directly. They query the DuckDB views listed in [SOLUTION_DESIGN §5.4](SOLUTION_DESIGN.md#54-query-builder-spec-first-sql-fallback-nl2sql) (`v_lu_trade`, `v_lu_trade_hs2`, `v_eu_reporters_hs2`, `dim_product`, `dim_partner`, `meta_coverage`). View and column names, and their one-line descriptions in `semantic/catalog.py`, are part of the contract, because the LLM prompts and the SQL templates depend on them.
 
@@ -233,8 +246,10 @@ Ownership means *you are responsible for it and you review changes to it*, not t
 ruff check --fix . && ruff format .      # lint + format
 pytest                                   # fast tests
 pytest -m "slow or network"              # optional heavier tests
+python -m luxtrade.process.placeholder   # placeholder data + semantic layer (until real data)
 python -m luxtrade.ingest.download       # fetch raw data + manifest
-python -m luxtrade.process.build         # build processed Parquet + views + quality report
+python -m luxtrade.process.build         # build processed Parquet + quality report
+python -m luxtrade.semantic.build        # (re)build the DuckDB semantic layer
 python -m luxtrade.agents.evaluate       # golden question set (calls the LLM; needs ANTHROPIC_API_KEY)
 streamlit run src/luxtrade/app/Home.py   # launch the app (presets and stored runs work without a key)
 ```
