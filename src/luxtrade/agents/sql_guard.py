@@ -15,7 +15,10 @@ from luxtrade.semantic.catalog import ALLOWED_VIEWS
 _FORBIDDEN_FUNCS = re.compile(
     r"^(read_|glob$|query$|query_table$|sniff_csv$|parquet_|iceberg_|delta_)"
 )
-_FILE_LITERAL = re.compile(r"(://|\.(parquet|csv|json|duckdb|db|txt|xlsx?)\b|[\\/])", re.IGNORECASE)
+_FILE_LITERAL = re.compile(
+    r"(://|\b[\w\-./]+\.(parquet|csv|json|duckdb|db|txt|xlsx?)\b)",
+    re.IGNORECASE,
+)
 
 
 class SQLRejectedError(ValueError):
