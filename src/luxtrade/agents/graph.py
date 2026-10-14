@@ -208,7 +208,9 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
                         f"product: {p} ({sem.label(p, 'product', spec.language)})"
                         for p in spec.products
                     )
-                candidates_block = ("\n\nCANDIDATES:\n" + "\n".join(candidates)) if candidates else ""
+                candidates_block = (
+                    ("\n\nCANDIDATES:\n" + "\n".join(candidates)) if candidates else ""
+                )
 
                 ctx_block = ""
                 ctx = state.get("context")

@@ -271,11 +271,17 @@ def test_custom_sql_retries_on_empty_result_before_optimising(make_assistant, fa
         interpret=interp(intent="time_series", needs_custom_sql=True),
         custom_sql=[
             CustomSQL(
-                sql="SELECT period, sum(value_eur) AS value_eur FROM v_lu_trade_hs2 WHERE year = 1990 GROUP BY period",
+                sql=(
+                    "SELECT period, sum(value_eur) AS value_eur "
+                    "FROM v_lu_trade_hs2 WHERE year = 1990 GROUP BY period"
+                ),
                 explanation="empty year",
             ),
             CustomSQL(
-                sql="SELECT period, sum(value_eur) AS value_eur FROM v_lu_trade_hs2 WHERE year = 2024 GROUP BY period ORDER BY period",
+                sql=(
+                    "SELECT period, sum(value_eur) AS value_eur "
+                    "FROM v_lu_trade_hs2 WHERE year = 2024 GROUP BY period ORDER BY period"
+                ),
                 explanation="valid year",
             ),
         ],
