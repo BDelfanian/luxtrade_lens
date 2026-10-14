@@ -31,7 +31,8 @@ Thumbs.db
 
 # HTML exports (rendered notebooks, Plotly/Streamlit exports)
 *.html
-*_files/          # Quarto/Pandoc HTML render assets
+# Quarto/Pandoc HTML render assets
+*_files/
 
 # Logs
 logs/
