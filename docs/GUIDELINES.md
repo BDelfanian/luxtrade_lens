@@ -52,8 +52,10 @@ These are the rules we follow while building the project. They support the jury 
 src/luxtrade/
 ├── config.py          # paths, constants, settings (single source of truth)
 ├── logging_setup.py   # logging configuration
-├── ingest/            # download.py, manifest.py
-├── process/           # clean.py, hierarchy.py, validate.py, build.py (real pipeline, Kasra)
+├── ingest/            # download.py (bulk listing, resumable download), reduce.py (7z → LU
+│                      # extract in data/interim/), manifest.py
+├── process/           # build.py (contract files), codelists.py (EN/FR/DE labels),
+│                      # validate.py (quality report) — real pipeline, Kasra
 │                      # placeholder.py + nomenclature.py (synthetic data in the contract)
 ├── semantic/          # build.py (DuckDB views), layer.py (read-only queries, coverage,
 │                      # labels), catalog.py (schema for the LLM), lookup.py (EN/FR/DE

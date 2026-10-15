@@ -119,7 +119,9 @@ class QuerySpec(BaseModel):
     language: Literal["en", "fr", "de"] = "en"
     intent: Literal["ranking", "time_series", "composition", "drilldown",
                     "benchmark", "seasonality", "forecast", "single_value", "pivot"]
-    breakdown: Literal["partner", "product", "none"] = "none"   # what to rank or split by
+    breakdown: Literal["partner", "product",                     # what to rank or split by
+                       "partner_group", "confidentiality",       # splits: EU27 vs non-EU27,
+                       "none"] = "none"                          # confidential vs published CN8
     # WHO
     partners: list[str] = []            # ISO-2 codes, resolved via dim_partner
     partner_group: Literal["WORLD", "EU27_2020", "EXTRA_EU27_2020"] = "WORLD"

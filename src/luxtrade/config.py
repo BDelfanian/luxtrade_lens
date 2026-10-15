@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
+INTERIM_DIR = DATA_DIR / "interim"  # per-month LU extracts reduced from the bulk files
 PROCESSED_DIR = DATA_DIR / "processed"
 # Overridable for tests and deployment
 RUNS_DIR = Path(os.environ.get("LUXTRADE_RUNS_DIR", DATA_DIR / "runs"))
@@ -21,6 +22,16 @@ BENCHMARK_FILE = "benchmark.parquet"
 META_FILE = "meta.json"
 DUCKDB_FILE = "luxtrade.duckdb"
 DB_PATH = Path(os.environ.get("LUXTRADE_DB", PROCESSED_DIR / DUCKDB_FILE))
+QUALITY_REPORT_FILE = "quality_report.json"
+LINEAGE_FILE = "lineage.json"
+MANIFEST_FILE = "manifest.json"  # in RAW_DIR
+
+# Comext bulk download (DATA_CARD §1)
+BULK_FILES_URL = "https://ec.europa.eu/eurostat/api/dissemination/files/"
+BULK_DATA_DIR = "comext/COMEXT_DATA/PRODUCTS"
+BULK_CODELIST_DIR = "comext/COMEXT_METADATA/CLASSIFICATIONS_AND_RELATIONS/CLASSIFICATIONS"
+CODELIST_LANGUAGES = {"en": "ENGLISH", "fr": "FRENCH", "de": "GERMAN"}
+CODELIST_FILES = ("CN.txt", "PARTNERS_ISO.txt")
 
 DATASET_ID = "DS-045409"
 REPORTER = "LU"

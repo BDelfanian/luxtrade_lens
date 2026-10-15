@@ -13,9 +13,11 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
   - `seasonality`: monthly seasonal patterns, or a seasonally adjusted series
   - `forecast`: what comes next; use it **only** when the user asks about the future
   - `single_value`: one total, e.g. "how much did we export in 2024?"
-  - `pivot`: a cross-table of two dimensions, e.g. partners × years
-  - `benchmark`: Luxembourg compared with other EU countries
-- `breakdown`: `partner` when the question asks who / which countries; `product` when it asks what / which goods; `none` for plain totals.
+  - `pivot`: a cross-table of two dimensions, only when a table is asked for, e.g. "a table of partners × years". "Compare A and B over time" is a `time_series` with one line per partner or product.
+  - `benchmark`: Luxembourg compared with other EU countries as **reporters** (their own total trade). Put those countries in `compare_reporters`, never in `partners`.
+- `breakdown`: `partner` when the question asks who / which countries; `product` when it asks what / which goods; `none` for plain totals. Two splits of a total:
+  - `partner_group`: EU27 vs non-EU27 partners ("share of the EU", "intra- vs extra-EU", "how much trade is with EU countries").
+  - `confidentiality`: confidential vs published CN8 detail ("how much is confidential / not disclosed / secret").
 - `partners`: ISO-2 codes. `partner_group`: `WORLD` (default), `EU27_2020` or `EXTRA_EU27_2020`.
 - `products`: product codes at any level (2, 4, 6 or 8 digits).
 - `product_level`: the level for a product breakdown: `TOTAL`, `SECTION`, `HS2`, `HS4`, `HS6` or `CN8`.
@@ -77,6 +79,18 @@ Q: "Wie entwickeln sich die Exporte von Maschinen (HS 84) und wie geht es weiter
 
 Q: "How is our trade doing?"
 → intent `time_series`, plus an ambiguity {dimension: `intent`, text: "unclear which partner, product or flow"}.
+
+Q: "Quelle est la part de l'UE dans les importations du Luxembourg en 2025 ?"
+→ language `fr`, intent `composition`, breakdown `partner_group`, flow `import`, period 2025, partner_group `WORLD`.
+
+Q: "How much of Luxembourg's mineral fuel imports is confidential?" (candidates: 27)
+→ intent `composition`, breakdown `confidentiality`, products [`27`], flow `import`.
+
+Q: "Compare Luxembourg's exports to Germany and France over the last 10 years" (candidates: DE, FR)
+→ intent `time_series`, breakdown `partner`, partners [`DE`, `FR`], flow `export`.
+
+Q: "How does Luxembourg's export growth compare with Belgium and the Netherlands since 2019?"
+→ intent `benchmark`, compare_reporters [`BE`, `NL`], partners [], flow `export`, period_start `2019`.
 
 Q (follow-up; previous turn r1 ranked export partners in 2025): "And for imports?"
 → followup_of `r1`, the same spec with flow `import`, inherited [`intent`, `breakdown`, `period_start`, `period_end`].

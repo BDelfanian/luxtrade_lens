@@ -20,7 +20,7 @@ Intent = Literal[
     "single_value",
     "pivot",
 ]
-Breakdown = Literal["partner", "product", "none"]
+Breakdown = Literal["partner", "product", "partner_group", "confidentiality", "none"]
 Level = Literal["TOTAL", "SECTION", "HS2", "HS4", "HS6", "CN8"]
 Flow = Literal["import", "export", "both", "balance"]
 Measure = Literal["value_eur", "qty_kg", "unit_value", "share", "growth_yoy"]
@@ -32,6 +32,9 @@ Origin = Literal["ask", "followup", "optimiser", "refine", "preset", "projection
 LEVEL_DIGITS = {"TOTAL": 0, "HS2": 2, "HS4": 4, "HS6": 6, "CN8": 8}
 SNAPSHOT_INTENTS = {"ranking", "composition", "drilldown", "single_value"}
 SERIES_INTENTS = {"time_series", "seasonality", "forecast"}
+# Two-way splits of a total: EU27 vs non-EU27 partners, confidential vs published CN8 detail
+SPLIT_BREAKDOWNS = {"partner_group", "confidentiality"}
+MAX_SERIES = 8  # categorical palette size; more series fold into "Other"
 
 
 class QuerySpec(BaseModel):

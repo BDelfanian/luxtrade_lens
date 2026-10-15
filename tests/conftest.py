@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from fixtures.comext import bulk_raw  # noqa: F401  (synthetic Comext archives)
 
 from luxtrade.agents.llm import FakeLLM
 from luxtrade.agents.service import Assistant

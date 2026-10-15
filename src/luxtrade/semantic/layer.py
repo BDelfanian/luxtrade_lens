@@ -21,6 +21,9 @@ SPECIAL_KEYS = {
     ),
     "CONFIDENTIAL": ("Confidential", "Confidentiel", "Vertraulich"),
     "TOTAL": ("All goods", "Tous les produits", "Alle Waren"),
+    "EU27": ("EU27 countries", "Pays de l'UE27", "EU27-Länder"),
+    "NON_EU27": ("Non-EU27 countries", "Pays hors UE27", "Nicht-EU27-Länder"),
+    "DISCLOSED": ("Published at CN8 level", "Publié au niveau NC8", "Auf KN8-Ebene veröffentlicht"),
 }
 REPORTER_LABEL = ("Luxembourg", "Luxembourg", "Luxemburg")
 LANG_COL = {"en": "label_en", "fr": "label_fr", "de": "label_de"}

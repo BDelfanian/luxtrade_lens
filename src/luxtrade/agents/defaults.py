@@ -2,7 +2,13 @@
 
 from datetime import date
 
-from luxtrade.agents.spec import LEVEL_DIGITS, SERIES_INTENTS, SNAPSHOT_INTENTS, QuerySpec
+from luxtrade.agents.spec import (
+    LEVEL_DIGITS,
+    MAX_SERIES,
+    SERIES_INTENTS,
+    SNAPSHOT_INTENTS,
+    QuerySpec,
+)
 from luxtrade.config import (
     BENCHMARK_REPORTERS,
     DEFAULT_TOP_N,
@@ -41,6 +47,22 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
     """Return a fully specified copy of ``spec``, with the defaults listed in assumptions."""
     s = spec.model_copy(deep=True)
     notes = list(s.assumptions)
+
+    if s.intent == "benchmark" and s.partners:
+        # "compare with Belgium and the Netherlands": countries compared are reporters, not
+        # partners (a benchmark by partner is not in the data and would be blocked, S03)
+        moved = [p.upper() for p in s.partners if p.upper() in BENCHMARK_REPORTERS]
+        if moved:
+            s.compare_reporters = list(dict.fromkeys(s.compare_reporters + moved))
+            s.partners = [p for p in s.partners if p.upper() not in BENCHMARK_REPORTERS]
+            notes.append(f"{', '.join(moved)} compared as reporting countries")
+    if s.intent == "pivot" and s.view == "auto":
+        # "compare exports to Germany and France over 10 years": a few named series read
+        # better as lines than as a cross-table
+        named = s.partners if s.breakdown == "partner" else s.products
+        if s.breakdown in ("partner", "product") and 2 <= len(named) <= MAX_SERIES:
+            s.intent = "time_series"
+            notes.append("compared over time as one line per " + s.breakdown)
 
     if s.intent in ("ranking", "composition", "pivot") and s.breakdown == "none":
         s.breakdown = "partner" if (s.products or not s.partners) else "product"
@@ -89,6 +111,15 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
             s.freq = "A" if (end.year - start.year) > 3 else "M"
         else:
             s.freq = "A"
+
+    # An annual series spanning several years never ends in an incomplete year: Jan–Jun of the
+    # current year would read as a full-year collapse. A question about that year alone is kept.
+    start_year, end_year = (_month(p, end=False).year for p in (s.period_start, s.period_end))
+    if s.freq == "A" and start_year < end_year and end_year > latest_year:
+        s.period_end = str(max(start_year, latest_year))
+        notes.append(
+            f"{end_year} is incomplete (data until {complete}): annual series end in {s.period_end}"
+        )
 
     if s.top_n is None and s.breakdown != "none":
         s.top_n = DEFAULT_TOP_N
