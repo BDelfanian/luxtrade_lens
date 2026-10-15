@@ -1,0 +1,244 @@
+{
+ "run_id": "f3ec9ddb02",
+ "session_id": "cxjajt",
+ "turn": 1,
+ "created_at": "2026-10-14T20:54:35+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "How much of Luxembourg's mineral fuel imports is confidential?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "composition",
+   "breakdown": "product",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "27",
+    "99"
+   ],
+   "product_level": "HS2",
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'mineral fuel' interpreted as HS2 code 27",
+    "'confidential' interpreted as HS2 code 99"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27",
+   "99"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'mineral fuel' interpreted as HS2 code 27",
+   "'confidential' interpreted as HS2 code 99",
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "'mineral fuel' interpreted as HS2 code 27",
+  "'confidential' interpreted as HS2 code 99",
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "39.3 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 39.2872597998004
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27', '99')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "11d8dc7285242a647031fdfafd0b74ddc4c85d10b32c50a2414a6da0143a44fb",
+ "row_count": 2,
+ "view_kind": "treemap",
+ "title": "Mineral fuels and oils — imports 2025 (99.3 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "27",
+    "value": 2231635421.0,
+    "share": 99.323433892,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Mineral fuels and oils"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 15201336.0,
+    "share": 0.676566108,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "27"
+  ]
+ },
+ "insight": [
+  "Luxembourg's mineral fuel imports include 0.7% that is confidential, amounting to 15.2 million euros.",
+  "Mineral fuels and oils dominate imports with a value of 2.23 billion euros, representing 99.3% of total imports.",
+  "The top three import categories together also make up 99.3% of the total import value.",
+  "A significant portion, 39.3%, of the import value is confidential at full product detail and is shown separately.",
+  "The data are presented in current euros and are not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 2.25 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Mineral fuels and oils: 2.23 bn €, 99.3 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 15.2 M€, 0.7 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 99.3 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 6080,
+   "outcome": "ok",
+   "detail": "intent=single_value breakdown=none · unresolved: ['confidential']"
+  },
+  {
+   "node": "interpret",
+   "ms": 7203,
+   "outcome": "retry",
+   "detail": "intent=composition breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 124,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 18,
+   "outcome": "ok",
+   "detail": "view=treemap; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1337,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3215,
+   "output_tokens": 165,
+   "cache_read_tokens": 3072,
+   "ms": 1614
+  },
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3259,
+   "output_tokens": 152,
+   "cache_read_tokens": 2944,
+   "ms": 1601
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 592,
+   "output_tokens": 126,
+   "cache_read_tokens": 0,
+   "ms": 1293
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

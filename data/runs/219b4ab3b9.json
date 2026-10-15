@@ -1,0 +1,336 @@
+{
+ "run_id": "219b4ab3b9",
+ "session_id": "xzwpye",
+ "turn": 1,
+ "created_at": "2026-10-14T20:37:51+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "What were Luxembourg's main export products in 2024?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": "2024",
+   "period_end": "2024",
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2024",
+  "period_end": "2024",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "HS2 chapters (no level given)"
+  ]
+ },
+ "assumptions": [
+  "HS2 chapters (no level given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.9 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.935176639950167
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2024-01-01' AS DATE)\n  AND period < CAST('2025-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "7af08dcfae1480ae986e2a874ffabb5254f0d19b2efab1bd5cac8b1cd68582eb",
+ "row_count": 97,
+ "view_kind": "bar",
+ "title": "Machinery and mechanical appliances — exports 2024 (13.5 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "84",
+    "value": 2015359170.0,
+    "share": 13.4653842423,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "87",
+    "value": 1493481389.0,
+    "share": 9.9785194922,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Vehicles and parts"
+   },
+   {
+    "key": "39",
+    "value": 1483554389.0,
+    "share": 9.9121934143,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "key": "72",
+    "value": 1223353473.0,
+    "share": 8.1736917287,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Iron and steel"
+   },
+   {
+    "key": "73",
+    "value": 884635758.0,
+    "share": 5.9105893249,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Articles of iron or steel"
+   },
+   {
+    "key": "40",
+    "value": 786649493.0,
+    "share": 5.2559056693,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Rubber and articles thereof"
+   },
+   {
+    "key": "04",
+    "value": 684409300.0,
+    "share": 4.5727998963,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "key": "85",
+    "value": 660613617.0,
+    "share": 4.413811851,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "76",
+    "value": 484263739.0,
+    "share": 3.2355509714,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Aluminium and articles thereof"
+   },
+   {
+    "key": "48",
+    "value": 401195034.0,
+    "share": 2.680537231,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Paper and paperboard"
+   },
+   {
+    "key": "OTHER",
+    "value": 4747122121.0,
+    "share": 31.7173357266,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 102326205.0,
+    "share": 0.683680452,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "87",
+   "39",
+   "72",
+   "73",
+   "40",
+   "04",
+   "85",
+   "76",
+   "48"
+  ]
+ },
+ "insight": [
+  "Luxembourg's main export products in 2024 were machinery and mechanical appliances, vehicles and parts, and plastics and articles thereof.",
+  "Total exports amounted to 14.97 billion euros, with the top three products making up 33.4% of this value.",
+  "Machinery and mechanical appliances led with 2.02 billion euros, representing 13.5% of exports, followed by vehicles and parts at 1.49 billion euros (10.0%) and plastics at 1.48 billion euros (9.9%).",
+  "Other products accounted for 31.7% of exports, while confidential exports made up 0.7%.",
+  "The values are nominal and not adjusted for price changes, and 1.9% of the export value is confidential at full product detail."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2024: 14.97 bn €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Machinery and mechanical appliances: 2.02 bn €, 13.5 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Vehicles and parts: 1.49 bn €, 10.0 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Plastics and articles thereof: 1.48 bn €, 9.9 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Iron and steel: 1.22 bn €, 8.2 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Articles of iron or steel: 884.6 M€, 5.9 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 4.75 bn €, 31.7 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 102.3 M€, 0.7 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 33.4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 37224,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 221,
+   "outcome": "ok",
+   "detail": "97 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 63,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1628,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2699,
+   "output_tokens": 125,
+   "cache_read_tokens": 1920,
+   "ms": 1604
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 768,
+   "output_tokens": 166,
+   "cache_read_tokens": 0,
+   "ms": 1540
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

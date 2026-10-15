@@ -1,0 +1,12 @@
+{
+ "session_id": "dxx9bd",
+ "created_at": "2026-10-14T15:00:44+00:00",
+ "title": "Show monthly imports of mineral fuels since 2020, with seasonal effects removed.",
+ "runs": [
+  "d6b707ab1e",
+  "c885b04648",
+  "32090a6056",
+  "fb73e77105",
+  "5764ecb07b"
+ ]
+}

@@ -1,0 +1,205 @@
+{
+ "run_id": "8c031cb5cb",
+ "session_id": "kv4etj",
+ "turn": 1,
+ "created_at": "2026-10-14T21:20:59+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Tell me about trade",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": null,
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [
+   {
+    "dimension": "intent",
+    "text": "unclear which partner, product or flow"
+   }
+  ],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": null,
+  "freq": null,
+  "period_start": null,
+  "period_end": null,
+  "flow": null,
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's exports to Germany in 2025?",
+   "note": "exports only, partner Germany, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "DE"
+    ],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What were Luxembourg's imports of wood products (HS4 4407) in 2024?",
+   "note": "imports only, product HS4 4407, year 2024",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "4407"
+    ],
+    "product_level": "HS4",
+    "freq": "A",
+    "period_start": "2024",
+    "period_end": "2024",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was Luxembourg's trade balance in goods with the EU27 in 2023?",
+   "note": "trade balance, partner group EU27, year 2023",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2023",
+    "period_end": "2023",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Which partner or product, and which period?",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 3261,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "optimise",
+   "ms": 4507,
+   "outcome": "routed",
+   "detail": "the question is unclear: unclear which partner, product or flow · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2992,
+   "output_tokens": 139,
+   "cache_read_tokens": 1920,
+   "ms": 1325
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4857,
+   "output_tokens": 407,
+   "cache_read_tokens": 0,
+   "ms": 3029
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

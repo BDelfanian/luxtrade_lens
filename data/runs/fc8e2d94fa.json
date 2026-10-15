@@ -1,0 +1,576 @@
+{
+ "run_id": "fc8e2d94fa",
+ "session_id": "zt394w",
+ "turn": 4,
+ "created_at": "2026-10-14T13:41:58+00:00",
+ "origin": "preset",
+ "status": "answered",
+ "question": "What are the main goods traded with Germany, by chapter?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "drilldown",
+  "breakdown": "product",
+  "partners": [
+   "DE"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "exports and imports (no flow given)",
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "exports and imports (no flow given)",
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.8199113737778263
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND partner IN ('DE')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "84b8381abda7136a0411b40c995119d39a0db4b1e3a3e7767dffdc69592f20b6",
+ "row_count": 42,
+ "view_kind": "treemap",
+ "title": "Machinery and mechanical appliances — exports 2025 (23.2 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "84",
+    "value": 1148700582.0,
+    "share": 23.2220155017,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "85",
+    "value": 733724953.0,
+    "share": 14.832909898,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "39",
+    "value": 542135923.0,
+    "share": 10.9597653255,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "key": "87",
+    "value": 461536975.0,
+    "share": 9.3303850943,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Vehicles and parts"
+   },
+   {
+    "key": "73",
+    "value": 271964635.0,
+    "share": 5.4980097241,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Articles of iron or steel"
+   },
+   {
+    "key": "72",
+    "value": 224585770.0,
+    "share": 4.5402033516,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Iron and steel"
+   },
+   {
+    "key": "56",
+    "value": 182666470.0,
+    "share": 3.6927669964,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Wadding, felt and nonwovens"
+   },
+   {
+    "key": "04",
+    "value": 177769985.0,
+    "share": 3.5937801478,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "key": "22",
+    "value": 175689306.0,
+    "share": 3.5517173503,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Beverages, spirits and vinegar"
+   },
+   {
+    "key": "48",
+    "value": 168472426.0,
+    "share": 3.4058216297,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Paper and paperboard"
+   },
+   {
+    "key": "OTHER",
+    "value": 815257801.0,
+    "share": 16.4811697577,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 44096738.0,
+    "share": 0.8914552229,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential"
+   },
+   {
+    "key": "84",
+    "value": 1194005193.0,
+    "share": 17.6902820028,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "87",
+    "value": 822130800.0,
+    "share": 12.1806218101,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vehicles and parts"
+   },
+   {
+    "key": "27",
+    "value": 546887342.0,
+    "share": 8.1026375433,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Mineral fuels and oils"
+   },
+   {
+    "key": "39",
+    "value": 532515396.0,
+    "share": 7.8897039823,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "key": "85",
+    "value": 526916063.0,
+    "share": 7.8067447285,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "22",
+    "value": 460820181.0,
+    "share": 6.8274736176,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Beverages, spirits and vinegar"
+   },
+   {
+    "key": "73",
+    "value": 447523488.0,
+    "share": 6.6304709159,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Articles of iron or steel"
+   },
+   {
+    "key": "38",
+    "value": 337557230.0,
+    "share": 5.0012199493,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Miscellaneous chemical products"
+   },
+   {
+    "key": "30",
+    "value": 305421525.0,
+    "share": 4.5251000068,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pharmaceutical products"
+   },
+   {
+    "key": "40",
+    "value": 298490619.0,
+    "share": 4.4224122778,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Rubber and articles thereof"
+   },
+   {
+    "key": "OTHER",
+    "value": 1271936456.0,
+    "share": 18.8449051379,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 5293498.0,
+    "share": 0.0784280277,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential"
+   },
+   {
+    "key": "84",
+    "value": 2342705775.0,
+    "share": 20.0298039876,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "87",
+    "value": 1283667775.0,
+    "share": 10.9751784423,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Vehicles and parts"
+   },
+   {
+    "key": "85",
+    "value": 1260641016.0,
+    "share": 10.7783029003,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "39",
+    "value": 1074651319.0,
+    "share": 9.1881172208,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "key": "73",
+    "value": 719488123.0,
+    "share": 6.1515219832,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Articles of iron or steel"
+   },
+   {
+    "key": "22",
+    "value": 636509487.0,
+    "share": 5.4420663478,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Beverages, spirits and vinegar"
+   },
+   {
+    "key": "27",
+    "value": 583527210.0,
+    "share": 4.9890753514,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Mineral fuels and oils"
+   },
+   {
+    "key": "72",
+    "value": 432577086.0,
+    "share": 3.6984730795,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Iron and steel"
+   },
+   {
+    "key": "40",
+    "value": 429381638.0,
+    "share": 3.6711524498,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Rubber and articles thereof"
+   },
+   {
+    "key": "04",
+    "value": 383889579.0,
+    "share": 3.282201761,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "key": "OTHER",
+    "value": 2499670111.0,
+    "share": 21.3718269239,
+    "rank": null,
+    "kind": "other",
+    "flow": "total",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 49390236.0,
+    "share": 0.4222795524,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "total",
+    "label": "Confidential"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "85",
+   "87",
+   "39",
+   "27",
+   "73",
+   "22",
+   "72",
+   "56",
+   "38"
+  ]
+ },
+ "insight": [
+  "In 2025, the largest product group for exports was Machinery and mechanical appliances with 1.15 bn € (23.2 % of 4.95 bn €).",
+  "In 2025, the largest product group for imports was Machinery and mechanical appliances with 1.19 bn € (17.7 % of 6.75 bn €).",
+  "The top three (Machinery and mechanical appliances, Vehicles and parts, Electrical machinery and equipment) account for 41.8 % of total trade.",
+  "See the notes below for the data limits that apply."
+ ],
+ "insight_source": "template",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2025: 4.95 bn €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Machinery and mechanical appliances: 1.15 bn €, 23.2 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Electrical machinery and equipment: 733.7 M€, 14.8 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Plastics and articles thereof: 542.1 M€, 11.0 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Vehicles and parts: 461.5 M€, 9.3 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Articles of iron or steel: 272.0 M€, 5.5 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 815.3 M€, 16.5 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 44.1 M€, 0.9 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 49.0 %"
+  },
+  {
+   "key": "import.total",
+   "text": "imports 2025: 6.75 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Machinery and mechanical appliances: 1.19 bn €, 17.7 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Vehicles and parts: 822.1 M€, 12.2 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Mineral fuels and oils: 546.9 M€, 8.1 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Plastics and articles thereof: 532.5 M€, 7.9 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Electrical machinery and equipment: 526.9 M€, 7.8 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 1.27 bn €, 18.8 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 5.3 M€, 0.1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 38.0 %"
+  },
+  {
+   "key": "total.total",
+   "text": "total trade 2025: 11.70 bn €"
+  },
+  {
+   "key": "total.rank1",
+   "text": "#1 Machinery and mechanical appliances: 2.34 bn €, 20.0 %"
+  },
+  {
+   "key": "total.rank2",
+   "text": "#2 Vehicles and parts: 1.28 bn €, 11.0 %"
+  },
+  {
+   "key": "total.rank3",
+   "text": "#3 Electrical machinery and equipment: 1.26 bn €, 10.8 %"
+  },
+  {
+   "key": "total.rank4",
+   "text": "#4 Plastics and articles thereof: 1.07 bn €, 9.2 %"
+  },
+  {
+   "key": "total.rank5",
+   "text": "#5 Articles of iron or steel: 719.5 M€, 6.2 %"
+  },
+  {
+   "key": "total.other",
+   "text": "Other: 2.50 bn €, 21.4 %"
+  },
+  {
+   "key": "total.confidential",
+   "text": "Confidential: 49.4 M€, 0.4 %"
+  },
+  {
+   "key": "total.top3_share",
+   "text": "top 3 total trade: 41.8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 162,
+   "outcome": "ok",
+   "detail": "42 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 89,
+   "outcome": "ok",
+   "detail": "view=treemap; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 52,
+   "outcome": "ok",
+   "detail": "no LLM configured: template insight"
+  }
+ ],
+ "llm_usage": [],
+ "code_version": "bd0380e",
+ "error": null
+}

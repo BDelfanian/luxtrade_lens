@@ -1,0 +1,342 @@
+AD	01/01/1976	31/12/2500	Andorre
+AE	01/01/1976	31/12/2500	Emirats Arabes Unis
+AF	01/01/1976	31/12/2500	Afghanistan
+AG	01/01/1983	31/12/2500	Antigua et Barbuda
+AI	01/01/1987	31/12/2500	Anguilla
+AL	01/01/1976	31/12/2500	Albanie
+AM	01/01/1992	31/12/1992	Arménie
+AM	01/01/1993	31/12/2500	Arménie
+AN	01/01/1976	31/12/1986	Antilles NL
+AN	01/01/1987	31/12/2012	Antilles NL
+AO	01/01/1976	31/12/2500	Angola
+AQ	01/01/2001	31/12/2500	Antarctique
+AR	01/01/1976	31/12/2500	Argentine
+AS	01/01/2001	31/12/2500	Samoa américaines
+AT	01/01/1976	31/12/2500	Autriche
+AU	01/01/1976	31/12/2500	Australie
+AW	01/01/1987	31/12/2500	Aruba
+AZ	01/01/1992	31/12/1992	Azerbaïdjan
+AZ	01/01/1993	31/12/2500	Azerbaïdjan
+BA	01/01/1992	31/12/1992	Bosnie-Herzégovine
+BA	01/01/1993	31/12/2500	Bosnie-Herzégovine
+BB	01/01/1976	31/12/2500	Barbade
+BD	01/01/1976	31/12/2500	Bangladesh
+BE	01/01/1976	31/12/1998	Belgique et Luxembourg
+BE	01/01/1999	31/12/2500	Belgique
+BF	01/01/1976	31/12/2500	Burkina Faso
+BG	01/01/1976	31/12/2500	Bulgarie
+BH	01/01/1976	31/12/2500	Bahreïn
+BI	01/01/1976	31/12/2500	Burundi
+BJ	01/01/1976	31/12/2500	Bénin
+BL	01/01/2013	31/12/2500	St Barthélémy
+BM	01/01/1976	31/12/2500	Bermudes
+BN	01/01/1976	31/12/2500	Brunei Darussalam
+BO	01/01/1976	31/12/2500	Bolivie
+BQ	01/01/2013	31/12/2500	Bonaire, Saint Eustache et Saba
+BR	01/01/1976	31/12/2500	Brésil
+BS	01/01/1976	31/12/2500	Bahamas
+BT	01/01/1976	31/12/2500	Bhoutan
+BV	01/01/2001	31/12/2500	Ile Bouvet
+BW	01/01/1976	31/12/2500	Botswana
+BY	01/01/1992	31/12/1992	Biélorussie
+BY	01/01/1993	31/12/2500	Biélorussie
+BZ	01/01/1976	31/12/2500	Bélize
+CA	01/01/1976	31/12/2500	Canada
+CC	01/01/2001	31/12/2500	Iles des Cocos (Keeling)
+CD	01/01/1976	31/12/2500	Congo,  République démocratique du
+CF	01/01/1976	31/12/2500	République Centrafricaine
+CG	01/01/1976	31/12/2500	Congo
+CH	01/01/1976	31/12/1994	Suisse
+CH	01/01/1995	31/12/2500	Suisse
+CI	01/01/1976	31/12/2500	Côte d'Ivoire
+CK	01/01/2001	31/12/2500	Iles Cook
+CL	01/01/1976	31/12/2500	Chili
+CM	01/01/1976	31/12/2500	Cameroun
+CN	01/01/1976	31/12/2500	Chine
+CO	01/01/1976	31/12/2500	Colombie
+CR	01/01/1976	31/12/2500	Costa Rica
+CS	01/01/1976	31/12/1992	Tchécoslovaquie
+CS	01/01/2004	31/12/2005	Serbie et Monténégro
+CU	01/01/1976	31/12/2500	Cuba
+CV	01/01/1976	31/12/2500	Cap Vert
+CW	01/01/2013	31/12/2500	Curaçao
+CX	01/01/2001	31/12/2500	Iles Christmas
+CY	01/01/1976	31/12/2500	Chypre
+CZ	01/01/1993	31/12/2500	Tchéquie
+DD	01/01/1976	31/12/1990	République démocratique allemande
+DE	01/01/1976	31/12/1990	Allemagne
+DE	01/01/1991	31/12/2500	Allemagne
+DJ	01/01/1976	31/12/2500	Djibouti
+DK	01/01/1976	31/12/2500	Danemark
+DM	01/01/1980	31/12/2500	Dominique
+DO	01/01/1976	31/12/2500	République Dominicaine
+DZ	01/01/1976	31/12/2500	Algérie
+EC	01/01/1976	31/12/2500	Equateur
+EE	01/01/1992	31/12/1992	Estonie
+EE	01/01/1993	31/12/2500	Estonie
+EG	01/01/1976	31/12/2500	Egypte
+EH	01/01/1976	31/12/1976	Ceuta, Melilla et Sahara espagnol
+EH	01/01/2013	31/12/2500	Sahara occidental
+ER	01/01/1994	31/12/2500	Erythrée
+ES	01/01/1976	31/12/1985	Espagne
+ES	01/01/1986	31/12/1996	Espagne
+ES	01/01/1997	31/12/2500	Espagne
+ET	01/01/1976	31/12/1993	Ethiopie
+ET	01/01/1994	31/12/2500	Ethiopie
+FI	01/01/1976	31/12/2500	Finlande
+FJ	01/01/1976	31/12/2500	Fidji
+FK	01/01/1976	31/12/1991	Iles Falklands
+FK	01/01/1992	31/12/2500	Iles Falklands
+FM	01/01/1992	31/12/2500	Micronésie,  Etats fédérés de
+FO	01/01/1976	31/12/1992	Iles Féroé
+FO	01/01/1993	31/12/2500	Iles Féroé
+FR	01/01/1976	31/12/1996	France
+FR	01/01/1997	31/12/2500	France
+GA	01/01/1976	31/12/2500	Gabon
+GB	01/01/1976	31/12/2500	Royaume Uni
+GD	01/01/1976	31/12/2500	Grenade
+GE	01/01/1992	31/12/1992	Géorgie
+GE	01/01/1993	31/12/2500	Géorgie
+GF	01/01/1976	31/12/1996	Guyane française
+GH	01/01/1976	31/12/2500	Ghana
+GI	01/01/1976	31/12/2500	Gibraltar
+GL	01/01/1976	31/12/2500	Groenland
+GM	01/01/1976	31/12/2500	Gambie
+GN	01/01/1976	31/12/2500	Guinée
+GP	01/01/1976	31/12/1996	Guadeloupe
+GQ	01/01/1976	31/12/2500	Guinée équatoriale
+GR	01/01/1976	31/12/1980	Grèce
+GR	01/01/1981	31/12/2500	Grèce
+GS	01/01/2001	31/12/2500	Iles de Géorgie du Sud et Sandwich du Sud
+GT	01/01/1976	31/12/2500	Guatemala
+GU	01/01/2001	31/12/2500	Guam
+GW	01/01/1976	31/12/2500	Guinée Bissau
+GY	01/01/1976	31/12/2500	Guyana
+HK	01/01/1976	31/12/2500	Hong Kong
+HM	01/01/2001	31/12/2500	Iles Heard et McDonald
+HN	01/01/1976	31/12/2500	Honduras
+HR	01/01/1992	31/12/1992	Croatie
+HR	01/01/1993	31/12/2500	Croatie
+HT	01/01/1976	31/12/2500	Haïti
+HU	01/01/1976	31/12/2500	Hongrie
+ID	01/01/1977	31/12/2500	Indonésie
+IE	01/01/1976	31/12/2500	Irlande
+IL	01/01/1976	31/12/1994	Israël
+IL	01/01/1995	31/12/2500	Israël
+IN	01/01/1976	31/12/2500	Inde
+IO	01/01/1976	31/12/2500	Territoire britannique de l'océan indien
+IQ	01/01/1976	31/12/2500	Iraq
+IR	01/01/1976	31/12/2500	Iran,  République islamique d'
+IS	01/01/1976	31/12/2500	Islande
+IT	01/01/1976	31/12/1993	Italie
+IT	01/01/1994	31/12/2500	Italie
+JM	01/01/1976	31/12/2500	Jamaïque
+JO	01/01/1976	31/12/2500	Jordanie
+JP	01/01/1976	31/12/2500	Japon
+KE	01/01/1976	31/12/2500	Kenya
+KG	01/01/1992	31/12/1992	Kirghizstan
+KG	01/01/1993	31/12/2500	Kirghize, République
+KH	01/01/1976	31/12/2500	Cambodge
+KI	01/01/1976	31/12/1979	Kiribati
+KI	01/01/1980	31/12/1980	Kiribati
+KI	01/01/1981	31/12/2500	Kiribati
+KM	01/01/1976	31/12/1976	Comores
+KM	01/01/1977	31/12/2500	Comores
+KN	01/01/1986	31/12/2500	St Kitts et Nevis
+KP	01/01/1976	31/12/2500	Corée,  République populaire démocratique de
+KR	01/01/1976	31/12/2500	Corée,  République de
+KW	01/01/1976	31/12/2500	Koweit
+KY	01/01/1976	31/12/2500	Iles Caïmanes
+KZ	01/01/1992	31/12/1992	Kazakhstan
+KZ	01/01/1993	31/12/2500	Kazakhstan
+LA	01/01/1976	31/12/2500	Lao,  République démocratique populaire
+LB	01/01/1976	31/12/2500	Liban
+LC	01/01/1980	31/12/2500	Sainte Lucie
+LI	01/01/1995	31/12/2500	Liechtenstein
+LK	01/01/1976	31/12/2500	Sri Lanka
+LR	01/01/1976	31/12/2500	Libéria
+LS	01/01/1976	31/12/2500	Lesotho
+LT	01/01/1992	31/12/1992	Lituanie
+LT	01/01/1993	31/12/2500	Lituanie
+LU	01/01/1999	31/12/2500	Luxembourg
+LV	01/01/1992	31/12/1992	Lettonie
+LV	01/01/1993	31/12/2500	Lettonie
+LY	01/01/1976	31/12/2500	Libye
+MA	01/01/1976	31/12/2500	Maroc
+MD	01/01/1992	31/12/1992	Moldavie
+MD	01/01/1993	31/12/2500	Moldavie
+ME	01/01/2007	31/12/2500	Monténégro
+MG	01/01/1976	31/12/2500	Madagascar
+MH	01/01/1992	31/12/2500	Iles Marshall
+MK	01/01/1993	31/12/2500	Macédoine du Nord
+ML	01/01/1976	31/12/2500	Mali
+MM	01/01/1976	31/12/2500	Myanmar
+MN	01/01/1976	31/12/2500	Mongolie
+MO	01/01/1976	31/12/2500	Macao
+MP	01/01/1994	31/12/2500	Iles Mariannes du Nord
+MQ	01/01/1976	31/12/1996	Martinique
+MR	01/01/1976	31/12/1976	Mauritanie
+MR	01/01/1977	31/12/2500	Mauritanie
+MS	01/01/1995	31/12/2500	Montserrat
+MT	01/01/1976	31/12/2500	Malte
+MU	01/01/1976	31/12/2500	Maurice
+MV	01/01/1976	31/12/2500	Maldives
+MW	01/01/1976	31/12/2500	Malawi
+MX	01/01/1976	31/12/2500	Mexique
+MY	01/01/1976	31/12/2500	Malaisie
+MZ	01/01/1976	31/12/2500	Mozambique
+NA	01/01/1990	31/12/2500	Namibie
+NC	01/01/1976	31/12/2500	Nouvelle Calédonie
+NE	01/01/1976	31/12/2500	Niger
+NF	01/01/2001	31/12/2500	Ile Norfolk
+NG	01/01/1976	31/12/2500	Nigéria
+NI	01/01/1976	31/12/2500	Nicaragua
+NL	01/01/1976	31/12/2500	Pays Bas
+NO	01/01/1976	31/12/1994	Norvège
+NO	01/01/1995	31/12/1996	Norvège
+NO	01/01/1997	31/12/2500	Norvège
+NP	01/01/1976	31/12/2500	Népal
+NR	01/01/1976	31/12/2500	Nauru
+NU	01/01/2001	31/12/2500	Nioué
+NZ	01/01/1976	31/12/2500	Nouvelle Zélande
+OM	01/01/1976	31/12/2500	Oman
+PA	01/01/1976	31/12/1980	Panama
+PA	01/01/1981	31/12/2500	Panama
+PE	01/01/1976	31/12/2500	Pérou
+PF	01/01/1976	31/12/2500	Polynésie française
+PG	01/01/1976	31/12/2500	Papouasie Nouvelle Guinée
+PH	01/01/1976	31/12/2500	Philippines
+PK	01/01/1976	31/12/2500	Pakistan
+PL	01/01/1976	31/12/2500	Pologne
+PM	01/01/1976	31/12/2500	St Pierre et Miquelon
+PN	01/01/1981	31/12/2500	Pitcairn
+PS	01/01/2001	31/12/2500	Territoire Palestinien occupé
+PT	01/01/1976	31/12/1985	Portugal
+PT	01/01/1986	31/12/2500	Portugal
+PW	01/01/1995	31/12/2500	Palaos
+PY	01/01/1976	31/12/2500	Paraguay
+PZ	01/01/1976	31/12/1980	Canal de Panama
+QA	01/01/1976	31/12/2500	Qatar
+QP	01/01/2013	31/12/2500	Haute Mer
+QQ	01/01/1976	31/12/1992	Avitaillement et Soutage
+QQ	01/01/1999	31/12/2500	Avitaillement et Soutage
+QR	01/01/1993	31/12/1998	Avitaillement et Soutage Intra
+QR	01/01/1999	31/12/2500	Avitaillement et Soutage dans le cadre des échanges Intra_UE
+QS	01/01/1993	31/12/1998	Avitaillement et Soutage Extra
+QS	01/01/1999	31/12/2500	Avitaillement et Soutage dans le cadre des échanges avec les pays tiers
+QT	01/01/1976	31/12/1979	Indes occidentales
+QT	01/01/1980	31/12/1982	Indes occidentales
+QT	01/01/1983	31/12/1985	Indes occidentales
+QT	01/01/1986	31/12/1986	Indes occidentales
+QU	01/01/1976	31/12/1992	Pays et territoires non déterminés
+QU	01/01/1993	31/12/2500	Pays et territoires non déterminés
+QV	01/01/1993	31/12/2500	Pays et territoires non déterminés dans le cadre des échanges Intra_UE
+QW	01/01/1993	31/12/2500	Pays et territoires non déterminés dans le cadre des échanges avec les pays tiers
+QX	01/01/1976	31/12/2500	Pays et territoires non précisés pour des raisons économiques ou militaires
+QY	01/01/1976	31/12/1993	Pays secrets Intra
+QY	01/01/1994	31/12/2500	Pays et territoires non précisés pour des raisons commerciales ou militaires dans le cadre des échanges Intra_UE
+QZ	01/01/1976	31/12/1993	Pays secrets Extra
+QZ	01/01/1994	31/12/2500	Pays et territoires non précisés pour des raisons commerciales ou militaires dans le cadre des échanges avec les pays tiers
+RE	01/01/1976	31/12/1996	Réunion
+RO	01/01/1976	31/12/2500	Roumanie
+RU	01/01/1992	31/12/1992	Russie, Fédération de
+RU	01/01/1993	31/12/2500	Russie, Fédération de
+RW	01/01/1976	31/12/2500	Rwanda
+SA	01/01/1976	31/12/2500	Arabie Saoudite
+SB	01/01/1980	31/12/2500	Iles Salomon
+SC	01/01/1976	31/12/2500	Seychelles
+SD	01/01/1976	31/12/2500	Soudan
+SE	01/01/1976	31/12/2500	Suède
+SG	01/01/1976	31/12/2500	Singapour
+SH	01/01/1976	31/12/2500	Ste Hélène, Ascension et Tristan Da Cunha
+SI	01/01/1992	31/12/1992	Slovénie
+SI	01/01/1993	31/12/2500	Slovénie
+SJ	01/01/1995	31/12/1996	Svalbard
+SK	01/01/1993	31/12/2500	Slovaquie
+SL	01/01/1976	31/12/2500	Sierra Leone
+SM	01/01/1994	31/12/2500	St Marin
+SN	01/01/1976	31/12/2500	Sénégal
+SO	01/01/1976	31/12/2500	Somalie
+SR	01/01/1976	31/12/2500	Suriname
+SS	01/01/2013	31/12/2500	Soudan du Sud
+ST	01/01/1976	31/12/2500	Sao Tomé et Principe
+SU	01/01/1976	31/12/1991	Union Soviétique
+SU	01/01/1992	31/12/1992	Union Soviétique
+SV	01/01/1976	31/12/2500	El Salvador
+SX	01/01/2013	31/12/2500	St Martin
+SY	01/01/1976	31/12/2500	République Arabe Syrienne
+SZ	01/01/1976	31/12/2500	Swaziland
+TC	01/01/1976	31/12/2500	Iles Turques et Caïques
+TD	01/01/1976	31/12/2500	Tchad
+TF	01/01/2001	31/12/2500	Terres australes françaises
+TG	01/01/1976	31/12/2500	Togo
+TH	01/01/1976	31/12/2500	Thailande
+TJ	01/01/1992	31/12/1992	Tadjikistan
+TJ	01/01/1993	31/12/2500	Tadjikistan
+TK	01/01/2001	31/12/2500	Tokélaou
+TL	01/01/2003	31/12/2500	Timor oriental
+TM	01/01/1992	31/12/1992	Turkménistan
+TM	01/01/1993	31/12/2500	Turkménistan
+TN	01/01/1976	31/12/2500	Tunisie
+TO	01/01/1976	31/12/2500	Tonga
+TP	01/01/1976	31/12/1976	Timor portugais
+TP	01/01/2001	31/12/2002	Timor Est
+TR	01/01/1976	31/12/2500	Turquie
+TT	01/01/1976	31/12/2500	Trinité et Tobago
+TV	01/01/1980	31/12/2500	Tuvalu
+TW	01/01/1976	31/12/2500	Taiwan
+TZ	01/01/1976	31/12/2500	Tanzanie
+UA	01/01/1992	31/12/1992	Ukraine
+UA	01/01/1993	31/12/2500	Ukraine
+UG	01/01/1976	31/12/2500	Ouganda
+UM	01/01/2001	31/12/2500	Iles mineures éloignées des Etats Unis
+US	01/01/1976	31/12/1994	Etats Unis
+US	01/01/1995	31/12/2500	Etats Unis
+UY	01/01/1976	31/12/2500	Uruguay
+UZ	01/01/1992	31/12/1992	Ouzbékistan
+UZ	01/01/1993	31/12/2500	Ouzbékistan
+VA	01/01/1976	31/12/2500	Saint Siège (Etat de la cité du Vatican)
+VC	01/01/1980	31/12/2500	Iles St Vincent et les Grenadines
+VD	01/01/1976	31/12/1976	Viet Nam du Nord
+VE	01/01/1976	31/12/2500	Vénézuela, République bolivarienne du
+VG	01/01/1987	31/12/1994	Iles Vierges britanniques
+VG	01/01/1995	31/12/2500	Iles Vierges britanniques
+VI	01/01/1976	31/12/2500	Iles Vierges américaines
+VN	01/01/1976	31/12/1976	Viet Nam
+VN	01/01/1977	31/12/2500	Viet Nam
+VU	01/01/1976	31/12/2500	Vanuatu
+WF	01/01/1976	31/12/2500	Wallis et Futuna
+WS	01/01/1976	31/12/2500	Samoa
+XA	01/01/1976	31/12/1991	Océanie américaine
+XA	01/01/1992	31/12/1993	Océanie américaine
+XA	01/01/1994	31/12/1994	Océanie américaine
+XA	01/01/1995	31/12/2000	Océanie américaine
+XB	01/01/1976	31/12/1985	Canaries
+XB	01/01/1986	31/12/1996	Canaries
+XC	01/01/1977	31/12/1985	Ceuta
+XC	01/01/1986	31/12/1998	Ceuta
+XC	01/01/1999	31/12/2500	Ceuta
+XI	01/01/2021	31/12/2500	Royaume-Uni (Irlande du Nord)
+XK	01/01/2005	31/12/2500	Kosovo
+XL	01/01/1999	31/12/2500	Melilla
+XM	01/01/2005	31/12/2006	Monténégro
+XO	01/01/1976	31/12/2000	Océanie australienne
+XP	01/01/1995	31/12/2000	Cisjordanie, bande de Gaza
+XR	01/01/1976	31/12/1991	Régions polaires
+XR	01/01/1992	31/12/2000	Régions polaires
+XS	01/01/2005	31/12/2500	Serbie
+XU	01/01/2021	31/12/2500	Royaume-Uni (à l’exclusion de l’Irlande du Nord)
+XZ	01/01/1976	31/12/2000	Océanie néo-zélandaise
+YD	01/01/1976	31/12/1990	Yemen du Sud
+YE	01/01/1976	31/12/1990	Yemen
+YE	01/01/1991	31/12/2500	Yemen
+YT	01/01/1977	31/12/2013	Mayotte
+YU	01/01/1976	31/12/1991	Yougoslavie
+YU	01/01/1992	31/12/1992	Yougoslavie
+YU	01/01/1993	31/12/2003	Yougoslavie
+ZA	01/01/1976	31/12/1989	Afrique du Sud
+ZA	01/01/1990	31/12/2500	Afrique du Sud
+ZM	01/01/1976	31/12/2500	Zambie
+ZW	01/01/1976	31/12/2500	Zimbabwe
+ZZ	01/01/1976	31/12/1999	Pas de données, code de travail
+ZZ	01/01/2000	31/12/2500	Pas de données, code de travail

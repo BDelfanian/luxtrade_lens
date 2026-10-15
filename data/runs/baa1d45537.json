@@ -1,0 +1,347 @@
+{
+ "run_id": "baa1d45537",
+ "session_id": "eb9mxv",
+ "turn": 1,
+ "created_at": "2026-10-14T20:53:08+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "From which countries did Luxembourg import the most pharmaceutical products in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "ranking",
+   "breakdown": "partner",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "30"
+   ],
+   "product_level": "HS2",
+   "freq": null,
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'pharmaceutical products' interpreted as HS2 code 30"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "30"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'pharmaceutical products' interpreted as HS2 code 30"
+  ]
+ },
+ "assumptions": [
+  "'pharmaceutical products' interpreted as HS2 code 30"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('30')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "98830acc9234b16b1721c322938fea19edca0ac93a729db51e4bce553ba73416",
+ "row_count": 55,
+ "view_kind": "map",
+ "title": "Belgium — imports 2025 (84.6 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "BE",
+    "value": 705557195.0,
+    "share": 84.583445751,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "key": "DE",
+    "value": 46899432.0,
+    "share": 5.6223869453,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "key": "NL",
+    "value": 31472479.0,
+    "share": 3.7729765057,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "key": "SE",
+    "value": 23478250.0,
+    "share": 2.8146141791,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Sweden",
+    "iso3": "SWE"
+   },
+   {
+    "key": "FR",
+    "value": 13555315.0,
+    "share": 1.6250351624,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "IT",
+    "value": 3830245.0,
+    "share": 0.4591765522,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "key": "US",
+    "value": 2137730.0,
+    "share": 0.2562748573,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "key": "AT",
+    "value": 1519721.0,
+    "share": 0.1821868442,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Austria",
+    "iso3": "AUT"
+   },
+   {
+    "key": "IE",
+    "value": 1445623.0,
+    "share": 0.1733038448,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Ireland",
+    "iso3": "IRL"
+   },
+   {
+    "key": "ES",
+    "value": 1015823.0,
+    "share": 0.1217786598,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "key": "OTHER",
+    "value": 2783088.0,
+    "share": 0.333641517,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 460280.0,
+    "share": 0.0551791813,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "DE",
+   "NL",
+   "SE",
+   "FR",
+   "IT",
+   "US",
+   "AT",
+   "IE",
+   "ES"
+  ]
+ },
+ "insight": [
+  "In 2025, Luxembourg imported the most pharmaceutical products from Belgium, Germany, and the Netherlands.",
+  "The total imports amounted to 834.2 million euros, with Belgium alone accounting for 705.6 million euros or 84.6% of the total.",
+  "Germany and the Netherlands followed with 46.9 million euros and 31.5 million euros respectively, making up 5.6% and 3.8% of imports.",
+  "The top three countries together represented 94.0% of Luxembourg's pharmaceutical imports.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 834.2 M€"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Belgium: 705.6 M€, 84.6 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Germany: 46.9 M€, 5.6 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Netherlands: 31.5 M€, 3.8 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Sweden: 23.5 M€, 2.8 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 France: 13.6 M€, 1.6 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 2.8 M€, 0.3 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 460 k €, 0.1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 94.0 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 7787,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=partner"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 136,
+   "outcome": "ok",
+   "detail": "55 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 23,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1383,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3090,
+   "output_tokens": 140,
+   "cache_read_tokens": 2944,
+   "ms": 1764
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 771,
+   "output_tokens": 131,
+   "cache_read_tokens": 0,
+   "ms": 1325
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

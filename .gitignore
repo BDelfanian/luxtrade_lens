@@ -19,17 +19,24 @@ dist/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# Data (raw downloads are reproducible via python -m comext download; never commit them)
-data/raw/
+# Data is shared in git so colleagues can run the app right after cloning:
+# - data/processed/luxtrade.duckdb, the app's only data source, is stored with Git LFS
+#   (see .gitattributes); every other database file stays local.
+# - Parquet files (the data/processed contract and the data/interim extracts) are inputs for
+#   rebuilding the database, not needed to run the app. Recreate them with
+#   python -m luxtrade.ingest.download, then python -m luxtrade.process.build.
+# - Bulk .7z archives are deleted after reduction and never committed.
+data/**/*.parquet
+data/interim/
 data/database/
 *.duckdb
+!data/processed/luxtrade.duckdb
 *.duckdb.wal
 *.duckdb.tmp/
 *.db
 *.sqlite
 *.sqlite3
 *.part
-data/interim/
 *.7z
 *.zip
 
@@ -50,12 +57,3 @@ Thumbs.db
 
 # Logs
 logs/
-
-# Run records (answers are regenerated or replayed locally; demo runs live in demo/runs/)
-data/runs/
-
-# Generated data. The real-data Parquet/JSON files are shared in git so colleagues can skip
-# the ~1 h download. The DuckDB semantic layer (~470 MB, over GitHub's 100 MB file limit) is
-# rebuilt from them in seconds: python -m luxtrade.semantic.build
-data/processed/*.duckdb
-data/processed/*.duckdb.wal

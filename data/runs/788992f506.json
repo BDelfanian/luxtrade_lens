@@ -1,0 +1,3149 @@
+{
+ "run_id": "788992f506",
+ "session_id": "asvm9r",
+ "turn": 4,
+ "created_at": "2026-10-14T14:38:27+00:00",
+ "origin": "projection",
+ "status": "answered",
+ "question": "Les exportations du Luxembourg ont-elles un profil saisonnier ? — projection",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": "76fbf73d42",
+ "interpretation": null,
+ "spec": {
+  "language": "fr",
+  "intent": "forecast",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "M",
+  "period_start": "2002-01",
+  "period_end": "2025-12",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": 12,
+  "view": "auto",
+  "assumptions": [
+   "full series 2002–2025-12 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "full series 2002–2025-12 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "S05",
+   "key": "projection_only",
+   "severity": "warn",
+   "message": "The projection only extends past patterns. It is not an official forecast and includes no prices, policy or company decisions.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2002-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  period,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "409e975cf4bfbf0a01af99cea7e4c5346bfc7ae4eed3c00919c826b3b4545550",
+ "row_count": 288,
+ "view_kind": "forecast",
+ "title": "exportations: 1,36 Md € déc. 2026",
+ "frames": {
+  "main": [
+   {
+    "period": "2002-01-01",
+    "value": 680062210.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-02-01",
+    "value": 727652278.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-03-01",
+    "value": 781694630.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-04-01",
+    "value": 725917106.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-05-01",
+    "value": 740885180.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-06-01",
+    "value": 748667308.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-07-01",
+    "value": 722816248.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-08-01",
+    "value": 563666591.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-09-01",
+    "value": 770103606.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-10-01",
+    "value": 764915819.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-11-01",
+    "value": 762976525.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2002-12-01",
+    "value": 610642512.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-01-01",
+    "value": 743621543.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-02-01",
+    "value": 776671487.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-03-01",
+    "value": 842524348.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-04-01",
+    "value": 805267720.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-05-01",
+    "value": 807742846.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-06-01",
+    "value": 828844825.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-07-01",
+    "value": 782455371.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-08-01",
+    "value": 596501083.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-09-01",
+    "value": 809462046.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-10-01",
+    "value": 831991668.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-11-01",
+    "value": 788392322.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2003-12-01",
+    "value": 666524729.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-01-01",
+    "value": 795830113.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-02-01",
+    "value": 841529975.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-03-01",
+    "value": 905327250.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-04-01",
+    "value": 855643291.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-05-01",
+    "value": 859558967.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-06-01",
+    "value": 882246005.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-07-01",
+    "value": 837796073.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-08-01",
+    "value": 667394615.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-09-01",
+    "value": 852229973.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-10-01",
+    "value": 886411377.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-11-01",
+    "value": 863898020.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2004-12-01",
+    "value": 712134297.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-01-01",
+    "value": 853481355.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-02-01",
+    "value": 908458997.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-03-01",
+    "value": 985482078.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-04-01",
+    "value": 880259221.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-05-01",
+    "value": 928508804.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-06-01",
+    "value": 956454570.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-07-01",
+    "value": 890238528.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-08-01",
+    "value": 686743932.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-09-01",
+    "value": 926944023.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-10-01",
+    "value": 952513692.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-11-01",
+    "value": 888555481.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2005-12-01",
+    "value": 782359330.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-01-01",
+    "value": 917467345.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-02-01",
+    "value": 957896772.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-03-01",
+    "value": 1015795201.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-04-01",
+    "value": 986956672.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-05-01",
+    "value": 965770286.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-06-01",
+    "value": 997929280.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-07-01",
+    "value": 936514586.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-08-01",
+    "value": 740385742.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-09-01",
+    "value": 982301947.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-10-01",
+    "value": 1008962072.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-11-01",
+    "value": 982690159.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2006-12-01",
+    "value": 827329974.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-01-01",
+    "value": 952862460.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-02-01",
+    "value": 996966264.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-03-01",
+    "value": 1085571636.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-04-01",
+    "value": 1020055495.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-05-01",
+    "value": 1064862662.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-06-01",
+    "value": 1067137966.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-07-01",
+    "value": 1001342619.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-08-01",
+    "value": 780656088.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-09-01",
+    "value": 1049495616.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-10-01",
+    "value": 1074544518.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-11-01",
+    "value": 1028241407.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2007-12-01",
+    "value": 878263178.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-01-01",
+    "value": 980340503.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-02-01",
+    "value": 998520987.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-03-01",
+    "value": 1110891546.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-04-01",
+    "value": 1049782379.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-05-01",
+    "value": 1078861843.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-06-01",
+    "value": 1086907776.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-07-01",
+    "value": 1014921481.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-08-01",
+    "value": 778791585.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-09-01",
+    "value": 1046472490.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-10-01",
+    "value": 1105859938.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-11-01",
+    "value": 1069702419.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2008-12-01",
+    "value": 878947070.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-01-01",
+    "value": 763056874.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-02-01",
+    "value": 807387771.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-03-01",
+    "value": 871040824.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-04-01",
+    "value": 803640159.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-05-01",
+    "value": 828302345.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-06-01",
+    "value": 867090192.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-07-01",
+    "value": 819107783.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-08-01",
+    "value": 629849718.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-09-01",
+    "value": 852122494.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-10-01",
+    "value": 840497440.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-11-01",
+    "value": 831206047.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2009-12-01",
+    "value": 686698327.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-01-01",
+    "value": 818543663.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-02-01",
+    "value": 859114500.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-03-01",
+    "value": 939194948.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-04-01",
+    "value": 880228447.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-05-01",
+    "value": 869123401.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-06-01",
+    "value": 900051621.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-07-01",
+    "value": 854837935.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-08-01",
+    "value": 669686756.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-09-01",
+    "value": 901028739.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-10-01",
+    "value": 898063316.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-11-01",
+    "value": 883801857.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2010-12-01",
+    "value": 726324813.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-01-01",
+    "value": 863952785.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-02-01",
+    "value": 895616637.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-03-01",
+    "value": 978762238.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-04-01",
+    "value": 928513031.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-05-01",
+    "value": 937389829.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-06-01",
+    "value": 953184169.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-07-01",
+    "value": 901211392.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-08-01",
+    "value": 704768465.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-09-01",
+    "value": 950241737.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-10-01",
+    "value": 982570717.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-11-01",
+    "value": 940278725.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2011-12-01",
+    "value": 763510340.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-01-01",
+    "value": 902818806.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-02-01",
+    "value": 963929755.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-03-01",
+    "value": 1082678971.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-04-01",
+    "value": 981788724.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-05-01",
+    "value": 988429113.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-06-01",
+    "value": 1004305474.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-07-01",
+    "value": 963367601.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-08-01",
+    "value": 738943827.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-09-01",
+    "value": 998622081.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-10-01",
+    "value": 988954739.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-11-01",
+    "value": 968190304.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2012-12-01",
+    "value": 817970567.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-01-01",
+    "value": 927131096.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-02-01",
+    "value": 978265849.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-03-01",
+    "value": 1054785754.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-04-01",
+    "value": 1002036588.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-05-01",
+    "value": 1011763015.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-06-01",
+    "value": 1025832178.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-07-01",
+    "value": 985919222.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-08-01",
+    "value": 766202247.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-09-01",
+    "value": 1008853552.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-10-01",
+    "value": 1022621409.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-11-01",
+    "value": 999981996.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2013-12-01",
+    "value": 849940401.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-01-01",
+    "value": 950834007.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-02-01",
+    "value": 1000524530.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-03-01",
+    "value": 1077912472.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-04-01",
+    "value": 1026784876.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-05-01",
+    "value": 1010372831.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-06-01",
+    "value": 1045374840.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-07-01",
+    "value": 997122481.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-08-01",
+    "value": 792095158.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-09-01",
+    "value": 1034661568.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-10-01",
+    "value": 1050762893.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-11-01",
+    "value": 1025757165.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2014-12-01",
+    "value": 854463819.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-01-01",
+    "value": 985828182.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-02-01",
+    "value": 998593917.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-03-01",
+    "value": 1088162708.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-04-01",
+    "value": 1046426540.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-05-01",
+    "value": 1050823549.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-06-01",
+    "value": 1041427833.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-07-01",
+    "value": 1017286955.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-08-01",
+    "value": 782926548.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-09-01",
+    "value": 1025299364.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-10-01",
+    "value": 1106298039.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-11-01",
+    "value": 1064105299.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2015-12-01",
+    "value": 892821086.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-01-01",
+    "value": 998893742.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-02-01",
+    "value": 1040162889.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-03-01",
+    "value": 1103493489.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-04-01",
+    "value": 1068950550.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-05-01",
+    "value": 1088645419.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-06-01",
+    "value": 1087804648.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-07-01",
+    "value": 1033732955.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-08-01",
+    "value": 826621021.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-09-01",
+    "value": 1102118613.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-10-01",
+    "value": 1142981429.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-11-01",
+    "value": 1068397766.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2016-12-01",
+    "value": 913197508.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-01-01",
+    "value": 1035010951.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-02-01",
+    "value": 1066189886.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-03-01",
+    "value": 1160762001.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-04-01",
+    "value": 1113948485.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-05-01",
+    "value": 1080395037.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-06-01",
+    "value": 1128463000.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-07-01",
+    "value": 1083314517.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-08-01",
+    "value": 848178109.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-09-01",
+    "value": 1139675426.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-10-01",
+    "value": 1131965950.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-11-01",
+    "value": 1112623712.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2017-12-01",
+    "value": 949472878.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-01-01",
+    "value": 1039908098.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-02-01",
+    "value": 1091705206.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-03-01",
+    "value": 1234455963.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-04-01",
+    "value": 1149262574.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-05-01",
+    "value": 1160777833.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-06-01",
+    "value": 1161408644.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-07-01",
+    "value": 1099747915.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-08-01",
+    "value": 856980907.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-09-01",
+    "value": 1137917486.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-10-01",
+    "value": 1172913679.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-11-01",
+    "value": 1154650822.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2018-12-01",
+    "value": 965270892.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-01-01",
+    "value": 1089351181.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-02-01",
+    "value": 1166558550.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-03-01",
+    "value": 1237075744.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-04-01",
+    "value": 1159753196.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-05-01",
+    "value": 1166105409.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-06-01",
+    "value": 1194136574.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-07-01",
+    "value": 1143823271.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-08-01",
+    "value": 900766586.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-09-01",
+    "value": 1187206024.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-10-01",
+    "value": 1198494316.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-11-01",
+    "value": 1171960885.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2019-12-01",
+    "value": 984768236.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-01-01",
+    "value": 964329741.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-02-01",
+    "value": 1031308729.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-03-01",
+    "value": 1124886131.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-04-01",
+    "value": 727510112.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-05-01",
+    "value": 853332149.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-06-01",
+    "value": 1073687052.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-07-01",
+    "value": 1022382722.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-08-01",
+    "value": 775289365.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-09-01",
+    "value": 1064698731.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-10-01",
+    "value": 1100281568.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-11-01",
+    "value": 1056270490.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2020-12-01",
+    "value": 880900145.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-01-01",
+    "value": 1159116224.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-02-01",
+    "value": 1204839234.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-03-01",
+    "value": 1270668475.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-04-01",
+    "value": 1246160085.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-05-01",
+    "value": 1230329260.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-06-01",
+    "value": 1274445579.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-07-01",
+    "value": 1185338643.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-08-01",
+    "value": 943409412.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-09-01",
+    "value": 1236212567.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-10-01",
+    "value": 1276268647.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-11-01",
+    "value": 1251041957.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2021-12-01",
+    "value": 1022169909.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-01-01",
+    "value": 1250664736.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-02-01",
+    "value": 1290013546.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-03-01",
+    "value": 1445027603.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-04-01",
+    "value": 1329916741.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-05-01",
+    "value": 1357890142.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-06-01",
+    "value": 1375881998.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-07-01",
+    "value": 1298921070.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-08-01",
+    "value": 1022411785.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-09-01",
+    "value": 1367044255.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-10-01",
+    "value": 1390980071.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-11-01",
+    "value": 1343828146.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2022-12-01",
+    "value": 1127419968.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-01-01",
+    "value": 1227768806.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-02-01",
+    "value": 1286619349.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-03-01",
+    "value": 1397158007.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-04-01",
+    "value": 1322895771.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-05-01",
+    "value": 1315176527.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-06-01",
+    "value": 1355131511.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-07-01",
+    "value": 1285710194.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-08-01",
+    "value": 1027677205.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-09-01",
+    "value": 1347131714.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-10-01",
+    "value": 1372923128.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-11-01",
+    "value": 1327520029.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2023-12-01",
+    "value": 1134287846.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-01-01",
+    "value": 1278544685.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-02-01",
+    "value": 1346911814.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-03-01",
+    "value": 1440715619.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-04-01",
+    "value": 1354430129.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-05-01",
+    "value": 1364040619.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-06-01",
+    "value": 1412929799.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-07-01",
+    "value": 1321032558.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-08-01",
+    "value": 1043227612.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-09-01",
+    "value": 1339313960.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-10-01",
+    "value": 1392621112.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-11-01",
+    "value": 1364620926.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2024-12-01",
+    "value": 1141611149.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-01-01",
+    "value": 1282492717.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-02-01",
+    "value": 1369006890.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-03-01",
+    "value": 1509229154.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-04-01",
+    "value": 1398268122.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-05-01",
+    "value": 1431797452.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-06-01",
+    "value": 1452784524.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-07-01",
+    "value": 1332518274.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-08-01",
+    "value": 1031683938.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-09-01",
+    "value": 1624417030.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-10-01",
+    "value": 1648325356.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-11-01",
+    "value": 1579117068.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2025-12-01",
+    "value": 1350359517.0,
+    "kind": "actual",
+    "lo80": null,
+    "hi80": null,
+    "lo95": null,
+    "hi95": null,
+    "flow": "export"
+   },
+   {
+    "period": "2026-01-01",
+    "value": 1523136890.53519,
+    "kind": "projection",
+    "lo80": 1447906814.4986672,
+    "hi80": 1604261799.5474336,
+    "lo95": 1409361736.406395,
+    "hi95": 1642708952.1716697,
+    "flow": "export"
+   },
+   {
+    "period": "2026-02-01",
+    "value": 1594898441.1867843,
+    "kind": "projection",
+    "lo80": 1493723335.0477614,
+    "hi80": 1685922782.8247275,
+    "lo95": 1450700809.5650487,
+    "hi95": 1763401052.9378867,
+    "flow": "export"
+   },
+   {
+    "period": "2026-03-01",
+    "value": 1729673569.3685613,
+    "kind": "projection",
+    "lo80": 1608448245.673812,
+    "hi80": 1857281456.2690382,
+    "lo95": 1544317913.790666,
+    "hi95": 1915998784.237848,
+    "flow": "export"
+   },
+   {
+    "period": "2026-04-01",
+    "value": 1601075940.5665853,
+    "kind": "projection",
+    "lo80": 1463448603.420375,
+    "hi80": 1733288657.951671,
+    "lo95": 1394712072.8601723,
+    "hi95": 1794951218.8626153,
+    "flow": "export"
+   },
+   {
+    "period": "2026-05-01",
+    "value": 1622181420.0898645,
+    "kind": "projection",
+    "lo80": 1473443275.9116406,
+    "hi80": 1767825221.8370795,
+    "lo95": 1395134610.7001183,
+    "hi95": 1845150676.7183802,
+    "flow": "export"
+   },
+   {
+    "period": "2026-06-01",
+    "value": 1668014950.42804,
+    "kind": "projection",
+    "lo80": 1505518843.381221,
+    "hi80": 1817918305.4188516,
+    "lo95": 1414178316.4382424,
+    "hi95": 1888953144.3240376,
+    "flow": "export"
+   },
+   {
+    "period": "2026-07-01",
+    "value": 1577066979.863403,
+    "kind": "projection",
+    "lo80": 1416329423.7966468,
+    "hi80": 1743873568.5974236,
+    "lo95": 1336412574.3180757,
+    "hi95": 1809216471.5952466,
+    "flow": "export"
+   },
+   {
+    "period": "2026-08-01",
+    "value": 1229396494.0865116,
+    "kind": "projection",
+    "lo80": 1094677074.4430447,
+    "hi80": 1365230551.1411767,
+    "lo95": 1028584462.9415289,
+    "hi95": 1439448906.6592677,
+    "flow": "export"
+   },
+   {
+    "period": "2026-09-01",
+    "value": 1645724748.3654363,
+    "kind": "projection",
+    "lo80": 1456390742.1398783,
+    "hi80": 1843456873.1056006,
+    "lo95": 1364096693.3945296,
+    "hi95": 1960485740.562787,
+    "flow": "export"
+   },
+   {
+    "period": "2026-10-01",
+    "value": 1679435203.9529765,
+    "kind": "projection",
+    "lo80": 1488223203.696141,
+    "hi80": 1892650782.7907145,
+    "lo95": 1373379888.7301717,
+    "hi95": 2028340816.720158,
+    "flow": "export"
+   },
+   {
+    "period": "2026-11-01",
+    "value": 1625072436.5299714,
+    "kind": "projection",
+    "lo80": 1424035404.1642847,
+    "hi80": 1826210105.6778433,
+    "lo95": 1330169135.2599862,
+    "hi95": 1944262763.9399624,
+    "flow": "export"
+   },
+   {
+    "period": "2026-12-01",
+    "value": 1359414620.6445363,
+    "kind": "projection",
+    "lo80": 1190174122.9783075,
+    "hi80": 1542814093.8178806,
+    "lo95": 1116561154.0541656,
+    "hi95": 1637412324.6079855,
+    "flow": "export"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Les exportations du Luxembourg en décembre 2025 sont estimées à 1,35 milliard d'euros.",
+  "La projection pour décembre 2026 prévoit des exportations de 1,36 milliard d'euros, avec un intervalle de confiance entre 1,19 et 1,54 milliard d'euros.",
+  "Le modèle utilisé intègre une saisonnalité mensuelle, ce qui suggère un profil saisonnier dans les exportations.",
+  "Cette projection repose sur des tendances passées et ne prend pas en compte les décisions politiques ou économiques futures.",
+  "Les valeurs sont exprimées en euros courants et ne sont pas ajustées pour l'inflation, ce qui limite leur comparabilité dans le temps."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.last_actual",
+   "text": "exportations déc. 2025: 1,35 Md €"
+  },
+  {
+   "key": "export.projection_end",
+   "text": "exportations projection déc. 2026: 1,36 Md € (80 %: 1,19 Md €–1,54 Md €)"
+  },
+  {
+   "key": "method0",
+   "text": "export: ETS (additive damped trend + monthly seasonality, log values); back-test on last 12 months: MAPE 5.9 % (seasonal-naive 6.8 %); 80/95 % intervals"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "export: ETS (additive damped trend + monthly seasonality, log values); back-test on last 12 months: MAPE 5.9 % (seasonal-naive 6.8 %); 80/95 % intervals"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn, S05:warn"
+  },
+  {
+   "node": "query",
+   "ms": 225,
+   "outcome": "ok",
+   "detail": "288 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, S05"
+  },
+  {
+   "node": "analyse",
+   "ms": 798,
+   "outcome": "ok",
+   "detail": "view=forecast; export: ETS (additive damped trend + monthly seasonality, log values); back-test on last 12 months: MAPE 5.9 % (seasonal-naive 6.8 %); 80/95 % intervals"
+  },
+  {
+   "node": "insight",
+   "ms": 1560,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 610,
+   "output_tokens": 145,
+   "cache_read_tokens": 0,
+   "ms": 1543
+  }
+ ],
+ "code_version": "b561356",
+ "error": null
+}

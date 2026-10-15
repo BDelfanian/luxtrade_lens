@@ -1,0 +1,576 @@
+{
+ "run_id": "a91606d664",
+ "session_id": "zt394w",
+ "turn": 2,
+ "created_at": "2026-10-14T13:40:39+00:00",
+ "origin": "preset",
+ "status": "answered",
+ "question": "Welche Waren werden hauptsächlich mit Deutschland gehandelt?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "de",
+  "intent": "drilldown",
+  "breakdown": "product",
+  "partners": [
+   "DE"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "exports and imports (no flow given)",
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "exports and imports (no flow given)",
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.8199113737778263
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND partner IN ('DE')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "84b8381abda7136a0411b40c995119d39a0db4b1e3a3e7767dffdc69592f20b6",
+ "row_count": 42,
+ "view_kind": "treemap",
+ "title": "Maschinen und mechanische Geräte — Exporte 2025 (23,2 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "84",
+    "value": 1148700582.0,
+    "share": 23.2220155017,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Maschinen und mechanische Geräte"
+   },
+   {
+    "key": "85",
+    "value": 733724953.0,
+    "share": 14.832909898,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Elektrische Maschinen und Geräte"
+   },
+   {
+    "key": "39",
+    "value": 542135923.0,
+    "share": 10.9597653255,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Kunststoffe und Waren daraus"
+   },
+   {
+    "key": "87",
+    "value": 461536975.0,
+    "share": 9.3303850943,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Kraftfahrzeuge und Teile davon"
+   },
+   {
+    "key": "73",
+    "value": 271964635.0,
+    "share": 5.4980097241,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Waren aus Eisen oder Stahl"
+   },
+   {
+    "key": "72",
+    "value": 224585770.0,
+    "share": 4.5402033516,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Eisen und Stahl"
+   },
+   {
+    "key": "56",
+    "value": 182666470.0,
+    "share": 3.6927669964,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Watte, Filze und Vliesstoffe"
+   },
+   {
+    "key": "04",
+    "value": 177769985.0,
+    "share": 3.5937801478,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Milch und Milcherzeugnisse; Eier; Honig"
+   },
+   {
+    "key": "22",
+    "value": 175689306.0,
+    "share": 3.5517173503,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Getränke, alkoholische Flüssigkeiten und Essig"
+   },
+   {
+    "key": "48",
+    "value": 168472426.0,
+    "share": 3.4058216297,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Papier und Pappe"
+   },
+   {
+    "key": "OTHER",
+    "value": 815257801.0,
+    "share": 16.4811697577,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Sonstige"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 44096738.0,
+    "share": 0.8914552229,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Vertraulich"
+   },
+   {
+    "key": "84",
+    "value": 1194005193.0,
+    "share": 17.6902820028,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Maschinen und mechanische Geräte"
+   },
+   {
+    "key": "87",
+    "value": 822130800.0,
+    "share": 12.1806218101,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Kraftfahrzeuge und Teile davon"
+   },
+   {
+    "key": "27",
+    "value": 546887342.0,
+    "share": 8.1026375433,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Mineralische Brennstoffe und Mineralöle"
+   },
+   {
+    "key": "39",
+    "value": 532515396.0,
+    "share": 7.8897039823,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Kunststoffe und Waren daraus"
+   },
+   {
+    "key": "85",
+    "value": 526916063.0,
+    "share": 7.8067447285,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Elektrische Maschinen und Geräte"
+   },
+   {
+    "key": "22",
+    "value": 460820181.0,
+    "share": 6.8274736176,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Getränke, alkoholische Flüssigkeiten und Essig"
+   },
+   {
+    "key": "73",
+    "value": 447523488.0,
+    "share": 6.6304709159,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Waren aus Eisen oder Stahl"
+   },
+   {
+    "key": "38",
+    "value": 337557230.0,
+    "share": 5.0012199493,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Verschiedene Erzeugnisse der chemischen Industrie"
+   },
+   {
+    "key": "30",
+    "value": 305421525.0,
+    "share": 4.5251000068,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pharmazeutische Erzeugnisse"
+   },
+   {
+    "key": "40",
+    "value": 298490619.0,
+    "share": 4.4224122778,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Kautschuk und Waren daraus"
+   },
+   {
+    "key": "OTHER",
+    "value": 1271936456.0,
+    "share": 18.8449051379,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Sonstige"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 5293498.0,
+    "share": 0.0784280277,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Vertraulich"
+   },
+   {
+    "key": "84",
+    "value": 2342705775.0,
+    "share": 20.0298039876,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Maschinen und mechanische Geräte"
+   },
+   {
+    "key": "87",
+    "value": 1283667775.0,
+    "share": 10.9751784423,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Kraftfahrzeuge und Teile davon"
+   },
+   {
+    "key": "85",
+    "value": 1260641016.0,
+    "share": 10.7783029003,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Elektrische Maschinen und Geräte"
+   },
+   {
+    "key": "39",
+    "value": 1074651319.0,
+    "share": 9.1881172208,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Kunststoffe und Waren daraus"
+   },
+   {
+    "key": "73",
+    "value": 719488123.0,
+    "share": 6.1515219832,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Waren aus Eisen oder Stahl"
+   },
+   {
+    "key": "22",
+    "value": 636509487.0,
+    "share": 5.4420663478,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Getränke, alkoholische Flüssigkeiten und Essig"
+   },
+   {
+    "key": "27",
+    "value": 583527210.0,
+    "share": 4.9890753514,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Mineralische Brennstoffe und Mineralöle"
+   },
+   {
+    "key": "72",
+    "value": 432577086.0,
+    "share": 3.6984730795,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Eisen und Stahl"
+   },
+   {
+    "key": "40",
+    "value": 429381638.0,
+    "share": 3.6711524498,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Kautschuk und Waren daraus"
+   },
+   {
+    "key": "04",
+    "value": 383889579.0,
+    "share": 3.282201761,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Milch und Milcherzeugnisse; Eier; Honig"
+   },
+   {
+    "key": "OTHER",
+    "value": 2499670111.0,
+    "share": 21.3718269239,
+    "rank": null,
+    "kind": "other",
+    "flow": "total",
+    "label": "Sonstige"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 49390236.0,
+    "share": 0.4222795524,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "total",
+    "label": "Vertraulich"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "85",
+   "87",
+   "39",
+   "27",
+   "73",
+   "22",
+   "72",
+   "56",
+   "38"
+  ]
+ },
+ "insight": [
+  "2025 war Maschinen und mechanische Geräte die wichtigste Warengruppe für die Exporte mit 1,15 Mrd. € (23,2 % von insgesamt 4,95 Mrd. €).",
+  "2025 war Maschinen und mechanische Geräte die wichtigste Warengruppe für die Importe mit 1,19 Mrd. € (17,7 % von insgesamt 6,75 Mrd. €).",
+  "Die drei größten (Maschinen und mechanische Geräte, Kraftfahrzeuge und Teile davon, Elektrische Maschinen und Geräte) machen 41,8 % des Gesamtwerts aus (Gesamthandel).",
+  "Hinweise zu den geltenden Datengrenzen finden Sie unten."
+ ],
+ "insight_source": "template",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "Exporte 2025: 4,95 Mrd. €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Maschinen und mechanische Geräte: 1,15 Mrd. €, 23,2 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Elektrische Maschinen und Geräte: 733,7 Mio. €, 14,8 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Kunststoffe und Waren daraus: 542,1 Mio. €, 11,0 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Kraftfahrzeuge und Teile davon: 461,5 Mio. €, 9,3 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Waren aus Eisen oder Stahl: 272,0 Mio. €, 5,5 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Sonstige: 815,3 Mio. €, 16,5 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Vertraulich: 44,1 Mio. €, 0,9 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 Exporte: 49,0 %"
+  },
+  {
+   "key": "import.total",
+   "text": "Importe 2025: 6,75 Mrd. €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Maschinen und mechanische Geräte: 1,19 Mrd. €, 17,7 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Kraftfahrzeuge und Teile davon: 822,1 Mio. €, 12,2 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Mineralische Brennstoffe und Mineralöle: 546,9 Mio. €, 8,1 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Kunststoffe und Waren daraus: 532,5 Mio. €, 7,9 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Elektrische Maschinen und Geräte: 526,9 Mio. €, 7,8 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Sonstige: 1,27 Mrd. €, 18,8 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Vertraulich: 5,3 Mio. €, 0,1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 Importe: 38,0 %"
+  },
+  {
+   "key": "total.total",
+   "text": "Gesamthandel 2025: 11,70 Mrd. €"
+  },
+  {
+   "key": "total.rank1",
+   "text": "#1 Maschinen und mechanische Geräte: 2,34 Mrd. €, 20,0 %"
+  },
+  {
+   "key": "total.rank2",
+   "text": "#2 Kraftfahrzeuge und Teile davon: 1,28 Mrd. €, 11,0 %"
+  },
+  {
+   "key": "total.rank3",
+   "text": "#3 Elektrische Maschinen und Geräte: 1,26 Mrd. €, 10,8 %"
+  },
+  {
+   "key": "total.rank4",
+   "text": "#4 Kunststoffe und Waren daraus: 1,07 Mrd. €, 9,2 %"
+  },
+  {
+   "key": "total.rank5",
+   "text": "#5 Waren aus Eisen oder Stahl: 719,5 Mio. €, 6,2 %"
+  },
+  {
+   "key": "total.other",
+   "text": "Sonstige: 2,50 Mrd. €, 21,4 %"
+  },
+  {
+   "key": "total.confidential",
+   "text": "Vertraulich: 49,4 Mio. €, 0,4 %"
+  },
+  {
+   "key": "total.top3_share",
+   "text": "top 3 Gesamthandel: 41,8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 123,
+   "outcome": "ok",
+   "detail": "42 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 67,
+   "outcome": "ok",
+   "detail": "view=treemap; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 26,
+   "outcome": "ok",
+   "detail": "no LLM configured: template insight"
+  }
+ ],
+ "llm_usage": [],
+ "code_version": "bd0380e",
+ "error": null
+}

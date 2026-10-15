@@ -1,0 +1,247 @@
+{
+ "run_id": "8a9617e8c6",
+ "session_id": "ds78h4",
+ "turn": 1,
+ "created_at": "2026-10-14T20:29:30+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Quelle a été l'évolution mensuelle des importations de combustibles minéraux en 2022 ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "fr",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "27"
+   ],
+   "product_level": "HS2",
+   "freq": "M",
+   "period_start": "2022",
+   "period_end": "2022",
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "fr",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "M",
+  "period_start": "2022",
+  "period_end": "2022",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  period AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2022-01-01' AS DATE)\n  AND period < CAST('2023-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  period,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "4668325817dd0399c90651f6bbfff505eaac258af0b595a47fdbda2ecb4536c5",
+ "row_count": 12,
+ "view_kind": "line",
+ "title": "importations: −5,6 % (janv. 2022–déc. 2022)",
+ "frames": {
+  "main": [
+   {
+    "period": "2022-01-01",
+    "flow": "import",
+    "value": 326874818.0
+   },
+   {
+    "period": "2022-02-01",
+    "flow": "import",
+    "value": 265969111.0
+   },
+   {
+    "period": "2022-03-01",
+    "flow": "import",
+    "value": 384974459.0
+   },
+   {
+    "period": "2022-04-01",
+    "flow": "import",
+    "value": 388244430.0
+   },
+   {
+    "period": "2022-05-01",
+    "flow": "import",
+    "value": 329624825.0
+   },
+   {
+    "period": "2022-06-01",
+    "flow": "import",
+    "value": 342250483.0
+   },
+   {
+    "period": "2022-07-01",
+    "flow": "import",
+    "value": 307950768.0
+   },
+   {
+    "period": "2022-08-01",
+    "flow": "import",
+    "value": 318961484.0
+   },
+   {
+    "period": "2022-09-01",
+    "flow": "import",
+    "value": 366294565.0
+   },
+   {
+    "period": "2022-10-01",
+    "flow": "import",
+    "value": 364362461.0
+   },
+   {
+    "period": "2022-11-01",
+    "flow": "import",
+    "value": 292030311.0
+   },
+   {
+    "period": "2022-12-01",
+    "flow": "import",
+    "value": 308437688.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Les importations de combustibles minéraux au Luxembourg ont diminué de 5,6 % entre janvier et décembre 2022.",
+  "En janvier 2022, elles s'élevaient à 326,9 millions d'euros et ont atteint un pic en avril à 388,2 millions d'euros.",
+  "En décembre 2022, les importations étaient de 308,4 millions d'euros, soit une baisse par rapport au début de l'année.",
+  "Cette évolution mensuelle montre une fluctuation avec un sommet au printemps, suivie d'une baisse vers la fin de l'année.",
+  "Les valeurs sont exprimées en euros courants, sans ajustement pour les variations de prix, ce qui limite la comparaison réelle du volume importé."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "importations.start",
+   "text": "importations janv. 2022: 326,9 M€"
+  },
+  {
+   "key": "importations.end",
+   "text": "importations déc. 2022: 308,4 M€"
+  },
+  {
+   "key": "importations.change",
+   "text": "importations change janv. 2022–déc. 2022: −5,6 %"
+  },
+  {
+   "key": "importations.peak",
+   "text": "importations peak avr. 2022: 388,2 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 64383,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 263,
+   "outcome": "ok",
+   "detail": "12 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 15,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1511,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3401,
+   "output_tokens": 128,
+   "cache_read_tokens": 1920,
+   "ms": 1655
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 583,
+   "output_tokens": 154,
+   "cache_read_tokens": 0,
+   "ms": 1425
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

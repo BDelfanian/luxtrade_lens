@@ -1,0 +1,211 @@
+{
+ "run_id": "bf07ed4daa",
+ "session_id": "8w7ang",
+ "turn": 1,
+ "created_at": "2026-10-14T20:35:06+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Tell me about trade",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": null,
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [
+   {
+    "dimension": "intent",
+    "text": "unclear which partner, product or flow"
+   }
+  ],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": null,
+  "freq": null,
+  "period_start": null,
+  "period_end": null,
+  "flow": null,
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's exports of wood products (HS4 4407) to Germany in 2025?",
+   "note": "exports of a specific product to a specific partner in 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [
+     "DE"
+    ],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [
+     "4407"
+    ],
+    "product_level": "HS4",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "How have Luxembourg's imports of wood veneer sheets (HS4 4408) from the EU27 evolved from 2010 to 2025?",
+   "note": "imports of a specific product from the EU27 over time",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [
+     "4408"
+    ],
+    "product_level": "HS4",
+    "freq": "A",
+    "period_start": "2010",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was the trade balance of Luxembourg in HS4 wood products (4407, 4408, 4409) in 2025?",
+   "note": "trade balance for a group of related products in 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "4407",
+     "4408",
+     "4409"
+    ],
+    "product_level": "HS4",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Which partner or product, and which period?",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 11875,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "optimise",
+   "ms": 11999,
+   "outcome": "routed",
+   "detail": "the question is unclear: unclear which partner, product or flow · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2672,
+   "output_tokens": 139,
+   "cache_read_tokens": 1920,
+   "ms": 1463
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4850,
+   "output_tokens": 454,
+   "cache_read_tokens": 0,
+   "ms": 3481
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

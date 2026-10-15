@@ -1,0 +1,203 @@
+{
+ "run_id": "d371210702",
+ "session_id": "kzxs5q",
+ "turn": 1,
+ "created_at": "2026-10-14T21:08:54+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Tell me about trade",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": null,
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [
+   {
+    "dimension": "intent",
+    "text": "unclear which partner, product or flow"
+   }
+  ],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": null,
+  "freq": null,
+  "period_start": null,
+  "period_end": null,
+  "flow": null,
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's top export partners in 2025?",
+   "note": "exports by partner, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "ranking",
+    "breakdown": "partner",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": 10,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "bar",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "How did Luxembourg's imports of wood products (HS 44) evolve from 2010 to 2025?",
+   "note": "imports of HS chapter 44 over time",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "44"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2010",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was Luxembourg's trade balance in goods with the EU27 in 2025?",
+   "note": "trade balance with EU27, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "kpi",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Which partner or product, and which period?",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 5830,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "optimise",
+   "ms": 6285,
+   "outcome": "routed",
+   "detail": "the question is unclear: unclear which partner, product or flow · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2672,
+   "output_tokens": 139,
+   "cache_read_tokens": 2432,
+   "ms": 1359
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4850,
+   "output_tokens": 394,
+   "cache_read_tokens": 4608,
+   "ms": 2747
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

@@ -1,0 +1,625 @@
+{
+ "run_id": "bfc41a243b",
+ "session_id": "83mn2u",
+ "turn": 1,
+ "created_at": "2026-10-14T21:22:42+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Welche Waren handelt Luxemburg hauptsächlich mit Portugal?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "de",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [
+    "PT"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": null,
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "de",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "PT"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "HS2 chapters (no level given)",
+   "exports and imports (no flow given)",
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "HS2 chapters (no level given)",
+  "exports and imports (no flow given)",
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND partner IN ('PT')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "89a511dede3a71bb03c560e8a46214df30bf1824bceaaad9f7d18be1ee3dcdb4",
+ "row_count": 151,
+ "view_kind": "bar",
+ "title": "Maschinen und mechanische Geräte — Exporte 2025 (14,7 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "84",
+    "value": 11849558.0,
+    "share": 14.676758956,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Maschinen und mechanische Geräte"
+   },
+   {
+    "key": "24",
+    "value": 7667302.0,
+    "share": 9.4966532335,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Tabak und verarbeitete tabakersatzstoffe"
+   },
+   {
+    "key": "30",
+    "value": 7538715.0,
+    "share": 9.3373864994,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Pharmazeutische Erzeugnisse"
+   },
+   {
+    "key": "87",
+    "value": 7278221.0,
+    "share": 9.0147409081,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Kraftfahrzeuge und Teile davon"
+   },
+   {
+    "key": "73",
+    "value": 6805789.0,
+    "share": 8.4295907626,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Waren aus Eisen oder Stahl"
+   },
+   {
+    "key": "39",
+    "value": 6463161.0,
+    "share": 8.0052147169,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Kunststoffe und Waren daraus"
+   },
+   {
+    "key": "72",
+    "value": 6182846.0,
+    "share": 7.6580190083,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Eisen und Stahl"
+   },
+   {
+    "key": "85",
+    "value": 3981500.0,
+    "share": 4.9314510957,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Elektrische Maschinen und Geräte"
+   },
+   {
+    "key": "33",
+    "value": 3694474.0,
+    "share": 4.5759432012,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Ätherische öle und resinoide; zubereitete riech-, körperpflege- oder schönheitsmittel"
+   },
+   {
+    "key": "40",
+    "value": 2683665.0,
+    "share": 3.3239640098,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Kautschuk und Waren daraus"
+   },
+   {
+    "key": "OTHER",
+    "value": 16518335.0,
+    "share": 20.4594653361,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Sonstige"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 73319.0,
+    "share": 0.0908122725,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Vertraulich"
+   },
+   {
+    "key": "22",
+    "value": 16758294.0,
+    "share": 17.2909278926,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Getränke, alkoholische Flüssigkeiten und Essig"
+   },
+   {
+    "key": "03",
+    "value": 6064108.0,
+    "share": 6.2568453663,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Fische und krebstiere, weichtiere und andere wirbellose wassertiere"
+   },
+   {
+    "key": "09",
+    "value": 5974591.0,
+    "share": 6.1644832206,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Kaffee, tee, mate und gewürze"
+   },
+   {
+    "key": "16",
+    "value": 5596927.0,
+    "share": 5.7748158122,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Zubereitungen von fleisch, fischen oder von krebstieren, weichtieren und anderen wirbellosen wassertieren"
+   },
+   {
+    "key": "02",
+    "value": 5497521.0,
+    "share": 5.6722503615,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Fleisch und geniessbare schlachtnebenerzeugnisse"
+   },
+   {
+    "key": "94",
+    "value": 4134075.0,
+    "share": 4.2654695477,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Möbel, Bettwaren und Leuchten"
+   },
+   {
+    "key": "19",
+    "value": 4118245.0,
+    "share": 4.249136418,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Zubereitungen aus getreide, mehl, stärke oder milch; backwaren"
+   },
+   {
+    "key": "61",
+    "value": 4094389.0,
+    "share": 4.2245221956,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Kleidung und bekleidungszubehör, aus gewirken oder gestricken"
+   },
+   {
+    "key": "20",
+    "value": 3383468.0,
+    "share": 3.4910057799,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Zubereitungen von gemüse, früchten, nüssen oder anderen pflanzenteilen"
+   },
+   {
+    "key": "04",
+    "value": 3017655.0,
+    "share": 3.1135660354,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Milch und Milcherzeugnisse; Eier; Honig"
+   },
+   {
+    "key": "OTHER",
+    "value": 38193340.0,
+    "share": 39.407250399,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Sonstige"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 86963.0,
+    "share": 0.0897269712,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Vertraulich"
+   },
+   {
+    "key": "22",
+    "value": 16800464.0,
+    "share": 9.4567143269,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Getränke, alkoholische Flüssigkeiten und Essig"
+   },
+   {
+    "key": "84",
+    "value": 13621330.0,
+    "share": 7.6672302957,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Maschinen und mechanische Geräte"
+   },
+   {
+    "key": "73",
+    "value": 9436521.0,
+    "share": 5.3116677811,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Waren aus Eisen oder Stahl"
+   },
+   {
+    "key": "87",
+    "value": 8766181.0,
+    "share": 4.9343440428,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Kraftfahrzeuge und Teile davon"
+   },
+   {
+    "key": "39",
+    "value": 8010087.0,
+    "share": 4.50875074,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Kunststoffe und Waren daraus"
+   },
+   {
+    "key": "24",
+    "value": 7667302.0,
+    "share": 4.3158025083,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Tabak und verarbeitete tabakersatzstoffe"
+   },
+   {
+    "key": "30",
+    "value": 7547944.0,
+    "share": 4.248617786,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Pharmazeutische Erzeugnisse"
+   },
+   {
+    "key": "72",
+    "value": 6442350.0,
+    "share": 3.6262964847,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Eisen und Stahl"
+   },
+   {
+    "key": "85",
+    "value": 6236003.0,
+    "share": 3.510147036,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Elektrische Maschinen und Geräte"
+   },
+   {
+    "key": "03",
+    "value": 6081260.0,
+    "share": 3.4230446592,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Fische und krebstiere, weichtiere und andere wirbellose wassertiere"
+   },
+   {
+    "key": "OTHER",
+    "value": 86886737.0,
+    "share": 48.9071641476,
+    "rank": null,
+    "kind": "other",
+    "flow": "total",
+    "label": "Sonstige"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 160282.0,
+    "share": 0.0902201919,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "total",
+    "label": "Vertraulich"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "22",
+   "24",
+   "03",
+   "30",
+   "73",
+   "09",
+   "87",
+   "16",
+   "39"
+  ]
+ },
+ "insight": [
+  "Luxemburg handelt mit Portugal hauptsächlich Maschinen und mechanische Geräte, Tabak und verarbeitete Tabakersatzstoffe sowie pharmazeutische Erzeugnisse.",
+  "Die Exporte nach Portugal betragen 80,7 Millionen Euro im Jahr 2025, wobei Maschinen und mechanische Geräte mit 11,8 Millionen Euro den größten Anteil von 14,7 % ausmachen.",
+  "Die Importe aus Portugal sind mit 96,9 Millionen Euro höher als die Exporte, wobei Getränke, alkoholische Flüssigkeiten und Essig mit 16,8 Millionen Euro den größten Posten bilden.",
+  "Der Gesamthandel zwischen Luxemburg und Portugal beläuft sich auf 177,7 Millionen Euro im Jahr 2025, wobei die Top 3 Handelswaren nur 22,4 % des Gesamtvolumens ausmachen.",
+  "Die Werte sind nominal und nicht inflationsbereinigt, was die Vergleichbarkeit über die Zeit einschränkt."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "Exporte 2025: 80,7 Mio. €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Maschinen und mechanische Geräte: 11,8 Mio. €, 14,7 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Tabak und verarbeitete tabakersatzstoffe: 7,7 Mio. €, 9,5 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Pharmazeutische Erzeugnisse: 7,5 Mio. €, 9,3 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Kraftfahrzeuge und Teile davon: 7,3 Mio. €, 9,0 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Waren aus Eisen oder Stahl: 6,8 Mio. €, 8,4 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Sonstige: 16,5 Mio. €, 20,5 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Vertraulich: 73 Tsd. €, 0,1 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 Exporte: 33,5 %"
+  },
+  {
+   "key": "import.total",
+   "text": "Importe 2025: 96,9 Mio. €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Getränke, alkoholische Flüssigkeiten und Essig: 16,8 Mio. €, 17,3 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Fische und krebstiere, weichtiere und andere wirbellose wassertiere: 6,1 Mio. €, 6,3 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Kaffee, tee, mate und gewürze: 6,0 Mio. €, 6,2 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Zubereitungen von fleisch, fischen oder von krebstieren, weichtieren und anderen wirbellosen wassertieren: 5,6 Mio. €, 5,8 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Fleisch und geniessbare schlachtnebenerzeugnisse: 5,5 Mio. €, 5,7 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Sonstige: 38,2 Mio. €, 39,4 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Vertraulich: 87 Tsd. €, 0,1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 Importe: 29,7 %"
+  },
+  {
+   "key": "total.total",
+   "text": "Gesamthandel 2025: 177,7 Mio. €"
+  },
+  {
+   "key": "total.rank1",
+   "text": "#1 Getränke, alkoholische Flüssigkeiten und Essig: 16,8 Mio. €, 9,5 %"
+  },
+  {
+   "key": "total.rank2",
+   "text": "#2 Maschinen und mechanische Geräte: 13,6 Mio. €, 7,7 %"
+  },
+  {
+   "key": "total.rank3",
+   "text": "#3 Waren aus Eisen oder Stahl: 9,4 Mio. €, 5,3 %"
+  },
+  {
+   "key": "total.rank4",
+   "text": "#4 Kraftfahrzeuge und Teile davon: 8,8 Mio. €, 4,9 %"
+  },
+  {
+   "key": "total.rank5",
+   "text": "#5 Kunststoffe und Waren daraus: 8,0 Mio. €, 4,5 %"
+  },
+  {
+   "key": "total.other",
+   "text": "Sonstige: 86,9 Mio. €, 48,9 %"
+  },
+  {
+   "key": "total.confidential",
+   "text": "Vertraulich: 160 Tsd. €, 0,1 %"
+  },
+  {
+   "key": "total.top3_share",
+   "text": "top 3 Gesamthandel: 22,4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 3769,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 76,
+   "outcome": "ok",
+   "detail": "151 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 29,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 2146,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3782,
+   "output_tokens": 125,
+   "cache_read_tokens": 1920,
+   "ms": 1270
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1454,
+   "output_tokens": 194,
+   "cache_read_tokens": 0,
+   "ms": 2117
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

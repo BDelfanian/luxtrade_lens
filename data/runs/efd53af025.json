@@ -1,0 +1,143 @@
+{
+ "run_id": "efd53af025",
+ "session_id": "6hrzyf",
+ "turn": 2,
+ "created_at": "2026-10-14T14:46:25+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "How has Luxembourg's trade balance with China evolved since 2010?\"",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": null,
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's exports of goods to China annually from 2010 to 2025?",
+   "note": "exports only, 2010-2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "CN"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2010",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What were Luxembourg's imports of goods from China annually from 2010 to 2025?",
+   "note": "imports only, 2010-2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "CN"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2010",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was Luxembourg's trade balance in machinery and mechanical appliances with China from 2010 to 2025?",
+   "note": "trade balance for HS2 chapter 84, 2010-2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "CN"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "84"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2010",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Specify the partner and period clearly, e.g. China and 2010-2025.",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "optimise",
+   "ms": 4213,
+   "outcome": "routed",
+   "detail": "the user asked for more precise versions of the question before running it · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1618,
+   "output_tokens": 420,
+   "cache_read_tokens": 0,
+   "ms": 3485
+  }
+ ],
+ "code_version": "b561356",
+ "error": null
+}

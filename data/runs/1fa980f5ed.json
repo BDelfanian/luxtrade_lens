@@ -1,0 +1,613 @@
+{
+ "run_id": "1fa980f5ed",
+ "session_id": "w2dxd3",
+ "turn": 1,
+ "created_at": "2026-10-14T17:25:32+00:00",
+ "origin": "overview",
+ "status": "answered",
+ "question": "Quels sont les principaux partenaires commerciaux du Luxembourg ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "fr",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "exports and imports (no flow given)",
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "exports and imports (no flow given)",
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE) AND period < CAST('2026-01-01' AS DATE)\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "ec6b19d82edfcb11e49f9e80f6e014ae9d0d6d7e2f72a003f9bf6349f38ce4ab",
+ "row_count": 50,
+ "view_kind": "map",
+ "title": "Allemagne — exportations 2025 (29,1 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "DE",
+    "value": 4946601564.0,
+    "share": 29.0805499811,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Allemagne",
+    "iso3": "DEU"
+   },
+   {
+    "key": "FR",
+    "value": 4379159767.0,
+    "share": 25.7446193779,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "BE",
+    "value": 2852575965.0,
+    "share": 16.7699938739,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Belgique",
+    "iso3": "BEL"
+   },
+   {
+    "key": "NL",
+    "value": 943544291.0,
+    "share": 5.5469975818,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Pays-Bas",
+    "iso3": "NLD"
+   },
+   {
+    "key": "IT",
+    "value": 830158106.0,
+    "share": 4.8804121337,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Italie",
+    "iso3": "ITA"
+   },
+   {
+    "key": "ES",
+    "value": 623043242.0,
+    "share": 3.6628056465,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Espagne",
+    "iso3": "ESP"
+   },
+   {
+    "key": "PL",
+    "value": 465729913.0,
+    "share": 2.737977142,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Pologne",
+    "iso3": "POL"
+   },
+   {
+    "key": "US",
+    "value": 435387769.0,
+    "share": 2.5595988708,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "États-Unis",
+    "iso3": "USA"
+   },
+   {
+    "key": "GB",
+    "value": 339706960.0,
+    "share": 1.9971014648,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Royaume-Uni",
+    "iso3": "GBR"
+   },
+   {
+    "key": "AT",
+    "value": 318131765.0,
+    "share": 1.8702631641,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Autriche",
+    "iso3": "AUT"
+   },
+   {
+    "key": "OTHER",
+    "value": 847205134.0,
+    "share": 4.9806298172,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Autres",
+    "iso3": null
+   },
+   {
+    "key": "UNDISCLOSED",
+    "value": 28755566.0,
+    "share": 0.1690509461,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Non divulgué / non spécifié",
+    "iso3": null
+   },
+   {
+    "key": "BE",
+    "value": 8977002021.0,
+    "share": 34.0037955457,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgique",
+    "iso3": "BEL"
+   },
+   {
+    "key": "DE",
+    "value": 6749497791.0,
+    "share": 25.5662795201,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Allemagne",
+    "iso3": "DEU"
+   },
+   {
+    "key": "FR",
+    "value": 3378803271.0,
+    "share": 12.798497243,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "NL",
+    "value": 2042434364.0,
+    "share": 7.7364938057,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pays-Bas",
+    "iso3": "NLD"
+   },
+   {
+    "key": "IT",
+    "value": 1005841659.0,
+    "share": 3.8100062854,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Italie",
+    "iso3": "ITA"
+   },
+   {
+    "key": "US",
+    "value": 960650282.0,
+    "share": 3.638826827,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "États-Unis",
+    "iso3": "USA"
+   },
+   {
+    "key": "JP",
+    "value": 879534816.0,
+    "share": 3.3315712739,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Japon",
+    "iso3": "JPN"
+   },
+   {
+    "key": "CN",
+    "value": 812215351.0,
+    "share": 3.0765733003,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Chine",
+    "iso3": "CHN"
+   },
+   {
+    "key": "PL",
+    "value": 466418440.0,
+    "share": 1.7667365158,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pologne",
+    "iso3": "POL"
+   },
+   {
+    "key": "ES",
+    "value": 240018585.0,
+    "share": 0.9091613071,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Espagne",
+    "iso3": "ESP"
+   },
+   {
+    "key": "OTHER",
+    "value": 876876744.0,
+    "share": 3.3215028193,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Autres",
+    "iso3": null
+   },
+   {
+    "key": "UNDISCLOSED",
+    "value": 10706667.0,
+    "share": 0.0405555568,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Non divulgué / non spécifié",
+    "iso3": null
+   },
+   {
+    "key": "BE",
+    "value": 11829577986.0,
+    "share": 27.2508131237,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Belgique",
+    "iso3": "BEL"
+   },
+   {
+    "key": "DE",
+    "value": 11696099355.0,
+    "share": 26.9433295234,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Allemagne",
+    "iso3": "DEU"
+   },
+   {
+    "key": "FR",
+    "value": 7757963038.0,
+    "share": 17.8713730295,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "NL",
+    "value": 2985978655.0,
+    "share": 6.8785502251,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Pays-Bas",
+    "iso3": "NLD"
+   },
+   {
+    "key": "IT",
+    "value": 1835999765.0,
+    "share": 4.2294396766,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Italie",
+    "iso3": "ITA"
+   },
+   {
+    "key": "US",
+    "value": 1396038051.0,
+    "share": 3.2159365352,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "États-Unis",
+    "iso3": "USA"
+   },
+   {
+    "key": "CN",
+    "value": 990534529.0,
+    "share": 2.2818118596,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Chine",
+    "iso3": "CHN"
+   },
+   {
+    "key": "PL",
+    "value": 932148353.0,
+    "share": 2.1473124909,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Pologne",
+    "iso3": "POL"
+   },
+   {
+    "key": "JP",
+    "value": 915056537.0,
+    "share": 2.1079394985,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Japon",
+    "iso3": "JPN"
+   },
+   {
+    "key": "ES",
+    "value": 863061827.0,
+    "share": 1.9881636175,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Espagne",
+    "iso3": "ESP"
+   },
+   {
+    "key": "OTHER",
+    "value": 2168079704.0,
+    "share": 4.994424562,
+    "rank": null,
+    "kind": "other",
+    "flow": "total",
+    "label": "Autres",
+    "iso3": null
+   },
+   {
+    "key": "UNDISCLOSED",
+    "value": 39462233.0,
+    "share": 0.090905858,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "total",
+    "label": "Non divulgué / non spécifié",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "DE",
+   "BE",
+   "FR",
+   "NL",
+   "IT",
+   "US",
+   "ES",
+   "JP",
+   "PL",
+   "CN"
+  ]
+ },
+ "insight": [
+  "Les principaux partenaires commerciaux du Luxembourg en 2025 sont la Belgique, l'Allemagne et la France.",
+  "Le commerce total avec ces trois pays représente 72,1 % du commerce total de 43,41 milliards d'euros.",
+  "La Belgique est le premier partenaire commercial avec 11,83 milliards d'euros, suivie de près par l'Allemagne avec 11,70 milliards d'euros.",
+  "Les exportations vers l'Allemagne représentent 29,1 % du total des exportations, tandis que la Belgique domine les importations avec 34,0 %.",
+  "Les valeurs sont exprimées en euros courants et ne tiennent pas compte des variations de prix."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exportations 2025: 17,01 Md €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Allemagne: 4,95 Md €, 29,1 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 France: 4,38 Md €, 25,7 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Belgique: 2,85 Md €, 16,8 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Pays-Bas: 943,5 M€, 5,5 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Italie: 830,2 M€, 4,9 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Autres: 847,2 M€, 5,0 %"
+  },
+  {
+   "key": "export.undisclosed",
+   "text": "Non divulgué / non spécifié: 28,8 M€, 0,2 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exportations: 71,6 %"
+  },
+  {
+   "key": "import.total",
+   "text": "importations 2025: 26,40 Md €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Belgique: 8,98 Md €, 34,0 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Allemagne: 6,75 Md €, 25,6 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 France: 3,38 Md €, 12,8 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Pays-Bas: 2,04 Md €, 7,7 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Italie: 1,01 Md €, 3,8 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Autres: 876,9 M€, 3,3 %"
+  },
+  {
+   "key": "import.undisclosed",
+   "text": "Non divulgué / non spécifié: 10,7 M€, 0,0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 importations: 72,4 %"
+  },
+  {
+   "key": "total.total",
+   "text": "commerce total 2025: 43,41 Md €"
+  },
+  {
+   "key": "total.rank1",
+   "text": "#1 Belgique: 11,83 Md €, 27,3 %"
+  },
+  {
+   "key": "total.rank2",
+   "text": "#2 Allemagne: 11,70 Md €, 26,9 %"
+  },
+  {
+   "key": "total.rank3",
+   "text": "#3 France: 7,76 Md €, 17,9 %"
+  },
+  {
+   "key": "total.rank4",
+   "text": "#4 Pays-Bas: 2,99 Md €, 6,9 %"
+  },
+  {
+   "key": "total.rank5",
+   "text": "#5 Italie: 1,84 Md €, 4,2 %"
+  },
+  {
+   "key": "total.other",
+   "text": "Autres: 2,17 Md €, 5,0 %"
+  },
+  {
+   "key": "total.undisclosed",
+   "text": "Non divulgué / non spécifié: 39,5 M€, 0,1 %"
+  },
+  {
+   "key": "total.top3_share",
+   "text": "top 3 commerce total: 72,1 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 96,
+   "outcome": "ok",
+   "detail": "50 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 76,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 2345,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1388,
+   "output_tokens": 139,
+   "cache_read_tokens": 0,
+   "ms": 2320
+  }
+ ],
+ "code_version": "7bec23c",
+ "error": null
+}

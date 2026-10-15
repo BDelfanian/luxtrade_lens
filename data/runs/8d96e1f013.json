@@ -1,0 +1,332 @@
+{
+ "run_id": "8d96e1f013",
+ "session_id": "f8kbu8",
+ "turn": 1,
+ "created_at": "2026-10-14T20:27:05+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "What were the top 10 imported products at CN8 level in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": "CN8",
+   "freq": "A",
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": 10,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "CN8",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "5.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 4.994863690725844
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  cn8 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "dafe932a750e87251a9d44d0118c40ff58eb36d245ab18b3fc77663e15d0881e",
+ "row_count": 8752,
+ "view_kind": "bar",
+ "title": "Industrial robots — imports 2025 (3.0 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "84287000",
+    "value": 747206091.0,
+    "share": 2.9771605064,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Industrial robots"
+   },
+   {
+    "key": "85171300",
+    "value": 701316175.0,
+    "share": 2.7943171822,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Smartphones for wireless networks"
+   },
+   {
+    "key": "30049000",
+    "value": 700573222.0,
+    "share": 2.7913569676,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Medicaments consisting of mixed or unmixed products for therapeutic or prophylactic purposes, put up in measured doses \"incl. those for transdermal administration\" or in forms or packings for retail sale (excl. containing antibiotics, hormones or steroids used as hormones, alkaloids, provitamins, vitamins, their derivatives or antimalarial active principles)"
+   },
+   {
+    "key": "87038010",
+    "value": 405070207.0,
+    "share": 1.613957698,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Motor cars and other motor vehicles principally designed for the transport of <10 persons, incl. station wagons and racing cars, with only electric motor for propulsion, new (excl. vehicles for travelling on snow and other specially designed vehicles of subheading 8703.10)"
+   },
+   {
+    "key": "87032319",
+    "value": 324399604.0,
+    "share": 1.292534551,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Motor cars and other motor vehicles principally designed for the transport of <10 persons, incl. station wagons and racing cars, with only spark-ignition internal combustion reciprocating piston engine, of a cylinder capacity > 1.500 cm³ but <= 3.000 cm³, new (excl. those of subheading 8703.10 and motor caravans)"
+   },
+   {
+    "key": "27102011",
+    "value": 304759747.0,
+    "share": 1.2142817004,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Gas oils of >= 70% of petroleum or bituminous minerals, with a sulphur content of <= 0,001% by weight, containing biodiesel"
+   },
+   {
+    "key": "27101942",
+    "value": 280711858.0,
+    "share": 1.118465531,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Gas oils of petroleum or bituminous minerals, with a sulphur content of <= 0,001% by weight, having a bio-based carbon content of => 80% by weight (excl. containing biodiesel, and for undergoing chemical transformation)"
+   },
+   {
+    "key": "87033219",
+    "value": 278086296.0,
+    "share": 1.1080042679,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Motor cars and other motor vehicles, principally designed for the transport of <10 persons, incl. station wagons, with only diesel engine of a cylinder capacity > 1.500 cm³ but <= 2.500 cm³, new (excl. motor caravans and vehicles for travelling on snow and other specially designed vehicles of subheading 8703.10)"
+   },
+   {
+    "key": "40012200",
+    "value": 260630076.0,
+    "share": 1.0384518788,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Technically specified natural rubber \"TSNR"
+   },
+   {
+    "key": "27101245",
+    "value": 257820909.0,
+    "share": 1.0272590618,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Motor spirit, with a lead content <= 0,013 g/l, with a research octane number \"RON\" of >= 95 but < 98 (excl. containing biodiesel)"
+   },
+   {
+    "key": "OTHER",
+    "value": 19583762180.0,
+    "share": 78.0293469644,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 1253608116.0,
+    "share": 4.9948636907,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84287000",
+   "85171300",
+   "30049000",
+   "87038010",
+   "87032319",
+   "27102011",
+   "27101942",
+   "87033219",
+   "40012200",
+   "27101245"
+  ]
+ },
+ "insight": [
+  "The top 10 imported products in Luxembourg in 2025 included industrial robots, smartphones for wireless networks, and medicaments for therapeutic or prophylactic purposes.",
+  "Total imports amounted to 25.10 billion euros, with the top three products accounting for 8.6% of this value.",
+  "Industrial robots were the largest import at 747.2 million euros, followed closely by smartphones at 701.3 million euros and medicaments at 700.6 million euros.",
+  "Other imports made up 78.0% of the total, and 5.0% of the import value is confidential and not detailed at the product level.",
+  "The data are presented in current euros and are not adjusted for price changes, and some product details are masked due to confidentiality."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 25.10 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Industrial robots: 747.2 M€, 3.0 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Smartphones for wireless networks: 701.3 M€, 2.8 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Medicaments consisting of mixed or unmixed products for therapeutic or prophylactic purposes, put up in measured doses \"incl. those for transdermal administration\" or in forms or packings for retail sale (excl. containing antibiotics, hormones or steroids used as hormones, alkaloids, provitamins, vitamins, their derivatives or antimalarial active principles): 700.6 M€, 2.8 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Motor cars and other motor vehicles principally designed for the transport of <10 persons, incl. station wagons and racing cars, with only electric motor for propulsion, new (excl. vehicles for travelling on snow and other specially designed vehicles of subheading 8703.10): 405.1 M€, 1.6 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Motor cars and other motor vehicles principally designed for the transport of <10 persons, incl. station wagons and racing cars, with only spark-ignition internal combustion reciprocating piston engine, of a cylinder capacity > 1.500 cm³ but <= 3.000 cm³, new (excl. those of subheading 8703.10 and motor caravans): 324.4 M€, 1.3 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 19.58 bn €, 78.0 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 1.25 bn €, 5.0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 8.6 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 15642,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 306,
+   "outcome": "ok",
+   "detail": "8752 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 133,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1945,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2808,
+   "output_tokens": 126,
+   "cache_read_tokens": 1920,
+   "ms": 1778
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 962,
+   "output_tokens": 158,
+   "cache_read_tokens": 0,
+   "ms": 1857
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

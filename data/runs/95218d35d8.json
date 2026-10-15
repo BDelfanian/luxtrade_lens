@@ -1,0 +1,197 @@
+{
+ "run_id": "95218d35d8",
+ "session_id": "76ndae",
+ "turn": 1,
+ "created_at": "2026-10-14T21:06:57+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Quelle est la part de l'UE dans les importations du Luxembourg en 2025 ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "fr",
+   "intent": "composition",
+   "breakdown": "partner",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": "A",
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": "import",
+   "measure": "share",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'UE' read as EU27_2020"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [
+   "EU27_2020"
+  ],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": null,
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "Quelle est la part des importations en provenance de l'UE27_2020 dans le total des importations du Luxembourg en 2025 ?",
+   "note": "part des importations de l'UE27_2020 en 2025",
+   "spec": {
+    "language": "fr",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": null,
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "share",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "Quels sont les principaux partenaires de l'UE27_2020 pour les importations du Luxembourg en 2025 ?",
+   "note": "importations par partenaire UE27_2020 en 2025",
+   "spec": {
+    "language": "fr",
+    "intent": "ranking",
+    "breakdown": "partner",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": null,
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": 10,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "Quelle est la valeur des importations du Luxembourg en produits du chapitre 27 (Combustibles et huiles minéraux) en 2025 ?",
+   "note": "importations de combustibles et huiles minéraux en 2025",
+   "spec": {
+    "language": "fr",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Précisez la période et le type de flux (importations ou exportations).",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 6921,
+   "outcome": "ok",
+   "detail": "intent=composition breakdown=partner · unresolved: ['EU27_2020']"
+  },
+  {
+   "node": "interpret",
+   "ms": 6549,
+   "outcome": "retry",
+   "detail": "intent=composition breakdown=partner · unresolved: ['EU27_2020']"
+  },
+  {
+   "node": "optimise",
+   "ms": 7481,
+   "outcome": "routed",
+   "detail": "terms not found in the data: EU27_2020 · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3346,
+   "output_tokens": 139,
+   "cache_read_tokens": 3200,
+   "ms": 1705
+  },
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3346,
+   "output_tokens": 139,
+   "cache_read_tokens": 3200,
+   "ms": 1905
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5978,
+   "output_tokens": 452,
+   "cache_read_tokens": 5760,
+   "ms": 3361
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

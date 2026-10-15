@@ -1,0 +1,2508 @@
+{
+ "run_id": "23ee8ea3b5",
+ "session_id": "ammjta",
+ "turn": 1,
+ "created_at": "2026-10-14T17:37:42+00:00",
+ "origin": "preset",
+ "status": "answered",
+ "question": "Do Luxembourg's exports have a seasonal pattern?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "seasonality",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "M",
+  "period_start": "2002-01",
+  "period_end": "2025-12",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "full series 2002–2025-12 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "full series 2002–2025-12 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2002-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  period,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "409e975cf4bfbf0a01af99cea7e4c5346bfc7ae4eed3c00919c826b3b4545550",
+ "row_count": 288,
+ "view_kind": "season",
+ "title": "exports: Mar +10.6 %, Aug −20.5 %",
+ "frames": {
+  "main": [
+   {
+    "period": "2002-01-01",
+    "observed": 680062210.0,
+    "trend": 683533632.639073,
+    "seasonal_factor": 0.9975782534,
+    "adjusted": 681713146.4893652,
+    "flow": "export"
+   },
+   {
+    "period": "2002-02-01",
+    "observed": 727652278.0,
+    "trend": 688420614.5999002,
+    "seasonal_factor": 1.0500328367,
+    "adjusted": 692980497.8850188,
+    "flow": "export"
+   },
+   {
+    "period": "2002-03-01",
+    "observed": 781694630.0,
+    "trend": 693342515.904692,
+    "seasonal_factor": 1.1225945117,
+    "adjusted": 696328569.1189811,
+    "flow": "export"
+   },
+   {
+    "period": "2002-04-01",
+    "observed": 725917106.0,
+    "trend": 698296164.0910293,
+    "seasonal_factor": 1.0500202897,
+    "adjusted": 691336265.6829213,
+    "flow": "export"
+   },
+   {
+    "period": "2002-05-01",
+    "observed": 740885180.0,
+    "trend": 703275564.076854,
+    "seasonal_factor": 1.0532573933,
+    "adjusted": 703422719.5777731,
+    "flow": "export"
+   },
+   {
+    "period": "2002-06-01",
+    "observed": 748667308.0,
+    "trend": 708277591.4290931,
+    "seasonal_factor": 1.0700086826,
+    "adjusted": 699683395.2597846,
+    "flow": "export"
+   },
+   {
+    "period": "2002-07-01",
+    "observed": 722816248.0,
+    "trend": 713301637.028841,
+    "seasonal_factor": 1.0090335308,
+    "adjusted": 716345122.2654219,
+    "flow": "export"
+   },
+   {
+    "period": "2002-08-01",
+    "observed": 563666591.0,
+    "trend": 718354703.435442,
+    "seasonal_factor": 0.7777893298,
+    "adjusted": 724703424.651968,
+    "flow": "export"
+   },
+   {
+    "period": "2002-09-01",
+    "observed": 770103606.0,
+    "trend": 723449305.3738257,
+    "seasonal_factor": 1.0233972893,
+    "adjusted": 752497211.0284332,
+    "flow": "export"
+   },
+   {
+    "period": "2002-10-01",
+    "observed": 764915819.0,
+    "trend": 728604502.420693,
+    "seasonal_factor": 1.0541219815,
+    "adjusted": 725642603.4376017,
+    "flow": "export"
+   },
+   {
+    "period": "2002-11-01",
+    "observed": 762976525.0,
+    "trend": 733882861.8154814,
+    "seasonal_factor": 1.0210026943,
+    "adjusted": 747281598.03219,
+    "flow": "export"
+   },
+   {
+    "period": "2002-12-01",
+    "observed": 610642512.0,
+    "trend": 739196558.3380141,
+    "seasonal_factor": 0.8346285453,
+    "adjusted": 731633869.2687176,
+    "flow": "export"
+   },
+   {
+    "period": "2003-01-01",
+    "observed": 743621543.0,
+    "trend": 744423171.404891,
+    "seasonal_factor": 0.9959100168,
+    "adjusted": 746675433.0095062,
+    "flow": "export"
+   },
+   {
+    "period": "2003-02-01",
+    "observed": 776671487.0,
+    "trend": 749465925.5270463,
+    "seasonal_factor": 1.047307471,
+    "adjusted": 741588796.4941387,
+    "flow": "export"
+   },
+   {
+    "period": "2003-03-01",
+    "observed": 842524348.0,
+    "trend": 754288800.7691156,
+    "seasonal_factor": 1.120508554,
+    "adjusted": 751912464.1907989,
+    "flow": "export"
+   },
+   {
+    "period": "2003-04-01",
+    "observed": 805267720.0,
+    "trend": 758944872.1376071,
+    "seasonal_factor": 1.0498791755,
+    "adjusted": 767009898.6214436,
+    "flow": "export"
+   },
+   {
+    "period": "2003-05-01",
+    "observed": 807742846.0,
+    "trend": 763564080.3324363,
+    "seasonal_factor": 1.0537097628,
+    "adjusted": 766570524.948068,
+    "flow": "export"
+   },
+   {
+    "period": "2003-06-01",
+    "observed": 828844825.0,
+    "trend": 768206370.7674993,
+    "seasonal_factor": 1.0706152122,
+    "adjusted": 774176207.7868553,
+    "flow": "export"
+   },
+   {
+    "period": "2003-07-01",
+    "observed": 782455371.0,
+    "trend": 772875438.849807,
+    "seasonal_factor": 1.0084708875,
+    "adjusted": 775882953.8213317,
+    "flow": "export"
+   },
+   {
+    "period": "2003-08-01",
+    "observed": 596501083.0,
+    "trend": 777546462.0200719,
+    "seasonal_factor": 0.7780348905,
+    "adjusted": 766676520.9624984,
+    "flow": "export"
+   },
+   {
+    "period": "2003-09-01",
+    "observed": 809462046.0,
+    "trend": 782174319.4620346,
+    "seasonal_factor": 1.0269186207,
+    "adjusted": 788243615.0902175,
+    "flow": "export"
+   },
+   {
+    "period": "2003-10-01",
+    "observed": 831991668.0,
+    "trend": 786700148.3178928,
+    "seasonal_factor": 1.0541704084,
+    "adjusted": 789238306.6203698,
+    "flow": "export"
+   },
+   {
+    "period": "2003-11-01",
+    "observed": 788392322.0,
+    "trend": 791153348.5857362,
+    "seasonal_factor": 1.0210140712,
+    "adjusted": 772165971.2923499,
+    "flow": "export"
+   },
+   {
+    "period": "2003-12-01",
+    "observed": 666524729.0,
+    "trend": 795584392.5674902,
+    "seasonal_factor": 0.8361659451,
+    "adjusted": 797120156.4381841,
+    "flow": "export"
+   },
+   {
+    "period": "2004-01-01",
+    "observed": 795830113.0,
+    "trend": 800058308.5658439,
+    "seasonal_factor": 0.9942763751,
+    "adjusted": 800411367.4559427,
+    "flow": "export"
+   },
+   {
+    "period": "2004-02-01",
+    "observed": 841529975.0,
+    "trend": 804620427.0049893,
+    "seasonal_factor": 1.0446434761,
+    "adjusted": 805566678.2161736,
+    "flow": "export"
+   },
+   {
+    "period": "2004-03-01",
+    "observed": 905327250.0,
+    "trend": 809240851.259364,
+    "seasonal_factor": 1.1185881079,
+    "adjusted": 809348180.612337,
+    "flow": "export"
+   },
+   {
+    "period": "2004-04-01",
+    "observed": 855643291.0,
+    "trend": 813889635.043324,
+    "seasonal_factor": 1.0497572406,
+    "adjusted": 815086819.9656498,
+    "flow": "export"
+   },
+   {
+    "period": "2004-05-01",
+    "observed": 859558967.0,
+    "trend": 818574524.6829116,
+    "seasonal_factor": 1.0541183713,
+    "adjusted": 815429263.3925292,
+    "flow": "export"
+   },
+   {
+    "period": "2004-06-01",
+    "observed": 882246005.0,
+    "trend": 823374709.1624806,
+    "seasonal_factor": 1.0711220395,
+    "adjusted": 823665252.4161638,
+    "flow": "export"
+   },
+   {
+    "period": "2004-07-01",
+    "observed": 837796073.0,
+    "trend": 828389235.6202253,
+    "seasonal_factor": 1.0080782397,
+    "adjusted": 831082390.2786767,
+    "flow": "export"
+   },
+   {
+    "period": "2004-08-01",
+    "observed": 667394615.0,
+    "trend": 833564688.0875605,
+    "seasonal_factor": 0.7783034688,
+    "adjusted": 857499216.9390045,
+    "flow": "export"
+   },
+   {
+    "period": "2004-09-01",
+    "observed": 852229973.0,
+    "trend": 838844131.6330979,
+    "seasonal_factor": 1.0304718638,
+    "adjusted": 827028862.1549538,
+    "flow": "export"
+   },
+   {
+    "period": "2004-10-01",
+    "observed": 886411377.0,
+    "trend": 844210428.9935324,
+    "seasonal_factor": 1.0540756461,
+    "adjusted": 840937156.9252365,
+    "flow": "export"
+   },
+   {
+    "period": "2004-11-01",
+    "observed": 863898020.0,
+    "trend": 849523724.1636736,
+    "seasonal_factor": 1.0210109671,
+    "adjusted": 846120215.9443315,
+    "flow": "export"
+   },
+   {
+    "period": "2004-12-01",
+    "observed": 712134297.0,
+    "trend": 854645791.6495098,
+    "seasonal_factor": 0.83748638,
+    "adjusted": 850323436.9060776,
+    "flow": "export"
+   },
+   {
+    "period": "2005-01-01",
+    "observed": 853481355.0,
+    "trend": 859576008.7071394,
+    "seasonal_factor": 0.9927113875,
+    "adjusted": 859747723.0162519,
+    "flow": "export"
+   },
+   {
+    "period": "2005-02-01",
+    "observed": 908458997.0,
+    "trend": 864417058.8586545,
+    "seasonal_factor": 1.0420825844,
+    "adjusted": 871772554.8989533,
+    "flow": "export"
+   },
+   {
+    "period": "2005-03-01",
+    "observed": 985482078.0,
+    "trend": 869289778.0745945,
+    "seasonal_factor": 1.1168776766,
+    "adjusted": 882354530.5585992,
+    "flow": "export"
+   },
+   {
+    "period": "2005-04-01",
+    "observed": 880259221.0,
+    "trend": 874320025.4056672,
+    "seasonal_factor": 1.0497092353,
+    "adjusted": 838574332.1927576,
+    "flow": "export"
+   },
+   {
+    "period": "2005-05-01",
+    "observed": 928508804.0,
+    "trend": 879534263.4016111,
+    "seasonal_factor": 1.0544238767,
+    "adjusted": 880584008.481325,
+    "flow": "export"
+   },
+   {
+    "period": "2005-06-01",
+    "observed": 956454570.0,
+    "trend": 884779337.0426967,
+    "seasonal_factor": 1.0715636437,
+    "adjusted": 892578406.8847414,
+    "flow": "export"
+   },
+   {
+    "period": "2005-07-01",
+    "observed": 890238528.0,
+    "trend": 889790588.2658683,
+    "seasonal_factor": 1.0078201657,
+    "adjusted": 883330735.2812433,
+    "flow": "export"
+   },
+   {
+    "period": "2005-08-01",
+    "observed": 686743932.0,
+    "trend": 894494364.2509538,
+    "seasonal_factor": 0.7785967816,
+    "adjusted": 882027704.4968538,
+    "flow": "export"
+   },
+   {
+    "period": "2005-09-01",
+    "observed": 926944023.0,
+    "trend": 898815140.979667,
+    "seasonal_factor": 1.0339408224,
+    "adjusted": 896515548.0224963,
+    "flow": "export"
+   },
+   {
+    "period": "2005-10-01",
+    "observed": 952513692.0,
+    "trend": 902794904.6468333,
+    "seasonal_factor": 1.0538383665,
+    "adjusted": 903851788.1908966,
+    "flow": "export"
+   },
+   {
+    "period": "2005-11-01",
+    "observed": 888555481.0,
+    "trend": 906599007.2800634,
+    "seasonal_factor": 1.0209366046,
+    "adjusted": 870333649.4876918,
+    "flow": "export"
+   },
+   {
+    "period": "2005-12-01",
+    "observed": 782359330.0,
+    "trend": 910462379.6551387,
+    "seasonal_factor": 0.8386634585,
+    "adjusted": 932864454.8368328,
+    "flow": "export"
+   },
+   {
+    "period": "2006-01-01",
+    "observed": 917467345.0,
+    "trend": 914517369.4910477,
+    "seasonal_factor": 0.9912400888,
+    "adjusted": 925575302.4162667,
+    "flow": "export"
+   },
+   {
+    "period": "2006-02-01",
+    "observed": 957896772.0,
+    "trend": 918798766.4398116,
+    "seasonal_factor": 1.0396865721,
+    "adjusted": 921332253.0885305,
+    "flow": "export"
+   },
+   {
+    "period": "2006-03-01",
+    "observed": 1015795201.0,
+    "trend": 923265260.26413,
+    "seasonal_factor": 1.1154124418,
+    "adjusted": 910690219.0934651,
+    "flow": "export"
+   },
+   {
+    "period": "2006-04-01",
+    "observed": 986956672.0,
+    "trend": 927785457.6457157,
+    "seasonal_factor": 1.0497564034,
+    "adjusted": 940176853.1879076,
+    "flow": "export"
+   },
+   {
+    "period": "2006-05-01",
+    "observed": 965770286.0,
+    "trend": 932137980.763382,
+    "seasonal_factor": 1.0545636648,
+    "adjusted": 915800836.1850237,
+    "flow": "export"
+   },
+   {
+    "period": "2006-06-01",
+    "observed": 997929280.0,
+    "trend": 936256220.1617649,
+    "seasonal_factor": 1.0719428621,
+    "adjusted": 930953799.2074243,
+    "flow": "export"
+   },
+   {
+    "period": "2006-07-01",
+    "observed": 936514586.0,
+    "trend": 940258462.9874218,
+    "seasonal_factor": 1.0076081587,
+    "adjusted": 929443234.381211,
+    "flow": "export"
+   },
+   {
+    "period": "2006-08-01",
+    "observed": 740385742.0,
+    "trend": 944256054.2475452,
+    "seasonal_factor": 0.778897042,
+    "adjusted": 950556623.1148492,
+    "flow": "export"
+   },
+   {
+    "period": "2006-09-01",
+    "observed": 982301947.0,
+    "trend": 948439925.2197543,
+    "seasonal_factor": 1.0372728034,
+    "adjusted": 947004436.7869384,
+    "flow": "export"
+   },
+   {
+    "period": "2006-10-01",
+    "observed": 1008962072.0,
+    "trend": 952954722.890489,
+    "seasonal_factor": 1.0534918156,
+    "adjusted": 957731286.620368,
+    "flow": "export"
+   },
+   {
+    "period": "2006-11-01",
+    "observed": 982690159.0,
+    "trend": 957759490.6691016,
+    "seasonal_factor": 1.0208131837,
+    "adjusted": 962654259.0629549,
+    "flow": "export"
+   },
+   {
+    "period": "2006-12-01",
+    "observed": 827329974.0,
+    "trend": 962728648.9828973,
+    "seasonal_factor": 0.8398564496,
+    "adjusted": 985084980.136273,
+    "flow": "export"
+   },
+   {
+    "period": "2007-01-01",
+    "observed": 952862460.0,
+    "trend": 967772522.1006353,
+    "seasonal_factor": 0.9898487028,
+    "adjusted": 962634448.4037098,
+    "flow": "export"
+   },
+   {
+    "period": "2007-02-01",
+    "observed": 996966264.0,
+    "trend": 972816028.705579,
+    "seasonal_factor": 1.0374637772,
+    "adjusted": 960964889.5277796,
+    "flow": "export"
+   },
+   {
+    "period": "2007-03-01",
+    "observed": 1085571636.0,
+    "trend": 977670667.3954873,
+    "seasonal_factor": 1.114117095,
+    "adjusted": 974378403.2383627,
+    "flow": "export"
+   },
+   {
+    "period": "2007-04-01",
+    "observed": 1020055495.0,
+    "trend": 982273726.3268099,
+    "seasonal_factor": 1.0498468874,
+    "adjusted": 971623107.415985,
+    "flow": "export"
+   },
+   {
+    "period": "2007-05-01",
+    "observed": 1064862662.0,
+    "trend": 986543988.9991131,
+    "seasonal_factor": 1.0545155286,
+    "adjusted": 1009812215.2679969,
+    "flow": "export"
+   },
+   {
+    "period": "2007-06-01",
+    "observed": 1067137966.0,
+    "trend": 990493983.6861347,
+    "seasonal_factor": 1.072171158,
+    "adjusted": 995305607.6856574,
+    "flow": "export"
+   },
+   {
+    "period": "2007-07-01",
+    "observed": 1001342619.0,
+    "trend": 993866815.696289,
+    "seasonal_factor": 1.0073389347,
+    "adjusted": 994047370.2802587,
+    "flow": "export"
+   },
+   {
+    "period": "2007-08-01",
+    "observed": 780656088.0,
+    "trend": 996512592.1455634,
+    "seasonal_factor": 0.7792516792,
+    "adjusted": 1001802253.1618396,
+    "flow": "export"
+   },
+   {
+    "period": "2007-09-01",
+    "observed": 1049495616.0,
+    "trend": 998723667.9948534,
+    "seasonal_factor": 1.040536838,
+    "adjusted": 1008609765.3280315,
+    "flow": "export"
+   },
+   {
+    "period": "2007-10-01",
+    "observed": 1074544518.0,
+    "trend": 1000777112.4205761,
+    "seasonal_factor": 1.0531318973,
+    "adjusted": 1020332325.6575892,
+    "flow": "export"
+   },
+   {
+    "period": "2007-11-01",
+    "observed": 1028241407.0,
+    "trend": 1002598283.6903871,
+    "seasonal_factor": 1.0208185803,
+    "adjusted": 1007271445.5616168,
+    "flow": "export"
+   },
+   {
+    "period": "2007-12-01",
+    "observed": 878263178.0,
+    "trend": 1003980193.7621666,
+    "seasonal_factor": 0.8413320681,
+    "adjusted": 1043895996.898685,
+    "flow": "export"
+   },
+   {
+    "period": "2008-01-01",
+    "observed": 980340503.0,
+    "trend": 1004857093.5782965,
+    "seasonal_factor": 0.9882791102,
+    "adjusted": 991967241.7569225,
+    "flow": "export"
+   },
+   {
+    "period": "2008-02-01",
+    "observed": 998520987.0,
+    "trend": 1005315369.2207059,
+    "seasonal_factor": 1.0353185611,
+    "adjusted": 964457727.8149673,
+    "flow": "export"
+   },
+   {
+    "period": "2008-03-01",
+    "observed": 1110891546.0,
+    "trend": 1005497385.822301,
+    "seasonal_factor": 1.1128946079,
+    "adjusted": 998200133.3174667,
+    "flow": "export"
+   },
+   {
+    "period": "2008-04-01",
+    "observed": 1049782379.0,
+    "trend": 1005394655.5161573,
+    "seasonal_factor": 1.0492174788,
+    "adjusted": 1000538401.4129242,
+    "flow": "export"
+   },
+   {
+    "period": "2008-05-01",
+    "observed": 1078861843.0,
+    "trend": 1005175994.5704899,
+    "seasonal_factor": 1.0545732605,
+    "adjusted": 1023031669.2610573,
+    "flow": "export"
+   },
+   {
+    "period": "2008-06-01",
+    "observed": 1086907776.0,
+    "trend": 1005213112.2601312,
+    "seasonal_factor": 1.0717380715,
+    "adjusted": 1014154302.1819086,
+    "flow": "export"
+   },
+   {
+    "period": "2008-07-01",
+    "observed": 1014921481.0,
+    "trend": 1005613466.7616374,
+    "seasonal_factor": 1.0071639639,
+    "adjusted": 1007702337.8777957,
+    "flow": "export"
+   },
+   {
+    "period": "2008-08-01",
+    "observed": 778791585.0,
+    "trend": 1005823106.1318232,
+    "seasonal_factor": 0.7798947035,
+    "adjusted": 998585554.5452756,
+    "flow": "export"
+   },
+   {
+    "period": "2008-09-01",
+    "observed": 1046472490.0,
+    "trend": 999201790.6583021,
+    "seasonal_factor": 1.0440532118,
+    "adjusted": 1002317198.2243468,
+    "flow": "export"
+   },
+   {
+    "period": "2008-10-01",
+    "observed": 1105859938.0,
+    "trend": 970041021.0413159,
+    "seasonal_factor": 1.0527655737,
+    "adjusted": 1050433226.2212359,
+    "flow": "export"
+   },
+   {
+    "period": "2008-11-01",
+    "observed": 1069702419.0,
+    "trend": 941590379.3397422,
+    "seasonal_factor": 1.0218487155,
+    "adjusted": 1046830516.8991565,
+    "flow": "export"
+   },
+   {
+    "period": "2008-12-01",
+    "observed": 878947070.0,
+    "trend": 923021716.2550273,
+    "seasonal_factor": 0.8432159933,
+    "adjusted": 1042374761.6624081,
+    "flow": "export"
+   },
+   {
+    "period": "2009-01-01",
+    "observed": 763056874.0,
+    "trend": 908626500.0104691,
+    "seasonal_factor": 0.9860239819,
+    "adjusted": 773872530.4847358,
+    "flow": "export"
+   },
+   {
+    "period": "2009-02-01",
+    "observed": 807387771.0,
+    "trend": 894889694.9991503,
+    "seasonal_factor": 1.0330636289,
+    "adjusted": 781546991.2776198,
+    "flow": "export"
+   },
+   {
+    "period": "2009-03-01",
+    "observed": 871040824.0,
+    "trend": 880681346.950901,
+    "seasonal_factor": 1.111293924,
+    "adjusted": 783807780.4466028,
+    "flow": "export"
+   },
+   {
+    "period": "2009-04-01",
+    "observed": 803640159.0,
+    "trend": 863047461.3727643,
+    "seasonal_factor": 1.0484393852,
+    "adjusted": 766510844.908533,
+    "flow": "export"
+   },
+   {
+    "period": "2009-05-01",
+    "observed": 828302345.0,
+    "trend": 836391546.2095108,
+    "seasonal_factor": 1.0546856571,
+    "adjusted": 785354706.7866005,
+    "flow": "export"
+   },
+   {
+    "period": "2009-06-01",
+    "observed": 867090192.0,
+    "trend": 811819664.1089085,
+    "seasonal_factor": 1.0705809073,
+    "adjusted": 809924953.8739665,
+    "flow": "export"
+   },
+   {
+    "period": "2009-07-01",
+    "observed": 819107783.0,
+    "trend": 807882560.014454,
+    "seasonal_factor": 1.0087323069,
+    "adjusted": 812017001.3391447,
+    "flow": "export"
+   },
+   {
+    "period": "2009-08-01",
+    "observed": 629849718.0,
+    "trend": 809894418.91066,
+    "seasonal_factor": 0.7810035587,
+    "adjusted": 806462033.3518715,
+    "flow": "export"
+   },
+   {
+    "period": "2009-09-01",
+    "observed": 852122494.0,
+    "trend": 812773643.1066186,
+    "seasonal_factor": 1.0466674937,
+    "adjusted": 814129128.0391672,
+    "flow": "export"
+   },
+   {
+    "period": "2009-10-01",
+    "observed": 840497440.0,
+    "trend": 815943991.9152125,
+    "seasonal_factor": 1.0525216712,
+    "adjusted": 798555947.1488094,
+    "flow": "export"
+   },
+   {
+    "period": "2009-11-01",
+    "observed": 831206047.0,
+    "trend": 819119879.0797815,
+    "seasonal_factor": 1.0227548241,
+    "adjusted": 812712907.7188014,
+    "flow": "export"
+   },
+   {
+    "period": "2009-12-01",
+    "observed": 686698327.0,
+    "trend": 822295532.3706328,
+    "seasonal_factor": 0.8444304834,
+    "adjusted": 813208831.9090599,
+    "flow": "export"
+   },
+   {
+    "period": "2010-01-01",
+    "observed": 818543663.0,
+    "trend": 825562404.1186388,
+    "seasonal_factor": 0.9838412756,
+    "adjusted": 831987520.0755638,
+    "flow": "export"
+   },
+   {
+    "period": "2010-02-01",
+    "observed": 859114500.0,
+    "trend": 828969181.4208246,
+    "seasonal_factor": 1.0306797236,
+    "adjusted": 833541671.9336761,
+    "flow": "export"
+   },
+   {
+    "period": "2010-03-01",
+    "observed": 939194948.0,
+    "trend": 832556401.3237711,
+    "seasonal_factor": 1.1095448059,
+    "adjusted": 846468698.7160807,
+    "flow": "export"
+   },
+   {
+    "period": "2010-04-01",
+    "observed": 880228447.0,
+    "trend": 836344927.856528,
+    "seasonal_factor": 1.048056452,
+    "adjusted": 839867399.5919192,
+    "flow": "export"
+   },
+   {
+    "period": "2010-05-01",
+    "observed": 869123401.0,
+    "trend": 840268850.9232169,
+    "seasonal_factor": 1.0545661197,
+    "adjusted": 824152591.9744644,
+    "flow": "export"
+   },
+   {
+    "period": "2010-06-01",
+    "observed": 900051621.0,
+    "trend": 844171377.5330826,
+    "seasonal_factor": 1.0692315888,
+    "adjusted": 841774252.092154,
+    "flow": "export"
+   },
+   {
+    "period": "2010-07-01",
+    "observed": 854837935.0,
+    "trend": 847984082.307544,
+    "seasonal_factor": 1.0108442835,
+    "adjusted": 845667279.235713,
+    "flow": "export"
+   },
+   {
+    "period": "2010-08-01",
+    "observed": 669686756.0,
+    "trend": 851696066.1839887,
+    "seasonal_factor": 0.7827231925,
+    "adjusted": 855585681.3921428,
+    "flow": "export"
+   },
+   {
+    "period": "2010-09-01",
+    "observed": 901028739.0,
+    "trend": 855396572.9568977,
+    "seasonal_factor": 1.0481170645,
+    "adjusted": 859664220.2268302,
+    "flow": "export"
+   },
+   {
+    "period": "2010-10-01",
+    "observed": 898063316.0,
+    "trend": 859191607.5852815,
+    "seasonal_factor": 1.0520985574,
+    "adjusted": 853592384.1981813,
+    "flow": "export"
+   },
+   {
+    "period": "2010-11-01",
+    "observed": 883801857.0,
+    "trend": 863136745.0337915,
+    "seasonal_factor": 1.0236425727,
+    "adjusted": 863389117.0459231,
+    "flow": "export"
+   },
+   {
+    "period": "2010-12-01",
+    "observed": 726324813.0,
+    "trend": 867200608.6955298,
+    "seasonal_factor": 0.8444508383,
+    "adjusted": 860114976.534851,
+    "flow": "export"
+   },
+   {
+    "period": "2011-01-01",
+    "observed": 863952785.0,
+    "trend": 871340128.6614171,
+    "seasonal_factor": 0.9827069607,
+    "adjusted": 879156065.4122334,
+    "flow": "export"
+   },
+   {
+    "period": "2011-02-01",
+    "observed": 895616637.0,
+    "trend": 875536194.9834076,
+    "seasonal_factor": 1.0291241003,
+    "adjusted": 870270783.4170908,
+    "flow": "export"
+   },
+   {
+    "period": "2011-03-01",
+    "observed": 978762238.0,
+    "trend": 879769881.8285254,
+    "seasonal_factor": 1.108434654,
+    "adjusted": 883013026.0599364,
+    "flow": "export"
+   },
+   {
+    "period": "2011-04-01",
+    "observed": 928513031.0,
+    "trend": 884024437.8574908,
+    "seasonal_factor": 1.0481657942,
+    "adjusted": 885845575.2849267,
+    "flow": "export"
+   },
+   {
+    "period": "2011-05-01",
+    "observed": 937389829.0,
+    "trend": 888287213.5973065,
+    "seasonal_factor": 1.0533256028,
+    "adjusted": 889933584.1497064,
+    "flow": "export"
+   },
+   {
+    "period": "2011-06-01",
+    "observed": 953184169.0,
+    "trend": 892599520.7127877,
+    "seasonal_factor": 1.0671362262,
+    "adjusted": 893216953.5203922,
+    "flow": "export"
+   },
+   {
+    "period": "2011-07-01",
+    "observed": 901211392.0,
+    "trend": 896936637.9649405,
+    "seasonal_factor": 1.0123332052,
+    "adjusted": 890231978.30073,
+    "flow": "export"
+   },
+   {
+    "period": "2011-08-01",
+    "observed": 704768465.0,
+    "trend": 901256877.8131852,
+    "seasonal_factor": 0.7843852843,
+    "adjusted": 898497816.1974723,
+    "flow": "export"
+   },
+   {
+    "period": "2011-09-01",
+    "observed": 950241737.0,
+    "trend": 905574565.4471018,
+    "seasonal_factor": 1.0481707061,
+    "adjusted": 906571545.4849545,
+    "flow": "export"
+   },
+   {
+    "period": "2011-10-01",
+    "observed": 982570717.0,
+    "trend": 909906437.992003,
+    "seasonal_factor": 1.0513910928,
+    "adjusted": 934543505.047427,
+    "flow": "export"
+   },
+   {
+    "period": "2011-11-01",
+    "observed": 940278725.0,
+    "trend": 914254684.1449858,
+    "seasonal_factor": 1.0249909969,
+    "adjusted": 917353155.1169035,
+    "flow": "export"
+   },
+   {
+    "period": "2011-12-01",
+    "observed": 763510340.0,
+    "trend": 918500738.7889478,
+    "seasonal_factor": 0.8471223778,
+    "adjusted": 901298749.79502,
+    "flow": "export"
+   },
+   {
+    "period": "2012-01-01",
+    "observed": 902818806.0,
+    "trend": 922604431.729033,
+    "seasonal_factor": 0.9825224154,
+    "adjusted": 918878584.1589363,
+    "flow": "export"
+   },
+   {
+    "period": "2012-02-01",
+    "observed": 963929755.0,
+    "trend": 926485232.0626936,
+    "seasonal_factor": 1.0274529121,
+    "adjusted": 938174142.7463748,
+    "flow": "export"
+   },
+   {
+    "period": "2012-03-01",
+    "observed": 1082678971.0,
+    "trend": 930087946.1444353,
+    "seasonal_factor": 1.106862177,
+    "adjusted": 978151565.2628837,
+    "flow": "export"
+   },
+   {
+    "period": "2012-04-01",
+    "observed": 981788724.0,
+    "trend": 933393758.1853853,
+    "seasonal_factor": 1.0484489132,
+    "adjusted": 936420183.7854202,
+    "flow": "export"
+   },
+   {
+    "period": "2012-05-01",
+    "observed": 988429113.0,
+    "trend": 936369610.625428,
+    "seasonal_factor": 1.0508990672,
+    "adjusted": 940555704.9612373,
+    "flow": "export"
+   },
+   {
+    "period": "2012-06-01",
+    "observed": 1004305474.0,
+    "trend": 939086775.0997517,
+    "seasonal_factor": 1.0641907041,
+    "adjusted": 943726975.0051508,
+    "flow": "export"
+   },
+   {
+    "period": "2012-07-01",
+    "observed": 963367601.0,
+    "trend": 941625525.5601367,
+    "seasonal_factor": 1.0124795379,
+    "adjusted": 951493402.9857639,
+    "flow": "export"
+   },
+   {
+    "period": "2012-08-01",
+    "observed": 738943827.0,
+    "trend": 943976177.363307,
+    "seasonal_factor": 0.7859585656,
+    "adjusted": 940181657.5475701,
+    "flow": "export"
+   },
+   {
+    "period": "2012-09-01",
+    "observed": 998622081.0,
+    "trend": 946011090.1429105,
+    "seasonal_factor": 1.0476540431,
+    "adjusted": 953198326.8665065,
+    "flow": "export"
+   },
+   {
+    "period": "2012-10-01",
+    "observed": 988954739.0,
+    "trend": 947782671.3984305,
+    "seasonal_factor": 1.0526895392,
+    "adjusted": 939455273.5761005,
+    "flow": "export"
+   },
+   {
+    "period": "2012-11-01",
+    "observed": 968190304.0,
+    "trend": 949525922.2696999,
+    "seasonal_factor": 1.0266578999,
+    "adjusted": 943050556.6862019,
+    "flow": "export"
+   },
+   {
+    "period": "2012-12-01",
+    "observed": 817970567.0,
+    "trend": 951394910.2626209,
+    "seasonal_factor": 0.8526859884,
+    "adjusted": 959286980.3957405,
+    "flow": "export"
+   },
+   {
+    "period": "2013-01-01",
+    "observed": 927131096.0,
+    "trend": 953330209.5004225,
+    "seasonal_factor": 0.9819873028,
+    "adjusted": 944137559.9903133,
+    "flow": "export"
+   },
+   {
+    "period": "2013-02-01",
+    "observed": 978265849.0,
+    "trend": 955276655.276731,
+    "seasonal_factor": 1.0240212546,
+    "adjusted": 955317914.1732634,
+    "flow": "export"
+   },
+   {
+    "period": "2013-03-01",
+    "observed": 1054785754.0,
+    "trend": 957274666.9782947,
+    "seasonal_factor": 1.1039546989,
+    "adjusted": 955461084.6556555,
+    "flow": "export"
+   },
+   {
+    "period": "2013-04-01",
+    "observed": 1002036588.0,
+    "trend": 959396091.0531512,
+    "seasonal_factor": 1.0481298751,
+    "adjusted": 956023305.690489,
+    "flow": "export"
+   },
+   {
+    "period": "2013-05-01",
+    "observed": 1011763015.0,
+    "trend": 961601551.0182377,
+    "seasonal_factor": 1.0497902668,
+    "adjusted": 963776334.200797,
+    "flow": "export"
+   },
+   {
+    "period": "2013-06-01",
+    "observed": 1025832178.0,
+    "trend": 963824695.2174544,
+    "seasonal_factor": 1.0615027405,
+    "adjusted": 966396165.4025563,
+    "flow": "export"
+   },
+   {
+    "period": "2013-07-01",
+    "observed": 985919222.0,
+    "trend": 966019162.8666685,
+    "seasonal_factor": 1.0119911726,
+    "adjusted": 974236978.2617939,
+    "flow": "export"
+   },
+   {
+    "period": "2013-08-01",
+    "observed": 766202247.0,
+    "trend": 968099768.971798,
+    "seasonal_factor": 0.7873045144,
+    "adjusted": 973196816.4444953,
+    "flow": "export"
+   },
+   {
+    "period": "2013-09-01",
+    "observed": 1008853552.0,
+    "trend": 970003104.8147298,
+    "seasonal_factor": 1.0474212649,
+    "adjusted": 963178413.2798966,
+    "flow": "export"
+   },
+   {
+    "period": "2013-10-01",
+    "observed": 1022621409.0,
+    "trend": 971721681.8236517,
+    "seasonal_factor": 1.0548427708,
+    "adjusted": 969453872.4645497,
+    "flow": "export"
+   },
+   {
+    "period": "2013-11-01",
+    "observed": 999981996.0,
+    "trend": 973278699.7434547,
+    "seasonal_factor": 1.028287525,
+    "adjusted": 972473137.8324853,
+    "flow": "export"
+   },
+   {
+    "period": "2013-12-01",
+    "observed": 849940401.0,
+    "trend": 974816336.8000265,
+    "seasonal_factor": 0.8583699689,
+    "adjusted": 990179563.3400186,
+    "flow": "export"
+   },
+   {
+    "period": "2014-01-01",
+    "observed": 950834007.0,
+    "trend": 976402328.0272845,
+    "seasonal_factor": 0.9804453752,
+    "adjusted": 969798043.8434691,
+    "flow": "export"
+   },
+   {
+    "period": "2014-02-01",
+    "observed": 1000524530.0,
+    "trend": 978066925.9535421,
+    "seasonal_factor": 1.0202703906,
+    "adjusted": 980646443.5505664,
+    "flow": "export"
+   },
+   {
+    "period": "2014-03-01",
+    "observed": 1077912472.0,
+    "trend": 979822627.0591955,
+    "seasonal_factor": 1.1008206072,
+    "adjusted": 979189947.018327,
+    "flow": "export"
+   },
+   {
+    "period": "2014-04-01",
+    "observed": 1026784876.0,
+    "trend": 981624784.2235754,
+    "seasonal_factor": 1.0475123792,
+    "adjusted": 980212641.3151563,
+    "flow": "export"
+   },
+   {
+    "period": "2014-05-01",
+    "observed": 1010372831.0,
+    "trend": 983435995.2095734,
+    "seasonal_factor": 1.050346852,
+    "adjusted": 961942075.6593963,
+    "flow": "export"
+   },
+   {
+    "period": "2014-06-01",
+    "observed": 1045374840.0,
+    "trend": 985103638.802825,
+    "seasonal_factor": 1.0598735404,
+    "adjusted": 986320348.7163501,
+    "flow": "export"
+   },
+   {
+    "period": "2014-07-01",
+    "observed": 997122481.0,
+    "trend": 986556014.1679777,
+    "seasonal_factor": 1.0112495658,
+    "adjusted": 986030070.8226707,
+    "flow": "export"
+   },
+   {
+    "period": "2014-08-01",
+    "observed": 792095158.0,
+    "trend": 987898054.9991802,
+    "seasonal_factor": 0.7880949578,
+    "adjusted": 1005075784.4776719,
+    "flow": "export"
+   },
+   {
+    "period": "2014-09-01",
+    "observed": 1034661568.0,
+    "trend": 989238722.0505315,
+    "seasonal_factor": 1.0466764281,
+    "adjusted": 988520941.3340515,
+    "flow": "export"
+   },
+   {
+    "period": "2014-10-01",
+    "observed": 1050762893.0,
+    "trend": 990564862.9769242,
+    "seasonal_factor": 1.0561731384,
+    "adjusted": 994877501.4145627,
+    "flow": "export"
+   },
+   {
+    "period": "2014-11-01",
+    "observed": 1025757165.0,
+    "trend": 991822826.9619172,
+    "seasonal_factor": 1.0298892125,
+    "adjusted": 995987871.8317667,
+    "flow": "export"
+   },
+   {
+    "period": "2014-12-01",
+    "observed": 854463819.0,
+    "trend": 992942739.9788845,
+    "seasonal_factor": 0.8635887754,
+    "adjusted": 989433678.8349112,
+    "flow": "export"
+   },
+   {
+    "period": "2015-01-01",
+    "observed": 985828182.0,
+    "trend": 993815463.0451397,
+    "seasonal_factor": 0.9788883651,
+    "adjusted": 1007089487.533024,
+    "flow": "export"
+   },
+   {
+    "period": "2015-02-01",
+    "observed": 998593917.0,
+    "trend": 994486205.4118114,
+    "seasonal_factor": 1.0168289458,
+    "adjusted": 982066768.5497339,
+    "flow": "export"
+   },
+   {
+    "period": "2015-03-01",
+    "observed": 1088162708.0,
+    "trend": 995268727.8241721,
+    "seasonal_factor": 1.0995962039,
+    "adjusted": 989602095.8471489,
+    "flow": "export"
+   },
+   {
+    "period": "2015-04-01",
+    "observed": 1046426540.0,
+    "trend": 996606267.1634241,
+    "seasonal_factor": 1.0469148912,
+    "adjusted": 999533533.0334048,
+    "flow": "export"
+   },
+   {
+    "period": "2015-05-01",
+    "observed": 1050823549.0,
+    "trend": 998643328.6283592,
+    "seasonal_factor": 1.0507776111,
+    "adjusted": 1000043717.9599707,
+    "flow": "export"
+   },
+   {
+    "period": "2015-06-01",
+    "observed": 1041427833.0,
+    "trend": 1001109315.7389373,
+    "seasonal_factor": 1.0591626464,
+    "adjusted": 983255816.7614291,
+    "flow": "export"
+   },
+   {
+    "period": "2015-07-01",
+    "observed": 1017286955.0,
+    "trend": 1003594612.5061833,
+    "seasonal_factor": 1.0099976645,
+    "adjusted": 1007217135.9890133,
+    "flow": "export"
+   },
+   {
+    "period": "2015-08-01",
+    "observed": 782926548.0,
+    "trend": 1006007518.1056834,
+    "seasonal_factor": 0.7884133385,
+    "adjusted": 993040718.3024638,
+    "flow": "export"
+   },
+   {
+    "period": "2015-09-01",
+    "observed": 1025299364.0,
+    "trend": 1008423146.2024246,
+    "seasonal_factor": 1.0450818162,
+    "adjusted": 981070905.7827185,
+    "flow": "export"
+   },
+   {
+    "period": "2015-10-01",
+    "observed": 1106298039.0,
+    "trend": 1010877585.7160181,
+    "seasonal_factor": 1.0568553271,
+    "adjusted": 1046782857.2209884,
+    "flow": "export"
+   },
+   {
+    "period": "2015-11-01",
+    "observed": 1064105299.0,
+    "trend": 1013427630.9839278,
+    "seasonal_factor": 1.0316473541,
+    "adjusted": 1031462247.95608,
+    "flow": "export"
+   },
+   {
+    "period": "2015-12-01",
+    "observed": 892821086.0,
+    "trend": 1016156109.9086442,
+    "seasonal_factor": 0.8681873,
+    "adjusted": 1028373815.2017843,
+    "flow": "export"
+   },
+   {
+    "period": "2016-01-01",
+    "observed": 998893742.0,
+    "trend": 1019182877.1041813,
+    "seasonal_factor": 0.9781338251,
+    "adjusted": 1021224004.6902192,
+    "flow": "export"
+   },
+   {
+    "period": "2016-02-01",
+    "observed": 1040162889.0,
+    "trend": 1022445049.65252,
+    "seasonal_factor": 1.0137670009,
+    "adjusted": 1026037430.7291286,
+    "flow": "export"
+   },
+   {
+    "period": "2016-03-01",
+    "observed": 1103493489.0,
+    "trend": 1025627492.0377895,
+    "seasonal_factor": 1.1003270711,
+    "adjusted": 1002877706.094738,
+    "flow": "export"
+   },
+   {
+    "period": "2016-04-01",
+    "observed": 1068950550.0,
+    "trend": 1028474096.3889312,
+    "seasonal_factor": 1.0465223019,
+    "adjusted": 1021431218.5210279,
+    "flow": "export"
+   },
+   {
+    "period": "2016-05-01",
+    "observed": 1088645419.0,
+    "trend": 1031032423.6967045,
+    "seasonal_factor": 1.0511178667,
+    "adjusted": 1035702515.8653367,
+    "flow": "export"
+   },
+   {
+    "period": "2016-06-01",
+    "observed": 1087804648.0,
+    "trend": 1033413943.820509,
+    "seasonal_factor": 1.0590713042,
+    "adjusted": 1027130698.0536519,
+    "flow": "export"
+   },
+   {
+    "period": "2016-07-01",
+    "observed": 1033732955.0,
+    "trend": 1035767832.735543,
+    "seasonal_factor": 1.0080163765,
+    "adjusted": 1025512064.1796452,
+    "flow": "export"
+   },
+   {
+    "period": "2016-08-01",
+    "observed": 826621021.0,
+    "trend": 1038278622.5661128,
+    "seasonal_factor": 0.7882496699,
+    "adjusted": 1048679184.4228888,
+    "flow": "export"
+   },
+   {
+    "period": "2016-09-01",
+    "observed": 1102118613.0,
+    "trend": 1041033115.0934467,
+    "seasonal_factor": 1.0423437381,
+    "adjusted": 1057346605.231167,
+    "flow": "export"
+   },
+   {
+    "period": "2016-10-01",
+    "observed": 1142981429.0,
+    "trend": 1043979566.4085851,
+    "seasonal_factor": 1.056559591,
+    "adjusted": 1081795517.0531878,
+    "flow": "export"
+   },
+   {
+    "period": "2016-11-01",
+    "observed": 1068397766.0,
+    "trend": 1047022110.5180414,
+    "seasonal_factor": 1.0331955035,
+    "adjusted": 1034071250.154431,
+    "flow": "export"
+   },
+   {
+    "period": "2016-12-01",
+    "observed": 913197508.0,
+    "trend": 1050091274.0317875,
+    "seasonal_factor": 0.8712963995,
+    "adjusted": 1048090533.3055978,
+    "flow": "export"
+   },
+   {
+    "period": "2017-01-01",
+    "observed": 1035010951.0,
+    "trend": 1053160456.0385405,
+    "seasonal_factor": 0.9779362674,
+    "adjusted": 1058362375.4321108,
+    "flow": "export"
+   },
+   {
+    "period": "2017-02-01",
+    "observed": 1066189886.0,
+    "trend": 1056175131.5104069,
+    "seasonal_factor": 1.0117241244,
+    "adjusted": 1053834598.0543909,
+    "flow": "export"
+   },
+   {
+    "period": "2017-03-01",
+    "observed": 1160762001.0,
+    "trend": 1059075192.9257549,
+    "seasonal_factor": 1.1026242264,
+    "adjusted": 1052726734.2826269,
+    "flow": "export"
+   },
+   {
+    "period": "2017-04-01",
+    "observed": 1113948485.0,
+    "trend": 1061830163.0643041,
+    "seasonal_factor": 1.0462821494,
+    "adjusted": 1064673124.4431927,
+    "flow": "export"
+   },
+   {
+    "period": "2017-05-01",
+    "observed": 1080395037.0,
+    "trend": 1064473832.1330317,
+    "seasonal_factor": 1.0521247637,
+    "adjusted": 1026869696.6748339,
+    "flow": "export"
+   },
+   {
+    "period": "2017-06-01",
+    "observed": 1128463000.0,
+    "trend": 1067084385.6482513,
+    "seasonal_factor": 1.0599569639,
+    "adjusted": 1064630959.9256084,
+    "flow": "export"
+   },
+   {
+    "period": "2017-07-01",
+    "observed": 1083314517.0,
+    "trend": 1069737205.2025763,
+    "seasonal_factor": 1.0058716501,
+    "adjusted": 1076990803.8601737,
+    "flow": "export"
+   },
+   {
+    "period": "2017-08-01",
+    "observed": 848178109.0,
+    "trend": 1072467268.0802448,
+    "seasonal_factor": 0.7882140435,
+    "adjusted": 1076075865.4303865,
+    "flow": "export"
+   },
+   {
+    "period": "2017-09-01",
+    "observed": 1139675426.0,
+    "trend": 1075287305.4724257,
+    "seasonal_factor": 1.0395434622,
+    "adjusted": 1096323018.1891675,
+    "flow": "export"
+   },
+   {
+    "period": "2017-10-01",
+    "observed": 1131965950.0,
+    "trend": 1078167033.9729714,
+    "seasonal_factor": 1.0563443219,
+    "adjusted": 1071588048.0835015,
+    "flow": "export"
+   },
+   {
+    "period": "2017-11-01",
+    "observed": 1112623712.0,
+    "trend": 1080945338.6285794,
+    "seasonal_factor": 1.0331147586,
+    "adjusted": 1076960427.4548357,
+    "flow": "export"
+   },
+   {
+    "period": "2017-12-01",
+    "observed": 949472878.0,
+    "trend": 1083403376.7234154,
+    "seasonal_factor": 0.8727098916,
+    "adjusted": 1087959340.361931,
+    "flow": "export"
+   },
+   {
+    "period": "2018-01-01",
+    "observed": 1039908098.0,
+    "trend": 1085492608.7444818,
+    "seasonal_factor": 0.9766653227,
+    "adjusted": 1064753783.9263818,
+    "flow": "export"
+   },
+   {
+    "period": "2018-02-01",
+    "observed": 1091705206.0,
+    "trend": 1087367740.6473923,
+    "seasonal_factor": 1.0117125095,
+    "adjusted": 1079066627.8659892,
+    "flow": "export"
+   },
+   {
+    "period": "2018-03-01",
+    "observed": 1234455963.0,
+    "trend": 1089231809.9297912,
+    "seasonal_factor": 1.1052718028,
+    "adjusted": 1116879992.6178427,
+    "flow": "export"
+   },
+   {
+    "period": "2018-04-01",
+    "observed": 1149262574.0,
+    "trend": 1091234444.2479596,
+    "seasonal_factor": 1.0458206517,
+    "adjusted": 1098909810.3079154,
+    "flow": "export"
+   },
+   {
+    "period": "2018-05-01",
+    "observed": 1160777833.0,
+    "trend": 1093504595.8114626,
+    "seasonal_factor": 1.0531434649,
+    "adjusted": 1102202949.2639248,
+    "flow": "export"
+   },
+   {
+    "period": "2018-06-01",
+    "observed": 1161408644.0,
+    "trend": 1096044714.702429,
+    "seasonal_factor": 1.0615992821,
+    "adjusted": 1094017925.2485917,
+    "flow": "export"
+   },
+   {
+    "period": "2018-07-01",
+    "observed": 1099747915.0,
+    "trend": 1098704774.4202662,
+    "seasonal_factor": 1.0042710536,
+    "adjusted": 1095070808.847533,
+    "flow": "export"
+   },
+   {
+    "period": "2018-08-01",
+    "observed": 856980907.0,
+    "trend": 1101188083.651157,
+    "seasonal_factor": 0.788651361,
+    "adjusted": 1086641004.3843763,
+    "flow": "export"
+   },
+   {
+    "period": "2018-09-01",
+    "observed": 1137917486.0,
+    "trend": 1103315813.456262,
+    "seasonal_factor": 1.0380026706,
+    "adjusted": 1096256799.9086442,
+    "flow": "export"
+   },
+   {
+    "period": "2018-10-01",
+    "observed": 1172913679.0,
+    "trend": 1105120040.2063138,
+    "seasonal_factor": 1.0566670658,
+    "adjusted": 1110012526.1686702,
+    "flow": "export"
+   },
+   {
+    "period": "2018-11-01",
+    "observed": 1154650822.0,
+    "trend": 1106751513.3870792,
+    "seasonal_factor": 1.0327969806,
+    "adjusted": 1117984312.2356997,
+    "flow": "export"
+   },
+   {
+    "period": "2018-12-01",
+    "observed": 965270892.0,
+    "trend": 1108452861.7835813,
+    "seasonal_factor": 0.8733932691,
+    "adjusted": 1105196165.5309596,
+    "flow": "export"
+   },
+   {
+    "period": "2019-01-01",
+    "observed": 1089351181.0,
+    "trend": 1110335194.9456658,
+    "seasonal_factor": 0.9742808137,
+    "adjusted": 1118108009.2198975,
+    "flow": "export"
+   },
+   {
+    "period": "2019-02-01",
+    "observed": 1166558550.0,
+    "trend": 1112257718.236406,
+    "seasonal_factor": 1.0124587552,
+    "adjusted": 1152203528.3208086,
+    "flow": "export"
+   },
+   {
+    "period": "2019-03-01",
+    "observed": 1237075744.0,
+    "trend": 1113909912.298008,
+    "seasonal_factor": 1.1072099237,
+    "adjusted": 1117291055.2549205,
+    "flow": "export"
+   },
+   {
+    "period": "2019-04-01",
+    "observed": 1159753196.0,
+    "trend": 1114948224.62605,
+    "seasonal_factor": 1.0446813831,
+    "adjusted": 1110150151.7604353,
+    "flow": "export"
+   },
+   {
+    "period": "2019-05-01",
+    "observed": 1166105409.0,
+    "trend": 1113548104.9410913,
+    "seasonal_factor": 1.052939376,
+    "adjusted": 1107476304.4866612,
+    "flow": "export"
+   },
+   {
+    "period": "2019-06-01",
+    "observed": 1194136574.0,
+    "trend": 1103227071.3405373,
+    "seasonal_factor": 1.0638828897,
+    "adjusted": 1122432351.8669584,
+    "flow": "export"
+   },
+   {
+    "period": "2019-07-01",
+    "observed": 1143823271.0,
+    "trend": 1089247628.9197407,
+    "seasonal_factor": 1.0034821078,
+    "adjusted": 1139854175.8624506,
+    "flow": "export"
+   },
+   {
+    "period": "2019-08-01",
+    "observed": 900766586.0,
+    "trend": 1078608152.6136537,
+    "seasonal_factor": 0.7894369914,
+    "adjusted": 1141024040.9228938,
+    "flow": "export"
+   },
+   {
+    "period": "2019-09-01",
+    "observed": 1187206024.0,
+    "trend": 1069727229.5417651,
+    "seasonal_factor": 1.0372219362,
+    "adjusted": 1144601731.38478,
+    "flow": "export"
+   },
+   {
+    "period": "2019-10-01",
+    "observed": 1198494316.0,
+    "trend": 1061789197.5616807,
+    "seasonal_factor": 1.0567967667,
+    "adjusted": 1134082118.5188537,
+    "flow": "export"
+   },
+   {
+    "period": "2019-11-01",
+    "observed": 1171960885.0,
+    "trend": 1054658498.3813077,
+    "seasonal_factor": 1.0325442329,
+    "adjusted": 1135022450.0076103,
+    "flow": "export"
+   },
+   {
+    "period": "2019-12-01",
+    "observed": 984768236.0,
+    "trend": 1047465292.3006607,
+    "seasonal_factor": 0.8736424687,
+    "adjusted": 1127198220.3933725,
+    "flow": "export"
+   },
+   {
+    "period": "2020-01-01",
+    "observed": 964329741.0,
+    "trend": 1038452276.6697829,
+    "seasonal_factor": 0.9733101731,
+    "adjusted": 990773309.1670455,
+    "flow": "export"
+   },
+   {
+    "period": "2020-02-01",
+    "observed": 1031308729.0,
+    "trend": 1025611373.1487862,
+    "seasonal_factor": 1.0144112866,
+    "adjusted": 1016657388.03099,
+    "flow": "export"
+   },
+   {
+    "period": "2020-03-01",
+    "observed": 1124886131.0,
+    "trend": 1016344686.3446829,
+    "seasonal_factor": 1.1066449596,
+    "adjusted": 1016483309.5432891,
+    "flow": "export"
+   },
+   {
+    "period": "2020-04-01",
+    "observed": 727510112.0,
+    "trend": 1015862382.7509145,
+    "seasonal_factor": 1.0421891703,
+    "adjusted": 698059558.414184,
+    "flow": "export"
+   },
+   {
+    "period": "2020-05-01",
+    "observed": 853332149.0,
+    "trend": 1017570768.9969181,
+    "seasonal_factor": 1.0500482855,
+    "adjusted": 812659913.6604958,
+    "flow": "export"
+   },
+   {
+    "period": "2020-06-01",
+    "observed": 1073687052.0,
+    "trend": 1019944144.8746653,
+    "seasonal_factor": 1.0663404918,
+    "adjusted": 1006889506.8884912,
+    "flow": "export"
+   },
+   {
+    "period": "2020-07-01",
+    "observed": 1022382722.0,
+    "trend": 1024963020.0960525,
+    "seasonal_factor": 1.00384356,
+    "adjusted": 1018468178.458388,
+    "flow": "export"
+   },
+   {
+    "period": "2020-08-01",
+    "observed": 775289365.0,
+    "trend": 1033927561.8835332,
+    "seasonal_factor": 0.7909279042,
+    "adjusted": 980227604.7306335,
+    "flow": "export"
+   },
+   {
+    "period": "2020-09-01",
+    "observed": 1064698731.0,
+    "trend": 1046763754.4576559,
+    "seasonal_factor": 1.0359208584,
+    "adjusted": 1027779991.4912732,
+    "flow": "export"
+   },
+   {
+    "period": "2020-10-01",
+    "observed": 1100281568.0,
+    "trend": 1060659360.8529086,
+    "seasonal_factor": 1.0588257486,
+    "adjusted": 1039152636.2962939,
+    "flow": "export"
+   },
+   {
+    "period": "2020-11-01",
+    "observed": 1056270490.0,
+    "trend": 1073458865.1514525,
+    "seasonal_factor": 1.0327316784,
+    "adjusted": 1022792766.0730458,
+    "flow": "export"
+   },
+   {
+    "period": "2020-12-01",
+    "observed": 880900145.0,
+    "trend": 1086122733.461316,
+    "seasonal_factor": 0.8730207415,
+    "adjusted": 1009025448.2704843,
+    "flow": "export"
+   },
+   {
+    "period": "2021-01-01",
+    "observed": 1159116224.0,
+    "trend": 1099482832.1904519,
+    "seasonal_factor": 0.9719666261,
+    "adjusted": 1192547349.7912521,
+    "flow": "export"
+   },
+   {
+    "period": "2021-02-01",
+    "observed": 1204839234.0,
+    "trend": 1113183724.7834103,
+    "seasonal_factor": 1.0161229184,
+    "adjusted": 1185721936.0194864,
+    "flow": "export"
+   },
+   {
+    "period": "2021-03-01",
+    "observed": 1270668475.0,
+    "trend": 1127771330.8978474,
+    "seasonal_factor": 1.1067275869,
+    "adjusted": 1148131202.3529692,
+    "flow": "export"
+   },
+   {
+    "period": "2021-04-01",
+    "observed": 1246160085.0,
+    "trend": 1143758828.8773177,
+    "seasonal_factor": 1.0394595487,
+    "adjusted": 1198853853.0090098,
+    "flow": "export"
+   },
+   {
+    "period": "2021-05-01",
+    "observed": 1230329260.0,
+    "trend": 1159946776.3656406,
+    "seasonal_factor": 1.0469701365,
+    "adjusted": 1175133098.0313141,
+    "flow": "export"
+   },
+   {
+    "period": "2021-06-01",
+    "observed": 1274445579.0,
+    "trend": 1174183715.0611682,
+    "seasonal_factor": 1.0689523436,
+    "adjusted": 1192237976.35459,
+    "flow": "export"
+   },
+   {
+    "period": "2021-07-01",
+    "observed": 1185338643.0,
+    "trend": 1184648941.024112,
+    "seasonal_factor": 1.0041619735,
+    "adjusted": 1180425742.3122482,
+    "flow": "export"
+   },
+   {
+    "period": "2021-08-01",
+    "observed": 943409412.0,
+    "trend": 1193799179.9343517,
+    "seasonal_factor": 0.7923127505,
+    "adjusted": 1190703306.704911,
+    "flow": "export"
+   },
+   {
+    "period": "2021-09-01",
+    "observed": 1236212567.0,
+    "trend": 1203718566.431673,
+    "seasonal_factor": 1.03397068,
+    "adjusted": 1195597313.2677355,
+    "flow": "export"
+   },
+   {
+    "period": "2021-10-01",
+    "observed": 1276268647.0,
+    "trend": 1213938678.4018397,
+    "seasonal_factor": 1.0616552345,
+    "adjusted": 1202149818.1075566,
+    "flow": "export"
+   },
+   {
+    "period": "2021-11-01",
+    "observed": 1251041957.0,
+    "trend": 1223751859.96898,
+    "seasonal_factor": 1.0331016025,
+    "adjusted": 1210957328.8775673,
+    "flow": "export"
+   },
+   {
+    "period": "2021-12-01",
+    "observed": 1022169909.0,
+    "trend": 1232972246.8783543,
+    "seasonal_factor": 0.8729184671,
+    "adjusted": 1170979819.4045343,
+    "flow": "export"
+   },
+   {
+    "period": "2022-01-01",
+    "observed": 1250664736.0,
+    "trend": 1241923595.3526235,
+    "seasonal_factor": 0.9705338331,
+    "adjusted": 1288635896.351776,
+    "flow": "export"
+   },
+   {
+    "period": "2022-02-01",
+    "observed": 1290013546.0,
+    "trend": 1250795376.4776194,
+    "seasonal_factor": 1.0177904613,
+    "adjusted": 1267464763.2058332,
+    "flow": "export"
+   },
+   {
+    "period": "2022-03-01",
+    "observed": 1445027603.0,
+    "trend": 1259650742.8604882,
+    "seasonal_factor": 1.1067538512,
+    "adjusted": 1305644973.7615328,
+    "flow": "export"
+   },
+   {
+    "period": "2022-04-01",
+    "observed": 1329916741.0,
+    "trend": 1268378061.8106358,
+    "seasonal_factor": 1.0367031515,
+    "adjusted": 1282832736.7442608,
+    "flow": "export"
+   },
+   {
+    "period": "2022-05-01",
+    "observed": 1357890142.0,
+    "trend": 1276610719.6166584,
+    "seasonal_factor": 1.0437914915,
+    "adjusted": 1300920876.4723253,
+    "flow": "export"
+   },
+   {
+    "period": "2022-06-01",
+    "observed": 1375881998.0,
+    "trend": 1283539741.9687293,
+    "seasonal_factor": 1.0714473145,
+    "adjusted": 1284134067.400873,
+    "flow": "export"
+   },
+   {
+    "period": "2022-07-01",
+    "observed": 1298921070.0,
+    "trend": 1287848501.2437806,
+    "seasonal_factor": 1.0044606028,
+    "adjusted": 1293152828.8563478,
+    "flow": "export"
+   },
+   {
+    "period": "2022-08-01",
+    "observed": 1022411785.0,
+    "trend": 1289079174.0405483,
+    "seasonal_factor": 0.793700789,
+    "adjusted": 1288157702.7176077,
+    "flow": "export"
+   },
+   {
+    "period": "2022-09-01",
+    "observed": 1367044255.0,
+    "trend": 1288306403.5828922,
+    "seasonal_factor": 1.0320385492,
+    "adjusted": 1324605806.6832294,
+    "flow": "export"
+   },
+   {
+    "period": "2022-10-01",
+    "observed": 1390980071.0,
+    "trend": 1286826889.4811482,
+    "seasonal_factor": 1.0648825017,
+    "adjusted": 1306228686.026101,
+    "flow": "export"
+   },
+   {
+    "period": "2022-11-01",
+    "observed": 1343828146.0,
+    "trend": 1285149428.4962907,
+    "seasonal_factor": 1.0333991334,
+    "adjusted": 1300396044.9800441,
+    "flow": "export"
+   },
+   {
+    "period": "2022-12-01",
+    "observed": 1127419968.0,
+    "trend": 1283573393.8371031,
+    "seasonal_factor": 0.8728840724,
+    "adjusted": 1291603322.4422712,
+    "flow": "export"
+   },
+   {
+    "period": "2023-01-01",
+    "observed": 1227768806.0,
+    "trend": 1282371896.0229585,
+    "seasonal_factor": 0.9690646535,
+    "adjusted": 1266962737.2936697,
+    "flow": "export"
+   },
+   {
+    "period": "2023-02-01",
+    "observed": 1286619349.0,
+    "trend": 1281426707.7621958,
+    "seasonal_factor": 1.0194920154,
+    "adjusted": 1262020035.0702286,
+    "flow": "export"
+   },
+   {
+    "period": "2023-03-01",
+    "observed": 1397158007.0,
+    "trend": 1280633156.7572641,
+    "seasonal_factor": 1.1064926465,
+    "adjusted": 1262690729.5576398,
+    "flow": "export"
+   },
+   {
+    "period": "2023-04-01",
+    "observed": 1322895771.0,
+    "trend": 1280089090.5619478,
+    "seasonal_factor": 1.0339277649,
+    "adjusted": 1279485681.6155035,
+    "flow": "export"
+   },
+   {
+    "period": "2023-05-01",
+    "observed": 1315176527.0,
+    "trend": 1280157540.447577,
+    "seasonal_factor": 1.0404356485,
+    "adjusted": 1264063307.41636,
+    "flow": "export"
+   },
+   {
+    "period": "2023-06-01",
+    "observed": 1355131511.0,
+    "trend": 1281105601.6558063,
+    "seasonal_factor": 1.0737751206,
+    "adjusted": 1262025432.5277214,
+    "flow": "export"
+   },
+   {
+    "period": "2023-07-01",
+    "observed": 1285710194.0,
+    "trend": 1282947486.022716,
+    "seasonal_factor": 1.0048349153,
+    "adjusted": 1279523804.754916,
+    "flow": "export"
+   },
+   {
+    "period": "2023-08-01",
+    "observed": 1027677205.0,
+    "trend": 1285630114.928866,
+    "seasonal_factor": 0.7951584976,
+    "adjusted": 1292418062.6493032,
+    "flow": "export"
+   },
+   {
+    "period": "2023-09-01",
+    "observed": 1347131714.0,
+    "trend": 1288975106.644127,
+    "seasonal_factor": 1.0303758108,
+    "adjusted": 1307417837.1586664,
+    "flow": "export"
+   },
+   {
+    "period": "2023-10-01",
+    "observed": 1372923128.0,
+    "trend": 1292630811.1609495,
+    "seasonal_factor": 1.0684186064,
+    "adjusted": 1285004884.6122482,
+    "flow": "export"
+   },
+   {
+    "period": "2023-11-01",
+    "observed": 1327520029.0,
+    "trend": 1296206675.9513004,
+    "seasonal_factor": 1.033677255,
+    "adjusted": 1284269362.1658285,
+    "flow": "export"
+   },
+   {
+    "period": "2023-12-01",
+    "observed": 1134287846.0,
+    "trend": 1299484325.711131,
+    "seasonal_factor": 0.8728468567,
+    "adjusted": 1299526758.0410464,
+    "flow": "export"
+   },
+   {
+    "period": "2024-01-01",
+    "observed": 1278544685.0,
+    "trend": 1302356380.8395529,
+    "seasonal_factor": 0.9675893152,
+    "adjusted": 1321371231.4660902,
+    "flow": "export"
+   },
+   {
+    "period": "2024-02-01",
+    "observed": 1346911814.0,
+    "trend": 1304741857.415752,
+    "seasonal_factor": 1.0212224046,
+    "adjusted": 1318921136.0027158,
+    "flow": "export"
+   },
+   {
+    "period": "2024-03-01",
+    "observed": 1440715619.0,
+    "trend": 1306604423.3416488,
+    "seasonal_factor": 1.1059190263,
+    "adjusted": 1302731560.5460186,
+    "flow": "export"
+   },
+   {
+    "period": "2024-04-01",
+    "observed": 1354430129.0,
+    "trend": 1308053702.9497678,
+    "seasonal_factor": 1.0310897173,
+    "adjusted": 1313590957.4729974,
+    "flow": "export"
+   },
+   {
+    "period": "2024-05-01",
+    "observed": 1364040619.0,
+    "trend": 1309355173.6338816,
+    "seasonal_factor": 1.0368362595,
+    "adjusted": 1315579587.912431,
+    "flow": "export"
+   },
+   {
+    "period": "2024-06-01",
+    "observed": 1412929799.0,
+    "trend": 1310819118.814682,
+    "seasonal_factor": 1.0759414394,
+    "adjusted": 1313203253.6682053,
+    "flow": "export"
+   },
+   {
+    "period": "2024-07-01",
+    "observed": 1321032558.0,
+    "trend": 1312694590.314557,
+    "seasonal_factor": 1.0053191543,
+    "adjusted": 1314042960.777487,
+    "flow": "export"
+   },
+   {
+    "period": "2024-08-01",
+    "observed": 1043227612.0,
+    "trend": 1315023024.2792406,
+    "seasonal_factor": 0.7967067834,
+    "adjusted": 1309424789.3715992,
+    "flow": "export"
+   },
+   {
+    "period": "2024-09-01",
+    "observed": 1339313960.0,
+    "trend": 1317955326.873842,
+    "seasonal_factor": 1.0289628182,
+    "adjusted": 1301615506.6512504,
+    "flow": "export"
+   },
+   {
+    "period": "2024-10-01",
+    "observed": 1392621112.0,
+    "trend": 1321547831.1012337,
+    "seasonal_factor": 1.0722004263,
+    "adjusted": 1298844020.09538,
+    "flow": "export"
+   },
+   {
+    "period": "2024-11-01",
+    "observed": 1364620926.0,
+    "trend": 1325855608.0171945,
+    "seasonal_factor": 1.0339569287,
+    "adjusted": 1319804421.3160515,
+    "flow": "export"
+   },
+   {
+    "period": "2024-12-01",
+    "observed": 1141611149.0,
+    "trend": 1330989157.474276,
+    "seasonal_factor": 0.8727737543,
+    "adjusted": 1308026442.6066036,
+    "flow": "export"
+   },
+   {
+    "period": "2025-01-01",
+    "observed": 1282492717.0,
+    "trend": 1337583877.847765,
+    "seasonal_factor": 0.9661551325,
+    "adjusted": 1327419038.4441097,
+    "flow": "export"
+   },
+   {
+    "period": "2025-02-01",
+    "observed": 1369006890.0,
+    "trend": 1347996482.0821252,
+    "seasonal_factor": 1.0230022556,
+    "adjusted": 1338224703.3383849,
+    "flow": "export"
+   },
+   {
+    "period": "2025-03-01",
+    "observed": 1509229154.0,
+    "trend": 1368582565.8859012,
+    "seasonal_factor": 1.1051123015,
+    "adjusted": 1365679444.4976954,
+    "flow": "export"
+   },
+   {
+    "period": "2025-04-01",
+    "observed": 1398268122.0,
+    "trend": 1388756329.8881207,
+    "seasonal_factor": 1.0281356114,
+    "adjusted": 1360003589.5354025,
+    "flow": "export"
+   },
+   {
+    "period": "2025-05-01",
+    "observed": 1431797452.0,
+    "trend": 1407301781.5511868,
+    "seasonal_factor": 1.0329912031,
+    "adjusted": 1386069356.3232005,
+    "flow": "export"
+   },
+   {
+    "period": "2025-06-01",
+    "observed": 1452784524.0,
+    "trend": 1425480481.23554,
+    "seasonal_factor": 1.0780312089,
+    "adjusted": 1347627519.4459002,
+    "flow": "export"
+   },
+   {
+    "period": "2025-07-01",
+    "observed": 1332518274.0,
+    "trend": 1443807647.658954,
+    "seasonal_factor": 1.0059296182,
+    "adjusted": 1324663525.098674,
+    "flow": "export"
+   },
+   {
+    "period": "2025-08-01",
+    "observed": 1031683938.0,
+    "trend": 1462484970.4889462,
+    "seasonal_factor": 0.7983249541,
+    "adjusted": 1292310772.375188,
+    "flow": "export"
+   },
+   {
+    "period": "2025-09-01",
+    "observed": 1624417030.0,
+    "trend": 1481600853.9591384,
+    "seasonal_factor": 1.0276549417,
+    "adjusted": 1580702786.6536856,
+    "flow": "export"
+   },
+   {
+    "period": "2025-10-01",
+    "observed": 1648325356.0,
+    "trend": 1501197925.136809,
+    "seasonal_factor": 1.0762447175,
+    "adjusted": 1531552563.3981087,
+    "flow": "export"
+   },
+   {
+    "period": "2025-11-01",
+    "observed": 1579117068.0,
+    "trend": 1521291773.1655805,
+    "seasonal_factor": 1.0342885826,
+    "adjusted": 1526766411.7700589,
+    "flow": "export"
+   },
+   {
+    "period": "2025-12-01",
+    "observed": 1350359517.0,
+    "trend": 1541866898.066493,
+    "seasonal_factor": 0.8726629107,
+    "adjusted": 1547401064.5360503,
+    "flow": "export"
+   }
+  ],
+  "profile": [
+   {
+    "month": 1,
+    "factor": 0.9690619121,
+    "flow": "export"
+   },
+   {
+    "month": 2,
+    "factor": 1.019526011,
+    "flow": "export"
+   },
+   {
+    "month": 3,
+    "factor": 1.1062010825,
+    "flow": "export"
+   },
+   {
+    "month": 4,
+    "factor": 1.0338631587,
+    "flow": "export"
+   },
+   {
+    "month": 5,
+    "factor": 1.0402049478,
+    "flow": "export"
+   },
+   {
+    "month": 6,
+    "factor": 1.0736294854,
+    "flow": "export"
+   },
+   {
+    "month": 7,
+    "factor": 1.0049412528,
+    "flow": "export"
+   },
+   {
+    "month": 8,
+    "factor": 0.7952407549,
+    "flow": "export"
+   },
+   {
+    "month": 9,
+    "factor": 1.03060056,
+    "flow": "export"
+   },
+   {
+    "month": 10,
+    "factor": 1.0686802973,
+    "flow": "export"
+   },
+   {
+    "month": 11,
+    "factor": 1.0336847005,
+    "flow": "export"
+   },
+   {
+    "month": 12,
+    "factor": 0.8728172122,
+    "flow": "export"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's exports do show a seasonal pattern.",
+  "The strongest month for exports is March, with an increase of 10.6%.",
+  "The weakest month is August, with a decrease of 20.5%.",
+  "Exports are projected to be 1.55 billion euros in December 2025.",
+  "The data are in current euros and do not account for price changes over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.strongest",
+   "text": "exports strongest month Mar: +10.6 %"
+  },
+  {
+   "key": "export.weakest",
+   "text": "exports weakest month Aug: −20.5 %"
+  },
+  {
+   "key": "export.adjusted_last",
+   "text": "exports adjusted Dec 2025: 1.55 bn €"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "STL on log values (period 12, robust, seasonal window 13); adjusted = observed / factor"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 153,
+   "outcome": "ok",
+   "detail": "288 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 55,
+   "outcome": "ok",
+   "detail": "view=season; STL on log values (period 12, robust, seasonal window 13); adjusted = observed / factor"
+  },
+  {
+   "node": "insight",
+   "ms": 1271,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 521,
+   "output_tokens": 83,
+   "cache_read_tokens": 0,
+   "ms": 1259
+  }
+ ],
+ "code_version": "57eb94c",
+ "error": null
+}

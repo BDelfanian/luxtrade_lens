@@ -1,0 +1,158 @@
+{
+ "created_at": "2026-10-14T21:22:42+00:00",
+ "model": "gpt-4.1-mini",
+ "placeholder_data": false,
+ "questions": 9,
+ "answered": 9,
+ "spec_accuracy_pct": 96.7,
+ "limitations_complete": 9,
+ "rows": [
+  {
+   "id": "Q1_partners_2025",
+   "lang": "en",
+   "run_id": "1be860949b",
+   "status": "answered",
+   "spec_score": "10/10",
+   "spec_misses": [],
+   "missing_limitations": [],
+   "numbers": [
+    "top_exports: DE 3914.5 != 3990.7",
+    "top_exports: FR 3103.3 != 3125.0",
+    "top_exports: BE 2137.0 != 2140.1",
+    "top_exports: NL 964.2 != 967.0",
+    "top_exports: IT 652.5 != 665.5",
+    "top_imports: BE 7541.9 != 7805.9",
+    "top_imports: DE 6268.6 != 6810.4",
+    "top_imports: FR 2700.2 != 2777.8",
+    "top_total_trade: DE 10183.1 != 10801.1",
+    "top_total_trade: BE 9678.9 != 9946.0",
+    "top_total_trade: FR 5803.4 != 5902.8",
+    "top_total_trade: NL 2357.2 != 2360.1",
+    "top_total_trade: IT 1472.9 != 1485.9"
+   ],
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q1_partners_2025",
+   "lang": "fr",
+   "run_id": "6103da7037",
+   "status": "answered",
+   "spec_score": "10/10",
+   "spec_misses": [],
+   "missing_limitations": [],
+   "numbers": [
+    "top_exports: DE 3914.5 != 3990.7",
+    "top_exports: FR 3103.3 != 3125.0",
+    "top_exports: BE 2137.0 != 2140.1",
+    "top_exports: NL 964.2 != 967.0",
+    "top_exports: IT 652.5 != 665.5",
+    "top_imports: BE 7541.9 != 7805.9",
+    "top_imports: DE 6268.6 != 6810.4",
+    "top_imports: FR 2700.2 != 2777.8",
+    "top_total_trade: DE 10183.1 != 10801.1",
+    "top_total_trade: BE 9678.9 != 9946.0",
+    "top_total_trade: FR 5803.4 != 5902.8",
+    "top_total_trade: NL 2357.2 != 2360.1",
+    "top_total_trade: IT 1472.9 != 1485.9"
+   ],
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q1_partners_2025",
+   "lang": "de",
+   "run_id": "88b0b62460",
+   "status": "answered",
+   "spec_score": "10/10",
+   "spec_misses": [],
+   "missing_limitations": [],
+   "numbers": [
+    "top_exports: DE 3914.5 != 3990.7",
+    "top_exports: FR 3103.3 != 3125.0",
+    "top_exports: BE 2137.0 != 2140.1",
+    "top_exports: NL 964.2 != 967.0",
+    "top_exports: IT 652.5 != 665.5",
+    "top_imports: BE 7541.9 != 7805.9",
+    "top_imports: DE 6268.6 != 6810.4",
+    "top_imports: FR 2700.2 != 2777.8",
+    "top_total_trade: DE 10183.1 != 10801.1",
+    "top_total_trade: BE 9678.9 != 9946.0",
+    "top_total_trade: FR 5803.4 != 5902.8",
+    "top_total_trade: NL 2357.2 != 2360.1",
+    "top_total_trade: IT 1472.9 != 1485.9"
+   ],
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q2_categories_2025",
+   "lang": "en",
+   "run_id": "99ba2c77e2",
+   "status": "answered",
+   "spec_score": "10/10",
+   "spec_misses": [],
+   "missing_limitations": [],
+   "numbers": "ok",
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q2_categories_2025",
+   "lang": "fr",
+   "run_id": "9fb7523ef0",
+   "status": "answered",
+   "spec_score": "10/10",
+   "spec_misses": [],
+   "missing_limitations": [],
+   "numbers": "ok",
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q2_categories_2025",
+   "lang": "de",
+   "run_id": "1af10acbf1",
+   "status": "answered",
+   "spec_score": "10/10",
+   "spec_misses": [],
+   "missing_limitations": [],
+   "numbers": "ok",
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q4_partner_goods_PT_2025",
+   "lang": "en",
+   "run_id": "ed85904665",
+   "status": "answered",
+   "spec_score": "9/10",
+   "spec_misses": [
+    "intent"
+   ],
+   "missing_limitations": [],
+   "numbers": "ok",
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q4_partner_goods_PT_2025",
+   "lang": "fr",
+   "run_id": "128c1f87ed",
+   "status": "answered",
+   "spec_score": "9/10",
+   "spec_misses": [
+    "intent"
+   ],
+   "missing_limitations": [],
+   "numbers": "ok",
+   "insight_source": "llm"
+  },
+  {
+   "id": "Q4_partner_goods_PT_2025",
+   "lang": "de",
+   "run_id": "bfc41a243b",
+   "status": "answered",
+   "spec_score": "9/10",
+   "spec_misses": [
+    "intent"
+   ],
+   "missing_limitations": [],
+   "numbers": "ok",
+   "insight_source": "llm"
+  }
+ ]
+}

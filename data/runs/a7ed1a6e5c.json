@@ -1,0 +1,362 @@
+{
+ "run_id": "a7ed1a6e5c",
+ "session_id": "fthqpu",
+ "turn": 3,
+ "created_at": "2026-10-14T21:21:25+00:00",
+ "origin": "followup",
+ "status": "answered",
+ "question": "only from Belgium",
+ "language": "en",
+ "followup_of": "887432c222",
+ "inherited": [
+  "flow",
+  "freq",
+  "product_level",
+  "top_n",
+  "period_start",
+  "period_end"
+ ],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [
+    "BE"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": "HS2",
+   "freq": "A",
+   "period_start": "2024",
+   "period_end": "2024",
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": 10,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'only from Belgium' means partner BE"
+   ]
+  },
+  "followup_of": "887432c222",
+  "inherited": [
+   "flow",
+   "freq",
+   "product_level",
+   "top_n",
+   "period_start",
+   "period_end"
+  ],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "BE"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2024",
+  "period_end": "2024",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'only from Belgium' means partner BE"
+  ]
+ },
+ "assumptions": [
+  "'only from Belgium' means partner BE"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.7 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.6637864226484902
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2024-01-01' AS DATE)\n  AND period < CAST('2025-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('BE')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "fded1b0437b707a66912637d98f56f4a4211934aa43189b8a024a99c9741d44f",
+ "row_count": 97,
+ "view_kind": "bar",
+ "title": "Vehicles and parts — imports 2024 (23.1 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "87",
+    "value": 1770476359.0,
+    "share": 23.0671110148,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vehicles and parts"
+   },
+   {
+    "key": "27",
+    "value": 1313704281.0,
+    "share": 17.1159373783,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Mineral fuels and oils"
+   },
+   {
+    "key": "30",
+    "value": 645456286.0,
+    "share": 8.4094948394,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pharmaceutical products"
+   },
+   {
+    "key": "84",
+    "value": 364496216.0,
+    "share": 4.7489336055,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "22",
+    "value": 310702047.0,
+    "share": 4.0480623049,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Beverages, spirits and vinegar"
+   },
+   {
+    "key": "39",
+    "value": 299551210.0,
+    "share": 3.9027807294,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "key": "40",
+    "value": 275559432.0,
+    "share": 3.5901976193,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Rubber and articles thereof"
+   },
+   {
+    "key": "85",
+    "value": 269145971.0,
+    "share": 3.5066381772,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "73",
+    "value": 126139717.0,
+    "share": 1.6434440599,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Articles of iron or steel"
+   },
+   {
+    "key": "90",
+    "value": 119158034.0,
+    "share": 1.5524813899,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Optical, measuring and medical instruments"
+   },
+   {
+    "key": "OTHER",
+    "value": 2177411512.0,
+    "share": 28.3689713318,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 3526625.0,
+    "share": 0.0459475496,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "87",
+   "27",
+   "30",
+   "84",
+   "22",
+   "39",
+   "40",
+   "85",
+   "73",
+   "90"
+  ]
+ },
+ "insight": [
+  "In 2024, the largest product group for imports was Vehicles and parts with 1.77 bn € (23.1 % of 7.68 bn €).",
+  "The top three (Vehicles and parts, Mineral fuels and oils, Pharmaceutical products) account for 48.6 % of imports.",
+  "See the notes below for the data limits that apply."
+ ],
+ "insight_source": "template",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2024: 7.68 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Vehicles and parts: 1.77 bn €, 23.1 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Mineral fuels and oils: 1.31 bn €, 17.1 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Pharmaceutical products: 645.5 M€, 8.4 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Machinery and mechanical appliances: 364.5 M€, 4.7 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Beverages, spirits and vinegar: 310.7 M€, 4.0 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 2.18 bn €, 28.4 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 3.5 M€, 0.0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 48.6 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 3221,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product · follow-up of 887432c222 (inherited: flow, freq, product_level, top_n, period_start, period_end)"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 144,
+   "outcome": "ok",
+   "detail": "97 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 34,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 2619,
+   "outcome": "fallback",
+   "detail": "grounding failed: number 15.1 is not in the fact sheet; grounding failed: number 15.1 is not in the fact sheet; fell back to the template insight"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3742,
+   "output_tokens": 133,
+   "cache_read_tokens": 1920,
+   "ms": 1531
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 778,
+   "output_tokens": 125,
+   "cache_read_tokens": 0,
+   "ms": 1315
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 798,
+   "output_tokens": 131,
+   "cache_read_tokens": 0,
+   "ms": 1213
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

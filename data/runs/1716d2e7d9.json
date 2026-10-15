@@ -1,0 +1,246 @@
+{
+ "run_id": "1716d2e7d9",
+ "session_id": "76ye8n",
+ "turn": 1,
+ "created_at": "2026-10-14T21:19:42+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "How have Luxembourg's exports to China evolved since 2015?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [
+    "CN"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": "2015",
+   "period_end": null,
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [
+   "CN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2015",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "2026 is incomplete (data until 2026-06): annual series end in 2025"
+  ]
+ },
+ "assumptions": [
+  "2026 is incomplete (data until 2026-06): annual series end in 2025"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2015-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('CN')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "36bb3f9dffc11c050e70f42644a99aa52775d34847c370d521f352849996f74a",
+ "row_count": 11,
+ "view_kind": "line",
+ "title": "exports: +9.3 % (2015–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 212200590.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 206124339.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 198969075.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 209051582.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 183707857.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 184140202.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 211818768.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 242533172.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 223832762.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 240482941.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 231829904.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's exports to China have increased since 2015.",
+  "The exports grew from 212.2 million euros in 2015 to 231.8 million euros projected for 2025.",
+  "The highest export value was recorded in 2022 at 242.5 million euros.",
+  "This shows a 9.3% increase in exports over the 2015 to 2025 period.",
+  "The data are in current euros and do not account for inflation or price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "exports.start",
+   "text": "exports 2015: 212.2 M€"
+  },
+  {
+   "key": "exports.end",
+   "text": "exports 2025: 231.8 M€"
+  },
+  {
+   "key": "exports.change",
+   "text": "exports change 2015–2025: +9.3 %"
+  },
+  {
+   "key": "exports.peak",
+   "text": "exports peak 2022: 242.5 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 5513,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 16,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 217,
+   "outcome": "ok",
+   "detail": "11 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 4,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1332,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3637,
+   "output_tokens": 127,
+   "cache_read_tokens": 0,
+   "ms": 1973
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 558,
+   "output_tokens": 103,
+   "cache_read_tokens": 0,
+   "ms": 1269
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

@@ -150,15 +150,20 @@ A key already set as an environment variable works too. The API is billed separa
 Without a key, the presets, the Refine filters and the stored runs and sessions (history, `demo/runs/`) still work. Insights then use the template fallback, and the optimiser is hidden.
 
 ### Run
-The real-data Parquet files (Eurostat extraction of 14 Oct 2026, complete until Jun 2026) are in the repo under `data/processed/`. Only the DuckDB semantic layer is rebuilt locally, because it is too large for GitHub:
+The real data (Eurostat extraction of 14 Oct 2026, complete until Jun 2026) is in the repo, ready to use. The app's database `data/processed/luxtrade.duckdb` (~450 MB) is stored with [Git LFS](https://git-lfs.com) because it is over GitHub's 100 MB file limit. Git for Windows includes Git LFS; run this once per machine before cloning or pulling:
 ```bash
-python -m luxtrade.semantic.build       # DuckDB semantic layer from the shared Parquet files (seconds)
-streamlit run src/luxtrade/app/Home.py  # launch the app
+git lfs install                         # once per machine
+git pull                                # or git clone; downloads the database too
+streamlit run src/luxtrade/app/Home.py  # launch the app on the real data
 pytest                                  # tests use their own synthetic data, no network needed
 ```
-`python -m luxtrade.process.placeholder` writes synthetic data into the same folder, so **it overwrites the shared real data**. Use it only for development without real data, and restore the real files with `git checkout -- data/processed`.
+If the app reports that `luxtrade.duckdb` is not a valid database, Git LFS was not active during the pull: run `git lfs pull`.
 
-To refresh the real data from Eurostat, the pipeline writes the same files ([GUIDELINES §1.3](docs/GUIDELINES.md)):
+Also in the repo: `data/raw/` (EN/FR/DE code lists and the download manifest) and `data/runs/` (stored answers and sessions, so the history in the sidebar works). Parquet files are not shared: they are only inputs for rebuilding the database.
+
+`python -m luxtrade.process.placeholder` writes synthetic data into the same folder, so **it overwrites the shared database**. Use it only for development without real data, and restore the real database with `git checkout -- data/processed`.
+
+To refresh the real data from Eurostat, the pipeline recreates the Parquet files and the database ([GUIDELINES §1.3](docs/GUIDELINES.md)):
 ```bash
 python -m luxtrade.ingest.download      # fetch + reduce Eurostat bulk files, write manifest (~1–1.5 h)
 python -m luxtrade.process.build        # contract Parquet + quality report + DuckDB semantic layer

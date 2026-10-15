@@ -1,0 +1,238 @@
+{
+ "run_id": "b5b1f9ae78",
+ "session_id": "gm9nwf",
+ "turn": 1,
+ "created_at": "2026-10-14T20:54:46+00:00",
+ "origin": "ask",
+ "status": "blocked",
+ "question": "How did Luxembourg's exports to the United Kingdom change after Brexit?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [
+    "GB"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": "A",
+   "period_start": "2016",
+   "period_end": "2026",
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "line",
+   "assumptions": [
+    "'after Brexit' interpreted as from 2016 onwards"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [
+   {
+    "dimension": "when",
+    "text": "exact start date of Brexit impact not specified, assumed from 2016 onwards"
+   }
+  ],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [
+   "GB"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2016",
+  "period_end": "2026",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": [
+   "'after Brexit' interpreted as from 2016 onwards"
+  ]
+ },
+ "assumptions": [
+  "'after Brexit' interpreted as from 2016 onwards"
+ ],
+ "limitations": [
+  {
+   "id": "L04",
+   "key": "latest_months_incomplete",
+   "severity": "block",
+   "message": "Months after Jun 2026 only contain extra-EU trade so far (intra-EU data is published later).",
+   "value": null
+  },
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [
+  {
+   "question": "How did Luxembourg's exports to the United Kingdom evolve annually from 2015 to 2025?",
+   "note": "Exports only, annual data 2015-2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "GB"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": null,
+    "freq": "A",
+    "period_start": "2015",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What were Luxembourg's imports from the United Kingdom by product section in 2025?",
+   "note": "Imports only, product breakdown, latest complete year",
+   "spec": {
+    "language": "en",
+    "intent": "ranking",
+    "breakdown": "product",
+    "partners": [
+     "GB"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": 10,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "bar",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was Luxembourg's trade balance with the United Kingdom from 2019 to 2025?",
+   "note": "Trade balance, multi-year 2019-2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "GB"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": null,
+    "freq": "A",
+    "period_start": "2019",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Specify a period up to June 2026 and a flow (export or import).",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 5179,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "blocked",
+   "detail": "L04:block, L06:warn"
+  },
+  {
+   "node": "optimise",
+   "ms": 5888,
+   "outcome": "routed",
+   "detail": "blocked by data limits: [L04] Months after Jun 2026 only contain extra-EU trade so far (intra-EU data is published later). · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3140,
+   "output_tokens": 163,
+   "cache_read_tokens": 2944,
+   "ms": 1498
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5293,
+   "output_tokens": 409,
+   "cache_read_tokens": 5120,
+   "ms": 2886
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

@@ -1,0 +1,765 @@
+{
+ "run_id": "d4366e8e62",
+ "session_id": "4znhyx",
+ "turn": 1,
+ "created_at": "2026-10-14T20:27:45+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Compare Luxembourg's exports to Germany and France over the last 10 years",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "pivot",
+   "breakdown": "none",
+   "partners": [
+    "DE",
+    "FR"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": "A",
+   "period_start": "2016",
+   "period_end": "2025",
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'last 10 years' interpreted as 2016 to 2025 inclusive"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "pivot",
+  "breakdown": "product",
+  "partners": [
+   "DE",
+   "FR"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2016",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'last 10 years' interpreted as 2016 to 2025 inclusive",
+   "broken down by product (not stated)",
+   "HS2 chapters (no level given)"
+  ]
+ },
+ "assumptions": [
+  "'last 10 years' interpreted as 2016 to 2025 inclusive",
+  "broken down by product (not stated)",
+  "HS2 chapters (no level given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.1 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.1081315905107918
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2016-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('DE', 'FR')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "0f15defb18bae131f9a25a5c21c8a9057e2370a082caaca6370f084ee843b444",
+ "row_count": 965,
+ "view_kind": "pivot",
+ "title": "Other: 3.00 bn € (2022)",
+ "frames": {
+  "main": [
+   {
+    "period": 2016,
+    "key": "04",
+    "flow": "export",
+    "value": 235439427.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2016,
+    "key": "39",
+    "flow": "export",
+    "value": 436028699.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2016,
+    "key": "72",
+    "flow": "export",
+    "value": 466978727.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2016,
+    "key": "73",
+    "flow": "export",
+    "value": 209760494.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2016,
+    "key": "84",
+    "flow": "export",
+    "value": 661361909.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2016,
+    "key": "85",
+    "flow": "export",
+    "value": 591282059.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2016,
+    "key": "87",
+    "flow": "export",
+    "value": 488389507.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2016,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2276519407.0,
+    "label": "Other"
+   },
+   {
+    "period": 2017,
+    "key": "04",
+    "flow": "export",
+    "value": 285298970.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2017,
+    "key": "39",
+    "flow": "export",
+    "value": 455741256.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2017,
+    "key": "72",
+    "flow": "export",
+    "value": 547836794.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2017,
+    "key": "73",
+    "flow": "export",
+    "value": 253824960.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2017,
+    "key": "84",
+    "flow": "export",
+    "value": 591734196.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2017,
+    "key": "85",
+    "flow": "export",
+    "value": 289254679.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2017,
+    "key": "87",
+    "flow": "export",
+    "value": 525024748.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2017,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2439513589.0,
+    "label": "Other"
+   },
+   {
+    "period": 2018,
+    "key": "04",
+    "flow": "export",
+    "value": 294686694.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2018,
+    "key": "39",
+    "flow": "export",
+    "value": 533640745.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2018,
+    "key": "72",
+    "flow": "export",
+    "value": 633872569.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2018,
+    "key": "73",
+    "flow": "export",
+    "value": 279442905.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2018,
+    "key": "84",
+    "flow": "export",
+    "value": 573091504.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2018,
+    "key": "85",
+    "flow": "export",
+    "value": 389143819.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2018,
+    "key": "87",
+    "flow": "export",
+    "value": 504884144.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2018,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2430590866.0,
+    "label": "Other"
+   },
+   {
+    "period": 2019,
+    "key": "04",
+    "flow": "export",
+    "value": 265103460.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2019,
+    "key": "39",
+    "flow": "export",
+    "value": 544234211.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2019,
+    "key": "72",
+    "flow": "export",
+    "value": 606928618.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2019,
+    "key": "73",
+    "flow": "export",
+    "value": 292307681.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2019,
+    "key": "84",
+    "flow": "export",
+    "value": 599642964.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2019,
+    "key": "85",
+    "flow": "export",
+    "value": 509482057.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2019,
+    "key": "87",
+    "flow": "export",
+    "value": 586445974.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2019,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2384071232.0,
+    "label": "Other"
+   },
+   {
+    "period": 2020,
+    "key": "04",
+    "flow": "export",
+    "value": 265792344.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2020,
+    "key": "39",
+    "flow": "export",
+    "value": 521692263.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2020,
+    "key": "72",
+    "flow": "export",
+    "value": 479508836.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2020,
+    "key": "73",
+    "flow": "export",
+    "value": 239382307.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2020,
+    "key": "84",
+    "flow": "export",
+    "value": 503732180.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2020,
+    "key": "85",
+    "flow": "export",
+    "value": 253696110.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2020,
+    "key": "87",
+    "flow": "export",
+    "value": 590240918.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2020,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2359406073.0,
+    "label": "Other"
+   },
+   {
+    "period": 2021,
+    "key": "04",
+    "flow": "export",
+    "value": 315049732.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2021,
+    "key": "39",
+    "flow": "export",
+    "value": 567169885.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2021,
+    "key": "72",
+    "flow": "export",
+    "value": 627847451.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2021,
+    "key": "73",
+    "flow": "export",
+    "value": 285916718.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2021,
+    "key": "84",
+    "flow": "export",
+    "value": 548607818.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2021,
+    "key": "85",
+    "flow": "export",
+    "value": 258994771.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2021,
+    "key": "87",
+    "flow": "export",
+    "value": 591926030.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2021,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2694943457.0,
+    "label": "Other"
+   },
+   {
+    "period": 2022,
+    "key": "04",
+    "flow": "export",
+    "value": 489039427.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2022,
+    "key": "39",
+    "flow": "export",
+    "value": 671564834.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2022,
+    "key": "72",
+    "flow": "export",
+    "value": 672819306.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2022,
+    "key": "73",
+    "flow": "export",
+    "value": 370107069.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2022,
+    "key": "84",
+    "flow": "export",
+    "value": 646608101.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2022,
+    "key": "85",
+    "flow": "export",
+    "value": 281450309.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2022,
+    "key": "87",
+    "flow": "export",
+    "value": 595589196.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2022,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 3002906229.0,
+    "label": "Other"
+   },
+   {
+    "period": 2023,
+    "key": "04",
+    "flow": "export",
+    "value": 517372669.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2023,
+    "key": "39",
+    "flow": "export",
+    "value": 560816188.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2023,
+    "key": "72",
+    "flow": "export",
+    "value": 495332141.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2023,
+    "key": "73",
+    "flow": "export",
+    "value": 299672910.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2023,
+    "key": "84",
+    "flow": "export",
+    "value": 626284617.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2023,
+    "key": "85",
+    "flow": "export",
+    "value": 272055334.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2023,
+    "key": "87",
+    "flow": "export",
+    "value": 709293736.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2023,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2905091491.0,
+    "label": "Other"
+   },
+   {
+    "period": 2024,
+    "key": "04",
+    "flow": "export",
+    "value": 536212262.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2024,
+    "key": "39",
+    "flow": "export",
+    "value": 567975592.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2024,
+    "key": "72",
+    "flow": "export",
+    "value": 430990346.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2024,
+    "key": "73",
+    "flow": "export",
+    "value": 273451988.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2024,
+    "key": "84",
+    "flow": "export",
+    "value": 582273504.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2024,
+    "key": "85",
+    "flow": "export",
+    "value": 223126795.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2024,
+    "key": "87",
+    "flow": "export",
+    "value": 606117213.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2024,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2772254957.0,
+    "label": "Other"
+   },
+   {
+    "period": 2025,
+    "key": "04",
+    "flow": "export",
+    "value": 568005318.0,
+    "label": "Dairy produce; eggs; honey"
+   },
+   {
+    "period": 2025,
+    "key": "39",
+    "flow": "export",
+    "value": 606749973.0,
+    "label": "Plastics and articles thereof"
+   },
+   {
+    "period": 2025,
+    "key": "72",
+    "flow": "export",
+    "value": 421167212.0,
+    "label": "Iron and steel"
+   },
+   {
+    "period": 2025,
+    "key": "73",
+    "flow": "export",
+    "value": 256211673.0,
+    "label": "Articles of iron or steel"
+   },
+   {
+    "period": 2025,
+    "key": "84",
+    "flow": "export",
+    "value": 589665184.0,
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2025,
+    "key": "85",
+    "flow": "export",
+    "value": 1023356083.0,
+    "label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2025,
+    "key": "87",
+    "flow": "export",
+    "value": 622791908.0,
+    "label": "Vehicles and parts"
+   },
+   {
+    "period": 2025,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 2929811448.0,
+    "label": "Other"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "04",
+   "39",
+   "72",
+   "73",
+   "84",
+   "85",
+   "87"
+  ]
+ },
+ "insight": [
+  "Luxembourg's exports to Germany and France over the last 10 years are not detailed in the available data.",
+  "The key figure provided is the value of other exports in 2022, which is 3.00 billion euros.",
+  "There is no specific comparison or trend information for exports to Germany and France.",
+  "The data does not include seasonal or projection notes.",
+  "Values are given in current euros and 1.1% of the data is confidential, which may affect detailed analysis."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "pivot.max",
+   "text": "Other 2022: 3.00 bn €"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 37718,
+   "outcome": "ok",
+   "detail": "intent=pivot breakdown=none"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 357,
+   "outcome": "ok",
+   "detail": "965 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 26,
+   "outcome": "ok",
+   "detail": "view=pivot; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1368,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2945,
+   "output_tokens": 146,
+   "cache_read_tokens": 1920,
+   "ms": 1875
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 506,
+   "output_tokens": 102,
+   "cache_read_tokens": 0,
+   "ms": 1296
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

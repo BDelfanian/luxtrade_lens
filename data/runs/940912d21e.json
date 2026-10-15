@@ -1,0 +1,198 @@
+{
+ "run_id": "940912d21e",
+ "session_id": "8ta37t",
+ "turn": 1,
+ "created_at": "2026-10-14T21:19:47+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Quelle est la part de l'UE dans les importations du Luxembourg en 2025 ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "fr",
+   "intent": "composition",
+   "breakdown": "partner_group",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": "import",
+   "measure": "share",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "fr",
+  "intent": "composition",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "25b7cda3023fc4e204b4eac559f1d2a00fcbdfa2c9a86f360dffc7d0b9539ba4",
+ "row_count": 2,
+ "view_kind": "bar",
+ "title": "Pays de l'UE27 — importations 2025: 86,6 %",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "EU27",
+    "value": 21723778482.0,
+    "share": 86.5560066022,
+    "rank": 1,
+    "kind": "item",
+    "label": "Pays de l'UE27"
+   },
+   {
+    "flow": "import",
+    "key": "NON_EU27",
+    "value": 3374165999.0,
+    "share": 13.4439933978,
+    "rank": 2,
+    "kind": "item",
+    "label": "Pays hors UE27"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "La part de l'Union européenne dans les importations du Luxembourg en 2025 est de 86,6 %.",
+  "Le total des importations s'élève à 25,10 milliards d'euros cette année-là.",
+  "Les pays de l'UE27 représentent 21,72 milliards d'euros des importations, tandis que les pays hors UE27 comptent pour 3,37 milliards d'euros.",
+  "La part des pays hors UE27 est donc de 13,4 % des importations totales.",
+  "Les valeurs sont exprimées en euros courants, sans ajustement pour les variations de prix."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "importations 2025: 25,10 Md €"
+  },
+  {
+   "key": "import.eu27",
+   "text": "Pays de l'UE27: 21,72 Md €, 86,6 %"
+  },
+  {
+   "key": "import.non_eu27",
+   "text": "Pays hors UE27: 3,37 Md €, 13,4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of each flow's total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 3505,
+   "outcome": "ok",
+   "detail": "intent=composition breakdown=partner_group"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 122,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 12,
+   "outcome": "ok",
+   "detail": "view=bar; share of each flow's total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1477,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3666,
+   "output_tokens": 123,
+   "cache_read_tokens": 1920,
+   "ms": 1208
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 543,
+   "output_tokens": 127,
+   "cache_read_tokens": 0,
+   "ms": 1441
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

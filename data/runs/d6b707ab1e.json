@@ -1,0 +1,143 @@
+{
+ "run_id": "d6b707ab1e",
+ "session_id": "dxx9bd",
+ "turn": 1,
+ "created_at": "2026-10-14T15:00:44+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Show monthly imports of mineral fuels since 2020, with seasonal effects removed.",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": null,
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What are Luxembourg's monthly imports of mineral fuels from 2020 to 2025, seasonally adjusted?",
+   "note": "monthly imports of mineral fuels, 2020-2025, seasonally adjusted",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "M",
+    "period_start": "2020-01",
+    "period_end": "2025-12",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": true,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "How have Luxembourg's imports of mineral fuels from Germany evolved monthly since 2020, with seasonal effects removed?",
+   "note": "monthly imports of mineral fuels from Germany, 2020-2025, seasonally adjusted",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "DE"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "M",
+    "period_start": "2020-01",
+    "period_end": "2025-12",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": true,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What is the monthly import quantity of mineral fuels into Luxembourg from all partners since 2020, seasonally adjusted?",
+   "note": "monthly imports quantity of mineral fuels, 2020-2025, seasonally adjusted",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "M",
+    "period_start": "2020-01",
+    "period_end": "2025-12",
+    "flow": "import",
+    "measure": "qty_kg",
+    "top_n": null,
+    "seasonal_adjust": true,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Specify the partner(s) or confirm all partners, and the exact period.",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "optimise",
+   "ms": 5016,
+   "outcome": "routed",
+   "detail": "the user asked for more precise versions of the question before running it · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1503,
+   "output_tokens": 461,
+   "cache_read_tokens": 0,
+   "ms": 3997
+  }
+ ],
+ "code_version": "b561356",
+ "error": null
+}

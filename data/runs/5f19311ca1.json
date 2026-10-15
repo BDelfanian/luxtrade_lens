@@ -1,0 +1,247 @@
+{
+ "run_id": "5f19311ca1",
+ "session_id": "mh5c4w",
+ "turn": 4,
+ "created_at": "2026-10-14T22:12:08+00:00",
+ "origin": "optimiser",
+ "status": "answered",
+ "question": "What were Luxembourg's top 5 non-EU trading partners by export value in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": "dcef3d74fb",
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 5,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "bar",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "2.6 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 2.644802752367623
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "a05f8e52ed1a970b14fa0d9d435b9a9649192d539fdd2029e7805b3c5cfa0def",
+ "row_count": 176,
+ "view_kind": "bar",
+ "title": "United States — exports 2025 (15.3 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "US",
+    "value": 421010107.0,
+    "share": 15.3415931661,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "key": "GB",
+    "value": 359563457.0,
+    "share": 13.1024794488,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "key": "CH",
+    "value": 283265429.0,
+    "share": 10.322182051,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Switzerland",
+    "iso3": "CHE"
+   },
+   {
+    "key": "CN",
+    "value": 231829904.0,
+    "share": 8.4478733688,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "key": "TR",
+    "value": 149377853.0,
+    "share": 5.443323594,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Türkiye",
+    "iso3": "TUR"
+   },
+   {
+    "key": "OTHER",
+    "value": 1137473605.0,
+    "share": 41.4494972804,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 161719454.0,
+    "share": 5.8930510909,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "US",
+   "GB",
+   "CH",
+   "CN",
+   "TR"
+  ]
+ },
+ "insight": [
+  "Luxembourg's top 5 non-EU trading partners by export value in 2025 were the United States, United Kingdom, Switzerland, China, and Türkiye.",
+  "Total exports to non-EU countries amounted to 2.74 billion euros in 2025.",
+  "The United States was the largest partner with exports valued at 421.0 million euros, representing 15.3% of the total.",
+  "The top three partners together accounted for 38.8% of exports, while other countries made up 41.4%.",
+  "The data are in current euros and include 2.6% of trade with undisclosed partners, which are not assigned to any country."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2025: 2.74 bn €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 United States: 421.0 M€, 15.3 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 United Kingdom: 359.6 M€, 13.1 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Switzerland: 283.3 M€, 10.3 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 China: 231.8 M€, 8.4 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Türkiye: 149.4 M€, 5.4 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 1.14 bn €, 41.4 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 161.7 M€, 5.9 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 38.8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-5 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 138,
+   "outcome": "ok",
+   "detail": "176 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 39,
+   "outcome": "ok",
+   "detail": "view=bar; Top-5 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1797,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 797,
+   "output_tokens": 142,
+   "cache_read_tokens": 0,
+   "ms": 1734
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

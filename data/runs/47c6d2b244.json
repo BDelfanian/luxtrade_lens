@@ -1,0 +1,286 @@
+{
+ "run_id": "47c6d2b244",
+ "session_id": "96vmpz",
+ "turn": 2,
+ "created_at": "2026-10-14T21:48:13+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "What are the top 5 categories of products imported from Belgium in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [
+    "BE"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": "HS2",
+   "freq": "A",
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": 5,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "BE"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 5,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.7 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.693220237380567
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('BE')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "9b23be32cb5fd6b17a681a89da4183737947ee541ede0d1fd6d708787dcd4cf3",
+ "row_count": 97,
+ "view_kind": "bar",
+ "title": "Vehicles and parts — imports 2025 (20.9 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "87",
+    "value": 1579239875.0,
+    "share": 20.9395357879,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vehicles and parts"
+   },
+   {
+    "key": "27",
+    "value": 1122291495.0,
+    "share": 14.8807431322,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Mineral fuels and oils"
+   },
+   {
+    "key": "30",
+    "value": 705557195.0,
+    "share": 9.3551590034,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pharmaceutical products"
+   },
+   {
+    "key": "40",
+    "value": 388662866.0,
+    "share": 5.1533779769,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Rubber and articles thereof"
+   },
+   {
+    "key": "84",
+    "value": 370454196.0,
+    "share": 4.9119446752,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "OTHER",
+    "value": 3371603002.0,
+    "share": 44.7049259842,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 4096268.0,
+    "share": 0.0543134401,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "87",
+   "27",
+   "30",
+   "40",
+   "84"
+  ]
+ },
+ "insight": [
+  "The top 5 categories of products imported from Belgium in 2025 are vehicles and parts, mineral fuels and oils, pharmaceutical products, rubber and articles thereof, and machinery and mechanical appliances.",
+  "Total imports from Belgium amount to 7.54 billion euros in 2025.",
+  "Vehicles and parts are the largest category with 1.58 billion euros, representing 20.9% of imports, followed by mineral fuels and oils at 1.12 billion euros or 14.9%.",
+  "The top 3 import categories together account for 45.2% of the total imports from Belgium.",
+  "The data values are in current euros and are not adjusted for price changes, and 1.7% of the import value is confidential and shown separately."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 7.54 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Vehicles and parts: 1.58 bn €, 20.9 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Mineral fuels and oils: 1.12 bn €, 14.9 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Pharmaceutical products: 705.6 M€, 9.4 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Rubber and articles thereof: 388.7 M€, 5.2 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Machinery and mechanical appliances: 370.5 M€, 4.9 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 3.37 bn €, 44.7 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 4.1 M€, 0.1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 45.2 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-5 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 5435,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 156,
+   "outcome": "ok",
+   "detail": "97 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 17,
+   "outcome": "ok",
+   "detail": "view=bar; Top-5 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1726,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3573,
+   "output_tokens": 128,
+   "cache_read_tokens": 1920,
+   "ms": 1632
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 775,
+   "output_tokens": 157,
+   "cache_read_tokens": 0,
+   "ms": 1676
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

@@ -1,0 +1,217 @@
+{
+ "run_id": "4e8637e70f",
+ "session_id": "qbgf9e",
+ "turn": 1,
+ "created_at": "2026-10-14T20:36:06+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "How much of Luxembourg's mineral fuel imports is confidential?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "single_value",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "27"
+   ],
+   "product_level": "HS2",
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'mineral fuel' interpreted as HS2 code 27"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [
+   {
+    "dimension": "what",
+    "text": "meaning of 'confidential' in trade data"
+   }
+  ],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "single_value",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": null,
+  "period_start": null,
+  "period_end": null,
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'mineral fuel' interpreted as HS2 code 27"
+  ]
+ },
+ "assumptions": [
+  "'mineral fuel' interpreted as HS2 code 27"
+ ],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's imports of mineral fuels (HS2 27) in 2025?",
+   "note": "imports of mineral fuels only, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was the trade balance of mineral fuels (HS2 27) for Luxembourg from 2018 to 2025?",
+   "note": "trade balance over time for mineral fuels",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2018",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What were Luxembourg's imports of mineral fuels (HS2 27) from EU27 in 2025?",
+   "note": "imports from EU27 only, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [
+     "27"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Please specify the meaning of 'confidential' or clarify the question.",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 36180,
+   "outcome": "ok",
+   "detail": "intent=single_value breakdown=none"
+  },
+  {
+   "node": "optimise",
+   "ms": 23048,
+   "outcome": "routed",
+   "detail": "the question is unclear: meaning of 'confidential' in trade data · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3215,
+   "output_tokens": 155,
+   "cache_read_tokens": 1920,
+   "ms": 1640
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5395,
+   "output_tokens": 420,
+   "cache_read_tokens": 0,
+   "ms": 3282
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

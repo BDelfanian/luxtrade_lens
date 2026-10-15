@@ -1,0 +1,337 @@
+{
+ "run_id": "69ba2ba0c3",
+ "session_id": "jkct35",
+ "turn": 1,
+ "created_at": "2026-10-14T17:38:01+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Quels sont les principaux partenaires à l'exportation du Luxembourg en 2024 ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "fr",
+   "intent": "ranking",
+   "breakdown": "partner",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": "2024",
+   "period_end": "2024",
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "fr",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2024",
+  "period_end": "2024",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2024-01-01' AS DATE)\n  AND period < CAST('2025-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "5c6cbc6fa5234dd514811299a789069a5bb732a404432a2b921a089ca6e9d30b",
+ "row_count": 25,
+ "view_kind": "map",
+ "title": "Allemagne — exportations 2024 (30,6 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "DE",
+    "value": 4833791936.0,
+    "share": 30.593619883,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Allemagne",
+    "iso3": "DEU"
+   },
+   {
+    "key": "FR",
+    "value": 3495680071.0,
+    "share": 22.1245574366,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "BE",
+    "value": 2785684140.0,
+    "share": 17.6309122986,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Belgique",
+    "iso3": "BEL"
+   },
+   {
+    "key": "NL",
+    "value": 919670770.0,
+    "share": 5.8207010826,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Pays-Bas",
+    "iso3": "NLD"
+   },
+   {
+    "key": "IT",
+    "value": 802321978.0,
+    "share": 5.0779872083,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Italie",
+    "iso3": "ITA"
+   },
+   {
+    "key": "ES",
+    "value": 598987661.0,
+    "share": 3.7910611499,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Espagne",
+    "iso3": "ESP"
+   },
+   {
+    "key": "PL",
+    "value": 452670274.0,
+    "share": 2.8650017374,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Pologne",
+    "iso3": "POL"
+   },
+   {
+    "key": "US",
+    "value": 425626440.0,
+    "share": 2.6938382309,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "États-Unis",
+    "iso3": "USA"
+   },
+   {
+    "key": "GB",
+    "value": 333406532.0,
+    "share": 2.1101679265,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Royaume-Uni",
+    "iso3": "GBR"
+   },
+   {
+    "key": "AT",
+    "value": 300798245.0,
+    "share": 1.9037863629,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Autriche",
+    "iso3": "AUT"
+   },
+   {
+    "key": "OTHER",
+    "value": 823119908.0,
+    "share": 5.2096196768,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Autres",
+    "iso3": null
+   },
+   {
+    "key": "UNDISCLOSED",
+    "value": 28242027.0,
+    "share": 0.1787470065,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Non divulgué / non spécifié",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "DE",
+   "FR",
+   "BE",
+   "NL",
+   "IT",
+   "ES",
+   "PL",
+   "US",
+   "GB",
+   "AT"
+  ]
+ },
+ "insight": [
+  "Les principaux partenaires à l'exportation du Luxembourg en 2024 sont l'Allemagne, la France et la Belgique.",
+  "Les exportations totales s'élèvent à 15,80 milliards d'euros, avec l'Allemagne en tête à 4,83 milliards d'euros, soit 30,6 % du total.",
+  "La part des trois premiers pays représente 70,3 % des exportations totales, ce qui montre une forte concentration géographique.",
+  "Les Pays-Bas et l'Italie suivent avec respectivement 919,7 millions d'euros et 802,3 millions d'euros d'exportations.",
+  "Les valeurs sont exprimées en euros courants, sans ajustement pour les variations de prix, ce qui peut limiter les comparaisons dans le temps."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exportations 2024: 15,80 Md €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Allemagne: 4,83 Md €, 30,6 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 France: 3,50 Md €, 22,1 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Belgique: 2,79 Md €, 17,6 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Pays-Bas: 919,7 M€, 5,8 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Italie: 802,3 M€, 5,1 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Autres: 823,1 M€, 5,2 %"
+  },
+  {
+   "key": "export.undisclosed",
+   "text": "Non divulgué / non spécifié: 28,2 M€, 0,2 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exportations: 70,3 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 1848,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=partner"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 71,
+   "outcome": "ok",
+   "detail": "25 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 23,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1765,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2360,
+   "output_tokens": 125,
+   "cache_read_tokens": 2176,
+   "ms": 1520
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 788,
+   "output_tokens": 163,
+   "cache_read_tokens": 0,
+   "ms": 1748
+  }
+ ],
+ "code_version": "57eb94c",
+ "error": null
+}

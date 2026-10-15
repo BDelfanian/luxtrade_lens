@@ -1,0 +1,822 @@
+{
+ "run_id": "c885b04648",
+ "session_id": "dxx9bd",
+ "turn": 2,
+ "created_at": "2026-10-14T15:01:04+00:00",
+ "origin": "followup",
+ "status": "answered",
+ "question": "Show monthly imports of mineral fuels since 2020, with seasonal effects removed.",
+ "language": "en",
+ "followup_of": "d6b707ab1e",
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "seasonality",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "27"
+   ],
+   "product_level": "HS2",
+   "freq": "M",
+   "period_start": "2020",
+   "period_end": null,
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": true,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": "d6b707ab1e",
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "seasonality",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "M",
+  "period_start": "2020",
+  "period_end": "2025-12",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": true,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2020-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  period,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "89300d995d7d0d13627a85552ebc8f8873a243dea84088dda38d2d4208ca7e06",
+ "row_count": 72,
+ "view_kind": "season",
+ "title": "imports: Mar +14.9 %, Aug −22.7 %",
+ "frames": {
+  "main": [
+   {
+    "period": "2020-01-01",
+    "observed": 91436197.0,
+    "trend": 71083293.20841877,
+    "seasonal_factor": 1.2946172335,
+    "adjusted": 70627977.62312196,
+    "flow": "import"
+   },
+   {
+    "period": "2020-02-01",
+    "observed": 96629268.0,
+    "trend": 74605291.91186377,
+    "seasonal_factor": 1.2958391705,
+    "adjusted": 74568874.13299471,
+    "flow": "import"
+   },
+   {
+    "period": "2020-03-01",
+    "observed": 113930644.0,
+    "trend": 78302548.61436428,
+    "seasonal_factor": 1.440471746,
+    "adjusted": 79092591.93588261,
+    "flow": "import"
+   },
+   {
+    "period": "2020-04-01",
+    "observed": 75652236.0,
+    "trend": 82184615.93863735,
+    "seasonal_factor": 0.9159545616,
+    "adjusted": 82593874.38427924,
+    "flow": "import"
+   },
+   {
+    "period": "2020-05-01",
+    "observed": 78556013.0,
+    "trend": 86260978.99748828,
+    "seasonal_factor": 0.916480831,
+    "adjusted": 85714845.67913741,
+    "flow": "import"
+   },
+   {
+    "period": "2020-06-01",
+    "observed": 110067070.0,
+    "trend": 90541047.62096362,
+    "seasonal_factor": 1.2123213996,
+    "adjusted": 90790338.30352946,
+    "flow": "import"
+   },
+   {
+    "period": "2020-07-01",
+    "observed": 98591562.0,
+    "trend": 95034503.11396049,
+    "seasonal_factor": 1.0399279232,
+    "adjusted": 94806149.3521502,
+    "flow": "import"
+   },
+   {
+    "period": "2020-08-01",
+    "observed": 78003107.0,
+    "trend": 99750778.67924246,
+    "seasonal_factor": 0.7785536709,
+    "adjusted": 100189762.00735378,
+    "flow": "import"
+   },
+   {
+    "period": "2020-09-01",
+    "observed": 97176693.0,
+    "trend": 104698592.82994676,
+    "seasonal_factor": 0.9308124841,
+    "adjusted": 104399859.9750091,
+    "flow": "import"
+   },
+   {
+    "period": "2020-10-01",
+    "observed": 107830204.0,
+    "trend": 109884722.08726706,
+    "seasonal_factor": 0.987260197,
+    "adjusted": 109221666.51207256,
+    "flow": "import"
+   },
+   {
+    "period": "2020-11-01",
+    "observed": 99724235.0,
+    "trend": 115317780.27197596,
+    "seasonal_factor": 0.8823825253,
+    "adjusted": 113017010.35762666,
+    "flow": "import"
+   },
+   {
+    "period": "2020-12-01",
+    "observed": 85351135.0,
+    "trend": 121028092.25583218,
+    "seasonal_factor": 0.693642362,
+    "adjusted": 123047754.39311418,
+    "flow": "import"
+   },
+   {
+    "period": "2021-01-01",
+    "observed": 158050648.0,
+    "trend": 127019924.89021462,
+    "seasonal_factor": 1.2311540022,
+    "adjusted": 128376017.71487455,
+    "flow": "import"
+   },
+   {
+    "period": "2021-02-01",
+    "observed": 166211402.0,
+    "trend": 133316709.70314462,
+    "seasonal_factor": 1.2429414224,
+    "adjusted": 133724243.96579659,
+    "flow": "import"
+   },
+   {
+    "period": "2021-03-01",
+    "observed": 185077982.0,
+    "trend": 139950925.0114445,
+    "seasonal_factor": 1.331350626,
+    "adjusted": 139015206.35595068,
+    "flow": "import"
+   },
+   {
+    "period": "2021-04-01",
+    "observed": 174080507.0,
+    "trend": 146922649.88826814,
+    "seasonal_factor": 0.9333245058,
+    "adjusted": 186516593.02222002,
+    "flow": "import"
+   },
+   {
+    "period": "2021-05-01",
+    "observed": 184084904.0,
+    "trend": 154232643.0671457,
+    "seasonal_factor": 0.9400069712,
+    "adjusted": 195833551.91747123,
+    "flow": "import"
+   },
+   {
+    "period": "2021-06-01",
+    "observed": 189510916.0,
+    "trend": 161883509.40811306,
+    "seasonal_factor": 1.1758520523,
+    "adjusted": 161169014.10202074,
+    "flow": "import"
+   },
+   {
+    "period": "2021-07-01",
+    "observed": 177123091.0,
+    "trend": 169875411.91120905,
+    "seasonal_factor": 1.0332949404,
+    "adjusted": 171415811.76464167,
+    "flow": "import"
+   },
+   {
+    "period": "2021-08-01",
+    "observed": 137623610.0,
+    "trend": 178231832.47136614,
+    "seasonal_factor": 0.7762935665,
+    "adjusted": 177282945.45696816,
+    "flow": "import"
+   },
+   {
+    "period": "2021-09-01",
+    "observed": 178683278.0,
+    "trend": 187026413.15851623,
+    "seasonal_factor": 0.9623149231,
+    "adjusted": 185680668.26578742,
+    "flow": "import"
+   },
+   {
+    "period": "2021-10-01",
+    "observed": 177643910.0,
+    "trend": 196362987.70615324,
+    "seasonal_factor": 1.0280241794,
+    "adjusted": 172801295.48697177,
+    "flow": "import"
+   },
+   {
+    "period": "2021-11-01",
+    "observed": 193617025.0,
+    "trend": 206255902.58702454,
+    "seasonal_factor": 0.9184360803,
+    "adjusted": 210811649.441768,
+    "flow": "import"
+   },
+   {
+    "period": "2021-12-01",
+    "observed": 155503229.0,
+    "trend": 216692232.14853448,
+    "seasonal_factor": 0.7306493008,
+    "adjusted": 212828820.66201907,
+    "flow": "import"
+   },
+   {
+    "period": "2022-01-01",
+    "observed": 358377756.0,
+    "trend": 227663167.83922842,
+    "seasonal_factor": 1.1707788871,
+    "adjusted": 306101997.5175338,
+    "flow": "import"
+   },
+   {
+    "period": "2022-02-01",
+    "observed": 354689352.0,
+    "trend": 239190010.24573866,
+    "seasonal_factor": 1.1923267903,
+    "adjusted": 297476627.11508566,
+    "flow": "import"
+   },
+   {
+    "period": "2022-03-01",
+    "observed": 376924525.0,
+    "trend": 251312197.51610976,
+    "seasonal_factor": 1.2312803445,
+    "adjusted": 306124049.3840159,
+    "flow": "import"
+   },
+   {
+    "period": "2022-04-01",
+    "observed": 370450454.0,
+    "trend": 264070719.36640322,
+    "seasonal_factor": 0.9515081527,
+    "adjusted": 389329773.9316488,
+    "flow": "import"
+   },
+   {
+    "period": "2022-05-01",
+    "observed": 377949075.0,
+    "trend": 277497938.07646835,
+    "seasonal_factor": 0.9637128935,
+    "adjusted": 392180158.18441546,
+    "flow": "import"
+   },
+   {
+    "period": "2022-06-01",
+    "observed": 333305829.0,
+    "trend": 284219598.65176636,
+    "seasonal_factor": 1.1412066277,
+    "adjusted": 292064399.9915129,
+    "flow": "import"
+   },
+   {
+    "period": "2022-07-01",
+    "observed": 350262563.0,
+    "trend": 273420900.4652646,
+    "seasonal_factor": 1.0269257199,
+    "adjusted": 341078771.5356527,
+    "flow": "import"
+   },
+   {
+    "period": "2022-08-01",
+    "observed": 275904400.0,
+    "trend": 272233109.7680894,
+    "seasonal_factor": 0.7741681415,
+    "adjusted": 356388212.34700644,
+    "flow": "import"
+   },
+   {
+    "period": "2022-09-01",
+    "observed": 338593472.0,
+    "trend": 276940213.36398035,
+    "seasonal_factor": 0.9938465362,
+    "adjusted": 340689894.9479219,
+    "flow": "import"
+   },
+   {
+    "period": "2022-10-01",
+    "observed": 384781559.0,
+    "trend": 275246187.19434875,
+    "seasonal_factor": 1.0691449747,
+    "adjusted": 359896523.02771777,
+    "flow": "import"
+   },
+   {
+    "period": "2022-11-01",
+    "observed": 367502247.0,
+    "trend": 271434960.4533241,
+    "seasonal_factor": 0.955693901,
+    "adjusted": 384539701.0626012,
+    "flow": "import"
+   },
+   {
+    "period": "2022-12-01",
+    "observed": 305852015.0,
+    "trend": 267548083.66327354,
+    "seasonal_factor": 0.7700092965,
+    "adjusted": 397205613.4854679,
+    "flow": "import"
+   },
+   {
+    "period": "2023-01-01",
+    "observed": 229454851.0,
+    "trend": 263100359.74077415,
+    "seasonal_factor": 1.1129851868,
+    "adjusted": 206161639.62728077,
+    "flow": "import"
+   },
+   {
+    "period": "2023-02-01",
+    "observed": 243651400.0,
+    "trend": 257678087.9276556,
+    "seasonal_factor": 1.1437724,
+    "adjusted": 213024374.43568036,
+    "flow": "import"
+   },
+   {
+    "period": "2023-03-01",
+    "observed": 289132707.0,
+    "trend": 253273705.89519012,
+    "seasonal_factor": 1.1405826921,
+    "adjusted": 253495611.50023666,
+    "flow": "import"
+   },
+   {
+    "period": "2023-04-01",
+    "observed": 242445179.0,
+    "trend": 252647555.66728586,
+    "seasonal_factor": 0.970835446,
+    "adjusted": 249728396.2915389,
+    "flow": "import"
+   },
+   {
+    "period": "2023-05-01",
+    "observed": 260971636.0,
+    "trend": 253066385.62280667,
+    "seasonal_factor": 0.9874485203,
+    "adjusted": 264288852.15900344,
+    "flow": "import"
+   },
+   {
+    "period": "2023-06-01",
+    "observed": 261519280.0,
+    "trend": 253541815.60549656,
+    "seasonal_factor": 1.1090642057,
+    "adjusted": 235801749.48917562,
+    "flow": "import"
+   },
+   {
+    "period": "2023-07-01",
+    "observed": 255036554.0,
+    "trend": 253654218.33030623,
+    "seasonal_factor": 1.0204196375,
+    "adjusted": 249933012.47665703,
+    "flow": "import"
+   },
+   {
+    "period": "2023-08-01",
+    "observed": 199009493.0,
+    "trend": 252763338.47540087,
+    "seasonal_factor": 0.7727504391,
+    "adjusted": 257533975.94068992,
+    "flow": "import"
+   },
+   {
+    "period": "2023-09-01",
+    "observed": 267332946.0,
+    "trend": 250923274.5473955,
+    "seasonal_factor": 1.024526255,
+    "adjusted": 260933231.02766576,
+    "flow": "import"
+   },
+   {
+    "period": "2023-10-01",
+    "observed": 279762379.0,
+    "trend": 248712596.9762806,
+    "seasonal_factor": 1.1084776442,
+    "adjusted": 252384322.28256047,
+    "flow": "import"
+   },
+   {
+    "period": "2023-11-01",
+    "observed": 253675536.0,
+    "trend": 246544086.22973856,
+    "seasonal_factor": 0.9939710166,
+    "adjusted": 255214218.28728652,
+    "flow": "import"
+   },
+   {
+    "period": "2023-12-01",
+    "observed": 220614934.0,
+    "trend": 244428064.37802547,
+    "seasonal_factor": 0.8130671898,
+    "adjusted": 271336657.9875088,
+    "flow": "import"
+   },
+   {
+    "period": "2024-01-01",
+    "observed": 197719338.0,
+    "trend": 242268118.23338202,
+    "seasonal_factor": 1.0577516761,
+    "adjusted": 186924154.7651879,
+    "flow": "import"
+   },
+   {
+    "period": "2024-02-01",
+    "observed": 225320278.0,
+    "trend": 240018265.3138356,
+    "seasonal_factor": 1.0972916676,
+    "adjusted": 205342193.56768924,
+    "flow": "import"
+   },
+   {
+    "period": "2024-03-01",
+    "observed": 244250936.0,
+    "trend": 237610846.6355934,
+    "seasonal_factor": 1.058187219,
+    "adjusted": 230820153.19944862,
+    "flow": "import"
+   },
+   {
+    "period": "2024-04-01",
+    "observed": 232837805.0,
+    "trend": 234938269.10063317,
+    "seasonal_factor": 0.9917356494,
+    "adjusted": 234778093.47672552,
+    "flow": "import"
+   },
+   {
+    "period": "2024-05-01",
+    "observed": 228781317.0,
+    "trend": 232094112.55802655,
+    "seasonal_factor": 1.0108307965,
+    "adjusted": 226329983.02005902,
+    "flow": "import"
+   },
+   {
+    "period": "2024-06-01",
+    "observed": 246508515.0,
+    "trend": 229373374.92856318,
+    "seasonal_factor": 1.078463027,
+    "adjusted": 228573913.83341026,
+    "flow": "import"
+   },
+   {
+    "period": "2024-07-01",
+    "observed": 235181736.0,
+    "trend": 227094550.7730129,
+    "seasonal_factor": 1.0137903061,
+    "adjusted": 231982624.5945323,
+    "flow": "import"
+   },
+   {
+    "period": "2024-08-01",
+    "observed": 167286781.0,
+    "trend": 225370549.61040372,
+    "seasonal_factor": 0.7720469231,
+    "adjusted": 216679551.46144426,
+    "flow": "import"
+   },
+   {
+    "period": "2024-09-01",
+    "observed": 238900439.0,
+    "trend": 224045863.8544356,
+    "seasonal_factor": 1.0550507953,
+    "adjusted": 226435011.529127,
+    "flow": "import"
+   },
+   {
+    "period": "2024-10-01",
+    "observed": 271110098.0,
+    "trend": 222902952.43904346,
+    "seasonal_factor": 1.1459993296,
+    "adjusted": 236570904.54112405,
+    "flow": "import"
+   },
+   {
+    "period": "2024-11-01",
+    "observed": 216639498.0,
+    "trend": 221817277.55259737,
+    "seasonal_factor": 1.0329069403,
+    "adjusted": 209737672.92594272,
+    "flow": "import"
+   },
+   {
+    "period": "2024-12-01",
+    "observed": 182324464.0,
+    "trend": 220734711.73386085,
+    "seasonal_factor": 0.8601030849,
+    "adjusted": 211979781.48615375,
+    "flow": "import"
+   },
+   {
+    "period": "2025-01-01",
+    "observed": 220619996.0,
+    "trend": 219615867.7594369,
+    "seasonal_factor": 1.0053508681,
+    "adjusted": 219445770.61835325,
+    "flow": "import"
+   },
+   {
+    "period": "2025-02-01",
+    "observed": 230022554.0,
+    "trend": 218452772.82371172,
+    "seasonal_factor": 1.0529439963,
+    "adjusted": 218456589.14237845,
+    "flow": "import"
+   },
+   {
+    "period": "2025-03-01",
+    "observed": 218564460.0,
+    "trend": 217277028.01856175,
+    "seasonal_factor": 0.9823244764,
+    "adjusted": 222497214.77745578,
+    "flow": "import"
+   },
+   {
+    "period": "2025-04-01",
+    "observed": 221048709.0,
+    "trend": 216215471.96085364,
+    "seasonal_factor": 1.0140764017,
+    "adjusted": 217980330.31739512,
+    "flow": "import"
+   },
+   {
+    "period": "2025-05-01",
+    "observed": 222628110.0,
+    "trend": 215227328.13271677,
+    "seasonal_factor": 1.0337093324,
+    "adjusted": 215368192.03436702,
+    "flow": "import"
+   },
+   {
+    "period": "2025-06-01",
+    "observed": 228000147.0,
+    "trend": 214273897.2997972,
+    "seasonal_factor": 1.049143781,
+    "adjusted": 217320210.18463936,
+    "flow": "import"
+   },
+   {
+    "period": "2025-07-01",
+    "observed": 213252506.0,
+    "trend": 213333923.15643382,
+    "seasonal_factor": 1.0076239249,
+    "adjusted": 211638986.26710388,
+    "flow": "import"
+   },
+   {
+    "period": "2025-08-01",
+    "observed": 166664400.0,
+    "trend": 212394428.989823,
+    "seasonal_factor": 0.7713900555,
+    "adjusted": 216057231.75135654,
+    "flow": "import"
+   },
+   {
+    "period": "2025-09-01",
+    "observed": 223611138.0,
+    "trend": 211448562.28078508,
+    "seasonal_factor": 1.085902981,
+    "adjusted": 205921838.2364729,
+    "flow": "import"
+   },
+   {
+    "period": "2025-10-01",
+    "observed": 235050848.0,
+    "trend": 210492148.42160556,
+    "seasonal_factor": 1.1833953967,
+    "adjusted": 198624102.0087517,
+    "flow": "import"
+   },
+   {
+    "period": "2025-11-01",
+    "observed": 226790005.0,
+    "trend": 209527370.8158074,
+    "seasonal_factor": 1.0724138353,
+    "adjusted": 211476202.1305974,
+    "flow": "import"
+   },
+   {
+    "period": "2025-12-01",
+    "observed": 194139786.0,
+    "trend": 208562421.94250458,
+    "seasonal_factor": 0.9101654196,
+    "adjusted": 213301650.24408522,
+    "flow": "import"
+   }
+  ],
+  "profile": [
+   {
+    "month": 1,
+    "factor": 1.1156041241,
+    "flow": "import"
+   },
+   {
+    "month": 2,
+    "factor": 1.1458552553,
+    "flow": "import"
+   },
+   {
+    "month": 3,
+    "factor": 1.1487450716,
+    "flow": "import"
+   },
+   {
+    "month": 4,
+    "factor": 0.9722960311,
+    "flow": "import"
+   },
+   {
+    "month": 5,
+    "factor": 0.9871417028,
+    "flow": "import"
+   },
+   {
+    "month": 6,
+    "factor": 1.1107459387,
+    "flow": "import"
+   },
+   {
+    "month": 7,
+    "factor": 1.0204109058,
+    "flow": "import"
+   },
+   {
+    "month": 8,
+    "factor": 0.7733298251,
+    "flow": "import"
+   },
+   {
+    "month": 9,
+    "factor": 1.0243282981,
+    "flow": "import"
+   },
+   {
+    "month": 10,
+    "factor": 1.1070083049,
+    "flow": "import"
+   },
+   {
+    "month": 11,
+    "factor": 0.9946843547,
+    "flow": "import"
+   },
+   {
+    "month": 12,
+    "factor": 0.8167988583,
+    "flow": "import"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Monthly imports of mineral fuels in Luxembourg show clear seasonal patterns with March being the strongest month and August the weakest.",
+  "The strongest month for imports is March, with an increase of 14.9%.",
+  "The weakest month is August, with a decrease of 22.7%.",
+  "The imports adjusted for seasonal effects in December 2025 are projected at 213.3 million euros.",
+  "The data are presented in current euros and do not account for price changes over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.strongest",
+   "text": "imports strongest month Mar: +14.9 %"
+  },
+  {
+   "key": "import.weakest",
+   "text": "imports weakest month Aug: −22.7 %"
+  },
+  {
+   "key": "import.adjusted_last",
+   "text": "imports adjusted Dec 2025: 213.3 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "STL on log values (period 12, robust, seasonal window 13); adjusted = observed / factor"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 3249,
+   "outcome": "ok",
+   "detail": "intent=seasonality breakdown=none · follow-up of d6b707ab1e (inherited: —)"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 166,
+   "outcome": "ok",
+   "detail": "72 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 48,
+   "outcome": "ok",
+   "detail": "view=season; STL on log values (period 12, robust, seasonal window 13); adjusted = observed / factor"
+  },
+  {
+   "node": "insight",
+   "ms": 1692,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2453,
+   "output_tokens": 134,
+   "cache_read_tokens": 2176,
+   "ms": 2465
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 528,
+   "output_tokens": 100,
+   "cache_read_tokens": 0,
+   "ms": 1678
+  }
+ ],
+ "code_version": "b561356",
+ "error": null
+}

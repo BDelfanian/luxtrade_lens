@@ -1,0 +1,229 @@
+{
+ "run_id": "0c6e3f249c",
+ "session_id": "6hrzyf",
+ "turn": 6,
+ "created_at": "2026-10-14T14:51:04+00:00",
+ "origin": "optimiser",
+ "status": "answered",
+ "question": "What were Luxembourg's imports of goods from China annually from 2010 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": "efd53af025",
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [
+   "CN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2010",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2010-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('CN')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "80b1675ee82fff2aff3798d6f0dccee5e44d7002ee6bc5c1d305705617036e16",
+ "row_count": 16,
+ "view_kind": "line",
+ "title": "imports: +516.5 % (2010–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 131744228.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 138198772.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 148862100.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 146879748.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 151134070.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 158557438.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 161258538.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 167985557.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 172001676.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 178131329.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 155880923.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 186150425.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 207511172.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 204470394.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 202975789.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 812215351.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Between 2010 and 2025, imports (China) went from 131.7 M€ to 812.2 M€ (+516.5 %).",
+  "The highest value was reached in 2025 (812.2 M€).",
+  "See the notes below for the data limits that apply."
+ ],
+ "insight_source": "template",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2010: 131.7 M€"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 812.2 M€"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2010–2025: +516.5 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2025: 812.2 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "SYNTHETIC placeholder shaped like Eurostat Comext DS-045409 (not real figures)",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": true,
+  "vintage": "2026-10-14-placeholder",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2025-12-01",
+  "manifest": "none (placeholder data)",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 118,
+   "outcome": "ok",
+   "detail": "16 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 13,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 4060,
+   "outcome": "fallback",
+   "detail": "grounding failed: number 15 is not in the fact sheet; grounding failed: number 15 is not in the fact sheet; fell back to the template insight"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 564,
+   "output_tokens": 113,
+   "cache_read_tokens": 0,
+   "ms": 2455
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 582,
+   "output_tokens": 105,
+   "cache_read_tokens": 0,
+   "ms": 1575
+  }
+ ],
+ "code_version": "b561356",
+ "error": null
+}

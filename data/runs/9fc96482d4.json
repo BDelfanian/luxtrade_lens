@@ -1,0 +1,245 @@
+{
+ "run_id": "9fc96482d4",
+ "session_id": "bbhqub",
+ "turn": 1,
+ "created_at": "2026-10-14T21:21:10+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "How did Luxembourg's exports to the United Kingdom change after Brexit?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [
+    "GB"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": "A",
+   "period_start": "2016",
+   "period_end": "2026",
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "line",
+   "assumptions": [
+    "'after Brexit' interpreted as from 2016 onwards"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [
+   "GB"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2016",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": [
+   "'after Brexit' interpreted as from 2016 onwards",
+   "2026 is incomplete (data until 2026-06): annual series end in 2025"
+  ]
+ },
+ "assumptions": [
+  "'after Brexit' interpreted as from 2016 onwards",
+  "2026 is incomplete (data until 2026-06): annual series end in 2025"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2016-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('GB')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "efe2ecc4a4fd3a13a3dfeaad374b8641d8a338abd911cb3221f23f6af04c8bd6",
+ "row_count": 10,
+ "view_kind": "line",
+ "title": "exports: −32.1 % (2016–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 529370616.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 545444632.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 458162602.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 621732660.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 409230043.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 349219776.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 429719286.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 388262439.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 342309067.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 359563457.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's exports to the United Kingdom decreased after Brexit.",
+  "The exports peaked at 621.7 million euros in 2019 but fell to 359.6 million euros by 2025.",
+  "This represents a decline of 32.1% from 2016 to 2025.",
+  "The data are presented in current euros and do not account for price changes over time.",
+  "Therefore, the nominal values may not fully reflect real changes in trade volume."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "exports.start",
+   "text": "exports 2016: 529.4 M€"
+  },
+  {
+   "key": "exports.end",
+   "text": "exports 2025: 359.6 M€"
+  },
+  {
+   "key": "exports.change",
+   "text": "exports change 2016–2025: −32.1 %"
+  },
+  {
+   "key": "exports.peak",
+   "text": "exports peak 2019: 621.7 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 4246,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 170,
+   "outcome": "ok",
+   "detail": "10 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 5,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1132,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3460,
+   "output_tokens": 139,
+   "cache_read_tokens": 1920,
+   "ms": 1503
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 558,
+   "output_tokens": 98,
+   "cache_read_tokens": 0,
+   "ms": 1080
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

@@ -1,0 +1,236 @@
+{
+ "run_id": "5862dd395c",
+ "session_id": "4fcjqs",
+ "turn": 1,
+ "created_at": "2026-10-14T20:54:10+00:00",
+ "origin": "ask",
+ "status": "blocked",
+ "question": "What was Luxembourg's GDP growth in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "single_value",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": null,
+   "measure": "growth_yoy",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [
+   {
+    "dimension": "intent",
+    "text": "GDP growth is out of scope for trade in goods data"
+   }
+  ],
+  "unresolved": [
+   "GDP growth"
+  ],
+  "out_of_scope": [
+   "S02"
+  ],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "single_value",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "growth_yoy",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "exports and imports (no flow given)"
+  ]
+ },
+ "assumptions": [
+  "exports and imports (no flow given)"
+ ],
+ "limitations": [
+  {
+   "id": "S02",
+   "key": "no_external_data",
+   "severity": "block",
+   "message": "GDP, population, prices or employment are not part of this dataset, so ratios to them can't be computed.",
+   "value": null
+  },
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's exports of wheat and meslin in 2025?",
+   "note": "exports only, product 1001, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "1001"
+    ],
+    "product_level": "HS4",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What were Luxembourg's imports of products of the milling industry in 2025?",
+   "note": "imports only, product 11, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "11"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was Luxembourg's trade balance in bulbs, tubers and roots in 2025?",
+   "note": "trade balance, product 0601, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "0601"
+    ],
+    "product_level": "HS4",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "auto",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Which partner or product, and which period?",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 5626,
+   "outcome": "ok",
+   "detail": "intent=single_value breakdown=none · unresolved: ['GDP growth'] · blocked topic: S02"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "blocked",
+   "detail": "S02:block, L06:warn"
+  },
+  {
+   "node": "optimise",
+   "ms": 5463,
+   "outcome": "routed",
+   "detail": "blocked by data limits: [S02] GDP, population, prices or employment are not part of this dataset, so ratios to them can't be computed. · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2769,
+   "output_tokens": 151,
+   "cache_read_tokens": 2560,
+   "ms": 1564
+  },
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4965,
+   "output_tokens": 402,
+   "cache_read_tokens": 4736,
+   "ms": 2924
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

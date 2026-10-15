@@ -1,0 +1,624 @@
+{
+ "run_id": "9fb7523ef0",
+ "session_id": "hmfbvn",
+ "turn": 1,
+ "created_at": "2026-10-14T21:22:18+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Quelles sont les principales catégories de marchandises exportées et importées par le Luxembourg ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "fr",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": "HS2",
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": "both",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "fr",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.752831184167725
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE) AND period < CAST('2026-01-01' AS DATE)\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "2eb671fc8767227e41b66bb005af1400a0334a15f8e854b76f67e45279bf35f1",
+ "row_count": 194,
+ "view_kind": "bar",
+ "title": "Machines et appareils mécaniques — exportations 2025 (12,5 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "84",
+    "value": 2038490470.0,
+    "share": 12.5415774007,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machines et appareils mécaniques"
+   },
+   {
+    "key": "39",
+    "value": 1575495176.0,
+    "share": 9.6930522782,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Matières plastiques et ouvrages en ces matières"
+   },
+   {
+    "key": "87",
+    "value": 1556322926.0,
+    "share": 9.5750972223,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Voitures automobiles et leurs parties"
+   },
+   {
+    "key": "85",
+    "value": 1506781023.0,
+    "share": 9.2702963806,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machines et appareils électriques"
+   },
+   {
+    "key": "72",
+    "value": 1120321110.0,
+    "share": 6.8926463584,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Fonte, fer et acier"
+   },
+   {
+    "key": "40",
+    "value": 851809335.0,
+    "share": 5.2406586456,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Caoutchouc et ouvrages en caoutchouc"
+   },
+   {
+    "key": "73",
+    "value": 817024273.0,
+    "share": 5.0266475654,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Ouvrages en fonte, fer ou acier"
+   },
+   {
+    "key": "04",
+    "value": 720667101.0,
+    "share": 4.433821183,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Lait et produits de la laiterie ; œufs ; miel"
+   },
+   {
+    "key": "76",
+    "value": 475253772.0,
+    "share": 2.923943994,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Aluminium et ouvrages en aluminium"
+   },
+   {
+    "key": "56",
+    "value": 434238839.0,
+    "share": 2.6716043513,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Ouates, feutres et nontissés"
+   },
+   {
+    "key": "OTHER",
+    "value": 5057591128.0,
+    "share": 31.1162458331,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Autres"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 99865146.0,
+    "share": 0.6144087876,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidentiel"
+   },
+   {
+    "key": "87",
+    "value": 3318048160.0,
+    "share": 13.220398039,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Voitures automobiles et leurs parties"
+   },
+   {
+    "key": "84",
+    "value": 2885716872.0,
+    "share": 11.4978215614,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machines et appareils mécaniques"
+   },
+   {
+    "key": "27",
+    "value": 2231635421.0,
+    "share": 8.891705943,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Combustibles et huiles minéraux"
+   },
+   {
+    "key": "85",
+    "value": 1972062083.0,
+    "share": 7.8574645206,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machines et appareils électriques"
+   },
+   {
+    "key": "39",
+    "value": 1292914757.0,
+    "share": 5.1514766796,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Matières plastiques et ouvrages en ces matières"
+   },
+   {
+    "key": "72",
+    "value": 953804230.0,
+    "share": 3.8003280736,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Fonte, fer et acier"
+   },
+   {
+    "key": "30",
+    "value": 834155181.0,
+    "share": 3.3235995945,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Produits pharmaceutiques"
+   },
+   {
+    "key": "40",
+    "value": 829620472.0,
+    "share": 3.3055315451,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Caoutchouc et ouvrages en caoutchouc"
+   },
+   {
+    "key": "22",
+    "value": 638282641.0,
+    "share": 2.5431669971,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Boissons, liquides alcooliques et vinaigres"
+   },
+   {
+    "key": "04",
+    "value": 563476858.0,
+    "share": 2.2451115805,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Lait et produits de la laiterie ; œufs ; miel"
+   },
+   {
+    "key": "OTHER",
+    "value": 9563026470.0,
+    "share": 38.1028274138,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Autres"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 15201336.0,
+    "share": 0.0605680517,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidentiel"
+   },
+   {
+    "key": "84",
+    "value": 4924207342.0,
+    "share": 11.9080832583,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Machines et appareils mécaniques"
+   },
+   {
+    "key": "87",
+    "value": 4874371086.0,
+    "share": 11.7875655293,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Voitures automobiles et leurs parties"
+   },
+   {
+    "key": "85",
+    "value": 3478843106.0,
+    "share": 8.4127963084,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Machines et appareils électriques"
+   },
+   {
+    "key": "39",
+    "value": 2868409933.0,
+    "share": 6.9366015541,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Matières plastiques et ouvrages en ces matières"
+   },
+   {
+    "key": "27",
+    "value": 2250162772.0,
+    "share": 5.4415104346,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Combustibles et huiles minéraux"
+   },
+   {
+    "key": "72",
+    "value": 2074125340.0,
+    "share": 5.0158036657,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Fonte, fer et acier"
+   },
+   {
+    "key": "40",
+    "value": 1681429807.0,
+    "share": 4.0661582147,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Caoutchouc et ouvrages en caoutchouc"
+   },
+   {
+    "key": "73",
+    "value": 1298079185.0,
+    "share": 3.1391113203,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Ouvrages en fonte, fer ou acier"
+   },
+   {
+    "key": "04",
+    "value": 1284143959.0,
+    "share": 3.1054121237,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Lait et produits de la laiterie ; œufs ; miel"
+   },
+   {
+    "key": "30",
+    "value": 1063419098.0,
+    "share": 2.571638901,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Produits pharmaceutiques"
+   },
+   {
+    "key": "OTHER",
+    "value": 15439546670.0,
+    "share": 37.3370563924,
+    "rank": null,
+    "kind": "other",
+    "flow": "total",
+    "label": "Autres"
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 115066482.0,
+    "share": 0.2782622974,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "total",
+    "label": "Confidentiel"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "87",
+   "39",
+   "85",
+   "27",
+   "72",
+   "40",
+   "30",
+   "73",
+   "04"
+  ]
+ },
+ "insight": [
+  "Les principales catégories de marchandises exportées par le Luxembourg en 2025 sont les machines et appareils mécaniques, les matières plastiques et ouvrages en ces matières, ainsi que les voitures automobiles et leurs parties.",
+  "Le total des exportations s'élève à 16,25 milliards d'euros, avec les trois premières catégories représentant 31,8 % de ce total.",
+  "En importations, les voitures automobiles et leurs parties dominent avec 3,32 milliards d'euros, suivies des machines et appareils mécaniques et des combustibles et huiles minéraux.",
+  "Le commerce total de marchandises atteint 41,35 milliards d'euros, où les machines et appareils mécaniques et les voitures automobiles sont les deux premières catégories.",
+  "Les données sont exprimées en euros courants et 3,8 % de la valeur totale est confidentielle, ce qui limite la précision des détails par produit."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exportations 2025: 16,25 Md €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Machines et appareils mécaniques: 2,04 Md €, 12,5 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Matières plastiques et ouvrages en ces matières: 1,58 Md €, 9,7 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Voitures automobiles et leurs parties: 1,56 Md €, 9,6 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Machines et appareils électriques: 1,51 Md €, 9,3 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Fonte, fer et acier: 1,12 Md €, 6,9 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Autres: 5,06 Md €, 31,1 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidentiel: 99,9 M€, 0,6 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exportations: 31,8 %"
+  },
+  {
+   "key": "import.total",
+   "text": "importations 2025: 25,10 Md €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Voitures automobiles et leurs parties: 3,32 Md €, 13,2 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Machines et appareils mécaniques: 2,89 Md €, 11,5 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Combustibles et huiles minéraux: 2,23 Md €, 8,9 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Machines et appareils électriques: 1,97 Md €, 7,9 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Matières plastiques et ouvrages en ces matières: 1,29 Md €, 5,2 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Autres: 9,56 Md €, 38,1 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidentiel: 15,2 M€, 0,1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 importations: 33,6 %"
+  },
+  {
+   "key": "total.total",
+   "text": "commerce total 2025: 41,35 Md €"
+  },
+  {
+   "key": "total.rank1",
+   "text": "#1 Machines et appareils mécaniques: 4,92 Md €, 11,9 %"
+  },
+  {
+   "key": "total.rank2",
+   "text": "#2 Voitures automobiles et leurs parties: 4,87 Md €, 11,8 %"
+  },
+  {
+   "key": "total.rank3",
+   "text": "#3 Machines et appareils électriques: 3,48 Md €, 8,4 %"
+  },
+  {
+   "key": "total.rank4",
+   "text": "#4 Matières plastiques et ouvrages en ces matières: 2,87 Md €, 6,9 %"
+  },
+  {
+   "key": "total.rank5",
+   "text": "#5 Combustibles et huiles minéraux: 2,25 Md €, 5,4 %"
+  },
+  {
+   "key": "total.other",
+   "text": "Autres: 15,44 Md €, 37,3 %"
+  },
+  {
+   "key": "total.confidential",
+   "text": "Confidentiel: 115,1 M€, 0,3 %"
+  },
+  {
+   "key": "total.top3_share",
+   "text": "top 3 commerce total: 32,1 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 4121,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 128,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 35,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1623,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3870,
+   "output_tokens": 123,
+   "cache_read_tokens": 1920,
+   "ms": 1268
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1424,
+   "output_tokens": 183,
+   "cache_read_tokens": 0,
+   "ms": 1585
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}

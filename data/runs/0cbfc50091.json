@@ -1,0 +1,206 @@
+{
+ "run_id": "0cbfc50091",
+ "session_id": "ffdmna",
+ "turn": 1,
+ "created_at": "2026-10-14T21:21:04+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "How much of Luxembourg's mineral fuel imports is confidential?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "composition",
+   "breakdown": "confidentiality",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "27"
+   ],
+   "product_level": "HS2",
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "confidentiality",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN is_confidential THEN 'CONFIDENTIAL' ELSE 'DISCLOSED' END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "7e7278aea18a9d020b76679c9ff91a67ba7116826fd47ba1344287c96f172601",
+ "row_count": 2,
+ "view_kind": "bar",
+ "title": "Confidential — imports 2025: 39.6 %",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "CONFIDENTIAL",
+    "value": 882720594.0,
+    "share": 39.5548746759,
+    "rank": 1,
+    "kind": "item",
+    "label": "Confidential"
+   },
+   {
+    "flow": "import",
+    "key": "DISCLOSED",
+    "value": 1348914827.0,
+    "share": 60.4451253241,
+    "rank": 2,
+    "kind": "item",
+    "label": "Published at CN8 level"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's mineral fuel imports include 39.6% that is confidential.",
+  "The total imports in 2025 amount to 2.23 billion euros.",
+  "Of this, 882.7 million euros are confidential, while 1.35 billion euros are published at a detailed level.",
+  "The data is presented in current euros and does not account for price changes over time.",
+  "This means the values reflect nominal amounts without adjustment for inflation or deflation."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 2.23 bn €"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 882.7 M€, 39.6 %"
+  },
+  {
+   "key": "import.disclosed",
+   "text": "Published at CN8 level: 1.35 bn €, 60.4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of each flow's total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 3538,
+   "outcome": "ok",
+   "detail": "intent=composition breakdown=confidentiality"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 91,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 11,
+   "outcome": "ok",
+   "detail": "view=bar; share of each flow's total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1004,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3535,
+   "output_tokens": 127,
+   "cache_read_tokens": 1920,
+   "ms": 1347
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 528,
+   "output_tokens": 97,
+   "cache_read_tokens": 0,
+   "ms": 964
+  }
+ ],
+ "code_version": "a04443e",
+ "error": null
+}
