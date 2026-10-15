@@ -49,7 +49,8 @@ Everyone reviews each other's work and joins rehearsals.
 **Behrooz (design and integration)**
 - [x] Freeze the `QuerySpec` and run-record schemas (Pydantic) and the defaults table
 - [x] LangGraph graph: supervisor + 7 nodes, end-to-end on placeholder data
-- [x] LLM wrapper (`anthropic` SDK, **`claude-sonnet-4-6`**, structured output, timeouts, offline fallback); `.env` handling
+- [x] LLM wrapper with two providers (OpenAI **`gpt-4.1-mini`** default, Anthropic `claude-sonnet-4-6`), strict structured output, timeouts, offline fallback; `.env` handling
+- [ ] Top up API credit, then run the golden evaluation on the live model
 - [x] Session model: `session_id`, turn records, context rebuilt from run records
 - [x] Dependencies: add `langgraph`, `anthropic`, `sqlglot`, `pydantic`, `python-dotenv`, `pyyaml`; regenerate `requirements.txt`
 - [ ] Remove `ruptures` (unused) and decide on `sdmx1` (API cross-check only)
@@ -84,6 +85,8 @@ Everyone reviews each other's work and joins rehearsals.
 - [ ] Optimiser v2: the on-demand "Optimise" button and "Not what you meant?" link; routes for SQL failure and empty results (Behrooz + Mina)
 - [ ] LLM SQL fallback, only if Phase 2 is solid (Behrooz)
 - [ ] Golden set → 24 questions incl. 4 that must be refused + 4 follow-up chains + 6 vague questions; run `python -m luxtrade.agents.evaluate` (all)
+- [x] **Overview landing page** after the evaluators' feedback ("most effective representation"): headline figures, context cards, five business questions with evidence and "Explore in the assistant" ([SOLUTION_DESIGN §8a](SOLUTION_DESIGN.md#8a-overview-page-the-big-picture-first-added-14-oct-after-the-evaluators-feedback)) (Behrouz)
+- [ ] Re-check the overview texts on **real data** once Kasra's pipeline lands (takeaways are computed, but read them once) (all)
 - [ ] **Pitch coaching slot:** sessions run Thu 13:00–16:40
 - [ ] **Feature freeze at 18:00 → tag `v0.1-demo`**
 
@@ -99,7 +102,7 @@ Everyone reviews each other's work and joins rehearsals.
 6. Annual-series projection (keep monthly)
 7. Benchmark map (keep the bars)
 
-**Never cut:** the limitation guard, grounding check, rewrite validation, the inherited-context notice, trace tab, run/session IDs, presets and offline replay. They are the core of the traceability story.
+**Never cut:** the overview page, the limitation guard, grounding check, rewrite validation, the inherited-context notice, trace tab, run/session IDs, presets and offline replay. They are the core of the traceability story.
 
 ## Phase 4 — Polish, deploy, document (Thu evening → Fri 10:00)
 
@@ -155,7 +158,7 @@ Everyone reviews each other's work and joins rehearsals.
 | LLM gives wrong numbers or invented facts | Numbers come only from SQL or Python; grounding check; template fallback; golden-set evaluation |
 | LLM picks wrong entities or SQL | Codes only from the label lookup; SQL templates for known intents; SQL guard; trace shows the SQL |
 | Network, API key or rate limit fails during the live demo | Offline replay of recorded demo runs by run ID; presets without the LLM; local instance; video |
-| Latency (2 LLM calls per answer, up to 4 with optimiser or SQL fallback) | `claude-sonnet-4-6` at low effort for interpreter, optimiser and insight; Refine and presets skip the LLM; stored runs open instantly; live step progress in the UI |
+| Latency (2 LLM calls per answer, up to 4 with optimiser or SQL fallback) | `gpt-4.1-mini` (fast, low cost) for every step; Refine and presets skip the LLM; stored runs open instantly; live step progress in the UI |
 | Follow-up picks up the wrong context | Structured context only (specs + result entities, last 5 turns); inherited fields shown on the card + "Start fresh"; follow-up chains in the golden set |
 | Optimiser suggests questions that can't be answered | Every rewrite is validated (codes, limitation guard, SQL compile) before it's shown; presets fill empty slots |
 | Data limitations misread (confidential codes, incomplete recent months, 2002 start) | Limitations registry fires automatically; [DATA_CARD.md §4](DATA_CARD.md); captions |

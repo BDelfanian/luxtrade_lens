@@ -1,7 +1,9 @@
 """The only place that calls an LLM (GUIDELINES §1.1): structured calls validated by Pydantic.
 
-``AnthropicLLM`` uses Claude Sonnet 4.6 by default (``LUXTRADE_LLM_MODEL`` overrides it).
-``FakeLLM`` returns scripted responses so tests never touch the network.
+Two providers behind one interface, chosen by ``LUXTRADE_LLM_PROVIDER`` (default ``openai``):
+- ``OpenAILLM``: ``gpt-4.1-mini`` by default, strict JSON-schema structured outputs.
+- ``AnthropicLLM``: ``claude-sonnet-4-6`` by default, structured outputs + adaptive thinking.
+``LUXTRADE_LLM_MODEL`` overrides the model. ``FakeLLM`` returns scripted responses for tests.
 """
 
 import logging
@@ -11,9 +13,15 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Protocol, TypeVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
-from luxtrade.config import LLM_MODEL, LLM_TIMEOUT_S
+from luxtrade.config import (
+    LLM_DEFAULT_MODELS,
+    LLM_DEFAULT_PROVIDER,
+    LLM_KEY_VARS,
+    LLM_TIMEOUT_S,
+    ROOT_DIR,
+)
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T", bound=BaseModel)
@@ -51,7 +59,9 @@ class StructuredLLM(Protocol):
 class AnthropicLLM:
     """Claude via the official ``anthropic`` SDK with structured outputs."""
 
-    def __init__(self, model: str = LLM_MODEL, timeout_s: float = LLM_TIMEOUT_S) -> None:
+    def __init__(
+        self, model: str = LLM_DEFAULT_MODELS["anthropic"], timeout_s: float = LLM_TIMEOUT_S
+    ) -> None:
         import anthropic
 
         self._anthropic = anthropic
@@ -104,6 +114,97 @@ class AnthropicLLM:
         return response.parsed_output
 
 
+def strict_schema(schema: type[BaseModel]) -> dict:
+    """JSON schema in OpenAI strict form: every property required, no extras, no defaults."""
+
+    def fix(node: object) -> object:
+        if isinstance(node, dict):
+            if "$ref" in node:
+                return {"$ref": node["$ref"]}  # strict mode allows no siblings next to $ref
+            node = {k: fix(v) for k, v in node.items() if k not in ("default", "title")}
+            if "properties" in node:
+                node["required"] = list(node["properties"])
+                node["additionalProperties"] = False
+            return node
+        if isinstance(node, list):
+            return [fix(v) for v in node]
+        return node
+
+    return fix(schema.model_json_schema())
+
+
+class OpenAILLM:
+    """OpenAI chat completions with strict structured outputs (``response_format``)."""
+
+    def __init__(
+        self, model: str = LLM_DEFAULT_MODELS["openai"], timeout_s: float = LLM_TIMEOUT_S
+    ) -> None:
+        import openai
+
+        self._openai = openai
+        self.client = openai.OpenAI(timeout=timeout_s, max_retries=2)
+        self.model = model
+        self.usage: list[LLMUsage] = []
+
+    def parse(
+        self, *, step: str, system: str, user: str, schema: type[T], effort: str = "low"
+    ) -> T:
+        """One structured call at temperature 0. ``effort`` is ignored (not a reasoning model)."""
+        t0 = time.perf_counter()
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                temperature=0,
+                max_completion_tokens=6000,
+                messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": schema.__name__,
+                        "schema": strict_schema(schema),
+                        "strict": True,
+                    },
+                },
+            )
+        except self._openai.APIConnectionError as exc:
+            raise LLMError(f"network error: {exc}") from exc
+        except self._openai.RateLimitError as exc:
+            body = exc.body if isinstance(exc.body, dict) else {}
+            if body.get("type") == "insufficient_quota" or body.get("code") == "insufficient_quota":
+                raise LLMError(
+                    "the OpenAI account has no credit left: add credit at "
+                    "platform.openai.com/settings/organization/billing"
+                ) from exc
+            raise LLMError("rate limited, try again shortly") from exc
+        except self._openai.APIStatusError as exc:
+            raise LLMError(f"API error {exc.status_code}: {exc.message}") from exc
+        ms = int(1000 * (time.perf_counter() - t0))
+        u = response.usage
+        cached = getattr(getattr(u, "prompt_tokens_details", None), "cached_tokens", 0) or 0
+        self.usage.append(
+            LLMUsage(
+                step=step,
+                model=self.model,
+                input_tokens=u.prompt_tokens,
+                output_tokens=u.completion_tokens,
+                cache_read_tokens=cached,
+                ms=ms,
+            )
+        )
+        logger.info(
+            "llm %s: %d in / %d out tokens, %d ms", step, u.prompt_tokens, u.completion_tokens, ms
+        )
+        choice = response.choices[0]
+        if choice.message.refusal:
+            raise LLMError(f"the model declined this request: {choice.message.refusal}")
+        if choice.finish_reason == "length":
+            raise LLMError("the model's answer was cut off")
+        try:
+            return schema.model_validate_json(choice.message.content or "")
+        except ValidationError as exc:
+            raise LLMError(f"the model returned invalid structured output: {exc}") from exc
+
+
 @dataclass
 class FakeLLM:
     """Scripted LLM for tests.
@@ -136,17 +237,30 @@ class FakeLLM:
         return schema.model_validate(resp.model_dump() if isinstance(resp, BaseModel) else resp)
 
 
-def default_llm() -> StructuredLLM | None:
-    """The configured LLM, or None when no Anthropic credentials are available (offline mode)."""
-    try:
-        from dotenv import load_dotenv
+def load_env_file() -> None:
+    """Apply non-empty `.env` values; they win over older values in the environment.
 
-        load_dotenv()
-    except ImportError:  # pragma: no cover - python-dotenv is a dependency
-        pass
-    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+    ``.env`` is the project's explicit configuration, so a new key there must replace an old one
+    set as a system variable. Empty entries (``OPENAI_API_KEY=``) never erase a variable.
+    """
+    from dotenv import dotenv_values, find_dotenv
+
+    path = find_dotenv(usecwd=True) or str(ROOT_DIR / ".env")
+    for key, value in dotenv_values(path).items():
+        if value:
+            os.environ[key] = value
+
+
+def default_llm() -> StructuredLLM | None:
+    """The configured LLM, or None when the provider's key is missing (offline mode)."""
+    load_env_file()
+    provider = os.environ.get("LUXTRADE_LLM_PROVIDER", LLM_DEFAULT_PROVIDER).strip().lower()
+    if provider not in LLM_DEFAULT_MODELS:
+        raise ValueError(f"LUXTRADE_LLM_PROVIDER must be one of {sorted(LLM_DEFAULT_MODELS)}")
+    if not any(os.environ.get(var) for var in LLM_KEY_VARS[provider]):
         return None
-    return AnthropicLLM()
+    model = os.environ.get("LUXTRADE_LLM_MODEL") or LLM_DEFAULT_MODELS[provider]
+    return OpenAILLM(model) if provider == "openai" else AnthropicLLM(model)
 
 
 Factory = Callable[[], StructuredLLM | None]

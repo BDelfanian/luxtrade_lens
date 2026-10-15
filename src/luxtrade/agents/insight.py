@@ -1,11 +1,23 @@
 """Insight writer: 4–5 grounded sentences from the fact sheet (SOLUTION_DESIGN §5.7)."""
 
+import re
+
 from luxtrade.agents import grounding
 from luxtrade.agents.facts import FactSheet
 from luxtrade.agents.interpret import prompt
 from luxtrade.agents.llm import LLMError, StructuredLLM
 from luxtrade.agents.spec import InsightOutput
 from luxtrade.semantic.layer import SemanticLayer
+
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-ZÀ-ÖØ-Þ0-9«\"])")
+
+
+def split_sentences(items: list[str]) -> list[str]:
+    """Split items that hold several sentences (models sometimes return one paragraph)."""
+    out = []
+    for item in items:
+        out += [part.strip() for part in _SENTENCE_END.split(item.strip()) if part.strip()]
+    return out
 
 
 def write_insight(
@@ -35,8 +47,9 @@ def write_insight(
         except LLMError as exc:
             notes.append(f"insight LLM failed: {exc}")
             break
-        problems = grounding.check(out.sentences, sheet, sem)
+        sentences = split_sentences(out.sentences)
+        problems = grounding.check(sentences, sheet, sem)
         if not problems:
-            return out.sentences, "llm", notes
+            return sentences, "llm", notes
         notes.append("grounding failed: " + "; ".join(problems))
     return sheet.template, "template", notes + ["fell back to the template insight"]

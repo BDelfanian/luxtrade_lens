@@ -30,7 +30,7 @@ Every answer has a **run ID** and every conversation a **session ID**, so both c
 | Criterion | Where to see it |
 |---|---|
 | Reproducibility & Openness | Quick start below (3 commands); `data/raw/manifest.json`; any answer's **"How we got this"** tab → **Re-verify**; EUPL-1.2 |
-| Clarity & Quality of Presentation | Hosted app link · pitch deck in `docs/pitch/` |
+| Clarity & Quality of Presentation | Hosted app link: the **Overview** landing page (Luxembourg's trade at a glance, with evidence) · pitch deck in `docs/pitch/` |
 | Use of Data | [DATA_CARD.md](docs/DATA_CARD.md); CN8 drill-downs; EU benchmark; limitation messages in the app |
 | Innovation & Experimentation | Multilingual questions with follow-ups → automatic data product + grounded insight; question optimiser; projections with a baseline check ([SOLUTION_DESIGN.md](docs/SOLUTION_DESIGN.md)) |
 | Functional PoC | Hosted app; presets Q1–Q6; golden-set scores: *to be filled* (`python -m luxtrade.agents.evaluate`) |
@@ -66,11 +66,19 @@ pip install -e .
 
 ### LLM access (optional for presets and stored runs)
 
-Questions typed in the ask box need an Anthropic API key. Put it in a `.env` file at the repository root (git-ignored):
+Questions typed in the ask box need an LLM API key. Copy `.env.example` to `.env` at the repository root (git-ignored) and fill it in. The provider is configurable:
+
+| `LUXTRADE_LLM_PROVIDER` | Key | Default model |
+|---|---|---|
+| `openai` (current default) | `OPENAI_API_KEY` | `gpt-4.1-mini` |
+| `anthropic` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` |
+
 ```
-ANTHROPIC_API_KEY=sk-ant-...
-LUXTRADE_LLM_MODEL=claude-sonnet-4-6   # default; optional override
+LUXTRADE_LLM_PROVIDER=openai
+OPENAI_API_KEY=sk-proj-...
+# LUXTRADE_LLM_MODEL=gpt-4.1-mini      # optional override
 ```
+A key already set as an environment variable works too. The API is billed separately from ChatGPT or Claude subscriptions.
 Without a key, the presets, the Refine filters and the stored runs and sessions (history, `demo/runs/`) still work. Insights then use the template fallback, and the optimiser is hidden.
 
 ### Run

@@ -20,11 +20,14 @@ _MEUR = {"en": "M€", "fr": "M€", "de": "Mio. €"}
 
 
 def _layout(fig: go.Figure, title: str, y_title: str = "", height: int = 420) -> go.Figure:
+    legend_items = sum(
+        1 for d in fig.data if getattr(d, "showlegend", False) is not False and d.name
+    )
     fig.update_layout(
         title={"text": title, "x": 0, "xanchor": "left", "font": {"size": 16, "color": TEXT}},
         font={"color": TEXT_2, "size": 12},
         height=height,
-        margin={"l": 8, "r": 8, "t": 56, "b": 8},
+        margin={"l": 8, "r": 8, "t": 56 if legend_items <= 4 else 96, "b": 8},
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         legend={"orientation": "h", "yanchor": "bottom", "y": 1.0, "x": 0, "title": None},
@@ -134,9 +137,9 @@ def choropleth(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
 def treemap(main: pd.DataFrame, title: str, lang: str) -> list[go.Figure]:
     """One treemap per flow; Other and Confidential slices in gray."""
     figs = []
+    colors = _colors(list(dict.fromkeys(main.sort_values("value", ascending=False)["key"])))
     for flow in [f for f in ("export", "import", "balance") if f in set(main["flow"])]:
         part = main[main["flow"] == flow]
-        colors = _colors(list(part["key"]))
         fig = go.Figure(
             go.Treemap(
                 labels=[f"{lab}" for lab in part["label"]],
@@ -341,6 +344,85 @@ def bench(main: pd.DataFrame, title: str, lang: str) -> list[go.Figure]:
     share.update_yaxes(autorange="reversed", gridcolor="rgba(0,0,0,0)")
     figs.append(_layout(share, f"Intra-EU share of trade, {int(main['period'].max())}", height=320))
     return figs
+
+
+def _short(label: str, size: int = 40) -> str:
+    return label if len(label) <= size else label[: size - 1].rstrip() + "…"
+
+
+def with_events(fig: go.Figure, events: pd.DataFrame) -> go.Figure:
+    """Dotted reference lines for well-known shocks: reading aids, not data."""
+    for i, row in enumerate(events.itertuples()):
+        fig.add_vline(x=row.year, line={"color": NEUTRAL, "width": 1, "dash": "dot"})
+        fig.add_annotation(
+            x=row.year,
+            y=1 - 0.07 * (i % 2),
+            yref="paper",
+            yanchor="top",
+            xanchor="left",
+            xshift=3,
+            text=row.label,
+            showarrow=False,
+            font={"size": 11, "color": TEXT_2},
+        )
+    return fig
+
+
+def change_bar(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
+    """Diverging bars of a change in value: rises in blue, falls in red, zero as the midpoint."""
+    part = main.sort_values("change", ascending=False)
+    fig = go.Figure(
+        go.Bar(
+            x=part["change"] / 1e6,
+            y=[_short(lab) for lab in part["label"]],
+            orientation="h",
+            marker={
+                "color": [SERIES[0] if v >= 0 else SERIES[7] for v in part["change"]],
+                "cornerradius": 4,
+            },
+            customdata=[
+                [lab, ("+" if v >= 0 else "") + fmt_eur(v, lang)]
+                for lab, v in zip(part["label"], part["change"], strict=True)
+            ],
+            hovertemplate="%{customdata[0]}<br>%{customdata[1]}<extra></extra>",
+        )
+    )
+    fig = _layout(fig, title, height=max(300, 34 * len(part) + 90))
+    fig.update_yaxes(autorange="reversed", gridcolor="rgba(0,0,0,0)")
+    fig.update_xaxes(
+        title=_MEUR.get(lang, "M€"),
+        showgrid=True,
+        gridcolor=GRID,
+        zeroline=True,
+        zerolinecolor=TEXT_2,
+        zerolinewidth=1,
+    )
+    return fig
+
+
+def overview_figures(
+    key: str, frames: dict[str, pd.DataFrame], titles: list[str], lang: str = "en"
+) -> list[go.Figure]:
+    """Figures for one overview panel (agents/overview.py), first figure = the main one."""
+    main = frames["main"]
+    if main.empty:
+        return []
+    if key == "trend":
+        return [with_events(lines(main, titles[0], lang), frames["events"])]
+    if key == "partners":
+        # bars: exports and imports side by side, ordered by total trade
+        return [choropleth(main, titles[0], lang), bar(main, titles[1], lang)]
+    if key == "products":
+        figs = treemap(main, titles[0], lang)
+        change = frames.get("change")
+        if change is not None and not change.empty:
+            figs.append(change_bar(change, titles[1], lang))
+        return figs
+    if key == "season":
+        return season(main, titles[0], lang)
+    if key == "peers":
+        return bench(main, titles[0], lang)
+    return []
 
 
 def build_figures(

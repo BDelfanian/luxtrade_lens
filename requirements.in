@@ -13,6 +13,7 @@ ruptures
 # Agents / LLM (SOLUTION_DESIGN §10)
 langgraph
 anthropic
+openai
 sqlglot
 pydantic
 python-dotenv

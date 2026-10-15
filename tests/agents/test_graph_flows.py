@@ -1,5 +1,7 @@
 """End-to-end graph flows with a scripted LLM (no network)."""
 
+from conftest import insight_from_facts
+
 from luxtrade.agents.llm import LLMError
 from luxtrade.agents.presets import preset
 from luxtrade.agents.spec import (
@@ -215,3 +217,30 @@ def test_session_history_is_stored_and_searchable(make_assistant):
     assert sessions.search(second.run_id)[0].session_id == first.session_id
     assert sessions.search("seasonal")[0].session_id == first.session_id
     assert assistant.runs.load(second.run_id).turn == 2
+
+
+def test_one_paragraph_insight_is_split_into_sentences(make_assistant, fake_llm):
+    def one_paragraph(user):
+        sentences = insight_from_facts(user).sentences
+        return InsightOutput(sentences=[" ".join(f"Fact {s}" for s in sentences)])
+
+    llm = fake_llm(
+        interpret=interp(intent="ranking", breakdown="partner", flow="export"),
+        insight=one_paragraph,
+    )
+    rec = make_assistant(llm).ask("Main export partners?")
+    assert rec.insight_source == "llm" and len(rec.insight) >= 3
+
+
+def test_blocked_topic_wins_over_an_unclear_interpretation(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(
+            intent="single_value",
+            ambiguities=[Ambiguity(dimension="what", text="GDP is not in the data")],
+        ),
+        optimise=LLMError("offline"),
+    )
+    rec = make_assistant(llm).ask("What share of Luxembourg's GDP is exports?")
+    assert rec.status == "blocked"
+    assert "S02" in {lim["id"] for lim in rec.limitations}
+    assert [t["node"] for t in rec.trace] == ["interpret", "guard_pre", "optimise"]

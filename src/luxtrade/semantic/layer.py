@@ -22,6 +22,7 @@ SPECIAL_KEYS = {
     "CONFIDENTIAL": ("Confidential", "Confidentiel", "Vertraulich"),
     "TOTAL": ("All goods", "Tous les produits", "Alle Waren"),
 }
+REPORTER_LABEL = ("Luxembourg", "Luxembourg", "Luxemburg")
 LANG_COL = {"en": "label_en", "fr": "label_fr", "de": "label_de"}
 
 
@@ -124,6 +125,8 @@ class SemanticLayer:
         idx = ("en", "fr", "de").index(lang) if lang in ("en", "fr", "de") else 0
         if code in SPECIAL_KEYS:
             return SPECIAL_KEYS[code][idx]
+        if kind == "reporter" and code == config.REPORTER:
+            return REPORTER_LABEL[idx]  # never a partner of itself, so not in dim_partner
         table = {
             "partner": self.partners,
             "product": self.products,

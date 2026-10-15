@@ -88,14 +88,14 @@ Licensing rules:
 | Criterion | Our answer |
 |-----------|------------|
 | **Reproducibility & Openness** | One-command pipeline (`download → process → app`), pinned environment, EUPL-1.2, Data Card. **Every answer has a run ID that replays and re-verifies its result** (result hash), and the SQL is shown |
-| **Clarity & Quality of Presentation** | A 5-minute story built around 3–4 "wow" insights, asked live in FR/DE/EN, rehearsed and timed, with recorded runs as a backup |
+| **Clarity & Quality of Presentation** | The app opens on an **Overview**: Luxembourg's trade at a glance (size, partners and dependence, products, seasonality, EU peers), each with a takeaway headline and its evidence. The 5-minute story is built around 3–4 "wow" insights, asked live in FR/DE/EN, rehearsed and timed, with recorded runs as a backup |
 | **Use of Data** | Use the full depth: monthly and annual data, HS2→CN8, value and quantity (unit values), all EU reporters for benchmarking. Data limits are shown, not hidden (limitations registry) |
 | **Innovation & Experimentation** | Multilingual natural-language questions with follow-ups in context → automatically chosen data product + grounded insight; a question optimiser that turns vague questions into validated, answerable ones; a traceable agent graph; statistical projections with a baseline check; smart significance filtering; seasonal adjustment |
-| **Functional PoC** | A working interactive app: ask box, presets for all six questions, Refine filters, history, deployed online. Accuracy measured on a golden question set |
+| **Functional PoC** | A working interactive app: overview page, ask box, presets for all six questions, Refine filters, history, deployed online. Accuracy measured on a golden question set |
 
 **Make grading easy** (coach tip 4):
 - The README opens with a **"For the jury" table** that maps each criterion to where it is shown: an app page, a file or a command.
-- The app has **a few tabs with clear names**, and every chart has a title that states its takeaway.
+- The app has **two pages with clear names**: **Overview** (the big picture, the landing page) and **Ask** (specific questions). Every overview section has a headline that states its takeaway.
 - Setup and launch take three commands. A hosted link means the jury needs no setup at all.
 - We present no method we can't explain in one sentence.
 

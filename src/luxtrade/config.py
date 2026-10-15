@@ -40,8 +40,15 @@ BENCHMARK_REPORTERS = ("LU", "BE", "NL", "DE", "FR", "AT")
 
 ATTRIBUTION = "Source: Eurostat, Comext DS-045409, extracted {date}; calculations by The Outliers."
 
-# LLM (SOLUTION_DESIGN §10); the key comes from .env / environment, never from code
-LLM_MODEL = os.environ.get("LUXTRADE_LLM_MODEL", "claude-sonnet-4-6")
+# LLM (SOLUTION_DESIGN §10). Keys come from .env / environment, never from code. Provider and
+# model are resolved when the LLM is created (after .env is loaded): LUXTRADE_LLM_PROVIDER,
+# LUXTRADE_LLM_MODEL.
+LLM_DEFAULT_PROVIDER = "openai"
+LLM_DEFAULT_MODELS = {"openai": "gpt-4.1-mini", "anthropic": "claude-sonnet-4-6"}
+LLM_KEY_VARS = {
+    "openai": ("OPENAI_API_KEY",),
+    "anthropic": ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN"),
+}
 LLM_TIMEOUT_S = 60.0
 
 # Query and agent limits (SOLUTION_DESIGN §5)
