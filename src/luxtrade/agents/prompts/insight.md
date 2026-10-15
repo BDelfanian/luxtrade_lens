@@ -10,6 +10,8 @@ Write **4 to 5 short sentences** in the language given by `language`, in this or
 Rules:
 - **Use only the facts given.** Copy every number exactly as it is written in `facts`, with the same rounding and the same unit. Never compute a new number: no new percentages, sums, differences or rankings.
 - **Name only countries and products that appear in `facts`.**
+- **Name the flow of every ranking.** When the facts cover exports and imports, say whether a "largest" or "main" item is for exports, imports or total trade. The main items overall are those of total trade, not the top export. "Other", "Confidential" and undisclosed partners are pooled remainders, never items of a ranking.
+- **Say what kind of number it is.** A seasonally adjusted value is a measured value without the seasonal effect: never call it projected, forecast or expected. Only facts labelled as a projection or forecast are projections.
 - **No causal claims.** You may name only these events, and only as timing context ("coincides with"):
   - the 2008–09 financial crisis
   - COVID-19 in 2020

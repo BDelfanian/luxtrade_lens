@@ -14,6 +14,7 @@ from luxtrade.agents import guard
 from luxtrade.agents.analyse import Analysis, analyse
 from luxtrade.agents.compile_sql import compile_spec
 from luxtrade.agents.defaults import apply_defaults
+from luxtrade.agents.findings import Finding, build_findings
 from luxtrade.agents.presets import preset
 from luxtrade.agents.spec import QuerySpec
 from luxtrade.agents.sql_guard import check_sql
@@ -301,6 +302,9 @@ class Overview:
     panels: list[Panel]
     about: dict[str, object]
     limits: list[str]
+    findings_hero: str = ""  # the story in one line (agents/findings.py)
+    findings_intro: str = ""
+    findings: list[Finding] = field(default_factory=list)  # the story tab (agents/findings.py)
 
 
 @dataclass
@@ -817,6 +821,7 @@ def build_overview(sem: SemanticLayer, lang: str = "en") -> Overview:
         _season(sem, lang),
         _peers(sem, lang, first, year),
     ]
+    hero, intro, findings = build_findings(sem, lang)
     return Overview(
         language=lang,
         year=year,
@@ -825,4 +830,7 @@ def build_overview(sem: SemanticLayer, lang: str = "en") -> Overview:
         panels=panels,
         about=_about(sem, partner_run.stats, year),
         limits=general_limits(sem),
+        findings_hero=hero,
+        findings_intro=intro,
+        findings=findings,
     )

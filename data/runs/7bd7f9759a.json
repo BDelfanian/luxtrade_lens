@@ -1,0 +1,220 @@
+{
+ "run_id": "7bd7f9759a",
+ "session_id": "swrx4x",
+ "turn": 3,
+ "created_at": "2026-10-15T16:38:04+00:00",
+ "origin": "refine",
+ "status": "answered",
+ "question": "What are the main categories of goods exported and imported? (refined)",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": "22efc901b0",
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "balance",
+  "measure": "value_eur",
+  "top_n": 5,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.752831184167725
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE) AND period < CAST('2026-01-01' AS DATE)\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "2eb671fc8767227e41b66bb005af1400a0334a15f8e854b76f67e45279bf35f1",
+ "row_count": 194,
+ "view_kind": "bar",
+ "title": "Main product groups — trade balance 2025",
+ "frames": {
+  "main": [
+   {
+    "key": "27",
+    "value": -2213108070.0,
+    "flow": "balance",
+    "share": null,
+    "rank": 1,
+    "kind": "item",
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "87",
+    "value": -1761725234.0,
+    "flow": "balance",
+    "share": null,
+    "rank": 2,
+    "kind": "item",
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "84",
+    "value": -847226402.0,
+    "flow": "balance",
+    "share": null,
+    "rank": 3,
+    "kind": "item",
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "30",
+    "value": -604891264.0,
+    "flow": "balance",
+    "share": null,
+    "rank": 4,
+    "kind": "item",
+    "label": "Pharmaceutical products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "85",
+    "value": -465281060.0,
+    "flow": "balance",
+    "share": null,
+    "rank": 5,
+    "kind": "item",
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "27",
+   "87",
+   "84",
+   "30",
+   "85"
+  ]
+ },
+ "insight": [
+  "The main categories of goods exported and imported by Luxembourg show a trade deficit of 5.89 billion euros in 2025.",
+  "The largest deficit is in Mineral fuels and oils, with a negative balance of 2.21 billion euros.",
+  "Vehicles and parts follow with a deficit of 1.76 billion euros, and Machinery and mechanical appliances have a deficit of 847.2 million euros.",
+  "Pharmaceutical products and Electrical machinery and equipment also contribute to the deficit, with 604.9 million euros and 465.3 million euros respectively.",
+  "The data are presented in current euros and include a small portion of confidential values, which are not detailed but accounted for separately."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "balance.total",
+   "text": "trade balance 2025: -5.89 bn €"
+  },
+  {
+   "key": "balance.rank1",
+   "text": "#1 Mineral fuels and oils: -2.21 bn €"
+  },
+  {
+   "key": "balance.rank2",
+   "text": "#2 Vehicles and parts: -1.76 bn €"
+  },
+  {
+   "key": "balance.rank3",
+   "text": "#3 Machinery and mechanical appliances: -847.2 M€"
+  },
+  {
+   "key": "balance.rank4",
+   "text": "#4 Pharmaceutical products: -604.9 M€"
+  },
+  {
+   "key": "balance.rank5",
+   "text": "#5 Electrical machinery and equipment: -465.3 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "trade balance = exports − imports per item, top by absolute size"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 144,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 28,
+   "outcome": "ok",
+   "detail": "view=bar; trade balance = exports − imports per item, top by absolute size"
+  },
+  {
+   "node": "insight",
+   "ms": 1820,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 650,
+   "output_tokens": 140,
+   "cache_read_tokens": 0,
+   "ms": 1740
+  }
+ ],
+ "code_version": "1b0db9a",
+ "error": null
+}

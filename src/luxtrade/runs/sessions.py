@@ -17,12 +17,19 @@ def new_session_id() -> str:
 
 
 class Session(BaseModel):
-    """A session file: its run IDs in order."""
+    """A session file: its run IDs in order, with what helps find it again."""
 
     session_id: str
     created_at: str
+    updated_at: str = ""  # time of the last question (files before 15 Oct 2026: empty)
+    language: str = ""  # language of the first question
     title: str = ""
     runs: list[str] = Field(default_factory=list)
+
+    @property
+    def last_active(self) -> str:
+        """ISO time of the last question, or of the start for older files."""
+        return self.updated_at or self.created_at
 
 
 class SessionStore:
@@ -35,6 +42,7 @@ class SessionStore:
         self.root = Path(root or self.runs.root / "sessions")
         self.demo_root = Path(demo_root or config.DEMO_RUNS_DIR / "sessions")
         self.root.mkdir(parents=True, exist_ok=True)
+        self._meta: dict[tuple[str, str, str], tuple[str, str]] = {}  # see _complete
 
     def _path(self, session_id: str) -> Path:
         return self.root / f"{session_id}.json"
@@ -51,10 +59,14 @@ class SessionStore:
     def append(self, record: RunRecord) -> Session:
         """Add a run to its session, creating the session file on the first turn."""
         session = self.get(record.session_id) or Session(
-            session_id=record.session_id, created_at=now_iso(), title=record.question[:80]
+            session_id=record.session_id,
+            created_at=record.created_at or now_iso(),
+            title=record.question[:80],
         )
         if record.run_id not in session.runs:
             session.runs.append(record.run_id)
+        session.updated_at = record.created_at or now_iso()
+        session.language = session.language or record.language
         self._path(session.session_id).write_text(
             session.model_dump_json(indent=1), encoding="utf-8"
         )
@@ -73,22 +85,47 @@ class SessionStore:
         session = self.get(session_id)
         return len(session.runs) + 1 if session else 1
 
+    def _complete(self, s: Session) -> Session:
+        """Fill the metadata older session files lack, from their first and last runs.
+
+        Kept in memory, not written back: the files stay as they were shared.
+        """
+        if s.runs and not (s.updated_at and s.language):
+            cache_key = (s.session_id, s.runs[0], s.runs[-1])
+            if cache_key not in self._meta:
+                first, last = self.runs.load(s.runs[0]), self.runs.load(s.runs[-1])
+                self._meta[cache_key] = (
+                    first.language if first else "",
+                    last.created_at if last else "",
+                )
+            language, updated_at = self._meta[cache_key]
+            s.language = s.language or language
+            s.updated_at = s.updated_at or updated_at
+        return s
+
     def recent(self, limit: int = 30) -> list[Session]:
-        """Sessions, newest first (own and demo)."""
+        """Sessions, most recently active first (own and demo)."""
         found = {}
         for folder in (self.demo_root, self.root):
             if folder.exists():
                 for path in folder.glob("*.json"):
                     s = Session.model_validate_json(path.read_text(encoding="utf-8"))
                     found[s.session_id] = s
-        return sorted(found.values(), key=lambda s: s.created_at, reverse=True)[:limit]
+        sessions = [self._complete(s) for s in found.values()]
+        return sorted(sessions, key=lambda s: s.last_active, reverse=True)[:limit]
 
     def search(self, text: str) -> list[Session]:
-        """Sessions whose ID, a run ID or a question contains ``text``."""
+        """Sessions whose ID, a run ID, a question or a date (YYYY-MM-DD) contains ``text``."""
         text = text.strip().lower()
         hits = []
         for s in self.recent(limit=500):
-            if text in s.session_id or any(text in r for r in s.runs) or text in s.title.lower():
+            if (
+                text in s.session_id
+                or any(text in r for r in s.runs)
+                or text in s.title.lower()
+                or text in s.created_at[:10]
+                or text in s.last_active[:10]
+            ):
                 hits.append(s)
                 continue
             if any(text in rec.question.lower() for rec in self.records(s.session_id)):

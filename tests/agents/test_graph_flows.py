@@ -393,3 +393,12 @@ def test_custom_sql_retries_on_empty_result_before_optimising(make_assistant, fa
     assert rec.status == "answered"
     query_traces = [t for t in rec.trace if t["node"] == "query"]
     assert len(query_traces) == 2
+
+
+def test_benchmark_insight_may_name_the_countries_compared(make_assistant, fake_llm):
+    """In a benchmark the countries are reporters, not partners: naming them is grounded."""
+    question, spec = preset("Q5").for_language("en")
+    rec = make_assistant(fake_llm()).run_spec(spec, question=question, origin="preset")
+    assert rec.status == "answered"
+    assert any("Belgium" in s for s in rec.insight)
+    assert rec.insight_source == "llm"
