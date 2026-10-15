@@ -1,0 +1,359 @@
+{
+ "run_id": "18ebf1196b",
+ "session_id": "emvjva",
+ "turn": 1,
+ "created_at": "2026-10-15T09:23:28+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Quels produits importons-nous de Chine ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "fr",
+   "intent": "ranking",
+   "breakdown": "product",
+   "partners": [
+    "CN"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": "import",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "fr",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "CN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "HS2 chapters (no level given)",
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "HS2 chapters (no level given)",
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('CN')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "335110c4141694b418128b1fce11d58abbc58ae7dfbbbfe46112836823681853",
+ "row_count": 74,
+ "view_kind": "bar",
+ "title": "Machines et appareils électriques — importations 2025 (84,1 %)",
+ "frames": {
+  "main": [
+   {
+    "key": "85",
+    "value": 640369963.0,
+    "share": 84.1142386413,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machines et appareils électriques",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "84",
+    "value": 52427631.0,
+    "share": 6.8865039276,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machines et appareils mécaniques",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "73",
+    "value": 13680512.0,
+    "share": 1.7969703727,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Ouvrages en fonte, fer ou acier",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "90",
+    "value": 10194848.0,
+    "share": 1.3391194577,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Instruments d'optique, de mesure et médicaux",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "39",
+    "value": 8161374.0,
+    "share": 1.0720174273,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Matières plastiques et ouvrages en ces matières",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "32",
+    "value": 6791410.0,
+    "share": 0.8920691389,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Extraits tannants ou tinctoriaux; tanins et leurs derives; pigments et autres matieres colorantes; peintures et vernis; mastics; encres",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "91",
+    "value": 4299167.0,
+    "share": 0.5647066226,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Horlogerie",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "29",
+    "value": 4264623.0,
+    "share": 0.5601691795,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Produits chimiques organiques",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "68",
+    "value": 2469951.0,
+    "share": 0.3244344049,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Ouvrages en pierres, platre, ciment, amiante, mica ou matieres analogues",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "82",
+    "value": 2226277.0,
+    "share": 0.2924271994,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Outils et outillage, articles de coutellerie et couverts de table, en metaux communs; parties de ces articles, en metaux communs",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "OTHER",
+    "value": 16356179.0,
+    "share": 2.1484261023,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Autres",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 67890.0,
+    "share": 0.0089175258,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidentiel",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "85",
+   "84",
+   "73",
+   "90",
+   "39",
+   "32",
+   "91",
+   "29",
+   "68",
+   "82"
+  ]
+ },
+ "insight": [
+  "Le Luxembourg importe principalement des machines et appareils électriques de Chine, pour un montant de 640,4 millions d'euros en 2025.",
+  "Le total des importations en provenance de Chine s'élève à 761,3 millions d'euros.",
+  "Les trois premiers produits représentent 92,8 % des importations, avec les machines et appareils mécaniques à 52,4 millions d'euros et les ouvrages en fonte, fer ou acier à 13,7 millions d'euros.",
+  "Les instruments d'optique, de mesure et médicaux ainsi que les matières plastiques complètent la liste des principaux produits importés.",
+  "Les valeurs sont exprimées en euros courants et ne tiennent pas compte des variations de prix."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "importations 2025: 761,3 M€"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Machines et appareils électriques: 640,4 M€, 84,1 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Machines et appareils mécaniques: 52,4 M€, 6,9 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Ouvrages en fonte, fer ou acier: 13,7 M€, 1,8 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Instruments d'optique, de mesure et médicaux: 10,2 M€, 1,3 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Matières plastiques et ouvrages en ces matières: 8,2 M€, 1,1 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Autres: 16,4 M€, 2,1 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidentiel: 68 k €, 0,0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 importations: 92,8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 6273,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=product"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 165,
+   "outcome": "ok",
+   "detail": "74 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 30,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1651,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3084,
+   "output_tokens": 125,
+   "cache_read_tokens": 0,
+   "ms": 1922
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 757,
+   "output_tokens": 150,
+   "cache_read_tokens": 0,
+   "ms": 1621
+  }
+ ],
+ "code_version": "24e9e68",
+ "error": null
+}

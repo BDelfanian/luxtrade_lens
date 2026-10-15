@@ -1,0 +1,137 @@
+{
+ "run_id": "ba036bb05d",
+ "session_id": "kgrmgk",
+ "turn": 1,
+ "created_at": "2026-10-15T09:25:45+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Who are Luxembourg's main export partners?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": null,
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "What were Luxembourg's top export partners in 2025?",
+   "note": "exports only, latest full year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "ranking",
+    "breakdown": "partner",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": 10,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "bar",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "How did Luxembourg's exports to EU27 countries evolve from 2015 to 2025?",
+   "note": "exports by EU27 partner group over time",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "partner_group",
+    "partners": [],
+    "partner_group": "EU27_2020",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2015",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "What was Luxembourg's export value of machinery and mechanical appliances in 2025 by partner?",
+   "note": "exports by product HS2=84 and partner, year 2025",
+   "spec": {
+    "language": "en",
+    "intent": "ranking",
+    "breakdown": "partner",
+    "partners": [],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [
+     "84"
+    ],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "export",
+    "measure": "value_eur",
+    "top_n": 10,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "table",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Specify the period and whether you want exports or imports.",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "optimise",
+   "ms": 7811,
+   "outcome": "routed",
+   "detail": "the user asked for more precise versions of the question before running it · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4606,
+   "output_tokens": 397,
+   "cache_read_tokens": 4480,
+   "ms": 3437
+  }
+ ],
+ "code_version": "24e9e68",
+ "error": null
+}

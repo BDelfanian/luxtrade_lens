@@ -1,0 +1,362 @@
+{
+ "run_id": "08fd2b1ca4",
+ "session_id": "qgse7s",
+ "turn": 2,
+ "created_at": "2026-10-15T09:30:56+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "Who are Luxembourg's main export partners?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "ranking",
+   "breakdown": "partner",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": null,
+   "period_start": null,
+   "period_end": null,
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "latest complete year 2025 (no period given)"
+  ]
+ },
+ "assumptions": [
+  "latest complete year 2025 (no period given)"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "2.7 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 2.733817830508474
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "b7e2d4e7fc6bd77abed021eed94082d898988f82cbb4a3055254993eca6d66ff",
+ "row_count": 202,
+ "view_kind": "map",
+ "title": "Germany — exports 2025",
+ "frames": {
+  "main": [
+   {
+    "key": "DE",
+    "value": 3914507497.0,
+    "share": 24.0835556907,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "key": "FR",
+    "value": 3103251302.0,
+    "share": 19.0923955597,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "BE",
+    "value": 2136972196.0,
+    "share": 13.1474748564,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "key": "NL",
+    "value": 964214803.0,
+    "share": 5.9322203173,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "key": "IT",
+    "value": 652476939.0,
+    "share": 4.0142890796,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "key": "ES",
+    "value": 511133132.0,
+    "share": 3.1446876163,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "key": "US",
+    "value": 421010107.0,
+    "share": 2.5902161041,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "key": "PL",
+    "value": 379291606.0,
+    "share": 2.3335478405,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Poland",
+    "iso3": "POL"
+   },
+   {
+    "key": "GB",
+    "value": 359563457.0,
+    "share": 2.2121726801,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "key": "AT",
+    "value": 296158272.0,
+    "share": 1.8220795956,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Austria",
+    "iso3": "AUT"
+   },
+   {
+    "key": "OTHER",
+    "value": 2981790333.0,
+    "share": 18.3451209629,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 533490655.0,
+    "share": 3.2822396968,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "DE",
+   "FR",
+   "BE",
+   "NL",
+   "IT",
+   "ES",
+   "US",
+   "PL",
+   "GB",
+   "AT"
+  ]
+ },
+ "insight": [
+  "Luxembourg's main export partners are Germany, France, and Belgium.",
+  "The total exports in 2025 amount to 16.25 billion euros, with the top three partners accounting for 56.3% of exports.",
+  "Germany leads with 3.91 billion euros (24.1%), followed by France with 3.10 billion euros (19.1%) and Belgium with 2.14 billion euros (13.1%).",
+  "Other countries and confidential exports make up the remaining share, including the Netherlands and Italy.",
+  "The data is in current euros and includes 3.3% confidential exports, with 2.7% of trade values undisclosed by partner country."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2025: 16.25 bn €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Germany: 3.91 bn €, 24.1 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 France: 3.10 bn €, 19.1 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Belgium: 2.14 bn €, 13.1 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Netherlands: 964.2 M€, 5.9 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Italy: 652.5 M€, 4.0 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 2.98 bn €, 18.3 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 533.5 M€, 3.3 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 56.3 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 7863,
+   "outcome": "ok",
+   "detail": "intent=ranking breakdown=partner · unresolved: ['s main']"
+  },
+  {
+   "node": "interpret",
+   "ms": 9574,
+   "outcome": "retry",
+   "detail": "intent=ranking breakdown=partner"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 1,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 163,
+   "outcome": "ok",
+   "detail": "202 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 32,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1489,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2747,
+   "output_tokens": 126,
+   "cache_read_tokens": 2560,
+   "ms": 1932
+  },
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2814,
+   "output_tokens": 122,
+   "cache_read_tokens": 1920,
+   "ms": 1923
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 803,
+   "output_tokens": 143,
+   "cache_read_tokens": 0,
+   "ms": 1451
+  }
+ ],
+ "code_version": "24e9e68",
+ "error": null
+}

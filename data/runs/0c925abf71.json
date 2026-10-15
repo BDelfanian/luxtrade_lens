@@ -1,0 +1,141 @@
+{
+ "run_id": "0c925abf71",
+ "session_id": "emvjva",
+ "turn": 2,
+ "created_at": "2026-10-15T09:23:51+00:00",
+ "origin": "ask",
+ "status": "suggestions",
+ "question": "Quels produits importons-nous de Chine ?”",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": null,
+ "assumptions": [],
+ "limitations": [],
+ "suggestions": [
+  {
+   "question": "Quels sont les 10 principaux produits importés de Chine en 2025 ?",
+   "note": "importations uniquement, classement HS2, année 2025",
+   "spec": {
+    "language": "en",
+    "intent": "ranking",
+    "breakdown": "product",
+    "partners": [
+     "CN"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "HS2",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": 10,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "bar",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "Comment ont évolué les importations de produits de Chine par Luxembourg de 2015 à 2025 ?",
+   "note": "importations uniquement, série temporelle, 2015-2025",
+   "spec": {
+    "language": "en",
+    "intent": "time_series",
+    "breakdown": "none",
+    "partners": [
+     "CN"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2015",
+    "period_end": "2025",
+    "flow": "import",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "line",
+    "assumptions": []
+   }
+  },
+  {
+   "question": "Quel est le solde commercial des échanges de marchandises entre Luxembourg et Chine en 2025 ?",
+   "note": "solde commercial, année 2025",
+   "spec": {
+    "language": "en",
+    "intent": "single_value",
+    "breakdown": "none",
+    "partners": [
+     "CN"
+    ],
+    "partner_group": "WORLD",
+    "compare_reporters": [],
+    "products": [],
+    "product_level": "TOTAL",
+    "freq": "A",
+    "period_start": "2025",
+    "period_end": "2025",
+    "flow": "balance",
+    "measure": "value_eur",
+    "top_n": null,
+    "seasonal_adjust": false,
+    "forecast_horizon": null,
+    "view": "kpi",
+    "assumptions": []
+   }
+  }
+ ],
+ "missing_hint": "Précisez la période et le type de flux (importations, exportations, solde).",
+ "sql": null,
+ "custom_sql": false,
+ "result_hash": null,
+ "row_count": 0,
+ "view_kind": "table",
+ "title": "",
+ "frames": {},
+ "entities": {},
+ "insight": [],
+ "insight_source": "",
+ "facts": [],
+ "methods": [],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "optimise",
+   "ms": 7071,
+   "outcome": "routed",
+   "detail": "the user asked for more precise versions of the question before running it · "
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "optimise",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5173,
+   "output_tokens": 420,
+   "cache_read_tokens": 0,
+   "ms": 3325
+  }
+ ],
+ "code_version": "24e9e68",
+ "error": null
+}
