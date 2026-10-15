@@ -54,6 +54,8 @@ logs/
 # Run records (answers are regenerated or replayed locally; demo runs live in demo/runs/)
 data/runs/
 
-# Generated data: placeholder (python -m luxtrade.process.placeholder) or the real pipeline
-data/processed/*
-!data/processed/.gitkeep
+# Generated data. The real-data Parquet/JSON files are shared in git so colleagues can skip
+# the ~1 h download. The DuckDB semantic layer (~470 MB, over GitHub's 100 MB file limit) is
+# rebuilt from them in seconds: python -m luxtrade.semantic.build
+data/processed/*.duckdb
+data/processed/*.duckdb.wal

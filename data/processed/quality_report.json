@@ -1,0 +1,293 @@
+{
+  "rows": {
+    "M/level_0": 75699,
+    "M/level_8": 14620216
+  },
+  "first_month": "2002-01",
+  "last_month": "2026-07",
+  "latest_complete_month": "2026-06",
+  "months_extra_eu_only": [
+    "2026-07"
+  ],
+  "missing_months": [],
+  "partners": 247,
+  "products_cn8": 14916,
+  "negative_values": 0,
+  "unknown_quantity_share_pct": 14.98,
+  "reconciliation": {
+    "keys": "period, flow, trade_type",
+    "groups": 1178,
+    "groups_off_tolerance": 30,
+    "max_abs_gap_eur": 1089739.0,
+    "groups_without_total_row": 0,
+    "tolerance": "max(1.0 EUR, 1e-06 x TOTAL)"
+  },
+  "reconciliation_by_partner_info": {
+    "keys": "period, partner, flow, trade_type",
+    "groups": 76808,
+    "groups_off_tolerance": 18731,
+    "max_abs_gap_eur": 186168268.0,
+    "groups_without_total_row": 1109,
+    "tolerance": "max(1.0 EUR, 1e-06 x TOTAL)"
+  },
+  "confidential_share_pct": [
+    {
+      "year": 2002,
+      "flow": "export",
+      "pct": 8.28
+    },
+    {
+      "year": 2002,
+      "flow": "import",
+      "pct": 11.87
+    },
+    {
+      "year": 2003,
+      "flow": "export",
+      "pct": 6.59
+    },
+    {
+      "year": 2003,
+      "flow": "import",
+      "pct": 7.79
+    },
+    {
+      "year": 2004,
+      "flow": "export",
+      "pct": 3.11
+    },
+    {
+      "year": 2004,
+      "flow": "import",
+      "pct": 3.86
+    },
+    {
+      "year": 2005,
+      "flow": "export",
+      "pct": 2.03
+    },
+    {
+      "year": 2005,
+      "flow": "import",
+      "pct": 4.33
+    },
+    {
+      "year": 2006,
+      "flow": "export",
+      "pct": 1.8
+    },
+    {
+      "year": 2006,
+      "flow": "import",
+      "pct": 4.36
+    },
+    {
+      "year": 2007,
+      "flow": "export",
+      "pct": 2.14
+    },
+    {
+      "year": 2007,
+      "flow": "import",
+      "pct": 4.75
+    },
+    {
+      "year": 2008,
+      "flow": "export",
+      "pct": 1.87
+    },
+    {
+      "year": 2008,
+      "flow": "import",
+      "pct": 5.0
+    },
+    {
+      "year": 2009,
+      "flow": "export",
+      "pct": 1.64
+    },
+    {
+      "year": 2009,
+      "flow": "import",
+      "pct": 4.91
+    },
+    {
+      "year": 2010,
+      "flow": "export",
+      "pct": 1.97
+    },
+    {
+      "year": 2010,
+      "flow": "import",
+      "pct": 4.76
+    },
+    {
+      "year": 2011,
+      "flow": "export",
+      "pct": 2.21
+    },
+    {
+      "year": 2011,
+      "flow": "import",
+      "pct": 5.05
+    },
+    {
+      "year": 2012,
+      "flow": "export",
+      "pct": 3.94
+    },
+    {
+      "year": 2012,
+      "flow": "import",
+      "pct": 4.91
+    },
+    {
+      "year": 2013,
+      "flow": "export",
+      "pct": 3.41
+    },
+    {
+      "year": 2013,
+      "flow": "import",
+      "pct": 5.13
+    },
+    {
+      "year": 2014,
+      "flow": "export",
+      "pct": 3.7
+    },
+    {
+      "year": 2014,
+      "flow": "import",
+      "pct": 4.42
+    },
+    {
+      "year": 2015,
+      "flow": "export",
+      "pct": 4.24
+    },
+    {
+      "year": 2015,
+      "flow": "import",
+      "pct": 3.79
+    },
+    {
+      "year": 2016,
+      "flow": "export",
+      "pct": 2.86
+    },
+    {
+      "year": 2016,
+      "flow": "import",
+      "pct": 3.43
+    },
+    {
+      "year": 2017,
+      "flow": "export",
+      "pct": 3.12
+    },
+    {
+      "year": 2017,
+      "flow": "import",
+      "pct": 3.55
+    },
+    {
+      "year": 2018,
+      "flow": "export",
+      "pct": 3.05
+    },
+    {
+      "year": 2018,
+      "flow": "import",
+      "pct": 4.17
+    },
+    {
+      "year": 2019,
+      "flow": "export",
+      "pct": 2.53
+    },
+    {
+      "year": 2019,
+      "flow": "import",
+      "pct": 3.43
+    },
+    {
+      "year": 2020,
+      "flow": "export",
+      "pct": 2.79
+    },
+    {
+      "year": 2020,
+      "flow": "import",
+      "pct": 3.68
+    },
+    {
+      "year": 2021,
+      "flow": "export",
+      "pct": 3.03
+    },
+    {
+      "year": 2021,
+      "flow": "import",
+      "pct": 4.82
+    },
+    {
+      "year": 2022,
+      "flow": "export",
+      "pct": 2.36
+    },
+    {
+      "year": 2022,
+      "flow": "import",
+      "pct": 7.55
+    },
+    {
+      "year": 2023,
+      "flow": "export",
+      "pct": 1.91
+    },
+    {
+      "year": 2023,
+      "flow": "import",
+      "pct": 6.39
+    },
+    {
+      "year": 2024,
+      "flow": "export",
+      "pct": 1.94
+    },
+    {
+      "year": 2024,
+      "flow": "import",
+      "pct": 5.34
+    },
+    {
+      "year": 2025,
+      "flow": "export",
+      "pct": 1.83
+    },
+    {
+      "year": 2025,
+      "flow": "import",
+      "pct": 4.99
+    },
+    {
+      "year": 2026,
+      "flow": "export",
+      "pct": 2.93
+    },
+    {
+      "year": 2026,
+      "flow": "import",
+      "pct": 6.81
+    }
+  ],
+  "benchmark_rows_by_reporter": {
+    "AT": 114113,
+    "BE": 114262,
+    "DE": 114266,
+    "FR": 114266,
+    "LU": 102941,
+    "NL": 114266
+  }
+}

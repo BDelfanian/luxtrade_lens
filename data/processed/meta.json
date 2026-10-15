@@ -1,0 +1,10 @@
+{
+  "is_placeholder": false,
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "generated_at": "2026-10-14T20:14:59+00:00",
+  "first_month": "2002-01",
+  "last_complete_month": "2026-06",
+  "latest_month": "2026-07",
+  "git_commit": "a04443eae89f2abfd371a1bdc7bc0749224ec74a"
+}

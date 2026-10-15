@@ -150,12 +150,15 @@ A key already set as an environment variable works too. The API is billed separa
 Without a key, the presets, the Refine filters and the stored runs and sessions (history, `demo/runs/`) still work. Insights then use the template fallback, and the optimiser is hidden.
 
 ### Run
+The real-data Parquet files (Eurostat extraction of 14 Oct 2026, complete until Jun 2026) are in the repo under `data/processed/`. Only the DuckDB semantic layer is rebuilt locally, because it is too large for GitHub:
 ```bash
-python -m luxtrade.process.placeholder  # synthetic placeholder data + semantic layer (~20 s)
+python -m luxtrade.semantic.build       # DuckDB semantic layer from the shared Parquet files (seconds)
 streamlit run src/luxtrade/app/Home.py  # launch the app
-pytest                                  # 166 tests, no network needed
+pytest                                  # tests use their own synthetic data, no network needed
 ```
-The app shows a **"Placeholder data"** banner until the real data is in place. To switch to real data, the pipeline writes the same files ([GUIDELINES §1.3](docs/GUIDELINES.md)):
+`python -m luxtrade.process.placeholder` writes synthetic data into the same folder, so **it overwrites the shared real data**. Use it only for development without real data, and restore the real files with `git checkout -- data/processed`.
+
+To refresh the real data from Eurostat, the pipeline writes the same files ([GUIDELINES §1.3](docs/GUIDELINES.md)):
 ```bash
 python -m luxtrade.ingest.download      # fetch + reduce Eurostat bulk files, write manifest (~1–1.5 h)
 python -m luxtrade.process.build        # contract Parquet + quality report + DuckDB semantic layer
