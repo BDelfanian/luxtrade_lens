@@ -496,6 +496,10 @@ def build_fact_sheet(
         if "key" in a.main.columns and spec.breakdown == "partner":
             entities = list(dict.fromkeys(entities + list(a.main["key"].astype(str))))
     entities += spec.partners
+    # benchmark: the countries compared are reporters, so naming them is grounded
+    entities += spec.compare_reporters
+    if a is not None and "reporter" in a.main.columns:
+        entities += list(a.main["reporter"].astype(str))
     return FactSheet(
         language=lang,
         question=question,

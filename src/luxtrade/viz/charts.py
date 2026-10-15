@@ -9,7 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from luxtrade.analytics.rankings import CONFIDENTIAL, OTHER, UNDISCLOSED
-from luxtrade.viz.format import flow_label, fmt_eur, fmt_pct, month_name
+from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct, month_name
 
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
 NEUTRAL = "#a3a29c"
@@ -52,6 +52,8 @@ def _y(values: pd.Series, measure: str) -> tuple[pd.Series, str, str]:
         return values / 1e6, "kt", "kt"
     if measure == "unit_value":
         return values, "€/kg", "€/kg"
+    if measure == "index":
+        return values, "index", "index"
     return values / 1e6, "M€", "M€"
 
 
@@ -476,3 +478,335 @@ def build_figures(
     if kind == "bench":
         return bench(main, title, lang)
     return []
+
+
+# --- key findings (agents/findings.py) --------------------------------------------------------
+
+
+def hhi_lines(main: pd.DataFrame, refs: pd.DataFrame, title: str) -> go.Figure:
+    """Concentration over time: colour = product or partner, dash = flow, reference levels."""
+    color = {"product": SERIES[0], "partner": SERIES[1]}
+    fig = go.Figure()
+    for (dim, flow), part in main.groupby(["dim", "flow"], sort=True):
+        part = part.sort_values("year")
+        fig.add_scatter(
+            x=part["year"],
+            y=part["hhi"],
+            name=part["label"].iloc[0],
+            mode="lines+markers",
+            line={
+                "width": 2.5,
+                "color": color[dim],
+                "dash": "solid" if flow == "export" else "dot",
+            },
+            hovertemplate="%{x}: HHI %{y:,.0f}<extra>" + part["label"].iloc[0] + "</extra>",
+        )
+    for row in refs.itertuples():
+        fig.add_hline(y=row.level, line={"color": NEUTRAL, "width": 1, "dash": "dash"})
+        fig.add_annotation(
+            x=1,
+            xref="paper",
+            y=row.level,
+            yanchor="bottom",
+            xanchor="right",
+            text=f"{row.label} ({row.level:,})",
+            showarrow=False,
+            font={"size": 11, "color": TEXT_2},
+        )
+    fig.update_layout(hovermode="x unified")
+    fig.update_xaxes(tickmode="array", tickvals=sorted(main["year"].unique()))
+    return _layout(fig, title, y_title="HHI")
+
+
+def then_now_bars(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
+    """Share of each chapter in two years, side by side: light = then, dark = now."""
+    years = sorted(main["year"].unique())
+    order = main[main["year"] == years[-1]].sort_values("share", ascending=False)["hs2"].tolist()
+    order += [c for c in main["hs2"].unique() if c not in order]
+    labels = dict(zip(main["hs2"], main["label"], strict=False))
+    fig = go.Figure()
+    for y, shade in zip(years, (SEQUENTIAL[2], SEQUENTIAL[5]), strict=False):
+        part = main[main["year"] == y].set_index("hs2").reindex(order)
+        fig.add_bar(
+            x=part["share"],
+            y=[_short(labels.get(c, c)) for c in order],
+            name=str(y),
+            orientation="h",
+            marker={"color": shade, "cornerradius": 4},
+            customdata=[fmt_pct(v, lang) if pd.notna(v) else "–" for v in part["share"]],
+            hovertemplate="%{y}<br>%{customdata}<extra>" + str(y) + "</extra>",
+        )
+    fig = _layout(fig, title, height=max(320, 30 * len(order) + 120))
+    fig.update_layout(barmode="group")
+    fig.update_yaxes(autorange="reversed", gridcolor="rgba(0,0,0,0)")
+    fig.update_xaxes(title="%", showgrid=True, gridcolor=GRID)
+    return fig
+
+
+def change_heatmap(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
+    """Chapters × crises: change in exports, red for falls, blue for rises, value in each cell."""
+    grid = main.pivot_table(index="label", columns="episode", values="change", sort=False)
+    grid = grid.loc[grid.mean(axis=1).sort_values().index]
+    episodes = list(dict.fromkeys(main["episode"]))
+    grid = grid[episodes]
+    text = [
+        [fmt_pct(v, lang, decimals=0, signed=True) if pd.notna(v) else "" for v in row]
+        for row in grid.to_numpy()
+    ]
+    limit = max(10.0, float(grid.abs().max().max()))
+    fig = go.Figure(
+        go.Heatmap(
+            z=grid.to_numpy(),
+            x=episodes,
+            y=[_short(lab) for lab in grid.index],
+            text=text,
+            texttemplate="%{text}",
+            zmin=-limit,
+            zmax=limit,
+            colorscale=[[0, SERIES[7]], [0.5, "#f7f6f2"], [1, SERIES[0]]],
+            showscale=False,
+            hovertemplate="%{y}<br>%{x}: %{text}<extra></extra>",
+            xgap=2,
+            ygap=2,
+        )
+    )
+    fig = _layout(fig, title, height=max(320, 32 * len(grid) + 130))
+    fig.update_layout(margin={"t": 96})  # room for the crisis names between title and grid
+    fig.update_yaxes(autorange="reversed", gridcolor="rgba(0,0,0,0)")
+    fig.update_xaxes(side="top")
+    return fig
+
+
+def share_bars(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
+    """Shares of a whole as horizontal bars; pooled rows (other, undisclosed) in gray."""
+    fig = go.Figure(
+        go.Bar(
+            x=main["share"],
+            y=main["label"],
+            orientation="h",
+            marker={
+                "color": [NEUTRAL if k in POOLED else SERIES[0] for k in main["key"]],
+                "cornerradius": 4,
+            },
+            text=[fmt_pct(v, lang) for v in main["share"]],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="%{y}: %{text}<extra></extra>",
+        )
+    )
+    fig = _layout(fig, title, height=max(280, 34 * len(main) + 100))
+    fig.update_yaxes(autorange="reversed", gridcolor="rgba(0,0,0,0)")
+    fig.update_xaxes(title="%", showgrid=False, showticklabels=False)
+    return fig
+
+
+def finding_figures(
+    key: str, frames: dict[str, pd.DataFrame], titles: list[str], lang: str = "en"
+) -> list[go.Figure]:
+    """Figures for one key finding (agents/findings.py), in the order of its chart titles."""
+    main = frames["main"]
+    if main.empty or not titles:
+        return []
+    if key == "diversification":
+        return [
+            hhi_lines(main, frames["refs"], titles[0]),
+            then_now_bars(frames["chapters"], titles[1], lang),
+        ]
+    if key == "shocks":
+        figs = [with_events(lines(main, titles[0], lang), frames["events"])]
+        if not frames["heat"].empty:
+            figs.append(change_heatmap(frames["heat"], titles[1], lang))
+        if not frames["fuel"].empty:
+            figs.append(share_bars(frames["fuel"], titles[2], lang))
+        return figs
+    if key == "europe":
+        figs = [lines(main, titles[0], lang, measure="share")]
+        if not frames["watch"].empty:
+            figs.append(lines(frames["watch"], titles[1], lang, measure="share"))
+        return figs
+    if key == "prices":
+        uv = lines(main, titles[0], lang, measure="unit_value")
+        uv.update_yaxes(type="log")
+        figs = [uv]
+        if not frames["fuel_index"].empty:
+            idx = lines(frames["fuel_index"], titles[1], lang, measure="index")
+            idx.add_hline(y=100, line={"color": NEUTRAL, "width": 1, "dash": "dash"})
+            figs.append(idx)
+        return figs
+    return []
+
+
+# --- key findings: one compact chart per card (the headline made visible) ----------------------
+
+_EU_LABEL = {"en": "EU27 countries", "fr": "Pays de l'UE27", "de": "EU27-Länder"}
+
+
+def _hero_layout(fig: go.Figure, height: int = 300, right: int = 8) -> go.Figure:
+    """Compact, title-less layout for a card: the card's headline is the title."""
+    fig.update_layout(
+        height=height,
+        margin={"l": 8, "r": right, "t": 8, "b": 8},
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font={"color": TEXT_2, "size": 13},
+        hoverlabel={"bgcolor": "white", "font": {"color": TEXT}},
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.0, "x": 0, "title": None},
+    )
+    fig.update_xaxes(showgrid=False, linecolor=GRID, ticks="", fixedrange=True)
+    fig.update_yaxes(gridcolor=GRID, zeroline=False, fixedrange=True)
+    return fig
+
+
+def _end_label(fig: go.Figure, x: object, y: float, name: str, value: str, color: str) -> None:
+    """Direct label at the end of a line: the series name, then its last value."""
+    fig.add_annotation(
+        x=x,
+        y=y,
+        xanchor="left",
+        xshift=10,
+        text=f"<b>{value}</b><br>{name}",
+        showarrow=False,
+        align="left",
+        font={"size": 12, "color": TEXT},
+        bordercolor=color,
+        borderwidth=0,
+    )
+
+
+def hero_hhi(main: pd.DataFrame, refs: pd.DataFrame, lang: str) -> go.Figure:
+    """Two lines that part ways: export concentration by product vs imports by partner."""
+    fig = go.Figure()
+    high = refs.loc[refs["level"].idxmax()] if not refs.empty else None
+    if high is not None:  # the line that counts as highly concentrated
+        fig.add_hline(y=high["level"], line={"color": NEUTRAL, "width": 1, "dash": "dash"})
+        fig.add_annotation(
+            x=0,
+            xref="paper",
+            y=high["level"],
+            yanchor="bottom",
+            xanchor="left",
+            text=f"{high['label']} (> {fmt_number(high['level'], 0, lang)})",
+            showarrow=False,
+            font={"size": 11, "color": TEXT_2},
+        )
+    for dim, flow, color in (("product", "export", SERIES[0]), ("partner", "import", SERIES[1])):
+        part = main[(main["dim"] == dim) & (main["flow"] == flow)].sort_values("year")
+        if part.empty:
+            continue
+        name = part["label"].iloc[0]
+        fig.add_scatter(
+            x=part["year"],
+            y=part["hhi"],
+            name=name,
+            mode="lines+markers",
+            line={"width": 3, "color": color},
+            marker={"size": 8, "color": color},
+            hovertemplate="%{x}: HHI %{y:,.0f}<extra>" + name + "</extra>",
+        )
+        first, last = part.iloc[0], part.iloc[-1]
+        fig.add_annotation(
+            x=first["year"],
+            y=first["hhi"],
+            yshift=14 if flow == "import" else -14,
+            text=fmt_number(first["hhi"], 0, lang),
+            showarrow=False,
+            font={"size": 12, "color": TEXT_2},
+        )
+        _end_label(fig, last["year"], last["hhi"], name, fmt_number(last["hhi"], 0, lang), color)
+    fig.update_layout(showlegend=False, hovermode="x unified")
+    years = sorted(main["year"].unique())
+    fig.update_xaxes(tickmode="array", tickvals=years, range=[years[0] - 1, years[-1] + 1])
+    fig.update_yaxes(title="HHI", rangemode="tozero")
+    return _hero_layout(fig, right=190)
+
+
+def hero_crisis(episodes: pd.DataFrame, lang: str) -> go.Figure:
+    """The weak spot against all exports in each crisis: red bars fall further than gray ones."""
+    order = list(dict.fromkeys(episodes["episode"]))
+    series = list(dict.fromkeys(episodes["series"]))
+    fig = go.Figure()
+    for name, color in zip(series, (SERIES[7], NEUTRAL), strict=False):
+        part = episodes[episodes["series"] == name].set_index("episode").reindex(order)
+        fig.add_bar(
+            x=order,
+            y=part["change"],
+            name=name,
+            marker={"color": color, "cornerradius": 4},
+            text=[fmt_pct(v, lang, decimals=0, signed=True) for v in part["change"]],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="%{x}<br>%{text}<extra>" + name + "</extra>",
+        )
+    low = float(episodes["change"].min())
+    fig.update_layout(barmode="group", bargap=0.3, bargroupgap=0.08)
+    fig.update_yaxes(
+        ticksuffix=" %", range=[min(low * 1.25, -10), 8], zeroline=True, zerolinecolor=TEXT_2
+    )
+    return _hero_layout(fig, height=320)
+
+
+def hero_europe(main: pd.DataFrame, watch: pd.DataFrame, lang: str) -> go.Figure:
+    """The EU share of imports climbs while China's falls, on one percentage axis."""
+    fig = go.Figure()
+    eu = main[main["flow"] == "import"].sort_values("period")
+    china = watch[watch["key"] == "CN-import"].sort_values("period")
+    for part, name, color in (
+        (eu, _EU_LABEL.get(lang, _EU_LABEL["en"]), SERIES[0]),
+        (china, china["label"].iloc[0] if not china.empty else "", SERIES[1]),
+    ):
+        if part.empty:
+            continue
+        fig.add_scatter(
+            x=part["period"],
+            y=part["value"],
+            name=name,
+            mode="lines",
+            line={"width": 3, "color": color},
+            hovertemplate="%{x}: %{y:.1f} %<extra>" + name + "</extra>",
+        )
+        last = part.iloc[-1]
+        _end_label(fig, last["period"], last["value"], name, fmt_pct(last["value"], lang), color)
+    fig.update_layout(showlegend=False, hovermode="x unified")
+    fig.update_xaxes(range=[eu["period"].min() - 0.5, eu["period"].max() + 0.5])
+    fig.update_yaxes(range=[0, 100], ticksuffix=" %")
+    return _hero_layout(fig, right=170)
+
+
+def hero_kilo(main: pd.DataFrame, lang: str) -> go.Figure:
+    """Value of a kilo imported from outside vs inside the EU, latest year."""
+    year = main["period"].max()
+    part = main[(main["period"] == year) & main["key"].isin(["extra-import", "intra-import"])]
+    part = part.sort_values("value")
+    fig = go.Figure(
+        go.Bar(
+            x=part["value"],
+            y=[f"{lab}  " for lab in part["label"]],
+            orientation="h",
+            marker={
+                "color": [SERIES[0] if k == "extra-import" else NEUTRAL for k in part["key"]],
+                "cornerradius": 4,
+            },
+            text=[f"{fmt_number(v, 2, lang)} €/kg" for v in part["value"]],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="%{y}: %{text}<extra>" + str(year) + "</extra>",
+        )
+    )
+    fig.update_layout(showlegend=False, bargap=0.35)
+    fig.update_xaxes(showticklabels=False, range=[0, float(part["value"].max()) * 1.3])
+    fig.update_yaxes(showgrid=False)
+    return _hero_layout(fig, height=200)
+
+
+def hero_figure(key: str, frames: dict[str, pd.DataFrame], lang: str = "en") -> go.Figure | None:
+    """The compact chart on a key finding's card (None for the conclusion)."""
+    main = frames["main"]
+    if key == "diversification" and not main.empty:
+        return hero_hhi(main, frames["refs"], lang)
+    if key == "shocks" and not frames.get("episodes", pd.DataFrame()).empty:
+        return hero_crisis(frames["episodes"], lang)
+    if key == "europe" and not main.empty:
+        return hero_europe(main, frames["watch"], lang)
+    if key == "prices" and not main.empty:
+        return hero_kilo(main, lang)
+    return None

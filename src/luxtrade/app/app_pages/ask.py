@@ -3,6 +3,8 @@
 UI only: renders run records and queues actions (GUIDELINES §1.1).
 """
 
+from datetime import date, datetime, timedelta
+
 import streamlit as st
 
 from luxtrade.agents.presets import PRESETS
@@ -15,6 +17,24 @@ cov = assistant.sem.coverage
 ss = st.session_state
 
 
+def scroll_to(anchor: str) -> None:
+    """Bring an anchor into view: the work and the new answer are drawn low on the page."""
+    st.html(
+        f"""<script>
+(function () {{
+  let tries = 0;
+  const go = () => {{
+    const el = document.getElementById("{anchor}");
+    if (el) {{ el.scrollIntoView({{behavior: "smooth", block: "start"}}); }}
+    else if (tries++ < 50) {{ setTimeout(go, 100); }}
+  }};
+  go();
+}})();
+</script>""",
+        unsafe_allow_javascript=True,
+    )
+
+
 def run_pending() -> None:
     """Execute a queued action with live step progress, then rerun."""
     job = ss.pop("pending", None)
@@ -24,6 +44,8 @@ def run_pending() -> None:
         rec = assistant.runs.load(job["run_id"])
         st.toast(assistant.verify(rec) if rec else "Run not found")
         return
+    st.html('<div id="lt-working"></div>')
+    scroll_to("lt-working")
     with st.status("Working…", expanded=False) as status:
 
         def step(label: str) -> None:
@@ -45,6 +67,7 @@ def run_pending() -> None:
                 on_step=step,
             )
         status.update(label=f"Done · run {rec.run_id}", state="complete")
+    ss.scroll_to = rec.run_id  # after the rerun, show the start of the new answer
     st.query_params["session"] = ss.session_id
     st.rerun()
 
@@ -54,6 +77,21 @@ def open_session(session_id: str) -> None:
     ss.session_id = session_id
     st.query_params.clear()
     st.query_params["session"] = session_id
+
+
+def local_time(iso: str) -> datetime:
+    """A stored UTC timestamp in the server's local time (Luxembourg)."""
+    return datetime.fromisoformat(iso).astimezone()
+
+
+def day_label(day: date) -> str:
+    """'Today', 'Yesterday' or 'Thu 15 Oct 2026': the heading of a group of sessions."""
+    today = date.today()
+    if day == today:
+        return "Today"
+    if day == today - timedelta(days=1):
+        return "Yesterday"
+    return f"{day:%a %d %b %Y}"
 
 
 def start_session() -> None:
@@ -69,25 +107,49 @@ with st.container(horizontal=True, vertical_alignment="center"):
     st.markdown(f"#### Ask about Luxembourg's trade in goods · session `{ss.session_id}`")
     st.button("New session", key="new-session", icon=":material/add:", on_click=start_session)
 
-# presets open by default only on an empty conversation, so they don't push answers down
-with (
-    st.expander("Preset questions", icon=":material/bolt:", expanded=not records),
-    st.container(horizontal=True),
-):
-    for p in PRESETS:
+# presets open by default only on an empty conversation, so they don't push answers down;
+# the full question on each button, two per row (stacked on a phone), read from the left
+# (Streamlit centres button text and has no option for it, hence the scoped style)
+st.html(
+    """<style>
+    [class*="st-key-preset-"] button { justify-content: flex-start; text-align: left; }
+    [class*="st-key-preset-"] button div,
+    [class*="st-key-preset-"] button p { justify-content: flex-start; text-align: left; }
+    </style>"""
+)
+with st.expander("Preset questions", icon=":material/bolt:", expanded=not records):
+    cols = st.columns(2)
+    for i, p in enumerate(PRESETS):
         q, spec = p.for_language(lang)
-        if st.button(f"{p.id} · {p.label[lang]}", key=f"preset-{p.id}", help=q):
+        if cols[i % 2].button(
+            f"**{p.id}** · {q}", key=f"preset-{p.id}", help=p.label[lang], width="stretch"
+        ):
             queue("spec", spec=spec.model_dump(), question=q, origin="preset")
 
 with st.expander("Previous sessions", icon=":material/history:"):
-    search = st.text_input("Search text, run or session ID", key="search")
+    search = st.text_input(
+        "Search text, run or session ID, or a date",
+        key="search",
+        placeholder="e.g. vehicles · k7p2qx · 2026-10-15",
+    )
     sessions = assistant.sessions.search(search) if search else assistant.sessions.recent(15)
+    shown_day = None
     for s in sessions:
         current = s.session_id == ss.session_id
+        last, started = local_time(s.last_active), local_time(s.created_at)
+        if last.date() != shown_day:  # one heading per day, newest first
+            shown_day = last.date()
+            st.caption(f"**{day_label(shown_day)}**")
+        n = len(s.runs)
+        meta = [f"{last:%H:%M}", f"{n} question{'s' if n != 1 else ''}"]
+        if s.language:
+            meta.append(s.language.upper())
+        meta.append(s.session_id)
         st.button(
-            f"{s.session_id} · {s.title[:80]}",
+            f"{s.title[:80]} :gray[· {' · '.join(meta)}]",
             key=f"open-{s.session_id}",
-            help=f"{len(s.runs)} turn(s) · {s.created_at[:16]}",
+            help=f"Started {started:%d %b %Y, %H:%M} · last question {last:%d %b %Y, %H:%M}"
+            f" · runs {', '.join(s.runs)}",
             icon=":material/radio_button_checked:" if current else ":material/chat:",
             type="tertiary",
             disabled=current,
@@ -106,7 +168,11 @@ if not records:
         "Or pick a preset above. New here? The **Overview** page gives the big picture "
         "first."
     )
+target = ss.pop("scroll_to", None)  # once: later reruns keep the reader's position
 for rec in records:
+    if rec.run_id == target:
+        st.html(f'<div id="run-{rec.run_id}"></div>')
+        scroll_to(f"run-{rec.run_id}")
     with st.chat_message("user"):
         st.markdown(rec.question)
     with st.chat_message("assistant"):
