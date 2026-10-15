@@ -1,6 +1,7 @@
 # Exact pinned versions, generated from requirements.in with Python 3.12.
 # Regenerate: pip install -r requirements.in && pip freeze --exclude-editable > requirements.txt
 altair==6.3.0
+annotated-doc==0.0.5
 annotated-types==0.8.0
 anthropic==1.13.0
 anyio==4.15.1
@@ -28,6 +29,7 @@ docstring_parser==0.18.0
 duckdb==1.5.6
 duckdb-engine==0.17.0
 executing==2.3.0
+fastapi==0.143.1
 fastjsonschema==2.22.2
 formulaic==1.2.2
 fqdn==1.6.0
@@ -85,6 +87,7 @@ nest-asyncio2==1.7.4
 notebook_shim==0.2.4
 numpy==2.5.4
 openai==3.31.0
+opentelemetry-api==1.45.1
 orjson==3.13.0
 ormsgpack==1.12.2
 packaging==26.3

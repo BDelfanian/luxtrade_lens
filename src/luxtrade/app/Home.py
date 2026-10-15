@@ -1,8 +1,8 @@
 """LuxTrade Lens: Luxembourg's trade in goods (EN · FR · DE).
 
 Run with ``streamlit run src/luxtrade/app/Home.py``. Entry point: shared sidebar and navigation
-between the Overview (landing page, the big picture) and Ask (the assistant, for specific
-questions). UI only: every computation happens in the agents layer (GUIDELINES §1.1).
+between Overview (the big picture), Ask (the assistant), and Dashboard (mapped SQL charts).
+UI only: every computation happens in the agents layer (GUIDELINES §1.1).
 """
 
 import streamlit as st
@@ -23,7 +23,10 @@ overview_page = st.Page(
     "app_pages/overview.py", title="Overview", icon=":material/insights:", default=True
 )
 ask_page = st.Page(ASK_PAGE, title="Ask", icon=":material/forum:", url_path="ask")
-page = st.navigation([overview_page, ask_page], position="top")
+dashboard_page = st.Page(
+    "app_pages/dashboard.py", title="Dashboard", icon=":material/dashboard:", url_path="dashboard"
+)
+page = st.navigation([overview_page, ask_page, dashboard_page], position="top")
 
 cov = assistant.sem.coverage
 ss = st.session_state

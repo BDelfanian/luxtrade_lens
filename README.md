@@ -177,6 +177,25 @@ python -m luxtrade.process.build        # contract Parquet + quality report + Du
 For notebooks, register the kernel once:
 `python -m ipykernel install --user --name statec-outliers --display-name "Python (statec-outliers)"`
 
+### Dashboard builder and chart API
+
+Open **Dashboard** in the Streamlit navigation (direct path: `/dashboard`). Run SQL against
+the semantic views, map query columns to chart roles, and add line, bar, pie, animated ranking
+or stacked area charts to a one-, two- or three-column dashboard. **Try a time-series example**
+loads export-partner rankings with a year slider and Play/Pause, or monthly trade areas with
+range selection and percentage shares. Download/load dashboard JSON to save and reuse layouts.
+
+The same chart definitions are available over HTTP. Start the API in a second terminal:
+
+```bash
+python -m uvicorn luxtrade.api.app:app --host 127.0.0.1 --port 8000
+```
+
+Interactive API docs: `http://127.0.0.1:8000/docs`. Use `POST /api/charts/render` with a SQL
+query, chart type, column mappings and display options; add `?format=html` for a standalone
+interactive chart. See [dashboard API and extension guide](docs/DASHBOARDS.md) for requests,
+dashboard rendering, mapping roles and adding new chart types (including time series).
+
 ### Adding a dependency
 1. Add the package name to `requirements.in`.
 2. `pip install -r requirements.in`
