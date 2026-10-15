@@ -88,3 +88,25 @@ def test_figures_build_for_real_answers(semantic, spec):
     figs = build_figures(kind, a.main, "title", "fr", monthly=resolved.freq == "M")
     assert figs and all(len(f.data) > 0 for f in figs)
     assert len(set(a.main.get("key", pd.Series(dtype=str)))) <= 30
+
+
+def test_render_hierarchical_treemap_with_parent_labels():
+    from luxtrade.viz.charts import treemap
+
+    df = pd.DataFrame(
+        {
+            "flow": ["export", "export"],
+            "parent_label": ["Machinery", "Machinery"],
+            "label": ["Turbines", "Boilers"],
+            "key": ["8406", "8402"],
+            "value": [100.0, 200.0],
+            "share": [0.33, 0.67],
+            "kind": ["item", "item"],
+        }
+    )
+    figs = treemap(df, "Hierarchical Test", "en")
+    assert len(figs) == 1
+    fig = figs[0]
+    assert fig.data[0].type == "treemap"
+    labels = list(fig.data[0].labels)
+    assert "Machinery" in labels or any("Machinery" in str(x) for x in fig.data[0].ids)

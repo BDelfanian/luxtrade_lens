@@ -318,3 +318,78 @@ def test_eu_share_question_is_answered_in_french(make_assistant, fake_llm):
     assert rec.status == "answered"
     assert rec.frame("main").iloc[0]["key"] == "EU27"
     assert rec.title.startswith("Pays de l'UE27 — importations")
+
+
+def test_custom_sql_prompt_contains_examples():
+    from luxtrade.agents.interpret import prompt
+
+    p = prompt("custom_sql")
+    assert "Examples:" in p
+    assert "v_lu_trade" in p
+    assert "LIMIT 1000" in p
+
+
+def test_custom_sql_prompt_receives_candidates_and_language(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(
+            intent="time_series", partners=["DE", "FR"], needs_custom_sql=True, language="fr"
+        ),
+        custom_sql=CustomSQL(
+            sql="SELECT period, sum(value_eur) AS value_eur FROM v_lu_trade_hs2 GROUP BY period",
+            explanation="Évolution mensuelle",
+        ),
+    )
+    rec = make_assistant(llm).ask("Mois inhabituels pour l'Allemagne et la France")
+    assert rec.status == "answered"
+    sql_call = next(prompt for step, prompt in llm.calls if step == "custom_sql")
+    assert "LANGUAGE: fr" in sql_call
+    assert "CANDIDATES:" in sql_call
+    assert "DE" in sql_call and "FR" in sql_call
+
+
+def test_custom_sql_insight_with_partner_name_passes_grounding(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(intent="time_series", partners=["DE"], needs_custom_sql=True),
+        custom_sql=CustomSQL(
+            sql="SELECT 'DE' AS partner, 500.0 AS value_eur FROM v_lu_trade_hs2",
+            explanation="Exports to Germany",
+        ),
+        insight=InsightOutput(
+            sentences=[
+                "Exports to Germany were 500 EUR.",
+                "Trade remained steady across the period.",
+                "Germany was the primary destination.",
+                "Historical trends indicate stability.",
+                "See notes for confidential data limits.",
+            ]
+        ),
+    )
+    rec = make_assistant(llm).ask("Custom query for Germany")
+    assert rec.status == "answered"
+    assert rec.insight_source == "llm"
+
+
+def test_custom_sql_retries_on_empty_result_before_optimising(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(intent="time_series", needs_custom_sql=True),
+        custom_sql=[
+            CustomSQL(
+                sql=(
+                    "SELECT period, sum(value_eur) AS value_eur "
+                    "FROM v_lu_trade_hs2 WHERE year = 1990 GROUP BY period"
+                ),
+                explanation="empty year",
+            ),
+            CustomSQL(
+                sql=(
+                    "SELECT period, sum(value_eur) AS value_eur "
+                    "FROM v_lu_trade_hs2 WHERE year = 2024 GROUP BY period ORDER BY period"
+                ),
+                explanation="valid year",
+            ),
+        ],
+    )
+    rec = make_assistant(llm).ask("Trade in an unusual period")
+    assert rec.status == "answered"
+    query_traces = [t for t in rec.trace if t["node"] == "query"]
+    assert len(query_traces) == 2

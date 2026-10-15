@@ -33,3 +33,9 @@ def test_accepts_select_on_views_and_ctes():
 def test_caps_large_limits():
     assert "LIMIT 10000" in check_sql("SELECT * FROM v_lu_trade LIMIT 999999")
     assert "LIMIT 5" in check_sql("SELECT * FROM v_lu_trade LIMIT 5")
+
+
+def test_accepts_slashes_in_benign_string_literals():
+    sql = "SELECT 'kg/m' AS unit, 'apples and/or oranges' AS desc FROM v_lu_trade"
+    checked = check_sql(sql)
+    assert "kg/m" in checked

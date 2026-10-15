@@ -1,0 +1,16 @@
+sources:
+  products: "https://ec.europa.eu/eurostat/api/dissemination/files/?sort=1&dir=comext%2FCOMEXT_DATA%2FPRODUCTS"
+  metadata: "https://ec.europa.eu/eurostat/api/dissemination/files/?sort=1&dir=comext%2FCOMEXT_METADATA"
+
+download:
+  start_date: "2025-01"
+  end_date: "2025-12"
+  include:
+    - "full_v2_*.7z"
+  exclude:
+    - "*52.7z"
+    - "full_partxixu_*"
+  directory: "data/raw"
+
+import:
+  reporter: "LU"

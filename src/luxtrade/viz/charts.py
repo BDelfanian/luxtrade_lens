@@ -5,6 +5,7 @@ Colour rules (dataviz reference palette): categorical slots in fixed order, neve
 """
 
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
 
 from luxtrade.analytics.rankings import CONFIDENTIAL, OTHER, UNDISCLOSED
@@ -138,23 +139,42 @@ def treemap(main: pd.DataFrame, title: str, lang: str) -> list[go.Figure]:
     """One treemap per flow; Other and Confidential slices in gray."""
     figs = []
     colors = _colors(list(dict.fromkeys(main.sort_values("value", ascending=False)["key"])))
+    has_parent = (
+        "parent_label" in main.columns
+        and main["parent_label"].dropna().astype(str).str.strip().ne("").any()
+    )
     for flow in [f for f in ("export", "import", "balance") if f in set(main["flow"])]:
         part = main[main["flow"] == flow]
-        fig = go.Figure(
-            go.Treemap(
-                labels=[f"{lab}" for lab in part["label"]],
-                parents=[""] * len(part),
+        if has_parent:
+            part = part.copy()
+            part["parent_label"] = part["parent_label"].fillna("").astype(str).str.strip()
+            part["parent_label"] = part["parent_label"].replace({"": "All Products"})
+            fig = px.treemap(
+                part,
+                path=["parent_label", "label"],
                 values=part["value"].clip(lower=0),
-                marker={"colors": [colors[k] for k in part["key"]]},
-                customdata=[
-                    f"{fmt_eur(v, lang)} · {fmt_pct(s, lang)}"
-                    for v, s in zip(part["value"], part["share"], strict=True)
-                ],
-                hovertemplate="%{label}<br>%{customdata}<extra></extra>",
-                texttemplate="%{label}<br>%{percentRoot:.1%}",
+            )
+            fig.update_traces(
+                texttemplate="%{label}<br>%{percentParent:.1%}",
+                hovertemplate="%{label}<br>%{value:.1f} M€<extra></extra>",
                 textfont={"color": "white"},
             )
-        )
+        else:
+            fig = go.Figure(
+                go.Treemap(
+                    labels=[f"{lab}" for lab in part["label"]],
+                    parents=[""] * len(part),
+                    values=part["value"].clip(lower=0),
+                    marker={"colors": [colors[k] for k in part["key"]]},
+                    customdata=[
+                        f"{fmt_eur(v, lang)} · {fmt_pct(s, lang)}"
+                        for v, s in zip(part["value"], part["share"], strict=True)
+                    ],
+                    hovertemplate="%{label}<br>%{customdata}<extra></extra>",
+                    texttemplate="%{label}<br>%{percentRoot:.1%}",
+                    textfont={"color": "white"},
+                )
+            )
         figs.append(_layout(fig, f"{title} — {flow_label(flow, lang)}", height=420))
     return figs
 

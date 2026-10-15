@@ -1,5 +1,73 @@
 # statec-hackathon-outliers
 
+## Comext downloader and database importer
+
+Requires Python 3.12 or later. Install the package and its ingestion dependencies:
+
+```bash
+python -m pip install -e .
+```
+
+Edit [config/download.yaml](config/download.yaml) for inclusive reference months,
+wildcard include/exclude patterns, official directory URLs, and the download directory.
+The initial selection is January–December 2025, excluding annual (`52`) files.
+Edit [database.yaml](database.yaml) for the local DuckDB path, memory limit, and threads.
+Optionally copy [.env.sample](.env.sample) to `.env` for local overrides.
+Environment variables such as `COMEXT_DATABASE__PATH` override `.env`, which overrides YAML.
+`settings.py` validates the required files and all nested configuration before either command.
+DuckDB requires no credentials; secrets must never be put in YAML or committed to Git.
+
+```bash
+python -m comext download
+python -m comext load
+```
+
+Downloads follow actual links in Eurostat's HTML directory listings. Files stream to `.part`
+and are renamed after size and format checks; SHA-256 completion receipts retain their source
+URLs. Complete downloads and successfully imported files are skipped on subsequent runs.
+Failures return a nonzero exit code and can be retried. Downloaded archives remain available.
+No automatic revision checking or incremental updates are implemented.
+
+The loader discovers the existing `data/raw/monthly_trade` archives recursively, alongside
+new downloads. It ignores duplicate pre-existing extraction folders and processes one archive
+at a time, removing only its own temporary extraction. It also accepts standalone CSV/`.dat`
+files. Existing downloads without a receipt are recorded with a local `file:` URI rather than
+an invented remote URL. `load` imports all locally available files; date and wildcard settings
+select remote downloads, not which already-downloaded trade files to load.
+
+DuckDB SQL stages only `REPORTER = 'LU'`, preserves all 18 original fields and string codes,
+and inserts `DECIMAL(28,4)` measures without passing through floats. Excess decimal precision
+fails the file rather than silently rounding it. `row_number` is the original 1-based data
+record position, excluding the CSV header and before the Luxembourg filter. The data and
+`imported_files` record commit in the same transaction, with complete rollback on failure.
+There are no foreign keys from trade records to partner or product lookup tables.
+
+Formats verified against local Eurostat 2002/2010 data, a live download of
+`full_v2_202501.7z`, and official metadata on 14 October 2026:
+
+- Trade archives contain a comma-separated `.dat` file with the 18-column header required
+  by [load.py](src/comext/load.py); unknown schemas fail explicitly.
+- English `CN.txt` and `PARTNERS_ISO.txt` are headerless UTF-8 TSV files with four fields:
+  code, validity start (`DD/MM/YYYY`), validity end, and English description. Quotes in
+  descriptions are literal text. CN includes historical intervals; `31/12/2500` is an
+  open-ended validity marker, not a requested classification year.
+- CN rows are expanded into years from the configured range and existing archive filenames.
+  Where a code changes during a year, `(year, code)` stores the latest applicable definition
+  in that year. Official empty descriptions and special codes are retained. Partner codes
+  use the latest official name; `PARTNERS.txt` numeric codes are also supported if present.
+
+Sources: [Eurostat Files API and directory listings](https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-migrating/bulkdownload)
+and [Comext API guide](https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-getting-started/comext-database).
+The downloader discovers classifications through `COMEXT_METADATA`, without guessing metadata
+filenames or assigning today's CN descriptions to historical codes.
+
+TODO: add explicit incremental-download and revision/re-import policies, including extending
+the years of an already imported CN snapshot when new periods are added. For now, an imported
+path is always skipped, even if its contents or the configured year range subsequently change.
+
+Focused offline checks:
+`python -m pytest tests/comext --confcutdir=tests/comext -o cache_dir=.pytest_cache_comext`.
+
 **The Outliers** — STATEC Hackathon 2026 (14–16 Oct, GovTech Lab, Luxembourg).
 
 **LuxTrade Lens** helps public-sector staff explore **Luxembourg's external trade in goods** (Eurostat Comext `DS-045409`):

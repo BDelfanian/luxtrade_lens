@@ -37,6 +37,7 @@ from luxtrade.agents.spec import (
     TraceEvent,
 )
 from luxtrade.agents.sql_guard import SQLRejectedError, check_sql
+from luxtrade.config import MAX_RETRIES
 from luxtrade.semantic.catalog import catalog_text
 from luxtrade.semantic.layer import QueryError, SemanticLayer
 from luxtrade.semantic.lookup import EntityIndex
@@ -202,8 +203,29 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
             if custom:
                 if llm is None:
                     raise LLMError("custom SQL needs the LLM")
+                candidates: list[str] = []
+                if spec.partners:
+                    candidates.extend(
+                        f"partner: {p} ({sem.label(p, 'partner', spec.language)})"
+                        for p in spec.partners
+                    )
+                if spec.products:
+                    candidates.extend(
+                        f"product: {p} ({sem.label(p, 'product', spec.language)})"
+                        for p in spec.products
+                    )
+                candidates_block = (
+                    ("\n\nCANDIDATES:\n" + "\n".join(candidates)) if candidates else ""
+                )
+
+                ctx_block = ""
+                ctx = state.get("context")
+                if ctx and ctx.turns:
+                    ctx_block = f"\n\nSESSION CONTEXT:\n{ctx.to_prompt()}"
+
                 user = (
-                    f"QUESTION: {state['question']}\n\n{coverage_text(sem)}"
+                    f"QUESTION: {state['question']}\nLANGUAGE: {spec.language}"
+                    f"{ctx_block}{candidates_block}\n\n{coverage_text(sem)}"
                     f"\n\nCATALOG:\n{catalog_text()}"
                 )
                 if state.get("sql_error"):
@@ -252,7 +274,16 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
             "_detail": f"{len(df)} rows" + (" · LLM-written SQL" if custom else ""),
         }
         if df.empty:
-            update.update(status="no_data", _outcome="routed")
+            if custom and retries.get("query", 1) <= MAX_RETRIES:
+                update.update(
+                    sql_error=(
+                        "Query returned 0 rows. Verify filter conditions (e.g. check date bounds, "
+                        "flow casing 'import'/'export', and partner/product codes)."
+                    ),
+                    _outcome="retry",
+                )
+            else:
+                update.update(status="no_data", _outcome="routed")
         return update
 
     def guard_post_node(state: RunState) -> dict:
@@ -291,10 +322,17 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
         lims = state.get("limitations", [])
         if state.get("custom_sql"):
             rows = a.main.head(12).to_dict(orient="records") if a is not None else []
+            entities = list(spec.partners) + list(spec.products)
+            if a is not None and not a.main.empty:
+                for col in ("partner", "key", "reporter"):
+                    if col in a.main.columns:
+                        entities.extend(str(val) for val in a.main[col].dropna().unique())
+            entities = sorted(set(entities))
             sheet = FactSheet(
                 language=spec.language,
                 question=state["question"],
                 title=state.get("custom_explanation", "")[:90],
+                entities=entities,
                 facts=[
                     Fact(key=f"row{i}", text=json.dumps(r, default=str, ensure_ascii=False))
                     for i, r in enumerate(rows)

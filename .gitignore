@@ -15,11 +15,20 @@ build/
 dist/
 *.py[cod]
 .pytest_cache/
+.pytest_cache_comext/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# Data (raw downloads are reproducible via python -m luxtrade.ingest.download; never commit them)
+# Data (raw downloads are reproducible via python -m comext download; never commit them)
 data/raw/
+data/database/
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp/
+*.db
+*.sqlite
+*.sqlite3
+*.part
 data/interim/
 *.7z
 *.zip
