@@ -24,7 +24,7 @@ def test_app_opens_on_the_overview(app_env):
     at.run()
     assert not at.exception
     assert at.title[0].value == "Luxembourg's trade in goods at a glance"
-    assert len(at.metric) == 4
+    assert not at.metric  # no KPI cards: the page opens on the five questions
     assert len(at.main.subheader) == 5
     assert any(b.key == "explore-partners" for b in at.button)
 
@@ -33,7 +33,9 @@ def test_app_loads_and_answers_a_preset(app_env):
     at = _app()
     at.run()
     assert not at.exception
-    assert any("Placeholder data" in w.value for w in at.sidebar.warning)
+    assert any("Placeholder data" in w.value for w in at.warning)
+    assert not at.sidebar.button  # presets and sessions live on the Ask page only
+    at.switch_page("app_pages/ask.py").run()
     at.button(key="preset-Q1").click().run()
     assert not at.exception
     assert len(at.tabs) == 4
@@ -57,3 +59,18 @@ def test_language_survives_the_switch_to_the_assistant(app_env):
     at.button(key="explore-partners").click().run()
     assert not at.exception
     assert at.button(key="preset-Q1").label == "Q1 · Principaux partenaires"
+
+
+def test_sessions_are_managed_on_the_ask_page(app_env):
+    at = _app()
+    at.run()
+    at.switch_page("app_pages/ask.py").run()
+    at.button(key="preset-Q1").click().run()
+    first = at.session_state["session_id"]
+    at.button(key="new-session").click().run()
+    assert not at.exception
+    assert at.session_state["session_id"] != first
+    assert not at.tabs  # the new conversation is empty
+    at.button(key=f"open-{first}").click().run()
+    assert at.session_state["session_id"] == first
+    assert len(at.tabs) == 4  # the earlier answer is back

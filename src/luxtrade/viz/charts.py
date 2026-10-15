@@ -125,11 +125,16 @@ def choropleth(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
             hovertemplate="%{text}<br>%{customdata}<extra></extra>",
         )
     )
+    # zoom to the mapped partners; light land around them for context
     fig.update_geos(
+        fitbounds="locations",
         showframe=False,
         showcoastlines=False,
+        showland=True,
+        landcolor="#f1f0ec",
+        showcountries=True,
+        countrycolor="white",
         projection_type="natural earth",
-        lataxis_range=[-50, 75],
         bgcolor="rgba(0,0,0,0)",
     )
     return _layout(fig, title, height=440)

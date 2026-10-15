@@ -57,11 +57,15 @@ def render_suggestions(rec: RunRecord) -> None:
         st.info("No trade is recorded for this selection.")
     else:
         st.info("This question can't be answered precisely as written. Pick a version that can:")
-    if rec.suggestions:
-        cols = st.columns(len(rec.suggestions))
-        for i, (col, s) in enumerate(zip(cols, rec.suggestions, strict=True)):
-            if col.button(
-                s["question"], key=f"sug-{rec.run_id}-{i}", help=s["note"], width="stretch"
+    # one row per suggestion so each full question is readable
+    for i, s in enumerate(rec.suggestions):
+        with st.container(horizontal=True, vertical_alignment="center"):
+            if st.button(
+                s["question"],
+                key=f"sug-{rec.run_id}-{i}",
+                help=s["note"],
+                icon=":material/arrow_forward:",
+                width="content",
             ):
                 queue(
                     "spec",
@@ -70,7 +74,7 @@ def render_suggestions(rec: RunRecord) -> None:
                     origin="optimiser",
                     parent=rec.run_id,
                 )
-            col.caption(s["note"])
+            st.caption(s["note"])
     with st.form(key=f"specific-{rec.run_id}", border=False):
         text = st.text_input("Ask more specifically", value=rec.question, help=rec.missing_hint)
         st.caption(rec.missing_hint)

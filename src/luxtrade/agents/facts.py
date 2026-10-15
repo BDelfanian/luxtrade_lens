@@ -35,6 +35,16 @@ _T = {
         "fr": "groupe de produits",
         "de": "die wichtigste Warengruppe",
     },
+    "title_partner": {
+        "en": "Main trading partners",
+        "fr": "Principaux partenaires commerciaux",
+        "de": "Wichtigste Handelspartner",
+    },
+    "title_product": {
+        "en": "Main product groups",
+        "fr": "Principaux groupes de produits",
+        "de": "Wichtigste Warengruppen",
+    },
     "series": {
         "en": "Between {start} and {end}, {flow}{scope} went from {v0} to {v1} ({chg}).",
         "fr": "Entre {start} et {end}, les {flow}{scope} sont passées de {v0} à {v1} ({chg}).",
@@ -146,10 +156,15 @@ def _period_text(spec: QuerySpec) -> str:
 
 
 def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact], list[str], str]:
-    facts, sents, title = [], [], ""
-    what = _T["what_partner" if spec.breakdown == "partner" else "what_product"][lang]
+    facts, sents = [], []
+    kind = "partner" if spec.breakdown == "partner" else "product"
+    what = _T[f"what_{kind}"][lang]
     period = _period_text(spec)
-    for flow in [f for f in ("export", "import", "total", "balance") if f in set(a.main["flow"])]:
+    flows = [f for f in ("export", "import", "total", "balance") if f in set(a.main["flow"])]
+    # the chart shows the whole ranking, so the title names it (not the top item)
+    scope = f"{flow_label(flows[0], lang)} {period}" if len(flows) == 1 else period
+    title = f"{_t(f'title_{kind}', lang)} — {scope}"
+    for flow in flows:
         part = a.main[a.main["flow"] == flow]
         items = part[part["kind"] == "item"].sort_values("rank")
         if items.empty:
@@ -191,8 +206,6 @@ def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact],
                     total=fmt_eur(total, lang),
                 )
             )
-        if not title:
-            title = f"{top['label']} — {fl} {period} ({fmt_pct(top['share'], lang)})"
         if flow == "total" or len(set(a.main["flow"])) == 1:
             names = ", ".join(items.head(3)["label"])
             sents.append(_t("top3", lang, names=names, conc=fmt_pct(conc, lang), flow=fl))
