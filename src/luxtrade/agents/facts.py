@@ -8,7 +8,7 @@ import pandas as pd
 from pydantic import BaseModel, Field
 
 from luxtrade.agents.analyse import Analysis
-from luxtrade.agents.spec import Limitation, QuerySpec
+from luxtrade.agents.spec import SPLIT_BREAKDOWNS, Limitation, QuerySpec
 from luxtrade.analytics import rankings, timeseries
 from luxtrade.semantic.layer import SemanticLayer
 from luxtrade.viz.format import flow_label, fmt_eur, fmt_pct, fmt_period, month_name
@@ -23,6 +23,11 @@ _T = {
         "en": "The top three ({names}) account for {conc} of {flow}.",
         "fr": "Les trois premiers ({names}) représentent {conc} du total ({flow}).",
         "de": "Die drei größten ({names}) machen {conc} des Gesamtwerts aus ({flow}).",
+    },
+    "split": {
+        "en": "In {period}, {name} accounted for {share} of {flow}{scope} ({value} of {total}).",
+        "fr": "En {period}, {name} représentaient {share} des {flow}{scope} ({value} sur {total}).",
+        "de": "{period} entfielen {share} der {flow}{scope} auf {name} ({value} von {total}).",
     },
     "what_partner": {"en": "partner", "fr": "partenaire", "de": "der wichtigste Partner"},
     "what_product": {
@@ -85,6 +90,23 @@ _T = {
         "fr": "Aucun échange n'est enregistré pour cette sélection.",
         "de": "Für diese Auswahl ist kein Handel verzeichnet.",
     },
+}
+
+
+# Split keys as they read inside the "split" sentence (chart labels are in semantic.layer)
+_SPLIT_NAMES = {
+    "EU27": ("EU27 countries", "les pays de l'UE27", "EU27-Länder"),
+    "NON_EU27": ("non-EU27 countries", "les pays hors UE27", "Nicht-EU27-Länder"),
+    "CONFIDENTIAL": (
+        "confidential trade (not published at CN8 level)",
+        "les échanges confidentiels (non publiés au niveau NC8)",
+        "vertraulichen Handel (nicht auf KN8-Ebene veröffentlicht)",
+    ),
+    "DISCLOSED": (
+        "trade published at CN8 level",
+        "les échanges publiés au niveau NC8",
+        "auf KN8-Ebene veröffentlichten Handel",
+    ),
 }
 
 
@@ -177,6 +199,41 @@ def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact],
     return facts, sents, title
 
 
+def _split_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str):  # noqa: ANN202
+    """Facts for a two-way split: each part's value and share, the subject part first."""
+    facts, sents, title = [], [], ""
+    period, scope = _period_text(spec), _scope(spec, sem)
+    idx = ("en", "fr", "de").index(lang)
+    for flow in [f for f in ("export", "import") if f in set(a.main["flow"])]:
+        part = a.main[a.main["flow"] == flow].sort_values("rank")
+        total, fl = part["value"].sum(), flow_label(flow, lang)
+        facts.append(Fact(key=f"{flow}.total", text=f"{fl} {period}: {fmt_eur(total, lang)}"))
+        for _, row in part.iterrows():
+            facts.append(
+                Fact(
+                    key=f"{flow}.{row['key'].lower()}",
+                    text=f"{row['label']}: {fmt_eur(row['value'], lang)}, "
+                    f"{fmt_pct(row['share'], lang)}",
+                )
+            )
+        subject = part.iloc[0]
+        sents.append(
+            _t(
+                "split",
+                lang,
+                period=period,
+                name=_SPLIT_NAMES[subject["key"]][idx],
+                share=fmt_pct(subject["share"], lang),
+                flow=fl,
+                scope=scope,
+                value=fmt_eur(subject["value"], lang),
+                total=fmt_eur(total, lang),
+            )
+        )
+        title = title or f"{subject['label']} — {fl} {period}: {fmt_pct(subject['share'], lang)}"
+    return facts, sents, title
+
+
 def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str):  # noqa: ANN202
     facts, sents, title = [], [], ""
     by = "key" if "key" in a.main.columns else "flow"
@@ -256,6 +313,8 @@ def build_fact_sheet(
     title = ""
     if a is None or a.main.empty:
         sents.append(_t("nodata", lang))
+    elif spec.intent in ("ranking", "composition") and spec.breakdown in SPLIT_BREAKDOWNS:
+        facts, sents, title = _split_facts(spec, a, sem, lang)
     elif spec.intent in ("ranking", "composition", "drilldown"):
         facts, sents, title = _ranking_facts(spec, a, lang)
     elif spec.intent == "time_series":

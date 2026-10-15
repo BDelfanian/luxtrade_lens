@@ -23,6 +23,11 @@ _LEVEL_COL = {
 _PRODUCT_COL = {2: "hs2", 4: "hs4", 6: "hs6", 8: "cn8"}
 PARTNER_KEY = "CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END"
 _EU = "(partner_is_eu27_2020 OR (partner_is_special AND trade_type = 'intra'))"
+# keys without an "X": rankings.is_hidden_key treats X as a masked code
+SPLIT_KEYS = {
+    "partner_group": f"CASE WHEN {_EU} THEN 'EU27' ELSE 'NON_EU27' END",
+    "confidentiality": "CASE WHEN is_confidential THEN 'CONFIDENTIAL' ELSE 'DISCLOSED' END",
+}
 
 
 class SpecError(ValueError):
@@ -49,11 +54,12 @@ def _in(column: str, codes: list[str]) -> str:
 
 
 def needs_detail(spec: QuerySpec) -> bool:
-    """True if the query needs CN8 detail (finer than HS2, or unit values / confidential split)."""
+    """True if the query needs CN8 detail (finer than HS2, unit values, confidential split)."""
     return (
         spec.product_level in ("HS4", "HS6", "CN8")
         or any(len(p) > 2 for p in spec.products)
         or spec.measure == "unit_value"
+        or spec.breakdown == "confidentiality"
     )
 
 
@@ -92,7 +98,7 @@ def _key(spec: QuerySpec) -> str | None:
         return PARTNER_KEY
     if spec.breakdown == "product":
         return _LEVEL_COL[spec.product_level or "HS2"]
-    return None
+    return SPLIT_KEYS.get(spec.breakdown)
 
 
 def _render(select: list[str], view: str, where: list[str], group: list[str], order: str) -> str:

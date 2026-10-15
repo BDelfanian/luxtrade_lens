@@ -157,9 +157,15 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
             detail += f" · follow-up of {interp.followup_of} (inherited: {inherited})"
         if interp.unresolved:
             detail += f" · unresolved: {interp.unresolved}"
+        # deterministic topic check right away: a blocked topic (GDP, services, …) must reach
+        # the guard and be explained, even if the LLM also called the question unclear
+        topic = guard.check_question(state["question"], interp.out_of_scope)
+        if guard.is_blocked(topic):
+            detail += " · blocked topic: " + ", ".join(lim.id for lim in topic)
         return {
             "interpretation": interp,
             "spec": None if interp.unresolved else spec,
+            "limitations": topic,
             "retries": retries,
             "_outcome": "retry" if wide else "ok",
             "_detail": detail,

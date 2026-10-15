@@ -115,3 +115,83 @@ def test_registry_ids_match_the_data_card():
     assert set(guard.registry()) == {f"L{i:02d}" for i in range(1, 12)} | {
         f"S0{i}" for i in range(1, 6)
     }
+
+
+def _coverage_until(semantic, latest_complete):
+    from dataclasses import replace
+
+    return replace(semantic.coverage, latest_complete_period=latest_complete)
+
+
+def test_annual_series_never_end_in_an_incomplete_year(semantic):
+    from datetime import date
+
+    cov = _coverage_until(semantic, date(2026, 6, 1))  # Jan–Jun 2026 published
+    spec = QuerySpec(
+        intent="time_series", partners=["CN"], period_start="2015", period_end="2026-06"
+    )
+    resolved = apply_defaults(spec, cov)
+    assert resolved.freq == "A" and resolved.period_end == "2025"
+    assert any("2026 is incomplete" in a for a in resolved.assumptions)
+
+
+def test_incomplete_year_is_kept_when_asked_alone_or_monthly(semantic):
+    from datetime import date
+
+    cov = _coverage_until(semantic, date(2026, 6, 1))
+    alone = apply_defaults(QuerySpec(intent="single_value", period_start="2026"), cov)
+    monthly = apply_defaults(
+        QuerySpec(intent="time_series", freq="M", period_start="2025-01", period_end="2026-06"),
+        cov,
+    )
+    assert alone.period_end == "2026" and monthly.period_end == "2026-06"
+
+
+def test_eu_split_shares_add_up_and_match_reference_sql(semantic):
+    spec = apply_defaults(
+        QuerySpec(intent="composition", breakdown="partner_group", flow="import"),
+        semantic.coverage,
+    )
+    df = semantic.query(check_sql(compile_spec(spec).sql))
+    assert set(df["key"]) == {"EU27", "NON_EU27"}
+    year = int(spec.period_start)
+    ref = semantic.query(
+        "SELECT sum(value_eur) FILTER (WHERE partner_is_eu27_2020 OR (partner_is_special "
+        "AND trade_type = 'intra')) AS eu FROM v_lu_trade "
+        f"WHERE flow = 'import' AND year = {year}"
+    )
+    eu = df.set_index("key").at["EU27", "value_eur"]
+    assert eu == pytest.approx(ref["eu"].iloc[0])
+
+
+def test_confidential_split_uses_the_cn8_detail(semantic):
+    spec = apply_defaults(
+        QuerySpec(
+            intent="composition", breakdown="confidentiality", products=["27"], flow="import"
+        ),
+        semantic.coverage,
+    )
+    compiled = compile_spec(spec)
+    assert compiled.view == "v_lu_trade"
+    df = semantic.query(check_sql(compiled.sql)).set_index("key")
+    ref = semantic.query(
+        "SELECT sum(value_eur) AS v FROM v_lu_trade WHERE is_confidential AND hs2 = '27' "
+        f"AND flow = 'import' AND year = {int(spec.period_start)}"
+    )
+    assert df.at["CONFIDENTIAL", "value_eur"] == pytest.approx(ref["v"].iloc[0])
+
+
+def test_benchmark_countries_named_as_partners_become_reporters(semantic):
+    spec = QuerySpec(
+        intent="benchmark", partners=["BE", "NL"], compare_reporters=["BE"], flow="export"
+    )
+    resolved = apply_defaults(spec, semantic.coverage)
+    assert resolved.partners == [] and resolved.compare_reporters == ["BE", "NL"]
+    assert not guard.is_blocked(guard.check_spec(resolved, semantic.coverage))
+
+
+def test_pivot_over_a_few_named_partners_becomes_a_time_series(semantic):
+    spec = QuerySpec(intent="pivot", breakdown="partner", partners=["DE", "FR"], flow="export")
+    assert apply_defaults(spec, semantic.coverage).intent == "time_series"
+    table = spec.model_copy(update={"view": "table"})
+    assert apply_defaults(table, semantic.coverage).intent == "pivot"  # asked for a table

@@ -114,6 +114,7 @@ Partners can be hidden too, using special `Q*` codes:
 **How we handle it:**
 - Flag with `partner_is_special = True` and keep these rows in all totals.
 - Show them as **"Undisclosed / not specified"**, never on the map.
+- **Partner-level `TOTAL` rows include this hidden trade under the real country** *(measured, Nov 2025–Jan 2026)*. Example: DE's import `TOTAL` is ~48.7 M€ per month higher than DE's CN8 detail, and `QY`/`QZ` have no `TOTAL` rows. Detail and `TOTAL` therefore agree per period × flow × trade type (checked in `quality_report.json`), but **not per partner**. The app uses detail rows only, so partner figures are "as disclosed at CN8 level".
 - Report their share in captions.
 
 > Note: real ISO codes can contain X or Q (`XK` Kosovo, `XS` Serbia, `MX` Mexico, `QA` Qatar). Use an **explicit list** of special codes, never a pattern.
@@ -232,5 +233,5 @@ Other data-model facts:
 - [ ] Measure the size of LU's processed Parquet → decide what can be committed or published for the hosted app
 - [ ] Re-measure the confidential share across all years (the Dec 2025 figures are one month only)
 - [ ] Extend the missing-value profile (§4b) to all years and to the EU27 summary data
-- [ ] Locate the Eurostat **CN and partner code lists in EN, FR and DE**, which the assistant needs to understand questions in all three languages. Record their source and version here (pending coach OK on classification metadata, [PROJECT_CONTEXT §7a](PROJECT_CONTEXT.md))
+- [x] Locate the Eurostat **CN and partner code lists in EN, FR and DE**: `comext/COMEXT_METADATA/CLASSIFICATIONS_AND_RELATIONS/CLASSIFICATIONS/{ENGLISH,FRENCH,GERMAN}/{CN,PARTNERS_ISO}.txt` in the same bulk service. They are downloaded by `ingest/download.py` and their server date and SHA-256 are recorded in `manifest.json` (pending coach OK on classification metadata, [PROJECT_CONTEXT §7a](PROJECT_CONTEXT.md))
 - [ ] Write `limitations.yaml` from §4.10 and check every ID's trigger against a measured example

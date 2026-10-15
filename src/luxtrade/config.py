@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
+INTERIM_DIR = DATA_DIR / "interim"  # per-month LU extracts reduced from the bulk files
 PROCESSED_DIR = DATA_DIR / "processed"
 # Overridable for tests and deployment
 RUNS_DIR = Path(os.environ.get("LUXTRADE_RUNS_DIR", DATA_DIR / "runs"))
@@ -21,6 +22,16 @@ BENCHMARK_FILE = "benchmark.parquet"
 META_FILE = "meta.json"
 DUCKDB_FILE = "luxtrade.duckdb"
 DB_PATH = Path(os.environ.get("LUXTRADE_DB", PROCESSED_DIR / DUCKDB_FILE))
+QUALITY_REPORT_FILE = "quality_report.json"
+LINEAGE_FILE = "lineage.json"
+MANIFEST_FILE = "manifest.json"  # in RAW_DIR
+
+# Comext bulk download (DATA_CARD §1)
+BULK_FILES_URL = "https://ec.europa.eu/eurostat/api/dissemination/files/"
+BULK_DATA_DIR = "comext/COMEXT_DATA/PRODUCTS"
+BULK_CODELIST_DIR = "comext/COMEXT_METADATA/CLASSIFICATIONS_AND_RELATIONS/CLASSIFICATIONS"
+CODELIST_LANGUAGES = {"en": "ENGLISH", "fr": "FRENCH", "de": "GERMAN"}
+CODELIST_FILES = ("CN.txt", "PARTNERS_ISO.txt")
 
 DATASET_ID = "DS-045409"
 REPORTER = "LU"
@@ -40,8 +51,15 @@ BENCHMARK_REPORTERS = ("LU", "BE", "NL", "DE", "FR", "AT")
 
 ATTRIBUTION = "Source: Eurostat, Comext DS-045409, extracted {date}; calculations by The Outliers."
 
-# LLM (SOLUTION_DESIGN §10); the key comes from .env / environment, never from code
-LLM_MODEL = os.environ.get("LUXTRADE_LLM_MODEL", "claude-sonnet-4-6")
+# LLM (SOLUTION_DESIGN §10). Keys come from .env / environment, never from code. Provider and
+# model are resolved when the LLM is created (after .env is loaded): LUXTRADE_LLM_PROVIDER,
+# LUXTRADE_LLM_MODEL.
+LLM_DEFAULT_PROVIDER = "openai"
+LLM_DEFAULT_MODELS = {"openai": "gpt-4.1-mini", "anthropic": "claude-sonnet-4-6"}
+LLM_KEY_VARS = {
+    "openai": ("OPENAI_API_KEY",),
+    "anthropic": ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN"),
+}
 LLM_TIMEOUT_S = 60.0
 
 # Query and agent limits (SOLUTION_DESIGN §5)

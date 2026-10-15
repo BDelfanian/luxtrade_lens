@@ -5,6 +5,8 @@ import json
 import pandas as pd
 import streamlit as st
 
+from luxtrade.agents.overview import Overview
+from luxtrade.agents.service import Assistant
 from luxtrade.agents.spec import QuerySpec
 from luxtrade.config import ATTRIBUTION, SERIES_FIRST_YEAR
 from luxtrade.runs.store import RunRecord
@@ -18,7 +20,21 @@ ORIGIN_LABEL = {
     "refine": "refined",
     "preset": "preset",
     "projection": "projection",
+    "overview": "from the overview",
 }
+ASK_PAGE = "app_pages/ask.py"  # relative to the entry point, Home.py
+
+
+@st.cache_resource(show_spinner="Loading the data…")
+def get_assistant() -> Assistant:
+    """One assistant per server process (read-only data, stateless graph)."""
+    return Assistant()
+
+
+@st.cache_data(show_spinner="Building the overview…", max_entries=12)
+def load_overview(lang: str, vintage: str) -> Overview:
+    """Overview per language and data vintage (deterministic, so safe to cache)."""
+    return get_assistant().overview(lang)
 
 
 def queue(action: str, **kwargs: object) -> None:
@@ -326,5 +342,7 @@ def render_answer(rec: RunRecord, latest_year: int) -> None:
         )
     if c2.button("Re-verify", key=f"verify-{rec.run_id}"):
         queue("verify", run_id=rec.run_id)
-    if rec.origin != "preset" and c3.button("Not what you meant?", key=f"nwm-{rec.run_id}"):
+    if rec.origin not in ("preset", "overview") and c3.button(
+        "Not what you meant?", key=f"nwm-{rec.run_id}"
+    ):
         queue("suggest", question=rec.question)

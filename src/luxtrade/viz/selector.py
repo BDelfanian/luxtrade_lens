@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from luxtrade.agents.spec import QuerySpec
+from luxtrade.agents.spec import SPLIT_BREAKDOWNS, QuerySpec
 
 KINDS = (
     "kpi",
@@ -45,6 +45,8 @@ def choose_view(
     if spec.intent == "single_value":
         return "kpi"
     if spec.intent in ("ranking", "composition"):
+        if spec.breakdown in SPLIT_BREAKDOWNS:
+            return "bar"
         if spec.breakdown == "partner":
             if iso3_count >= MAP_MIN_COUNTRIES and undisclosed_pct < MAP_MAX_UNDISCLOSED_PCT:
                 return "map"

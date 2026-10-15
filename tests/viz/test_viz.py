@@ -110,4 +110,3 @@ def test_render_hierarchical_treemap_with_parent_labels():
     assert fig.data[0].type == "treemap"
     labels = list(fig.data[0].labels)
     assert "Machinery" in labels or any("Machinery" in str(x) for x in fig.data[0].ids)
-

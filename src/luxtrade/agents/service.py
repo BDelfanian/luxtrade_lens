@@ -9,6 +9,7 @@ from pathlib import Path
 from luxtrade.agents.context import build_context
 from luxtrade.agents.graph import Deps, RunState, build_graph
 from luxtrade.agents.llm import StructuredLLM, default_llm
+from luxtrade.agents.overview import Overview, build_overview
 from luxtrade.agents.spec import QuerySpec
 from luxtrade.config import DATASET_ID, RAW_DIR
 from luxtrade.runs.sessions import SessionStore, new_session_id
@@ -210,6 +211,10 @@ class Assistant:
             code_version=code_version(),
             error=s.get("error"),
         )
+
+    def overview(self, lang: str = "en") -> Overview:
+        """The landing page's five business questions, answered without the LLM."""
+        return build_overview(self.sem, lang)
 
     def verify(self, record: RunRecord) -> str:
         """Re-execute the stored SQL and compare result hashes."""

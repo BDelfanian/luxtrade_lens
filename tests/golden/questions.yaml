@@ -1,0 +1,258 @@
+# Golden question set — expected QuerySpec + key numbers per question.
+# Used by `python -m luxtrade.agents.evaluate` (SOLUTION_DESIGN §9).
+# Values in million EUR (nominal), shares in % of LU world total for that flow.
+# Justification for each entry: docs/benchmarks/<id>.md
+
+- id: Q1_partners_2025
+  sample_question: Q1
+  variants:
+    en: "Who are Luxembourg's main trading partners in 2025?"
+    fr: "Quels sont les principaux partenaires commerciaux du Luxembourg en 2025 ?"
+    de: "Wer sind Luxemburgs wichtigste Handelspartner im Jahr 2025?"
+  expected_spec:
+    intent: ranking
+    breakdown: partner
+    partner_group: WORLD
+    product_level: TOTAL
+    freq: A
+    period_start: "2025"
+    period_end: "2025"
+    flow: both
+    measure: value_eur
+    top_n: 10
+  expected_assumptions:
+    - "exports and imports (no flow given)"
+    - "annual 2025; Dec 2025 is the latest month with intra- and extra-EU data"
+  expected_limitations: [nominal_values]   # registry keys (semantic/limitations.yaml); L03 not raised: undisclosed partners ~0.75 % < 1 % threshold
+
+  source:
+    dataset: DS-045409
+    extracted: 2026-10-14
+    eurostat_updated: 2026-09-15T11:00:00+02:00
+    method: >
+      Comext API, freq=A, reporter=LU, product=TOTAL, indicators=VALUE_IN_EUROS, time=2025,
+      all partners; aggregates (WORLD, INT_/EXT_*) excluded from the ranking.
+      Cross-checked: sum of the 12 monthly 2025 values = annual value, exactly, for WORLD and
+      the top 10 partners, both flows. To re-verify on trade.parquet with reference_sql.
+  reference_sql: |
+    SELECT partner, flow, SUM(value_eur) / 1e6 AS value_meur
+    FROM trade
+    WHERE reporter = 'LU' AND freq = 'M' AND level = 0
+      AND period >= DATE '2025-01-01' AND period < DATE '2026-01-01'
+    GROUP BY partner, flow
+
+  tolerance:
+    value_meur: 0.1
+    share_pct: 0.1
+    rank: exact   # top 5 of each list must match in order
+
+  expected:
+    world:   {exports: 16253.9, imports: 25097.9, total: 41351.8, balance: -8844.0}
+    intra_eu27_share_pct: {exports: 83.1, imports: 86.6}
+    top_exports:      # partner, value_meur, share_pct
+      - [DE, 3990.7, 24.6]
+      - [FR, 3125.0, 19.2]
+      - [BE, 2140.1, 13.2]
+      - [NL,  967.0,  5.9]
+      - [IT,  665.5,  4.1]
+      - [ES,  519.1,  3.2]
+      - [US,  427.2,  2.6]
+      - [PL,  383.4,  2.4]
+      - [GB,  361.3,  2.2]
+      - [AT,  327.0,  2.0]
+    top_imports:
+      - [BE, 7805.9, 31.1]
+      - [DE, 6810.4, 27.1]
+      - [FR, 2777.8, 11.1]
+      - [NL, 1393.0,  5.6]
+      - [JP, 1127.1,  4.5]
+      - [IT,  820.5,  3.3]
+      - [CN,  761.3,  3.0]
+      - [US,  713.4,  2.8]
+      - [PL,  527.6,  2.1]
+      - [ES,  377.7,  1.5]
+    top_total_trade:
+      - [DE, 10801.1, 26.1]
+      - [BE,  9946.0, 24.1]
+      - [FR,  5902.8, 14.3]
+      - [NL,  2360.1,  5.7]
+      - [IT,  1485.9,  3.6]
+      - [JP,  1188.0,  2.9]
+      - [US,  1140.6,  2.8]
+      - [CN,   996.7,  2.4]
+      - [PL,   910.9,  2.2]
+      - [ES,   896.8,  2.2]
+    concentration_total_trade_pct: {top3: 64.4, top5: 73.7}
+    special_partner_share_pct: {exports: 1.6, imports: 0.2}   # QV, QY, QZ, ... kept in totals
+  must_mention:
+    - "Germany, Belgium and France are the top three partners (about 64% of goods trade)"
+    - "the 2025 entries of Japan and China in the import top 10 are driven by one-off flows"
+
+- id: Q2_categories_2025
+  sample_question: Q2
+  variants:
+    en: "What are the main categories of goods exported from and imported into Luxembourg?"
+    fr: "Quelles sont les principales catégories de marchandises exportées et importées par le Luxembourg ?"
+    de: "Welche Warengruppen exportiert und importiert Luxemburg hauptsächlich?"
+  expected_spec:
+    intent: ranking
+    breakdown: product
+    partner_group: WORLD
+    product_level: HS2
+    freq: A
+    period_start: "2025"
+    period_end: "2025"
+    flow: both
+    measure: value_eur
+    top_n: 10
+  expected_assumptions:
+    - "exports and imports (no flow given)"
+    - "latest complete year 2025 (no period given)"
+    - "HS2 chapters (no level given)"
+  expected_limitations: [nominal_values, confidential_in_chapters]   # registry keys; LU confidential share > 1 % threshold
+
+  source:
+    dataset: DS-045409
+    extracted: 2026-10-14
+    eurostat_updated: 2026-09-15T11:00:00+02:00
+    method: >
+      Comext API, freq=A, reporter=LU, partner=WORLD, product=01..99 + TOTAL,
+      indicators=VALUE_IN_EUROS, time=2024,2025. Sum of the 97 chapters = TOTAL exactly
+      (masked codes such as 27XXXXXX sit in their chapter; chapter 99 = undisclosed).
+  reference_sql: |
+    SELECT LEFT(product, 2) AS hs2, flow, SUM(value_eur) / 1e6 AS value_meur
+    FROM trade
+    WHERE reporter = 'LU' AND freq = 'M' AND level = 8
+      AND period >= DATE '2025-01-01' AND period < DATE '2026-01-01'
+    GROUP BY hs2, flow   -- masked codes (27XXXXXX) keep their chapter prefix
+
+  tolerance:
+    value_meur: 0.1
+    share_pct: 0.1
+    rank: exact   # top 5 of each list must match in order
+
+  expected:
+    world: {exports: 16253.9, imports: 25097.9}
+    top_exports_hs2:      # chapter, value_meur, share_pct
+      - ["84", 2038.5, 12.5]   # machinery, mechanical appliances
+      - ["39", 1575.5,  9.7]   # plastics
+      - ["87", 1556.3,  9.6]   # vehicles and parts
+      - ["85", 1506.8,  9.3]   # electrical equipment
+      - ["72", 1120.3,  6.9]   # iron and steel
+      - ["40",  851.8,  5.2]   # rubber
+      - ["73",  817.0,  5.0]   # articles of iron or steel
+      - ["04",  720.7,  4.4]   # dairy, eggs, honey
+      - ["76",  475.3,  2.9]   # aluminium
+      - ["56",  434.2,  2.7]   # wadding, felt, nonwovens
+    top_imports_hs2:
+      - ["87", 3318.0, 13.2]   # vehicles and parts
+      - ["84", 2885.7, 11.5]   # machinery
+      - ["27", 2231.6,  8.9]   # mineral fuels
+      - ["85", 1972.1,  7.9]   # electrical equipment
+      - ["39", 1292.9,  5.2]   # plastics
+      - ["72",  953.8,  3.8]   # iron and steel
+      - ["30",  834.2,  3.3]   # pharmaceuticals
+      - ["40",  829.6,  3.3]   # rubber
+      - ["22",  638.3,  2.5]   # beverages
+      - ["04",  563.5,  2.2]   # dairy
+    top_sections:         # HS section, value_meur, share_pct
+      exports: [[XVI, 3545.3, 21.8], [XV, 2723.4, 16.8], [VII, 2427.3, 14.9], [XVII, 1714.1, 10.5], [VI, 1089.3, 6.7]]
+      imports: [[XVI, 4857.8, 19.4], [XVII, 3984.5, 15.9], [V, 2389.7, 9.5], [XV, 2376.4, 9.5], [VI, 2309.3, 9.2]]
+    concentration_pct: {exports_top5: 48.0, exports_top10: 68.3, imports_top5: 46.6, imports_top10: 61.8}
+    undisclosed_ch99_meur: {exports: 99.9, imports: 15.2}
+  must_mention:
+    - "machinery, vehicles, plastics, electrical equipment and iron/steel lead both flows"
+    - "fuels and vehicles are the largest net imports; steel articles and plastics the largest net exports"
+    - "the 2025 jump in electrical equipment (HS 85) is a one-off telephone flow (HS 8517)"
+
+- id: Q4_partner_goods_PT_2025
+  sample_question: Q4
+  variants:
+    en: "For a given partner country, for example Portugal, what are the main goods traded with Luxembourg?"
+    fr: "Quels sont les principaux biens échangés entre le Luxembourg et le Portugal ?"
+    de: "Welche Waren handelt Luxemburg hauptsächlich mit Portugal?"
+  expected_spec:
+    intent: drilldown
+    breakdown: product
+    partners: [PT]
+    product_level: HS2
+    freq: A
+    period_start: "2025"
+    period_end: "2025"
+    flow: both
+    measure: value_eur
+    top_n: 10
+  expected_assumptions:
+    - "exports and imports (no flow given)"
+    - "latest complete year 2025 (no period given)"
+    - "HS2 chapters, drill-down to HS4 / HS6 / CN8 on click"
+  expected_limitations: [nominal_values]   # registry keys; PT confidential share not yet measured at CN8 (L02 may or may not fire)
+
+  source:
+    dataset: DS-045409
+    extracted: 2026-10-14
+    eurostat_updated: 2026-09-15T11:00:00+02:00
+    method: >
+      Comext API, freq=A, reporter=LU, partner=PT, product=TOTAL + HS2 01..99, then HS4 in the top
+      5 chapters per flow, then HS6/CN8 under 2204; indicators=VALUE_IN_EUROS, time=2024,2025.
+  reference_sql: |
+    SELECT LEFT(product, 2) AS hs2, LEFT(product, 4) AS hs4, product AS cn8, flow,
+           SUM(value_eur) / 1e6 AS value_meur
+    FROM trade
+    WHERE reporter = 'LU' AND partner = 'PT' AND freq = 'M' AND level = 8
+      AND period >= DATE '2025-01-01' AND period < DATE '2026-01-01'
+    GROUP BY ALL
+
+  tolerance:
+    value_meur: 0.01   # small partner: compare to 10 k EUR
+    share_pct: 0.1
+    rank: exact        # top 5 HS2 of each flow must match in order
+
+  expected:
+    partner_totals_meur: {exports: 80.75, imports: 96.92, total: 177.67, balance: -16.17}
+    partner_rank: {exports: 22, imports: 17, total: 21}   # among all LU partners, 2025
+    partner_share_of_lu_pct: {exports: 0.5, imports: 0.39, total: 0.43}
+    top_exports_hs2:      # chapter, value_meur, share of LU->PT exports %
+      - ["84", 11.85, 14.7]   # machinery
+      - ["24",  7.67,  9.5]   # tobacco
+      - ["30",  7.54,  9.3]   # pharmaceuticals
+      - ["87",  7.28,  9.0]   # vehicles
+      - ["73",  6.81,  8.4]   # articles of iron or steel
+      - ["39",  6.46,  8.0]   # plastics
+      - ["72",  6.18,  7.7]   # iron and steel
+      - ["85",  3.98,  4.9]   # electrical equipment
+      - ["33",  3.69,  4.6]   # perfumery, cosmetics
+      - ["40",  2.68,  3.3]   # rubber
+    top_imports_hs2:
+      - ["22", 16.76, 17.3]   # beverages
+      - ["03",  6.06,  6.3]   # fish
+      - ["09",  5.97,  6.2]   # coffee, tea, spices
+      - ["16",  5.60,  5.8]   # meat and fish preparations
+      - ["02",  5.50,  5.7]   # meat
+      - ["94",  4.13,  4.3]   # furniture
+      - ["19",  4.12,  4.3]   # cereal and pastry preparations
+      - ["61",  4.09,  4.2]   # knitted apparel
+      - ["20",  3.38,  3.5]   # vegetable and fruit preparations
+      - ["04",  3.02,  3.1]   # dairy
+    key_hs4:              # heading, value_meur, share of its chapter %
+      exports:
+        - ["2402", 7.67, 100]  # cigarettes
+        - ["3004", 7.54, 100]  # medicaments
+        - ["8703", 4.47,  61]  # motor cars
+        - ["8428", 2.74,  23]  # lifting machinery
+      imports:
+        - ["2204", 10.56, 63]  # wine
+        - ["0901",  5.80, 97]  # coffee
+        - ["2203",  3.35, 20]  # beer
+        - ["0207",  2.16, 39]  # poultry meat
+    drill_path_wine:      # HS4 -> HS6 -> CN8, imports
+      hs4: ["2204", 10.56]
+      hs6: ["220421", 8.86]          # wine in containers <= 2 l, 84 % of 2204
+      cn8_top3: [["22042180", 2.21], ["22042169", 1.59], ["22042189", 0.97]]   # PGI wine; Dão/Bairrada/Douro; Port
+      cn8_sum_equals_hs4: true
+    confidential_gap_ch22_meur: 0.29   # 16.76 chapter vs 16.47 visible HS4
+    pareto_80_n_chapters: {exports: 11, imports: 18}
+  must_mention:
+    - "exports to Portugal are industrial (machinery, tobacco, medicines, vehicles, steel); imports are food and drink"
+    - "wine is the single largest flow (10.6 M EUR), mostly bottled PDO/PGI wine and Port"
+    - "Portugal is a small partner (0.4 % of LU trade), so year-on-year changes are volatile"

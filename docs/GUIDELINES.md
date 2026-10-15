@@ -4,7 +4,7 @@ These are the rules we follow while building the project. They support the jury 
 
 > **Golden rule:** a fresh clone must go `setup → pipeline → app` with no manual steps. Every number shown in the app must be traceable to the SQL that produced it, the processed files, and the Eurostat bulk files behind them, all recorded in the answer's run record.
 
-> **LLM rule:** LLMs translate, code computes. An LLM (`claude-sonnet-4-6`) may interpret a question in its session context, suggest rewrites of vague questions, write SQL for unusual questions, and phrase an insight. It never produces a number, picks a chart, decides a limitation, or shows a rewrite that code hasn't validated. See [SOLUTION_DESIGN.md](SOLUTION_DESIGN.md).
+> **LLM rule:** LLMs translate, code computes. An LLM (`gpt-4.1-mini` by default, or `claude-sonnet-4-6`; see `agents/llm.py`) may interpret a question in its session context, suggest rewrites of vague questions, write SQL for unusual questions, and phrase an insight. It never produces a number, picks a chart, decides a limitation, or shows a rewrite that code hasn't validated. See [SOLUTION_DESIGN.md](SOLUTION_DESIGN.md).
 
 > **Simplicity rule (coach):** before writing code, ask *what problem does this solve, and why does it matter?* Choose the simplest solution that answers it. Prefer standard charts, transparent rules and fewer features done well. If a method can't be explained to the jury in one sentence, don't ship it.
 
@@ -52,8 +52,10 @@ These are the rules we follow while building the project. They support the jury 
 src/luxtrade/
 ├── config.py          # paths, constants, settings (single source of truth)
 ├── logging_setup.py   # logging configuration
-├── ingest/            # download.py, manifest.py
-├── process/           # clean.py, hierarchy.py, validate.py, build.py (real pipeline, Kasra)
+├── ingest/            # download.py (bulk listing, resumable download), reduce.py (7z → LU
+│                      # extract in data/interim/), manifest.py
+├── process/           # build.py (contract files), codelists.py (EN/FR/DE labels),
+│                      # validate.py (quality report) — real pipeline, Kasra
 │                      # placeholder.py + nomenclature.py (synthetic data in the contract)
 ├── semantic/          # build.py (DuckDB views), layer.py (read-only queries, coverage,
 │                      # labels), catalog.py (schema for the LLM), lookup.py (EN/FR/DE
@@ -68,7 +70,8 @@ src/luxtrade/
 │                      # evaluate.py
 ├── runs/              # store.py (run records, run_id, result_hash, replay),
 │                      # sessions.py (session_id, turns, resume)
-└── app/               # Home.py (layout, sidebar, thread) + components.py (answer card)
+└── app/               # Home.py (navigation, shared sidebar) + components.py (answer card)
+                       # app_pages/overview.py (landing page) + app_pages/ask.py (thread)
 tests/                 # mirrors src/luxtrade/ one-to-one; tests/golden/ for the question set
 ```
 

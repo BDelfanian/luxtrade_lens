@@ -39,4 +39,3 @@ def test_accepts_slashes_in_benign_string_literals():
     sql = "SELECT 'kg/m' AS unit, 'apples and/or oranges' AS desc FROM v_lu_trade"
     checked = check_sql(sql)
     assert "kg/m" in checked
-
