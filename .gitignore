@@ -1,5 +1,10 @@
 # Environments
 .venv/
+
+# Agent skills symlinked into .venv by packages (e.g. Streamlit); machine-local
+.agents/skills/developing-with-streamlit
+.claude/skills/developing-with-streamlit
+.claude/settings.local.json
 venv/
 env/
 
