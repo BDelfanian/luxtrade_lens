@@ -5,8 +5,10 @@ from datetime import date
 from luxtrade.agents.spec import (
     LEVEL_DIGITS,
     MAX_SERIES,
+    RANKED_INTENTS,
     SERIES_INTENTS,
     SNAPSHOT_INTENTS,
+    SPLIT_BREAKDOWNS,
     QuerySpec,
 )
 from luxtrade.config import (
@@ -69,6 +71,13 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
         notes.append(f"broken down by {s.breakdown} (not stated)")
     if s.intent == "drilldown":
         s.breakdown = "product"
+    # "which products grew most": a ranking needs one change per item, a series a yearly rate
+    ranked = s.intent in RANKED_INTENTS and s.breakdown not in SPLIT_BREAKDOWNS
+    if s.measure == "growth_yoy" and ranked:
+        s.measure = "change"
+        notes.append("ranked by change in value from the first to the last year")
+    elif s.measure == "change" and not ranked:
+        s.measure = "growth_yoy"
 
     if s.product_level is None:
         if s.breakdown == "product":
@@ -98,10 +107,20 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
         else:
             s.period_start, s.period_end = f"{SERIES_FIRST_YEAR}-01", complete
             notes.append(f"full series {SERIES_FIRST_YEAR}–{complete} (no period given)")
+    elif s.period_end is None and s.measure == "change":
+        s.period_end = str(latest_year)  # "grew most since 2015": up to the latest full year
     elif s.period_end is None:
         s.period_end = s.period_start if s.intent in SNAPSHOT_INTENTS else complete
     elif s.period_start is None:
         s.period_start = s.period_end if s.intent in SNAPSHOT_INTENTS else f"{SERIES_FIRST_YEAR}-01"
+
+    if s.measure == "change":
+        y0, y1 = (_month(p, end=False).year for p in (s.period_start, s.period_end))
+        if y0 == y1:
+            s.period_start, s.period_end = str(y1 - 1), str(y1)
+            notes.append(f"change from {y1 - 1} to {y1}")
+        else:
+            s.period_start, s.period_end = str(y0), str(y1)
 
     if s.freq is None:
         if s.intent in ("seasonality", "forecast"):

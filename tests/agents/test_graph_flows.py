@@ -267,6 +267,35 @@ def test_follow_up_never_filters_on_the_previous_result_codes(make_assistant, fa
     assert second.spec["products"] == [] and second.spec["flow"] == "import"
 
 
+def test_follow_up_keeps_the_level_it_declares_inherited(make_assistant, fake_llm):
+    first_spec = dict(
+        intent="ranking",
+        breakdown="product",
+        product_level="HS2",
+        flow="export",
+        measure="change",
+        period_start="2008",
+        period_end="2009",
+    )
+    llm = fake_llm(interpret=[interp(**first_spec)])
+    assistant = make_assistant(llm)
+    first = assistant.ask("Which chapters' exports fell most between 2008 and 2009?")
+    llm.responses["interpret"] = [
+        interp(  # the LLM says it keeps the level but writes TOTAL (seen on real data)
+            **{
+                **first_spec,
+                "product_level": "TOTAL",
+                "period_start": "2019",
+                "period_end": "2020",
+            },
+            followup_of=first.run_id,
+            inherited=["intent", "breakdown", "product_level", "flow", "measure"],
+        )
+    ]
+    second = assistant.ask("And between 2019 and 2020?", session_id=first.session_id)
+    assert second.spec["product_level"] == "HS2" and second.spec["period_start"] == "2019"
+
+
 def test_elliptical_question_is_a_follow_up_even_if_the_llm_misses_it(make_assistant, fake_llm):
     first_spec = dict(
         intent="ranking", breakdown="product", flow="import", period_start="2024", period_end="2024"
@@ -402,3 +431,37 @@ def test_benchmark_insight_may_name_the_countries_compared(make_assistant, fake_
     assert rec.status == "answered"
     assert any("Belgium" in s for s in rec.insight)
     assert rec.insight_source == "llm"
+
+
+def test_short_follow_up_builds_on_the_latest_turn(make_assistant, fake_llm):
+    exports = dict(intent="time_series", breakdown="partner_group", flow="export", measure="share")
+    ranking = dict(
+        intent="ranking",
+        breakdown="partner",
+        partner_group="EXTRA_EU27_2020",
+        flow="import",
+        period_start="2005",
+        period_end="2005",
+    )
+    llm = fake_llm(interpret=[interp(**exports), interp(**ranking)])
+    assistant = make_assistant(llm)
+    first = assistant.ask("EU share of exports over time?")
+    second = assistant.ask("Top non-EU import partners in 2005?", session_id=first.session_id)
+    llm.responses["interpret"] = [  # the LLM builds on the first turn (seen on real data)
+        interp(
+            **{**exports, "period_start": "2025", "period_end": "2025"},
+            followup_of=first.run_id,
+            inherited=["intent", "breakdown", "flow", "measure"],
+        )
+    ]
+    third = assistant.ask("And in 2025?", session_id=first.session_id)
+    assert third.followup_of == second.run_id
+    assert third.spec["partner_group"] == "EXTRA_EU27_2020" and third.spec["intent"] == "ranking"
+    assert third.spec["period_start"] == "2025"
+
+
+def test_observed_year_called_projected_fails_grounding(make_assistant, fake_llm):
+    from luxtrade.agents.grounding import _FUTURE
+
+    assert _FUTURE.search("Imports are projected to reach 25.10 bn € in 2025.")
+    assert not _FUTURE.search("Imports reached 25.10 bn € in 2025.")

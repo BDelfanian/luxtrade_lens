@@ -267,7 +267,18 @@ def render_refine(rec: RunRecord, latest_year: int) -> None:
             key=f"rf-f-{rec.run_id}",
         )
         top_n = c3.number_input("Top N", 3, 30, spec.top_n or 10, key=f"rf-n-{rec.run_id}")
-        views = ["auto", "table", "bar", "line", "area", "map", "treemap", "pivot"]
+        views = [
+            "auto",
+            "table",
+            "bar",
+            "line",
+            "area",
+            "stacked",
+            "heatmap",
+            "map",
+            "treemap",
+            "pivot",
+        ]
         view = st.selectbox(
             "View",
             views,

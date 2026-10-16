@@ -1,0 +1,359 @@
+{
+ "run_id": "87cd811d7c",
+ "session_id": "3pa6r8",
+ "turn": 4,
+ "created_at": "2026-10-16T07:50:52+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "How has the share of imports from EU27 and non-EU countries developed yearly since 2015?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "partner_group",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": null,
+   "freq": "A",
+   "period_start": "2015",
+   "period_end": null,
+   "flow": "import",
+   "measure": "share",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2015",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "2026 is incomplete (data until 2026-06): annual series end in 2025"
+  ]
+ },
+ "assumptions": [
+  "2026 is incomplete (data until 2026-06): annual series end in 2025"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2015-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "39909d04c2b7814c52d48d1619019f5ede149c25239259eb7a0bf5246e042a23",
+ "row_count": 22,
+ "view_kind": "stacked",
+ "title": "EU27 countries · imports: +21.7 % (2015–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2015,
+    "key": "EU27",
+    "flow": "import",
+    "value": 71.1446853233,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2015,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 28.8553146767,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2016,
+    "key": "EU27",
+    "flow": "import",
+    "value": 76.2879101207,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2016,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 23.7120898793,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2017,
+    "key": "EU27",
+    "flow": "import",
+    "value": 81.7764314903,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2017,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 18.2235685097,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2018,
+    "key": "EU27",
+    "flow": "import",
+    "value": 86.673269278,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2018,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 13.326730722,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2019,
+    "key": "EU27",
+    "flow": "import",
+    "value": 83.4549365076,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2019,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 16.5450634924,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2020,
+    "key": "EU27",
+    "flow": "import",
+    "value": 88.9799721305,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2020,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 11.0200278695,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2021,
+    "key": "EU27",
+    "flow": "import",
+    "value": 88.7340028421,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2021,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 11.2659971579,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2022,
+    "key": "EU27",
+    "flow": "import",
+    "value": 90.8489868119,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2022,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 9.1510131881,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2023,
+    "key": "EU27",
+    "flow": "import",
+    "value": 90.70267412,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2023,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 9.29732588,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2024,
+    "key": "EU27",
+    "flow": "import",
+    "value": 91.516218002,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2024,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 8.483781998,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "EU27",
+    "flow": "import",
+    "value": 86.5560066022,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 13.4439933978,
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The share of imports from EU27 countries in Luxembourg increased from 71.1 % in 2015 to 86.6 % in 2025.",
+  "This represents a rise of 21.7 % over the period.",
+  "In contrast, imports from non-EU27 countries decreased from 28.9 % in 2015 to 13.4 % in 2025, a drop of 53.4 %.",
+  "The highest share of imports from EU27 countries was 91.5 % in 2024, while the peak for non-EU27 imports was 28.9 % in 2015.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "EU27 countries · imports.start",
+   "text": "EU27 countries · imports 2015: 71.1 %"
+  },
+  {
+   "key": "EU27 countries · imports.end",
+   "text": "EU27 countries · imports 2025: 86.6 %"
+  },
+  {
+   "key": "EU27 countries · imports.change",
+   "text": "EU27 countries · imports change 2015–2025: +21.7 %"
+  },
+  {
+   "key": "EU27 countries · imports.peak",
+   "text": "EU27 countries · imports peak 2024: 91.5 %"
+  },
+  {
+   "key": "Non-EU27 countries · imports.start",
+   "text": "Non-EU27 countries · imports 2015: 28.9 %"
+  },
+  {
+   "key": "Non-EU27 countries · imports.end",
+   "text": "Non-EU27 countries · imports 2025: 13.4 %"
+  },
+  {
+   "key": "Non-EU27 countries · imports.change",
+   "text": "Non-EU27 countries · imports change 2015–2025: −53.4 %"
+  },
+  {
+   "key": "Non-EU27 countries · imports.peak",
+   "text": "Non-EU27 countries · imports peak 2015: 28.9 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the period total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 5776,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=partner_group"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 380,
+   "outcome": "ok",
+   "detail": "22 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 8,
+   "outcome": "ok",
+   "detail": "view=stacked; at most 8 series; smaller ones pooled as 'Other'; share of the period total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1826,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4004,
+   "output_tokens": 123,
+   "cache_read_tokens": 2944,
+   "ms": 1342
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 911,
+   "output_tokens": 151,
+   "cache_read_tokens": 0,
+   "ms": 1795
+  }
+ ],
+ "code_version": "6438c33",
+ "error": null
+}

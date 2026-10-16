@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from luxtrade.analytics.rankings import CONFIDENTIAL, OTHER, UNDISCLOSED
-from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct, month_name
+from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct, fmt_period, month_name
 
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
 NEUTRAL = "#a3a29c"
@@ -439,6 +439,119 @@ def change_bar(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
     return fig
 
 
+def _flows(main: pd.DataFrame) -> list[str]:
+    present = set(main["flow"])
+    return [f for f in ("export", "import", "total", "balance") if f in present] or sorted(present)
+
+
+def stacked_bars(main: pd.DataFrame, title: str, lang: str, measure: str = "share") -> go.Figure:
+    """One stacked horizontal bar per period, a colour per key; exports and imports side by side."""
+    flows = _flows(main)
+    periods = sorted(main["period"].unique())
+    ticks = [fmt_period(p, lang) for p in periods]
+    ranked = list(dict.fromkeys(main.sort_values("value", ascending=False)["key"]))
+    keys = [k for k in ranked if k not in POOLED] + [k for k in ranked if k in POOLED]
+    colors = _colors(keys)
+    names = dict(zip(main["key"], main.get("label", main["key"]), strict=False))
+    fig = make_subplots(
+        rows=1,
+        cols=len(flows),
+        shared_yaxes=True,
+        horizontal_spacing=0.06,
+        subplot_titles=[flow_label(f, lang) for f in flows] if len(flows) > 1 else None,
+    )
+    in_legend: set[str] = set()
+    for col, flow in enumerate(flows, start=1):
+        part = main[main["flow"] == flow]
+        for k in keys:
+            seg = part[part["key"] == k].groupby("period")["value"].sum().reindex(periods)
+            if seg.isna().all():
+                continue
+            x, unit, _ = _y(seg, measure)
+            name = _short(str(names.get(k, k)), 44)
+            fig.add_bar(
+                x=x,
+                y=ticks,
+                orientation="h",
+                name=name,
+                legendgroup=k,
+                showlegend=k not in in_legend,
+                marker={"color": colors[k], "line": {"color": "white", "width": 1}},
+                customdata=_hover(seg, measure, lang),
+                hovertemplate="%{y} · %{customdata}<extra>" + name + "</extra>",
+                row=1,
+                col=col,
+            )
+            in_legend.add(k)
+    fig.update_layout(barmode="stack", bargap=0.3)
+    fig = _layout(fig, title, height=max(320, 34 * len(periods) + 150))
+    fig.update_layout(legend={"y": -0.08, "yanchor": "top"}, margin={"t": 72})
+    fig.update_xaxes(title=_y(main["value"], measure)[1], showgrid=True, gridcolor=GRID)
+    fig.update_yaxes(
+        categoryorder="array", categoryarray=ticks, autorange="reversed", gridcolor="rgba(0,0,0,0)"
+    )
+    return fig
+
+
+def heatmap(
+    main: pd.DataFrame, title: str, lang: str, measure: str = "value_eur"
+) -> list[go.Figure]:
+    """Rows × periods per flow: item × period with keys, otherwise year × month."""
+    figs = []
+    for flow in _flows(main):
+        part = main[main["flow"] == flow]
+        if "key" in part.columns:
+            rows = part["label"] if "label" in part.columns else part["key"]
+            grid = part.assign(row=rows).pivot_table(
+                index="row", columns="period", values="value", aggfunc="sum"
+            )
+            grid = grid.loc[grid.abs().sum(axis=1).sort_values(ascending=False).index]
+            x = [fmt_period(p, lang) for p in grid.columns]
+            y = [_short(str(r)) for r in grid.index]
+        else:
+            when = pd.DatetimeIndex(part["period"])
+            grid = part.assign(year=when.year, month=when.month).pivot_table(
+                index="year", columns="month", values="value", aggfunc="sum"
+            )
+            x, y = [month_name(m, lang) for m in grid.columns], list(grid.index)
+        z, unit, _ = _y(grid, measure)
+        if (grid < 0).any().any():  # balances and growth rates: diverging around zero
+            scale = {"colorscale": [[0, SERIES[7]], [0.5, "#f7f6f2"], [1, SERIES[0]]], "zmid": 0}
+        else:
+            scale = {
+                "colorscale": [[i / (len(SEQUENTIAL) - 1), c] for i, c in enumerate(SEQUENTIAL)]
+            }
+        fig = go.Figure(
+            go.Heatmap(
+                z=z.to_numpy(),
+                x=x,
+                y=y,
+                xgap=2,
+                ygap=2,
+                colorbar={"title": unit, "thickness": 10},
+                hovertemplate="%{y} · %{x}: %{z:,.1f} " + unit + "<extra></extra>",
+                **scale,
+            )
+        )
+        fig.update_yaxes(autorange="reversed", gridcolor="rgba(0,0,0,0)")
+        name = f"{title} — {flow_label(flow, lang)}" if len(_flows(main)) > 1 else title
+        figs.append(_layout(fig, name, height=max(320, 26 * len(y) + 130)))
+    return figs
+
+
+def change_bars(main: pd.DataFrame, title: str, lang: str) -> list[go.Figure]:
+    """Diverging change bars, one chart per flow."""
+    flows = _flows(main)
+    return [
+        change_bar(
+            main[main["flow"] == f],
+            f"{title} — {flow_label(f, lang)}" if len(flows) > 1 else title,
+            lang,
+        )
+        for f in flows
+    ]
+
+
 def overview_figures(
     key: str, frames: dict[str, pd.DataFrame], titles: list[str], lang: str = "en"
 ) -> list[go.Figure]:
@@ -477,6 +590,12 @@ def build_figures(
         return []
     if kind == "bar":
         return [bar(main, title, lang, measure)]
+    if kind == "change":
+        return change_bars(main, title, lang)
+    if kind == "stacked":
+        return [stacked_bars(main, title, lang, measure)]
+    if kind == "heatmap":
+        return heatmap(main, title, lang, measure)
     if kind == "map":
         return [choropleth(main, title, lang), bar(main, title, lang, measure)]
     if kind == "treemap":

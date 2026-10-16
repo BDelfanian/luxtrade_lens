@@ -1,0 +1,53 @@
+{
+ "session_id": "p76wq4",
+ "built_at": "2026-10-16T07:53:39+00:00",
+ "code_version": "6438c33",
+ "steps": [
+  {
+   "run_id": "3098ad7e30",
+   "status": "answered",
+   "checks": {
+    "19.71 €/kg": true,
+    "1.23 €/kg": true
+   }
+  },
+  {
+   "run_id": "3dd8e0d1aa",
+   "status": "answered",
+   "checks": {
+    "4.20 €/kg": true,
+    "2.14 €/kg": true
+   }
+  },
+  {
+   "run_id": "9001071be7",
+   "status": "answered",
+   "checks": {
+    "11.86 €/kg": true,
+    "0.51 €/kg": true,
+    "19.71 €/kg": true
+   }
+  },
+  {
+   "run_id": "a75a31ee1a",
+   "status": "answered",
+   "checks": {
+    "+95.3 %": true
+   }
+  },
+  {
+   "run_id": "3cd10a6fec",
+   "status": "answered",
+   "checks": {
+    "+34.7 %": true
+   }
+  },
+  {
+   "run_id": "4c86ac61c4",
+   "status": "answered",
+   "checks": {
+    "+45.2 %": true
+   }
+  }
+ ]
+}

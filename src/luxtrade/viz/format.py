@@ -57,6 +57,17 @@ def fmt_eur(value: float | None, lang: str = "en") -> str:
     return f"{fmt_number(value / 1e3, 0, lang)} {_UNITS['k'][lang]}"
 
 
+def fmt_measure(value: float | None, measure: str, lang: str = "en") -> str:
+    """A value in its measure's unit: euros, '19.71 €/kg' for unit values, '1.2 bn kg' for mass."""
+    if measure == "unit_value":
+        return MISSING if _missing(value) else f"{fmt_number(value, 2, lang)} €/kg"
+    if measure == "qty_kg":
+        return fmt_eur(value, lang).replace("M€", "M €").replace("€", "kg")
+    if measure in ("share", "growth_yoy"):
+        return fmt_pct(value, lang)
+    return fmt_eur(value, lang)
+
+
 def fmt_pct(value: float | None, lang: str = "en", decimals: int = 1, signed: bool = False) -> str:
     """Format a percentage: '24.6 %' / '24,6 %', optionally with a sign ('–' when missing)."""
     if _missing(value):

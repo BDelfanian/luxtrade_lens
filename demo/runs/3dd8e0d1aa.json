@@ -1,0 +1,220 @@
+{
+ "run_id": "3dd8e0d1aa",
+ "session_id": "p76wq4",
+ "turn": 2,
+ "created_at": "2026-10-16T07:53:05+00:00",
+ "origin": "followup",
+ "status": "answered",
+ "question": "And for exports?",
+ "language": "en",
+ "followup_of": "3098ad7e30",
+ "inherited": [
+  "intent",
+  "breakdown",
+  "product_level",
+  "freq",
+  "period_start",
+  "period_end",
+  "measure",
+  "top_n"
+ ],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "composition",
+   "breakdown": "partner_group",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": "TOTAL",
+   "freq": "A",
+   "period_start": "2025",
+   "period_end": "2025",
+   "flow": "export",
+   "measure": "unit_value",
+   "top_n": 10,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": []
+  },
+  "followup_of": "3098ad7e30",
+  "inherited": [
+   "intent",
+   "breakdown",
+   "product_level",
+   "freq",
+   "period_start",
+   "period_end",
+   "measure",
+   "top_n"
+  ],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "unit_value",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "99e42da84e5214637463b47907264b6b9b5e74403afecc953d359396dc9061d9",
+ "row_count": 2,
+ "view_kind": "bar",
+ "title": "exports 2025: EU27 countries 2.14 €/kg · Non-EU27 countries 4.20 €/kg",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "EU27",
+    "value": 2.1411079727,
+    "share": 33.782601912,
+    "rank": 1,
+    "kind": "item",
+    "label": "EU27 countries"
+   },
+   {
+    "flow": "export",
+    "key": "NON_EU27",
+    "value": 4.1967933478,
+    "share": 66.217398088,
+    "rank": 2,
+    "kind": "item",
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The unit value of Luxembourg's exports to EU27 countries was 2.14 euros per kilogram.",
+  "Exports to non-EU27 countries had a higher unit value of 4.20 euros per kilogram.",
+  "This shows that exports to non-EU27 countries are valued almost twice as much per kilogram as those to EU27 countries.",
+  "Compared to imports, export unit values are generally lower for EU27 countries and much lower for non-EU27 countries.",
+  "The data only includes trade rows where quantities are known, so some volumes and unit values may be missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.eu27",
+   "text": "EU27 countries: 2.14 €/kg"
+  },
+  {
+   "key": "export.non_eu27",
+   "text": "Non-EU27 countries: 4.20 €/kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of each flow's total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 4207,
+   "outcome": "ok",
+   "detail": "intent=composition breakdown=partner_group · follow-up of 3098ad7e30 (inherited: intent, breakdown, product_level, freq, period_start, period_end, measure, top_n)"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 155,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 25,
+   "outcome": "ok",
+   "detail": "view=bar; share of each flow's total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 3246,
+   "outcome": "ok",
+   "detail": "grounding failed: number 2025 is not in the fact sheet"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 2976,
+   "output_tokens": 151,
+   "cache_read_tokens": 1920,
+   "ms": 1767
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 675,
+   "output_tokens": 119,
+   "cache_read_tokens": 0,
+   "ms": 1677
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 694,
+   "output_tokens": 117,
+   "cache_read_tokens": 0,
+   "ms": 1473
+  }
+ ],
+ "code_version": "6438c33",
+ "error": null
+}

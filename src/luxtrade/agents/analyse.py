@@ -2,6 +2,7 @@
 
 Frame shapes (``Analysis.main``) are the contract for charts, facts and stored run records:
 - ranking/composition/drilldown: key, label, flow, value, share, rank, kind[, iso3]
+  (measure "change": also base, change, change_pct; value is the last year, base the first)
 - time_series: period, [key, label,] flow, value
 - pivot: key, label, period, flow, value
 - single_value: period, flow, value
@@ -15,7 +16,13 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 from luxtrade.agents.guard import make
-from luxtrade.agents.spec import MAX_SERIES, SPLIT_BREAKDOWNS, Limitation, QuerySpec
+from luxtrade.agents.spec import (
+    MAX_SERIES,
+    RANKED_INTENTS,
+    SPLIT_BREAKDOWNS,
+    Limitation,
+    QuerySpec,
+)
 from luxtrade.analytics import benchmark, forecast, rankings, seasonality, timeseries
 from luxtrade.semantic.layer import SemanticLayer
 
@@ -127,6 +134,43 @@ def _ranking(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
     return Analysis(main=main, methods=[method])
 
 
+def _change(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
+    """Largest rises and falls per flow between the first and the last year of the period."""
+    y0, y1 = int(spec.period_start[:4]), int(spec.period_end[:4])
+    df = df.assign(value=df["value_eur"])[["year", "key", "flow", "value"]]
+    if spec.flow == "balance":
+        df = timeseries.to_balance(df, ["year", "key"])
+    df = df[~df["key"].astype(str).map(rankings.is_hidden_key).astype(bool)]
+    wide = df.pivot_table(
+        index=["flow", "key"], columns="year", values="value", aggfunc="sum", fill_value=0.0
+    )
+    both = pd.DataFrame(index=wide.index)
+    both["base"], both["value"] = wide.get(y0, 0.0), wide.get(y1, 0.0)
+    both = both.reset_index()
+    both["change"] = both["value"] - both["base"]
+    both["change_pct"] = [
+        timeseries.change_pct(b, v) for b, v in zip(both["base"], both["value"], strict=True)
+    ]
+    n = spec.top_n or 10
+    rises, falls = (n + 1) // 2, n // 2
+    parts = []
+    for _, g in both.groupby("flow"):
+        part = pd.concat(
+            [
+                g[g["change"] > 0].nlargest(rises, "change"),
+                g[g["change"] < 0].nsmallest(falls, "change"),
+            ]
+        ).sort_values("change", ascending=False)
+        parts.append(part.assign(rank=range(1, len(part) + 1)))
+    main = pd.concat(parts, ignore_index=True) if parts else both.assign(rank=None)
+    main = _label(main.assign(kind="item", share=None), spec, sem)
+    method = (
+        f"change = value {y1} − value {y0} per item; the {rises} largest rises and {falls} "
+        "largest falls per flow; masked and undisclosed codes are not ranked"
+    )
+    return Analysis(main=main, methods=[method])
+
+
 def _time_series(df: pd.DataFrame, spec: QuerySpec) -> Analysis:
     df = df.assign(value=_measure(df, spec))
     cols = ["period"] + (["key"] if "key" in df.columns else []) + ["flow", "value"]
@@ -205,7 +249,9 @@ def _benchmark(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysi
 
 def analyse(spec: QuerySpec, df: pd.DataFrame, sem: SemanticLayer) -> Analysis:
     """Turn the SQL result into display frames for the spec's intent."""
-    if spec.intent in ("ranking", "composition", "drilldown"):
+    if spec.intent in RANKED_INTENTS and spec.measure == "change":
+        result = _change(df, spec, sem)
+    elif spec.intent in RANKED_INTENTS:
         result = _ranking(df, spec, sem)
     elif spec.intent == "time_series":
         result = _time_series(df, spec)

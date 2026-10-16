@@ -43,6 +43,7 @@ def _spec(**kw):
         (_spec(intent="drilldown"), "treemap"),
         (_spec(intent="time_series"), "line"),
         (_spec(intent="time_series", measure="share"), "area"),
+        (_spec(intent="time_series", measure="share", freq="A"), "stacked"),
         (_spec(intent="pivot"), "pivot"),
         (_spec(intent="seasonality"), "season"),
         (_spec(intent="forecast"), "forecast"),
@@ -59,6 +60,19 @@ def test_map_needs_enough_countries_and_few_undisclosed():
     assert choose_view(spec, frame, iso3_count=8, undisclosed_pct=2.0) == "map"
     assert choose_view(spec, frame, iso3_count=3) == "bar"
     assert choose_view(spec, frame, iso3_count=8, undisclosed_pct=60.0) == "bar"
+
+
+def test_change_ranking_uses_diverging_bars_only():
+    spec = _spec(intent="ranking", breakdown="product", measure="change")
+    frame = pd.DataFrame({"key": [], "change": []})
+    assert choose_view(spec, frame) == "change"
+    assert choose_view(spec.model_copy(update={"view": "treemap"}), frame) == "change"
+
+
+def test_long_share_series_stay_stacked_areas():
+    spec = _spec(intent="time_series", measure="share", freq="A")
+    frame = pd.DataFrame({"key": ["01"] * 20, "period": range(2005, 2025)})
+    assert choose_view(spec, frame) == "area"
 
 
 def test_requested_view_wins_only_if_compatible():
@@ -78,8 +92,20 @@ def test_requested_view_wins_only_if_compatible():
         _spec(intent="seasonality", flow="export"),
         _spec(intent="forecast", flow="export"),
         _spec(intent="benchmark", flow="export"),
+        _spec(intent="ranking", breakdown="product", measure="growth_yoy", period_start="2019"),
+        _spec(intent="ranking", breakdown="partner", measure="change", flow="balance"),
+        _spec(
+            intent="time_series",
+            breakdown="product",
+            measure="share",
+            freq="A",
+            period_start="2018",
+            period_end="2025",
+        ),
+        _spec(intent="time_series", breakdown="partner", flow="export", view="heatmap"),
+        _spec(intent="time_series", flow="import", freq="M", view="heatmap"),
     ],
-    ids=lambda s: s.intent,
+    ids=lambda s: f"{s.intent}-{s.measure}-{s.view}",
 )
 def test_figures_build_for_real_answers(semantic, spec):
     resolved = apply_defaults(spec, semantic.coverage)

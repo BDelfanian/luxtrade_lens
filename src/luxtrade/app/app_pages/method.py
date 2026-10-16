@@ -85,6 +85,12 @@ def rule_fired(ex: dict) -> str:
         return "Intent is seasonality → raw vs seasonally adjusted line + month × year heatmap"
     if kind == "treemap":
         return "Drill-down by product → treemap with Top-N + Other + Confidential"
+    if kind == "change":
+        return "Ranking by change between two years → diverging bars, rises in blue, falls in red"
+    if kind == "stacked":
+        return (
+            "Shares over a few years → one stacked bar per year (stacked areas for longer series)"
+        )
     return f"Intent {spec.intent} → {kind}"
 
 

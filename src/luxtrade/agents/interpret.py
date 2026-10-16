@@ -5,9 +5,9 @@ import re
 from functools import cache
 from pathlib import Path
 
-from luxtrade.agents.context import SessionContext
+from luxtrade.agents.context import SessionContext, TurnContext
 from luxtrade.agents.llm import StructuredLLM
-from luxtrade.agents.spec import Interpretation, QuerySpec
+from luxtrade.agents.spec import RANKED_INTENTS, Interpretation, QuerySpec
 from luxtrade.semantic.layer import SemanticLayer
 from luxtrade.semantic.lookup import Candidate, EntityIndex
 
@@ -104,8 +104,25 @@ def interpret(
     if detected:
         followup = context.turns[-1].run_id  # "only from Belgium": the LLM missed the follow-up
     inherited = interp.inherited if followup else []
+    last = context.turns[-1] if context.turns else None
+    chosen = context.get(followup)
+    if (
+        chosen is not None
+        and last is not None
+        and chosen.run_id != last.run_id
+        and is_elliptical(question)
+        and chosen.spec is not None
+        and last.spec is not None
+    ):
+        # "and in 2025?" builds on the latest turn, but the LLM picked an older one (seen on
+        # real data): apply the change it made to that turn to the latest turn instead
+        spec, inherited = rebase_followup(spec, chosen.spec, last.spec)
+        followup = last.run_id
     view_only = interp.view_only and followup is not None
     prev = context.get(followup)
+    asked = {c.code for c in cands}
+    for turn in context.turns:  # follow-up or not: a ranking never filters on earlier results
+        spec = drop_result_codes(spec, turn, asked)
     if prev and prev.spec and not view_only:
         spec, inherited = merge_followup(spec, prev.spec, inherited, fill_codes=detected)
     return interp.model_copy(
@@ -114,7 +131,10 @@ def interpret(
             "followup_of": followup,
             "inherited": inherited,
             "view_only": view_only,
-            "unresolved": list(dict.fromkeys(interp.unresolved + dropped)),
+            # a partner group ("non-EU") is a spec field, not a code to look up
+            "unresolved": [
+                u for u in dict.fromkeys(interp.unresolved + dropped) if u not in _GROUP_CODES
+            ],
         }
     )
 
@@ -127,6 +147,7 @@ _ELLIPTICAL_RE = re.compile(
 )
 _ELLIPTICAL_MAX_WORDS = 7
 # Spec fields a follow-up takes from the previous turn when the new question leaves them open
+_GROUP_CODES = {"WORLD", "EU27_2020", "EXTRA_EU27_2020"}
 _OPEN_FIELDS = ("flow", "freq", "product_level", "top_n")
 _CODE_FIELDS = ("partners", "products")
 
@@ -134,6 +155,38 @@ _CODE_FIELDS = ("partners", "products")
 def is_elliptical(question: str) -> bool:
     """True for short questions that only make sense after an earlier turn ("only Germany")."""
     return len(question.split()) <= _ELLIPTICAL_MAX_WORDS and bool(_ELLIPTICAL_RE.match(question))
+
+
+_REBASE_SKIP = {"language", "assumptions", "view"}
+
+
+def rebase_followup(
+    spec: QuerySpec, chosen: QuerySpec, last: QuerySpec
+) -> tuple[QuerySpec, list[str]]:
+    """The latest turn's spec with what the follow-up changed relative to the turn it picked."""
+    fields = [f for f in QuerySpec.model_fields if f not in _REBASE_SKIP]
+    changed = {f: getattr(spec, f) for f in fields if getattr(spec, f) != getattr(chosen, f)}
+    rebased = last.model_copy(update={**changed, "language": spec.language, "view": spec.view})
+    return rebased, [f for f in fields if f not in changed]
+
+
+def drop_result_codes(spec: QuerySpec, prev: TurnContext, asked: set[str]) -> QuerySpec:
+    """Remove codes a ranking follow-up copied from the previous turn's *result*.
+
+    "And in 2025?" after a top-10 ranking must rank everything again: filtering on the ten
+    earlier items makes the shares relative to them (seen on real data). Codes named in the
+    question or already in the previous spec's filter stay; series ("how did these develop?")
+    keep them.
+    """
+    if spec.intent not in RANKED_INTENTS or prev.spec is None:
+        return spec
+    update = {}
+    for field in ("partners", "products"):
+        codes, kept = getattr(spec, field), set(getattr(prev.spec, field))
+        copied = [c for c in codes if c in set(prev.entities.get(field, [])) - kept - asked]
+        if copied:
+            update[field] = [c for c in codes if c not in copied]
+    return spec.model_copy(update=update) if update else spec
 
 
 def merge_followup(
@@ -144,7 +197,9 @@ def merge_followup(
     Inherited code filters are copied from the previous *spec*, never from its result (the LLM
     tends to copy the ranked result codes, which silently restricts the new query). Fields the
     new question leaves open take the previous turn's value; empty code filters too when
-    ``fill_codes`` (follow-up detected in code: the LLM produced a stand-alone spec).
+    ``fill_codes`` (follow-up detected in code: the LLM produced a stand-alone spec). An open
+    field the LLM declares inherited takes the previous value even if the LLM wrote another one
+    ("and between 2019 and 2020?" after an HS2 ranking came back with ``TOTAL``, seen on real data).
     """
     inherited = list(inherited)
     update = {f: list(getattr(prev, f)) for f in _CODE_FIELDS if f in inherited}
@@ -153,7 +208,8 @@ def merge_followup(
             update[f] = list(getattr(prev, f))
             inherited.append(f)
     for f in _OPEN_FIELDS:
-        if getattr(spec, f) is None and getattr(prev, f) is not None:
+        declared = f in inherited and getattr(prev, f) is not None
+        if declared or (getattr(spec, f) is None and getattr(prev, f) is not None):
             update[f] = getattr(prev, f)
             inherited.append(f)
     if spec.period_start is None and spec.period_end is None and prev.period_start is not None:

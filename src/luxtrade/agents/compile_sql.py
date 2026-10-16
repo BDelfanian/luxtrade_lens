@@ -8,7 +8,7 @@ import re
 from dataclasses import dataclass
 
 from luxtrade.agents.defaults import period_bounds
-from luxtrade.agents.spec import QuerySpec
+from luxtrade.agents.spec import RANKED_INTENTS, QuerySpec
 from luxtrade.config import REPORTER, SQL_ROW_LIMIT
 
 _CODE_RE = re.compile(r"^[0-9A-Z]{2,8}$")
@@ -120,7 +120,13 @@ def compile_spec(spec: QuerySpec) -> CompiledQuery:
     bucket = "year" if spec.freq == "A" else "period"  # group by the column, alias it as period
     measures = _measures(detail)
 
-    if spec.intent in ("ranking", "composition", "drilldown"):
+    if spec.intent in RANKED_INTENTS and spec.measure == "change":
+        # only the two years compared: the change is computed per key in the analysis step
+        years = sorted({int(spec.period_start[:4]), int(spec.period_end[:4])})
+        where.append(f"year IN ({', '.join(map(str, years))})")
+        select = ["year", f"{key or chr(39) + 'TOTAL' + chr(39)} AS key", "flow", measures]
+        sql = _render(select, view, where, ["year", "key", "flow"], "year, value_eur DESC")
+    elif spec.intent in RANKED_INTENTS:
         select = [f"{key or chr(39) + 'TOTAL' + chr(39)} AS key", "flow", measures]
         sql = _render(select, view, where, ["key", "flow"], "value_eur DESC")
     elif spec.intent in ("time_series", "pivot"):

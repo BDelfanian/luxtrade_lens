@@ -1,6 +1,7 @@
 """The assistant in one slide: what it does and for whom (presentation mode, before the findings).
 
-Fixed texts in English, French and German; every feature named here exists in the app.
+Also the kicker of the slide that follows, so the results read as the tool's output. Fixed texts
+in English, French and German; every feature named here exists in the app.
 """
 
 from dataclasses import dataclass
@@ -139,6 +140,18 @@ _T = {
         "Assistenten öffnen.",
     },
 }
+
+
+_NUMBERS_KICKER = {
+    "en": "What the assistant found: the key numbers",
+    "fr": "Ce que l'assistant a trouvé : les chiffres clés",
+    "de": "Was der Assistent gefunden hat: die wichtigsten Zahlen",
+}
+
+
+def numbers_kicker(lang: str) -> str:
+    """The kicker of the slide with the findings in numbers (after the tool slide)."""
+    return _NUMBERS_KICKER.get(lang, _NUMBERS_KICKER["en"])
 
 
 def tool_pitch(lang: str) -> ToolPitch:

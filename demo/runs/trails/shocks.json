@@ -1,0 +1,53 @@
+{
+ "session_id": "xn64mx",
+ "built_at": "2026-10-16T07:51:03+00:00",
+ "code_version": "6438c33",
+ "steps": [
+  {
+   "run_id": "1a22fe421b",
+   "status": "answered",
+   "checks": {
+    "18.34 bn €": true,
+    "16.25 bn €": true
+   }
+  },
+  {
+   "run_id": "0db2f88e82",
+   "status": "answered",
+   "checks": {
+    "−48.4 %": true,
+    "−34.6 %": true
+   }
+  },
+  {
+   "run_id": "16f5d336ce",
+   "status": "answered",
+   "checks": {
+    "−26.0 %": true
+   }
+  },
+  {
+   "run_id": "9cf496d94f",
+   "status": "answered",
+   "checks": {
+    "27.1 percent": true
+   }
+  },
+  {
+   "run_id": "05ee4bb4f5",
+   "status": "answered",
+   "checks": {
+    "2.67 bn €": true,
+    "1.12 bn €": true
+   }
+  },
+  {
+   "run_id": "9fbd56d692",
+   "status": "answered",
+   "checks": {
+    "50.3 %": true,
+    "39.3 %": true
+   }
+  }
+ ]
+}

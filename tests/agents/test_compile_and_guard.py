@@ -47,6 +47,25 @@ def test_ranking_matches_reference_sql(semantic):
     assert df["value_eur"].sum() == pytest.approx(ref)
 
 
+def test_growth_ranking_becomes_a_change_against_the_previous_year(semantic):
+    from luxtrade.agents.analyse import analyse
+
+    spec = QuerySpec(intent="ranking", breakdown="product", flow="export", measure="growth_yoy")
+    resolved = apply_defaults(spec, semantic.coverage)
+    assert resolved.measure == "change"
+    assert (resolved.period_start, resolved.period_end) == ("2024", "2025")
+    main = analyse(resolved, semantic.query(compile_spec(resolved).sql), semantic).main
+    assert 0 < len(main) <= 10 and main["change"].is_monotonic_decreasing
+    since = apply_defaults(spec.model_copy(update={"period_start": "2019"}), semantic.coverage)
+    assert (since.period_start, since.period_end) == ("2019", "2025")
+    top = main.iloc[0]
+    ref = semantic.query(
+        "SELECT year, sum(value_eur) AS v FROM v_lu_trade WHERE flow = 'export' "
+        f"AND hs2 = '{top['key']}' AND year IN (2024, 2025) GROUP BY year ORDER BY year"
+    )["v"]
+    assert top["change"] == pytest.approx(ref.iloc[1] - ref.iloc[0])
+
+
 def test_invalid_codes_never_reach_sql():
     with pytest.raises(SpecError):
         compile_spec(
