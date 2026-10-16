@@ -432,13 +432,13 @@ def deck_chart(f: Finding, height: int = CHART_HEIGHT) -> None:
 
 
 def deck_slides() -> list[str]:
-    """The slide order: challenge, tool, title, findings, conclusion, options, team.
+    """The slide order: challenge, title, tool, findings, conclusion, options, team.
 
     The tool comes before the results: the findings show what it can do.
     """
     story = ov.findings[:-1]
     keys = [f.key for f in story]
-    return ["challenge", "tool", "title", *keys, "conclusion", "options", "team"]
+    return ["challenge", "title", "tool", *keys, "conclusion", "options", "team"]
 
 
 # The slide template: the LuxTrade Lens logo top left, the event top right, and a footer

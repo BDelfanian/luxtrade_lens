@@ -210,7 +210,7 @@ def test_presentation_mode_steps_through_the_slides_and_closes(app_env):
         at.button(key="deck-next").click().run()
         assert not at.exception
         shown += 1
-    assert shown == 11  # challenge, tool, title, five findings, conclusion, options, team
+    assert shown == 11  # challenge, title, tool, five findings, conclusion, options, team
     # Save as PDF: every slide laid out for the print dialog, then back to the slides
     at.button(key="deck-pdf").click().run()
     assert not at.exception
