@@ -1,0 +1,311 @@
+{
+ "run_id": "7571194757",
+ "session_id": "rqkte8",
+ "turn": 3,
+ "created_at": "2026-10-16T23:01:59+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the main product chapters (HS2) exported by Luxembourg to Japan and China in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "JP",
+   "CN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('JP', 'CN')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "fd491c20a0ba7edc531746b6416711d6288e138d46fc6c08b222b6b9c96c5190",
+ "row_count": 67,
+ "view_kind": "bar",
+ "title": "Main product groups — exports 2025",
+ "frames": {
+  "main": [
+   {
+    "key": "56",
+    "value": 94445699.0,
+    "share": 32.6901774423,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Wadding, felt and nonwovens",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "84",
+    "value": 52392878.0,
+    "share": 18.1345735874,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "74",
+    "value": 46992402.0,
+    "share": 16.2653246901,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Copper and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "85",
+    "value": 33135807.0,
+    "share": 11.4691872895,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "73",
+    "value": 16846843.0,
+    "share": 5.8311420514,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "90",
+    "value": 10588368.0,
+    "share": 3.6649167978,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Optical, measuring and medical instruments",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "39",
+    "value": 7454957.0,
+    "share": 2.5803596112,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "88",
+    "value": 4358572.0,
+    "share": 1.5086181116,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "32",
+    "value": 3383032.0,
+    "share": 1.1709576777,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Tanning or dyeing extracts; tannins and their derivatives; dyes, pigments and other colouring matter; paints and varnishes; putty and other mastics; inks",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "87",
+    "value": 3189957.0,
+    "share": 1.1041292665,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "OTHER",
+    "value": 16122371.0,
+    "share": 5.580382954,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 666.0,
+    "share": 0.0002305204,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "56",
+   "84",
+   "74",
+   "85",
+   "73",
+   "90",
+   "39",
+   "88",
+   "32",
+   "87"
+  ]
+ },
+ "insight": [
+  "The main product chapters exported by Luxembourg to Japan and China in 2025 were wadding, felt and nonwovens, machinery and mechanical appliances, and copper and articles thereof.",
+  "Total exports reached 288.9 million euros in 2025, with the top three product chapters accounting for 67.1% of exports.",
+  "Wadding, felt and nonwovens was the largest export category at 94.4 million euros, representing 32.7% of total exports.",
+  "Machinery and mechanical appliances followed with 52.4 million euros, and copper and articles thereof with 47.0 million euros.",
+  "The values are nominal and not adjusted for price changes, which limits direct comparison over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2025: 288.9 M€"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Wadding, felt and nonwovens: 94.4 M€, 32.7 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Machinery and mechanical appliances: 52.4 M€, 18.1 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Copper and articles thereof: 47.0 M€, 16.3 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Electrical machinery and equipment: 33.1 M€, 11.5 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Articles of iron or steel: 16.8 M€, 5.8 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 16.1 M€, 5.6 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 1 k €, 0.0 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 67.1 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 169,
+   "outcome": "ok",
+   "detail": "67 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 60,
+   "outcome": "ok",
+   "detail": "view=bar; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1532,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 912,
+   "output_tokens": 150,
+   "cache_read_tokens": 0,
+   "ms": 1482
+  }
+ ],
+ "code_version": "8315cc0",
+ "error": null
+}

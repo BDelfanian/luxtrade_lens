@@ -1,0 +1,310 @@
+{
+ "run_id": "456af44c25",
+ "session_id": "qd9k2z",
+ "turn": 3,
+ "created_at": "2026-10-16T22:52:42+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which fuel product chapters (HS4) had the largest changes in import value (EUR) between 2021 and 2022?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "period_start": "2021",
+  "period_end": "2022",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "37.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 37.75033483094543
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2021-01-01' AS DATE)\n  AND period < CAST('2023-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\n  AND year IN (2021, 2022)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "b477e919649de5558195323a2bfa9de1090b1eac36c71fdac1d315b52720ae99",
+ "row_count": 30,
+ "view_kind": "change",
+ "title": "Largest changes by product group — imports 2021–2022",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "2710",
+    "base": 1293517202.0,
+    "value": 2387252778.0,
+    "change": 1093735576.0,
+    "change_pct": 84.5551628002,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Petroleum oils",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2701",
+    "base": 4187345.0,
+    "value": 11001645.0,
+    "change": 6814300.0,
+    "change_pct": 162.735575884,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Coal; briquettes, ovoids and similar solid fuels manufactured from coal",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2715",
+    "base": 7192940.0,
+    "value": 9827174.0,
+    "change": 2634234.0,
+    "change_pct": 36.622493723,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Bituminous mastics, cut-backs and other bituminous mixtures based on natural asphalt, on natural bitumen, on petroleum bitumen, on mineral tar or on mineral tar pitch",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2712",
+    "base": 2346213.0,
+    "value": 4643817.0,
+    "change": 2297604.0,
+    "change_pct": 97.9281932203,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Petroleum jelly, paraffin wax, micro- crystalline petroleum wax, slack wax, ozokerite, lignite wax, peat wax, other mineral waxes, and similar products obtained by synthesis or by other processes, whether or not coloured",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2711",
+    "base": 7055300.0,
+    "value": 8113996.0,
+    "change": 1058696.0,
+    "change_pct": 15.0056836704,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Petroleum gases",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2709",
+    "base": 27868.0,
+    "value": 22092.0,
+    "change": -5776.0,
+    "change_pct": -20.7262810392,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Petroleum oils and oils obtained from bituminous minerals, crude",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2703",
+    "base": 1700711.0,
+    "value": 1643145.0,
+    "change": -57566.0,
+    "change_pct": -3.3848196431,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Peat, incl. peat litter, whether or not agglomerated",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2706",
+    "base": 82744.0,
+    "value": 346.0,
+    "change": -82398.0,
+    "change_pct": -99.5818427922,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Tar distilled from coal, from lignite or from peat, and other mineral tars, whether or not dehydrated or partially distilled, incl. reconstituted tars",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   },
+   {
+    "flow": "import",
+    "key": "2714",
+    "base": 1265333.0,
+    "value": 1172972.0,
+    "change": -92361.0,
+    "change_pct": -7.2993433349,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Bitumen and asphalt, natural; bituminous or oil-shale and tar sands; asphaltites and asphaltic rocks",
+    "parent": "27",
+    "parent_label": "Mineral fuels and oils"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "2710",
+   "2701",
+   "2715",
+   "2712",
+   "2711",
+   "2709",
+   "2703",
+   "2706",
+   "2714"
+  ]
+ },
+ "insight": [
+  "The fuel product chapter with the largest increase in import value between 2021 and 2022 was Petroleum oils, rising from 1.29 billion euros to 2.39 billion euros.",
+  "Coal and similar solid fuels had the highest percentage increase in imports, growing by 162.7% from 4.2 million euros to 11.0 million euros.",
+  "Petroleum jelly and related mineral waxes nearly doubled in import value, increasing by 97.9% from 2.3 million euros to 4.6 million euros.",
+  "Imports of petroleum gases increased by 15.0%, while crude petroleum oils decreased by 20.7%.",
+  "The data are in current euros and not adjusted for price changes, and 37.8% of the import value is confidential at full product detail, which limits detailed analysis."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.2710",
+   "text": "imports Petroleum oils: 1.29 bn € 2021 → 2.39 bn € 2022 (1.09 bn €, +84.6 %)"
+  },
+  {
+   "key": "import.2701",
+   "text": "imports Coal; briquettes, ovoids and similar solid fuels manufactured from coal: 4.2 M€ 2021 → 11.0 M€ 2022 (6.8 M€, +162.7 %)"
+  },
+  {
+   "key": "import.2715",
+   "text": "imports Bituminous mastics, cut-backs and other bituminous mixtures based on natural asphalt, on natural bitumen, on petroleum bitumen, on mineral tar or on mineral tar pitch: 7.2 M€ 2021 → 9.8 M€ 2022 (2.6 M€, +36.6 %)"
+  },
+  {
+   "key": "import.2712",
+   "text": "imports Petroleum jelly, paraffin wax, micro- crystalline petroleum wax, slack wax, ozokerite, lignite wax, peat wax, other mineral waxes, and similar products obtained by synthesis or by other processes, whether or not coloured: 2.3 M€ 2021 → 4.6 M€ 2022 (2.3 M€, +97.9 %)"
+  },
+  {
+   "key": "import.2711",
+   "text": "imports Petroleum gases: 7.1 M€ 2021 → 8.1 M€ 2022 (1.1 M€, +15.0 %)"
+  },
+  {
+   "key": "import.2709",
+   "text": "imports Petroleum oils and oils obtained from bituminous minerals, crude: 28 k € 2021 → 22 k € 2022 (-6 k €, −20.7 %)"
+  },
+  {
+   "key": "import.2703",
+   "text": "imports Peat, incl. peat litter, whether or not agglomerated: 1.7 M€ 2021 → 1.6 M€ 2022 (-58 k €, −3.4 %)"
+  },
+  {
+   "key": "import.2706",
+   "text": "imports Tar distilled from coal, from lignite or from peat, and other mineral tars, whether or not dehydrated or partially distilled, incl. reconstituted tars: 83 k € 2021 → 0 k € 2022 (-82 k €, −99.6 %)"
+  },
+  {
+   "key": "import.2714",
+   "text": "imports Bitumen and asphalt, natural; bituminous or oil-shale and tar sands; asphaltites and asphaltic rocks: 1.3 M€ 2021 → 1.2 M€ 2022 (-92 k €, −7.3 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2022 − value 2021 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 222,
+   "outcome": "ok",
+   "detail": "30 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 81,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2022 − value 2021 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1711,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1271,
+   "output_tokens": 174,
+   "cache_read_tokens": 0,
+   "ms": 1630
+  }
+ ],
+ "code_version": "8315cc0",
+ "error": null
+}

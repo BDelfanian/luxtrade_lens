@@ -1,0 +1,502 @@
+{
+ "run_id": "f55b6e2ded",
+ "session_id": "rqkte8",
+ "turn": 5,
+ "created_at": "2026-10-16T23:02:03+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the main changes in export and import product chapters (HS2) between 2005 and 2025 with Japan and China?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "JP",
+   "CN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND partner IN ('JP', 'CN')\n  AND year IN (2005, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "e1ab6e5f78be6ce44dce7d4251919f3db1e6278105d00dfa5f114da32d34c2e4",
+ "row_count": 258,
+ "view_kind": "change",
+ "title": "Largest changes by product group — 2005–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "56",
+    "base": 36232406.0,
+    "value": 94445699.0,
+    "change": 58213293.0,
+    "change_pct": 160.6663741845,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Wadding, felt and nonwovens",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "74",
+    "base": 19905474.0,
+    "value": 46992402.0,
+    "change": 27086928.0,
+    "change_pct": 136.0777844326,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Copper and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "85",
+    "base": 10676434.0,
+    "value": 33135807.0,
+    "change": 22459373.0,
+    "change_pct": 210.3639941951,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "90",
+    "base": 676617.0,
+    "value": 10588368.0,
+    "change": 9911751.0,
+    "change_pct": 1464.8983102701,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Optical, measuring and medical instruments",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "84",
+    "base": 42888118.0,
+    "value": 52392878.0,
+    "change": 9504760.0,
+    "change_pct": 22.1617558504,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "64",
+    "base": 1304494.0,
+    "value": 848570.0,
+    "change": -455924.0,
+    "change_pct": -34.9502565746,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Footwear",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "69",
+    "base": 551631.0,
+    "value": 16145.0,
+    "change": -535486.0,
+    "change_pct": -97.0732246737,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Ceramic products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "76",
+    "base": 4893578.0,
+    "value": 51858.0,
+    "change": -4841720.0,
+    "change_pct": -98.9402845934,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Aluminium and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "48",
+    "base": 7287791.0,
+    "value": 209099.0,
+    "change": -7078692.0,
+    "change_pct": -97.130831551,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Paper and paperboard",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "72",
+    "base": 17149253.0,
+    "value": 480252.0,
+    "change": -16669001.0,
+    "change_pct": -97.1995748153,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "85",
+    "base": 246266825.0,
+    "value": 768885611.0,
+    "change": 522618786.0,
+    "change_pct": 212.2164794223,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "90",
+    "base": 1748216.0,
+    "value": 14338835.0,
+    "change": 12590619.0,
+    "change_pct": 720.1981334114,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Optical, measuring and medical instruments",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "73",
+    "base": 2248928.0,
+    "value": 14411558.0,
+    "change": 12162630.0,
+    "change_pct": 540.819003543,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "39",
+    "base": 2434247.0,
+    "value": 9737303.0,
+    "change": 7303056.0,
+    "change_pct": 300.0129403466,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "32",
+    "base": 2506621.0,
+    "value": 6819029.0,
+    "change": 4312408.0,
+    "change_pct": 172.0406874434,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Tanning or dyeing extracts; tannins and their derivatives; dyes, pigments and other colouring matter; paints and varnishes; putty and other mastics; inks",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "87",
+    "base": 4174518.0,
+    "value": 1672316.0,
+    "change": -2502202.0,
+    "change_pct": -59.9399020438,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "68",
+    "base": 5934000.0,
+    "value": 3239951.0,
+    "change": -2694049.0,
+    "change_pct": -45.4002190765,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Articles of stone, plaster, cement, asbestos, mica or similar materials",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "94",
+    "base": 3537316.0,
+    "value": 584226.0,
+    "change": -2953090.0,
+    "change_pct": -83.4839183155,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Furniture, bedding and lamps",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "62",
+    "base": 16030953.0,
+    "value": 708679.0,
+    "change": -15322274.0,
+    "change_pct": -95.5793083543,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Articles of apparel and clothing accessories, not knitted or crocheted",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "84",
+    "base": 2078160805.0,
+    "value": 1029845230.0,
+    "change": -1048315575.0,
+    "change_pct": -50.4443916216,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "56",
+   "85",
+   "90",
+   "74",
+   "73",
+   "39",
+   "32",
+   "84",
+   "64",
+   "87"
+  ]
+ },
+ "insight": [
+  "The main changes in Luxembourg's trade with Japan and China between 2005 and 2025 show strong growth in exports of Electrical machinery and equipment, which increased from 10.7 million euros to 33.1 million euros.",
+  "The largest export increase was in Optical, measuring and medical instruments, rising from 677 thousand euros to 10.6 million euros.",
+  "Imports of Electrical machinery and equipment also grew significantly, from 246.3 million euros to 768.9 million euros, while imports of Machinery and mechanical appliances decreased from 2.08 billion euros to 1.03 billion euros.",
+  "These values are nominal and not adjusted for price changes, which may affect the interpretation of growth over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.56",
+   "text": "exports Wadding, felt and nonwovens: 36.2 M€ 2005 → 94.4 M€ 2025 (58.2 M€, +160.7 %)"
+  },
+  {
+   "key": "export.74",
+   "text": "exports Copper and articles thereof: 19.9 M€ 2005 → 47.0 M€ 2025 (27.1 M€, +136.1 %)"
+  },
+  {
+   "key": "export.85",
+   "text": "exports Electrical machinery and equipment: 10.7 M€ 2005 → 33.1 M€ 2025 (22.5 M€, +210.4 %)"
+  },
+  {
+   "key": "export.90",
+   "text": "exports Optical, measuring and medical instruments: 677 k € 2005 → 10.6 M€ 2025 (9.9 M€, +1,464.9 %)"
+  },
+  {
+   "key": "export.84",
+   "text": "exports Machinery and mechanical appliances: 42.9 M€ 2005 → 52.4 M€ 2025 (9.5 M€, +22.2 %)"
+  },
+  {
+   "key": "export.64",
+   "text": "exports Footwear: 1.3 M€ 2005 → 849 k € 2025 (-456 k €, −35.0 %)"
+  },
+  {
+   "key": "export.69",
+   "text": "exports Ceramic products: 552 k € 2005 → 16 k € 2025 (-535 k €, −97.1 %)"
+  },
+  {
+   "key": "export.76",
+   "text": "exports Aluminium and articles thereof: 4.9 M€ 2005 → 52 k € 2025 (-4.8 M€, −98.9 %)"
+  },
+  {
+   "key": "export.48",
+   "text": "exports Paper and paperboard: 7.3 M€ 2005 → 209 k € 2025 (-7.1 M€, −97.1 %)"
+  },
+  {
+   "key": "export.72",
+   "text": "exports Iron and steel: 17.1 M€ 2005 → 480 k € 2025 (-16.7 M€, −97.2 %)"
+  },
+  {
+   "key": "import.85",
+   "text": "imports Electrical machinery and equipment: 246.3 M€ 2005 → 768.9 M€ 2025 (522.6 M€, +212.2 %)"
+  },
+  {
+   "key": "import.90",
+   "text": "imports Optical, measuring and medical instruments: 1.7 M€ 2005 → 14.3 M€ 2025 (12.6 M€, +720.2 %)"
+  },
+  {
+   "key": "import.73",
+   "text": "imports Articles of iron or steel: 2.2 M€ 2005 → 14.4 M€ 2025 (12.2 M€, +540.8 %)"
+  },
+  {
+   "key": "import.39",
+   "text": "imports Plastics and articles thereof: 2.4 M€ 2005 → 9.7 M€ 2025 (7.3 M€, +300.0 %)"
+  },
+  {
+   "key": "import.32",
+   "text": "imports Tanning or dyeing extracts; tannins and their derivatives; dyes, pigments and other colouring matter; paints and varnishes; putty and other mastics; inks: 2.5 M€ 2005 → 6.8 M€ 2025 (4.3 M€, +172.0 %)"
+  },
+  {
+   "key": "import.87",
+   "text": "imports Vehicles and parts: 4.2 M€ 2005 → 1.7 M€ 2025 (-2.5 M€, −59.9 %)"
+  },
+  {
+   "key": "import.68",
+   "text": "imports Articles of stone, plaster, cement, asbestos, mica or similar materials: 5.9 M€ 2005 → 3.2 M€ 2025 (-2.7 M€, −45.4 %)"
+  },
+  {
+   "key": "import.94",
+   "text": "imports Furniture, bedding and lamps: 3.5 M€ 2005 → 584 k € 2025 (-3.0 M€, −83.5 %)"
+  },
+  {
+   "key": "import.62",
+   "text": "imports Articles of apparel and clothing accessories, not knitted or crocheted: 16.0 M€ 2005 → 709 k € 2025 (-15.3 M€, −95.6 %)"
+  },
+  {
+   "key": "import.84",
+   "text": "imports Machinery and mechanical appliances: 2.08 bn € 2005 → 1.03 bn € 2025 (-1.05 bn €, −50.4 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 359,
+   "outcome": "ok",
+   "detail": "258 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 82,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1561,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1745,
+   "output_tokens": 149,
+   "cache_read_tokens": 0,
+   "ms": 1462
+  }
+ ],
+ "code_version": "8315cc0",
+ "error": null
+}

@@ -1,0 +1,184 @@
+{
+ "run_id": "10c4cda0b6",
+ "session_id": "qd9k2z",
+ "turn": 7,
+ "created_at": "2026-10-16T22:52:59+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the yearly trend of import volume (kg) for Petroleum oils (HS4 2710) from 2018 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "2710"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "period_start": "2018",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "qty_kg",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2018-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('2710')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "247c094b5dbcdbc4536c240f2c4fb94963ee29da8bb1a11cb25c6c021c274be6",
+ "row_count": 8,
+ "view_kind": "line",
+ "title": "imports: −25.5 % (2018–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 2868137565.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 3037200307.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 2347963786.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 2527644802.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 2758267508.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 2452747212.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 2355177531.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 2138178430.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The yearly trend of import volume for Petroleum oils from 2018 to 2025 was a decrease.",
+  "Imports started at 2.87 billion kilograms in 2018 and fell to 2.14 billion kilograms in 2025.",
+  "The peak import volume was 3.04 billion kilograms in 2019.",
+  "Overall, imports declined by 25.5% over this period.",
+  "Quantities are missing for part of the trade, so these volumes cover only rows with a known quantity."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2018: 2.87 bn kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 2.14 bn kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2018–2025: −25.5 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2019: 3.04 bn kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 255,
+   "outcome": "ok",
+   "detail": "8 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 9,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1137,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 733,
+   "output_tokens": 105,
+   "cache_read_tokens": 0,
+   "ms": 1094
+  }
+ ],
+ "code_version": "8315cc0",
+ "error": null
+}

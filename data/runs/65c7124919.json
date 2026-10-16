@@ -1,0 +1,1281 @@
+{
+ "run_id": "65c7124919",
+ "session_id": "rqkte8",
+ "turn": 7,
+ "created_at": "2026-10-16T23:10:06+00:00",
+ "origin": "followup",
+ "status": "answered",
+ "question": "instead of value, report the percentage share of the corresponding year",
+ "language": "en",
+ "followup_of": "78e3cb00f4",
+ "inherited": [
+  "language",
+  "intent",
+  "breakdown",
+  "partners",
+  "product_level",
+  "freq",
+  "period_start",
+  "period_end",
+  "flow",
+  "top_n",
+  "view"
+ ],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "partner",
+   "partners": [
+    "JP",
+    "CN"
+   ],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [],
+   "product_level": "HS2",
+   "freq": "A",
+   "period_start": "2002",
+   "period_end": "2025",
+   "flow": "both",
+   "measure": "share",
+   "top_n": 10,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "line",
+   "assumptions": []
+  },
+  "followup_of": "78e3cb00f4",
+  "inherited": [
+   "language",
+   "intent",
+   "breakdown",
+   "partners",
+   "product_level",
+   "freq",
+   "period_start",
+   "period_end",
+   "flow",
+   "top_n",
+   "view"
+  ],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [
+   "JP",
+   "CN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2002",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2002-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND partner IN ('JP', 'CN')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2002-01-01' AS DATE) AND period < CAST('2026-01-01' AS DATE)\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "82fb3f54afe857747befc2eb68315847294edf06c0d29e623bab151dd8df58b8",
+ "row_count": 96,
+ "view_kind": "line",
+ "title": "China · exports: +168.5 % (2002–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2002,
+    "key": "CN",
+    "flow": "export",
+    "value": 0.531149519,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2002,
+    "key": "CN",
+    "flow": "import",
+    "value": 0.5455510824,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2002,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4195731618,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2002,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.0160999895,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2003,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.0797451681,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2003,
+    "key": "CN",
+    "flow": "import",
+    "value": 10.8361536138,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2003,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.3471352997,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2003,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.0543410255,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2004,
+    "key": "CN",
+    "flow": "export",
+    "value": 0.717073806,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2004,
+    "key": "CN",
+    "flow": "import",
+    "value": 12.5447012196,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2004,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.2570167102,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2004,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.1108686075,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2005,
+    "key": "CN",
+    "flow": "export",
+    "value": 0.8745596634,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2005,
+    "key": "CN",
+    "flow": "import",
+    "value": 12.3870098906,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2005,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.2248165005,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2005,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.7023619967,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2006,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.1953576103,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2006,
+    "key": "CN",
+    "flow": "import",
+    "value": 16.3617171581,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2006,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.1388575294,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2006,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.688011024,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2007,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.1175464303,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2007,
+    "key": "CN",
+    "flow": "import",
+    "value": 16.6703472438,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2007,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.1853263775,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2007,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.5067307346,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2008,
+    "key": "CN",
+    "flow": "export",
+    "value": 0.8560990253,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2008,
+    "key": "CN",
+    "flow": "import",
+    "value": 18.6169319777,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2008,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.1715079675,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2008,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.3227134381,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2009,
+    "key": "CN",
+    "flow": "export",
+    "value": 0.7773013899,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2009,
+    "key": "CN",
+    "flow": "import",
+    "value": 18.2528962167,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2009,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.2001894259,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2009,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.2599710976,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2010,
+    "key": "CN",
+    "flow": "export",
+    "value": 0.937449596,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2010,
+    "key": "CN",
+    "flow": "import",
+    "value": 8.7467539389,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2010,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.2754503176,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2010,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.6451235467,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2011,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.1229995768,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2011,
+    "key": "CN",
+    "flow": "import",
+    "value": 6.870887665,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2011,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.2750833957,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2011,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.795456349,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2012,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.32776517,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2012,
+    "key": "CN",
+    "flow": "import",
+    "value": 7.1613961727,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2012,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4380563776,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2012,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.7573932949,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2013,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.4151625051,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2013,
+    "key": "CN",
+    "flow": "import",
+    "value": 6.3660365229,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2013,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4015429806,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2013,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.845969857,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2014,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.3494512635,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2014,
+    "key": "CN",
+    "flow": "import",
+    "value": 5.9091828245,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2014,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.3962563855,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2014,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.9560569889,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2015,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.3725456114,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2015,
+    "key": "CN",
+    "flow": "import",
+    "value": 11.5994561982,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2015,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.3966028662,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2015,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.0645677894,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2016,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.4454943867,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2016,
+    "key": "CN",
+    "flow": "import",
+    "value": 5.7440232665,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2016,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4344753855,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2016,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.1418796912,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2017,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.423964428,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2017,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.5293039524,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2017,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.5119400996,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2017,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.5602255247,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2018,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.505765846,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2018,
+    "key": "CN",
+    "flow": "import",
+    "value": 2.1159671101,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2018,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.5407161641,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2018,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.1212015526,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2019,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.2520045261,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2019,
+    "key": "CN",
+    "flow": "import",
+    "value": 6.9911126434,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2019,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.570798466,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2019,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.2459800966,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2020,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.5201500474,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2020,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.5346583166,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2020,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.5867887496,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2020,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.8288037159,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2021,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.4907964096,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2021,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.2181146157,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2021,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.5843197704,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2021,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.7273523442,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2022,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.4693417205,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2022,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.0685951257,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2022,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4878318709,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2022,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.7171406906,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2023,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.4078509121,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2023,
+    "key": "CN",
+    "flow": "import",
+    "value": 0.8223373657,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2023,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4695147184,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2023,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.5464983098,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2024,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.6067583647,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2024,
+    "key": "CN",
+    "flow": "import",
+    "value": 0.6393368635,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2024,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.4638140003,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2024,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.9253028694,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2025,
+    "key": "CN",
+    "flow": "export",
+    "value": 1.4263067341,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2025,
+    "key": "CN",
+    "flow": "import",
+    "value": 3.0333552836,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2025,
+    "key": "JP",
+    "flow": "export",
+    "value": 0.3511882528,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2025,
+    "key": "JP",
+    "flow": "import",
+    "value": 4.4909090816,
+    "label": "Japan",
+    "iso3": "JPN"
+   }
+  ],
+  "totals": [
+   {
+    "period": 2002,
+    "flow": "export",
+    "value": 10801886089.0
+   },
+   {
+    "period": 2002,
+    "flow": "import",
+    "value": 13378507962.0
+   },
+   {
+    "period": 2003,
+    "flow": "export",
+    "value": 11754814631.0
+   },
+   {
+    "period": 2003,
+    "flow": "import",
+    "value": 14290181389.0
+   },
+   {
+    "period": 2004,
+    "flow": "export",
+    "value": 13063477458.0
+   },
+   {
+    "period": 2004,
+    "flow": "import",
+    "value": 16115801346.0
+   },
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 15394146750.0
+   },
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 18154619782.0
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 18336982599.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 21610814188.0
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 16733525152.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 20451620342.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 17469519014.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 21863560875.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 15298785071.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 18160433767.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 14180328901.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 18713336015.0
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 14990138864.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 20732587803.0
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 14658638997.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 21228221332.0
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 13868196853.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 20077758043.0
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 14400955059.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 20098125346.0
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 15460367090.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 21016138777.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 14259781352.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 19761934890.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 13972896449.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 20274152140.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 13883405747.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 20463000768.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 14673098473.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 21657598157.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 12113291205.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 18504346533.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 14208430248.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 22146665635.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 16506246887.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 25660352026.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 15898896685.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 24322124998.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 14966963688.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 24087714129.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 16253860299.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 25097944481.0
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "CN",
+   "JP"
+  ]
+ },
+ "insight": [
+  "China's share of exports increased from 0.5% in 2002 to 1.4% in 2025, while its share of imports rose from 0.5% to 3.0% in the same period.",
+  "The largest growth in China's trade share was in imports, which peaked at 18.6% in 2008 before settling at 3.0% in 2025.",
+  "Japan's export share slightly declined from 0.4% in 2002 to 0.4% in 2025, with a peak of 0.6% in 2020, while its import share grew from 1.0% to 4.5%, peaking in 2025.",
+  "China's export share peaked at 1.6% in 2024, just before 2025, indicating a recent high point in exports.",
+  "The data are presented in current euros and are not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "China · exports.start",
+   "text": "China · exports 2002: 0.5 %"
+  },
+  {
+   "key": "China · exports.end",
+   "text": "China · exports 2025: 1.4 %"
+  },
+  {
+   "key": "China · exports.change",
+   "text": "China · exports change 2002–2025: +168.5 %"
+  },
+  {
+   "key": "China · exports.peak",
+   "text": "China · exports peak 2024: 1.6 %"
+  },
+  {
+   "key": "China · imports.start",
+   "text": "China · imports 2002: 0.5 %"
+  },
+  {
+   "key": "China · imports.end",
+   "text": "China · imports 2025: 3.0 %"
+  },
+  {
+   "key": "China · imports.change",
+   "text": "China · imports change 2002–2025: +456.0 %"
+  },
+  {
+   "key": "China · imports.peak",
+   "text": "China · imports peak 2008: 18.6 %"
+  },
+  {
+   "key": "Japan · exports.start",
+   "text": "Japan · exports 2002: 0.4 %"
+  },
+  {
+   "key": "Japan · exports.end",
+   "text": "Japan · exports 2025: 0.4 %"
+  },
+  {
+   "key": "Japan · exports.change",
+   "text": "Japan · exports change 2002–2025: −16.3 %"
+  },
+  {
+   "key": "Japan · exports.peak",
+   "text": "Japan · exports peak 2020: 0.6 %"
+  },
+  {
+   "key": "Japan · imports.start",
+   "text": "Japan · imports 2002: 1.0 %"
+  },
+  {
+   "key": "Japan · imports.end",
+   "text": "Japan · imports 2025: 4.5 %"
+  },
+  {
+   "key": "Japan · imports.change",
+   "text": "Japan · imports change 2002–2025: +342.0 %"
+  },
+  {
+   "key": "Japan · imports.peak",
+   "text": "Japan · imports peak 2025: 4.5 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all partners), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 6923,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=partner · follow-up of 78e3cb00f4 (inherited: language, intent, breakdown, partners, product_level, freq, period_start, period_end, flow, top_n, view)"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 799,
+   "outcome": "ok",
+   "detail": "96 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 43,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all partners), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1869,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4800,
+   "output_tokens": 162,
+   "cache_read_tokens": 1920,
+   "ms": 1782
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1148,
+   "output_tokens": 209,
+   "cache_read_tokens": 0,
+   "ms": 1803
+  }
+ ],
+ "code_version": "8315cc0",
+ "error": null
+}
