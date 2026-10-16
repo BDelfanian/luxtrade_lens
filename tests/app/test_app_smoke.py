@@ -23,15 +23,17 @@ def test_app_opens_on_the_overview(app_env):
     at = _app()
     at.run()
     assert not at.exception
-    assert at.title[0].value == "Luxembourg's trade in goods at a glance"
-    assert [t.label for t in at.tabs] == ["Key findings", "At a glance"]
-    # key findings: five cards, four with a headline figure, each opening its details
-    assert len(at.metric) == 4
+    assert at.title[0].value == "LuxTrade Lens"  # the app name, above every page
+    assert at.title[1].value == "Luxembourg's trade in goods at a glance"
+    assert [t.label for t in at.tabs] == ["The challenge", "Key findings", "More evidence"]
+    # key findings: a headline figure per finding, and a card each opening its details
+    assert len(at.metric) == 5
     assert [b.key for b in at.button if (b.key or "").startswith("more-")] == [
         "more-diversification",
         "more-shocks",
         "more-europe",
         "more-prices",
+        "more-composition",
         "more-conclusion",
     ]
     # at a glance: the five business questions
@@ -39,7 +41,9 @@ def test_app_opens_on_the_overview(app_env):
     assert any(b.key == "explore-partners" for b in at.button)
 
 
-@pytest.mark.parametrize("key", ["diversification", "shocks", "europe", "prices", "conclusion"])
+@pytest.mark.parametrize(
+    "key", ["diversification", "shocks", "europe", "prices", "composition", "conclusion"]
+)
 def test_to_know_more_opens_the_details_of_a_finding(app_env, key):
     at = _app()
     at.run()
@@ -89,7 +93,7 @@ def test_dashboard_builds_reorders_and_removes_charts(app_env):
     at = _app().run()
     at.switch_page("app_pages/dashboard.py").run()
     assert not at.exception
-    assert at.title[0].value == "Dashboard builder"
+    assert at.title[1].value == "Dashboard builder"
     at.button(key="dashboard-run-query").click().run()
     assert not at.exception
     at.selectbox(key="dashboard-map-line-color").set_value("flow").run()
@@ -180,3 +184,38 @@ def test_sessions_are_managed_on_the_ask_page(app_env):
     at.button(key=f"open-{first}").click().run()
     assert at.session_state["session_id"] == first
     assert len(at.tabs) == 4  # the earlier answer is back
+
+
+@pytest.mark.parametrize(
+    ("page", "title"), [("app_pages/data.py", "The data"), ("app_pages/method.py", "How it works")]
+)
+def test_reference_pages_open_with_the_team_footer(app_env, page, title):
+    at = _app()
+    at.run()
+    at.switch_page(page).run()
+    assert not at.exception
+    assert at.title[1].value == title
+    assert any("Mina Naseh (PwC)" in c.value for c in at.caption)  # footer on every page
+
+
+def test_presentation_mode_steps_through_the_slides_and_closes(app_env):
+    at = _app()
+    at.run()
+    at.button(key="present-btn").click().run()
+    assert not at.exception
+    assert not at.tabs  # the page's tabs are replaced by the slides
+    assert at.button(key="deck-back").disabled
+    shown = 1
+    while not at.button(key="deck-next").disabled:
+        at.button(key="deck-next").click().run()
+        assert not at.exception
+        shown += 1
+    assert shown == 11  # challenge, tool, title, five findings, conclusion, options, team
+    # Save as PDF: every slide laid out for the print dialog, then back to the slides
+    at.button(key="deck-pdf").click().run()
+    assert not at.exception
+    assert at.button(key="deck-print-back")
+    at.button(key="deck-print-back").click().run()
+    assert not at.exception and at.button(key="deck-close")
+    at.button(key="deck-close").click().run()
+    assert at.title[1].value == "Luxembourg's trade in goods at a glance"

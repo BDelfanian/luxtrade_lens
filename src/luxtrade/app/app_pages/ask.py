@@ -18,15 +18,21 @@ ss = st.session_state
 
 
 def scroll_to(anchor: str) -> None:
-    """Bring an anchor into view: the work and the new answer are drawn low on the page."""
+    """Bring an anchor into view: the work and the new answer are drawn low on the page.
+
+    The scroll is re-applied every 0.25 s for 2.5 s while the page finishes drawing: a chat
+    page otherwise pins itself to the bottom once the last elements arrive.
+    """
     st.html(
         f"""<script>
 (function () {{
-  let tries = 0;
+  const start = Date.now();
   const go = () => {{
     const el = document.getElementById("{anchor}");
-    if (el) {{ el.scrollIntoView({{behavior: "smooth", block: "start"}}); }}
-    else if (tries++ < 50) {{ setTimeout(go, 100); }}
+    if (el && Math.abs(el.getBoundingClientRect().top) > 4) {{
+      el.scrollIntoView({{block: "start"}});
+    }}
+    if (Date.now() - start < 2500) setTimeout(go, 250);
   }};
   go();
 }})();
@@ -39,10 +45,6 @@ def run_pending() -> None:
     """Execute a queued action with live step progress, then rerun."""
     job = ss.pop("pending", None)
     if not job:
-        return
-    if job["action"] == "verify":
-        rec = assistant.runs.load(job["run_id"])
-        st.toast(assistant.verify(rec) if rec else "Run not found")
         return
     st.html('<div id="lt-working"></div>')
     scroll_to("lt-working")
@@ -94,6 +96,13 @@ def day_label(day: date) -> str:
     return f"{day:%a %d %b %Y}"
 
 
+TOP_LINK = (
+    '<a class="lt-top-link" href="#lt-top" title="Back to the top of the page" '
+    "onclick=\"event.preventDefault(); document.getElementById('lt-top')"
+    ".scrollIntoView({behavior: 'smooth', block: 'start'});\">↑ Top</a>"
+)
+
+
 def start_session() -> None:
     """Callback: an empty conversation."""
     ss.session_id = new_session_id()
@@ -103,6 +112,15 @@ def start_session() -> None:
 records = assistant.sessions.records(ss.session_id)
 lang = ss.get("lang") or "en"
 
+# where the Top links scroll back to; the links scroll in the browser (no rerun, which would
+# let Streamlit restore the old scroll position)
+st.html(
+    """<div id="lt-top"></div>
+<style>
+.lt-top-link { font-size: 0.875rem; color: inherit; opacity: 0.65; text-decoration: none; }
+.lt-top-link:hover { opacity: 1; text-decoration: underline; }
+</style>"""
+)
 with st.container(horizontal=True, vertical_alignment="center"):
     st.markdown(f"#### Ask about Luxembourg's trade in goods · session `{ss.session_id}`")
     st.button("New session", key="new-session", icon=":material/add:", on_click=start_session)
@@ -122,7 +140,11 @@ with st.expander("Preset questions", icon=":material/bolt:", expanded=not record
     for i, p in enumerate(PRESETS):
         q, spec = p.for_language(lang)
         if cols[i % 2].button(
-            f"**{p.id}** · {q}", key=f"preset-{p.id}", help=p.label[lang], width="stretch"
+            f"**{p.id}** · {q}",
+            key=f"preset-{p.id}",
+            help=p.label[lang],
+            width="stretch",
+            wrap=True,  # the full question, never cut with an ellipsis
         ):
             queue("spec", spec=spec.model_dump(), question=q, origin="preset")
 
@@ -177,6 +199,7 @@ for rec in records:
         st.markdown(rec.question)
     with st.chat_message("assistant"):
         render_answer(rec, cov.latest_complete_year)
+        st.html(TOP_LINK, unsafe_allow_javascript=True)
 
 optimise_first = st.toggle(
     "✨ Optimise my question before running it",

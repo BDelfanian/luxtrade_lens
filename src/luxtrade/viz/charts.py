@@ -7,6 +7,7 @@ Colour rules (dataviz reference palette): categorical slots in fixed order, neve
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from luxtrade.analytics.rankings import CONFIDENTIAL, OTHER, UNDISCLOSED
 from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct, month_name
@@ -111,16 +112,27 @@ def choropleth(main: pd.DataFrame, title: str, lang: str) -> go.Figure:
     """World map of partner values (sequential blue); undisclosed partners are never mapped."""
     flow = "total" if "total" in set(main["flow"]) else main["flow"].iloc[0]
     part = main[(main["flow"] == flow) & main["iso3"].notna() & (main["kind"] == "item")]
+    balance = flow == "balance"  # deficits and surpluses: diverging colours around zero
+    if balance:
+        limit = float(part["value"].abs().max() / 1e6) if not part.empty else 1.0
+        scale = {
+            "colorscale": [[0, SERIES[7]], [0.5, "#f7f6f2"], [1, SERIES[0]]],
+            "zmid": 0,
+            "zmin": -limit,
+            "zmax": limit,
+        }
+    else:
+        scale = {"colorscale": [[i / (len(SEQUENTIAL) - 1), c] for i, c in enumerate(SEQUENTIAL)]}
     fig = go.Figure(
         go.Choropleth(
             locations=part["iso3"],
             z=part["value"] / 1e6,
             text=part["label"],
             customdata=[
-                f"{fmt_eur(v, lang)} · {fmt_pct(s, lang)}"
+                fmt_eur(v, lang) if balance else f"{fmt_eur(v, lang)} · {fmt_pct(s, lang)}"
                 for v, s in zip(part["value"], part["share"], strict=True)
             ],
-            colorscale=[[i / (len(SEQUENTIAL) - 1), c] for i, c in enumerate(SEQUENTIAL)],
+            **scale,
             marker_line_color="white",
             marker_line_width=0.5,
             colorbar={"title": _MEUR.get(lang, "M€"), "thickness": 10},
@@ -633,15 +645,18 @@ def finding_figures(
             idx.add_hline(y=100, line={"color": NEUTRAL, "width": 1, "dash": "dash"})
             figs.append(idx)
         return figs
+    if key == "composition":
+        return [composition_bars(main, lang, titles[0], height=520)]
     return []
 
 
 # --- key findings: one compact chart per card (the headline made visible) ----------------------
 
 _EU_LABEL = {"en": "EU27 countries", "fr": "Pays de l'UE27", "de": "EU27-Länder"}
+HERO_HEIGHT = 360  # every card chart is the same height, so the cards line up
 
 
-def _hero_layout(fig: go.Figure, height: int = 300, right: int = 8) -> go.Figure:
+def _hero_layout(fig: go.Figure, height: int = HERO_HEIGHT, right: int = 8) -> go.Figure:
     """Compact, title-less layout for a card: the card's headline is the title."""
     fig.update_layout(
         height=height,
@@ -742,7 +757,7 @@ def hero_crisis(episodes: pd.DataFrame, lang: str) -> go.Figure:
     fig.update_yaxes(
         ticksuffix=" %", range=[min(low * 1.25, -10), 8], zeroline=True, zerolinecolor=TEXT_2
     )
-    return _hero_layout(fig, height=320)
+    return _hero_layout(fig)
 
 
 def hero_europe(main: pd.DataFrame, watch: pd.DataFrame, lang: str) -> go.Figure:
@@ -792,10 +807,108 @@ def hero_kilo(main: pd.DataFrame, lang: str) -> go.Figure:
             hovertemplate="%{y}: %{text}<extra>" + str(year) + "</extra>",
         )
     )
-    fig.update_layout(showlegend=False, bargap=0.35)
+    fig.update_layout(showlegend=False, bargap=0.45)
     fig.update_xaxes(showticklabels=False, range=[0, float(part["value"].max()) * 1.3])
     fig.update_yaxes(showgrid=False)
-    return _hero_layout(fig, height=200)
+    return _hero_layout(fig)
+
+
+# Shades of one chapter's hue: its 1st, 2nd and 3rd heading, then the rest of the chapter
+_SHADES = {1: 1.0, 2: 0.7, 3: 0.45, 0: 0.18}
+_FLOW_TITLE = {
+    "export": {"en": "Exports", "fr": "Exportations", "de": "Exporte"},
+    "import": {"en": "Imports", "fr": "Importations", "de": "Importe"},
+}
+_OF_FLOW = {"en": "% of {flow}", "fr": "% des {flow}", "de": "% der {flow}"}
+
+
+def _rgba(hex_color: str, alpha: float) -> str:
+    r, g, b = (int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
+    return f"rgba({r},{g},{b},{alpha})"
+
+
+def composition_bars(
+    main: pd.DataFrame, lang: str = "en", title: str = "", height: int = HERO_HEIGHT
+) -> go.Figure:
+    """Exports and imports side by side: one stacked bar per year, coloured by chapter.
+
+    A hue per chapter (the same in both panels) and a shade per heading: darkest = the largest
+    heading in the latest year, then the next two, palest = the rest of the chapter.
+    """
+    years = sorted(main["year"].unique())
+    flows = [f for f in ("export", "import") if f in set(main["flow"])]
+    chapters = list(dict.fromkeys(main["hs2"]))  # same chapter, same colour in both panels
+    hue = {c: SERIES[i % len(SERIES)] for i, c in enumerate(chapters)}
+    fig = make_subplots(
+        rows=1,
+        cols=len(flows),
+        shared_yaxes=True,
+        horizontal_spacing=0.06,
+        subplot_titles=[_FLOW_TITLE[f].get(lang, _FLOW_TITLE[f]["en"]) for f in flows],
+    )
+    in_legend = set()
+    for col, flow in enumerate(flows, start=1):
+        part = main[main["flow"] == flow]
+        for hs2 in dict.fromkeys(part["hs2"]):
+            chapter = part[part["hs2"] == hs2]
+            for slot in (1, 2, 3, 0):
+                seg = chapter[chapter["slot"] == slot].set_index("year").reindex(years)
+                if seg["share"].isna().all():
+                    continue
+                name = _short(chapter["chapter"].iloc[0], 44)
+                fig.add_bar(
+                    x=seg["share"],
+                    y=[str(y) for y in years],
+                    orientation="h",
+                    name=name,
+                    legendgroup=hs2,
+                    showlegend=slot == 1 and hs2 not in in_legend,
+                    marker={
+                        "color": _rgba(hue[hs2], _SHADES[slot]),
+                        "line": {"color": "white", "width": 1},
+                    },
+                    text=[
+                        (seg["hs4"].iloc[0] if slot else "") if v >= 2.0 else ""
+                        for v in seg["share"].fillna(0)
+                    ],
+                    textposition="inside",
+                    insidetextanchor="middle",
+                    textfont={"color": "white" if slot in (1, 2) else TEXT, "size": 11},
+                    customdata=[
+                        [_short(lab, 60), fmt_pct(v, lang)]
+                        for lab, v in zip(
+                            seg["label"].fillna(""), seg["share"].fillna(0), strict=True
+                        )
+                    ],
+                    hovertemplate="%{y} · %{customdata[0]}<br>%{customdata[1]}<extra>"
+                    + name
+                    + "</extra>",
+                    row=1,
+                    col=col,
+                )
+                if slot == 1:
+                    in_legend.add(hs2)
+        fig.update_xaxes(
+            ticksuffix=" %",
+            title=_OF_FLOW.get(lang, _OF_FLOW["en"]).format(flow=flow_label(flow, lang)),
+            showgrid=True,
+            gridcolor=GRID,
+            row=1,
+            col=col,
+        )
+    fig.update_layout(barmode="stack", bargap=0.3)
+    fig.update_yaxes(
+        categoryorder="array", categoryarray=[str(y) for y in years], autorange="reversed"
+    )
+    fig.update_annotations(font={"size": 14, "color": TEXT})
+    if title:
+        fig = _layout(fig, title, height=height)
+        fig.update_layout(legend={"y": -0.18, "yanchor": "top"}, margin={"b": 70})
+        return fig
+    fig = _hero_layout(fig, height=height)
+    fig.update_layout(legend={"orientation": "h", "y": -0.16, "yanchor": "top", "x": 0})
+    fig.update_layout(margin={"t": 30, "b": 60})
+    return fig
 
 
 def hero_figure(key: str, frames: dict[str, pd.DataFrame], lang: str = "en") -> go.Figure | None:
@@ -809,4 +922,6 @@ def hero_figure(key: str, frames: dict[str, pd.DataFrame], lang: str = "en") -> 
         return hero_europe(main, frames["watch"], lang)
     if key == "prices" and not main.empty:
         return hero_kilo(main, lang)
+    if key == "composition" and not main.empty:
+        return composition_bars(main, lang, height=430)
     return None

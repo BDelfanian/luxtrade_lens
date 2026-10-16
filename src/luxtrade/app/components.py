@@ -24,6 +24,18 @@ ORIGIN_LABEL = {
 }
 ASK_PAGE = "app_pages/ask.py"  # relative to the entry point, Home.py
 
+# The team and the status of the app, shown under every page and on "How it works"
+CONTRIBUTORS = (
+    ("Mina Naseh", "PwC"),
+    ("Behrouz Delfanian", "ArcelorMittal"),
+    ("Kasra Eskandarizanjani", "Amfie"),
+)
+POC_NOTE = (
+    "**Proof of concept.** LuxTrade Lens was built with vibe coding (AI-assisted "
+    "development) for the STATEC Hackathon 2026 by *The Outliers*. It is not an official "
+    "STATEC or Eurostat product."
+)
+
 
 @st.cache_resource(show_spinner="Loading the data…")
 def get_assistant() -> Assistant:
@@ -209,6 +221,26 @@ def render_trace(rec: RunRecord) -> None:
         )
 
 
+def refined_question(spec: QuerySpec) -> str:
+    """What a refined run asks, from its spec alone, e.g. 'Refined: trade balance, 2014–2018'.
+
+    The original wording is left out: its year or flow may no longer apply, and the paragraph
+    is written from this question.
+    """
+    period = (
+        spec.period_start
+        if spec.period_start == spec.period_end
+        else f"{spec.period_start}–{spec.period_end}"
+    )
+    parts = [flow_label(spec.flow or "both", "en")]
+    if spec.breakdown not in (None, "none"):
+        parts[0] += f" by {spec.breakdown.replace('_', ' ')}"
+    parts.append(period)
+    if spec.top_n and spec.breakdown not in (None, "none"):
+        parts.append(f"top {spec.top_n}")
+    return "Refined: " + ", ".join(parts)
+
+
 def render_refine(rec: RunRecord, latest_year: int) -> None:
     """Refine controls generated from the spec: re-run without the LLM (SOLUTION_DESIGN §5.6)."""
     spec = _spec(rec)
@@ -257,7 +289,7 @@ def render_refine(rec: RunRecord, latest_year: int) -> None:
             queue(
                 "spec",
                 spec=new.model_dump(),
-                question=f"{rec.question} (refined)",
+                question=refined_question(new),
                 origin="refine",
                 parent=rec.run_id,
             )
@@ -323,9 +355,8 @@ def render_answer(rec: RunRecord, latest_year: int) -> None:
 
     render_refine(rec, latest_year)
     spec = _spec(rec)
-    c1, c2, c3 = st.columns(3)
     projectable = spec and spec.intent in ("time_series", "seasonality") and not rec.custom_sql
-    if projectable and c1.button("Show projection", key=f"proj-{rec.run_id}"):
+    if projectable and st.button("Show projection", key=f"proj-{rec.run_id}"):
         new = spec.model_copy(
             update={
                 "intent": "forecast",
@@ -344,9 +375,3 @@ def render_answer(rec: RunRecord, latest_year: int) -> None:
             origin="projection",
             parent=rec.run_id,
         )
-    if c2.button("Re-verify", key=f"verify-{rec.run_id}"):
-        queue("verify", run_id=rec.run_id)
-    if rec.origin not in ("preset", "overview") and c3.button(
-        "Not what you meant?", key=f"nwm-{rec.run_id}"
-    ):
-        queue("suggest", question=rec.question)

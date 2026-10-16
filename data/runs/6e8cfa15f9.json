@@ -1,0 +1,261 @@
+{
+ "run_id": "6e8cfa15f9",
+ "session_id": "qxqvk3",
+ "turn": 6,
+ "created_at": "2026-10-15T18:33:09+00:00",
+ "origin": "optimiser",
+ "status": "answered",
+ "question": "What were Luxembourg's top 6 imported product categories from Japan in 2015?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": "7650f0eee7",
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "JP"
+  ],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS4",
+  "freq": "A",
+  "period_start": "2015",
+  "period_end": "2015",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 6,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "bar",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2015-01-01' AS DATE)\n  AND period < CAST('2016-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('JP')\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "10f253e875516ba95fbdc744e23b0eb3c8cc08caa3e62f4fac70f17678b523e5",
+ "row_count": 275,
+ "view_kind": "bar",
+ "title": "Main product groups — imports 2015",
+ "frames": {
+  "main": [
+   {
+    "key": "8537",
+    "value": 57507565.0,
+    "share": 25.7038826494,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8501",
+    "value": 29408964.0,
+    "share": 13.1447846817,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electric motors and generators (excl. generating sets)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8414",
+    "value": 22285289.0,
+    "share": 9.9607495686,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Air or vacuum pumps (excl. gas compound elevators and pneumatic elevators and conveyors); air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "8504",
+    "value": 22118302.0,
+    "share": 9.8861121839,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8428",
+    "value": 15401129.0,
+    "share": 6.8837693351,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Lifting and handling machinery",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "8538",
+    "value": 9621106.0,
+    "share": 4.3002999619,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Parts suitable for use solely or principally with the apparatus of heading 8535, 8536 or 8537, n.e.s.",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "OTHER",
+    "value": 67387542.0,
+    "share": 30.1198889502,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 1147.0,
+    "share": 0.0005126691,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "8537",
+   "8501",
+   "8414",
+   "8504",
+   "8428",
+   "8538"
+  ]
+ },
+ "insight": [
+  "Luxembourg's top 6 imported product categories from Japan in 2015 totaled 223.7 million euros in value.",
+  "The largest category was boards, panels, consoles, desks, cabinets and other bases equipped with electric control apparatus, valued at 57.5 million euros, representing 25.7% of imports.",
+  "Electric motors and generators were the second largest category at 29.4 million euros, followed by air or vacuum pumps and related equipment at 22.3 million euros.",
+  "Electrical transformers and static converters ranked fourth with 22.1 million euros, and lifting and handling machinery was fifth at 15.4 million euros.",
+  "These values are nominal and not adjusted for price changes, which limits direct comparison over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2015: 223.7 M€"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy): 57.5 M€, 25.7 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Electric motors and generators (excl. generating sets): 29.4 M€, 13.1 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Air or vacuum pumps (excl. gas compound elevators and pneumatic elevators and conveyors); air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; parts thereof: 22.3 M€, 10.0 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof: 22.1 M€, 9.9 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Lifting and handling machinery: 15.4 M€, 6.9 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 67.4 M€, 30.1 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 1 k €, 0.0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 48.8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-6 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 172,
+   "outcome": "ok",
+   "detail": "275 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 34,
+   "outcome": "ok",
+   "detail": "view=bar; Top-6 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1877,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 989,
+   "output_tokens": 154,
+   "cache_read_tokens": 0,
+   "ms": 1782
+  }
+ ],
+ "code_version": "1b0db9a",
+ "error": null
+}

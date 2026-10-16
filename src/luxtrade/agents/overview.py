@@ -14,7 +14,7 @@ from luxtrade.agents import guard
 from luxtrade.agents.analyse import Analysis, analyse
 from luxtrade.agents.compile_sql import compile_spec
 from luxtrade.agents.defaults import apply_defaults
-from luxtrade.agents.findings import Finding, build_findings
+from luxtrade.agents.findings import Challenge, Finding, build_challenge, build_findings
 from luxtrade.agents.presets import preset
 from luxtrade.agents.spec import QuerySpec
 from luxtrade.agents.sql_guard import check_sql
@@ -303,6 +303,7 @@ class Overview:
     about: dict[str, object]
     limits: list[str]
     findings_hero: str = ""  # the story in one line (agents/findings.py)
+    challenge: Challenge | None = None  # the problem the page answers (first tab)
     findings_intro: str = ""
     findings: list[Finding] = field(default_factory=list)  # the story tab (agents/findings.py)
 
@@ -822,15 +823,17 @@ def build_overview(sem: SemanticLayer, lang: str = "en") -> Overview:
         _peers(sem, lang, first, year),
     ]
     hero, intro, findings = build_findings(sem, lang)
+    about = _about(sem, partner_run.stats, year)
     return Overview(
         language=lang,
         year=year,
         base_year=base,
         kpis=_kpis(trend.frames["main"], partners.frames["concentration"], c5, c5b, base, lang),
         panels=panels,
-        about=_about(sem, partner_run.stats, year),
+        about=about,
         limits=general_limits(sem),
         findings_hero=hero,
         findings_intro=intro,
         findings=findings,
+        challenge=build_challenge(sem, lang, findings, about),
     )

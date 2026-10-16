@@ -110,3 +110,47 @@ def test_render_hierarchical_treemap_with_parent_labels():
     assert fig.data[0].type == "treemap"
     labels = list(fig.data[0].labels)
     assert "Machinery" in labels or any("Machinery" in str(x) for x in fig.data[0].ids)
+
+
+def test_missing_values_format_as_a_dash():
+    from luxtrade.viz.format import fmt_eur, fmt_number, fmt_pct
+
+    assert fmt_pct(None) == fmt_eur(None) == fmt_number(float("nan"), 1, "en") == "–"
+    assert fmt_pct(12.345, "fr") == "12,3 %"
+
+
+def test_a_trade_balance_ranking_draws_in_every_view():
+    """Balance rows have no share (a share of a balance means nothing): no view may crash."""
+    from luxtrade.viz.charts import build_figures
+
+    main = pd.DataFrame(
+        {
+            "key": ["BE", "DE", "US"],
+            "value": [-19.0e9, -7.1e9, 1.2e9],
+            "flow": "balance",
+            "share": [None, None, None],
+            "rank": [1, 2, 3],
+            "kind": "item",
+            "label": ["Belgium", "Germany", "United States"],
+            "iso3": ["BEL", "DEU", "USA"],
+        }
+    )
+    for kind in ("map", "bar", "treemap"):
+        assert build_figures(kind, main, "Trade balance by partner", "en"), kind
+    choropleth = build_figures("map", main, "Trade balance by partner", "en")[0]
+    assert choropleth.data[0].zmid == 0  # deficits and surpluses on either side of zero
+
+
+def test_a_refined_question_describes_the_new_request():
+    from luxtrade.agents.spec import QuerySpec
+    from luxtrade.app.components import refined_question
+
+    spec = QuerySpec(
+        intent="ranking",
+        breakdown="partner",
+        flow="balance",
+        period_start="2014",
+        period_end="2018",
+        top_n=5,
+    )
+    assert refined_question(spec) == "Refined: trade balance by partner, 2014–2018, top 5"

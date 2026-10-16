@@ -1,6 +1,6 @@
 """Key findings: the Overview's story tab, written for decision-makers (SOLUTION_DESIGN §8a).
 
-Four findings and a conclusion on resilience: how diversified trade is, how it absorbed the
+Five findings and a conclusion on resilience: how diversified trade is, how it absorbed the
 crises and where it depends on one route, how European it has become, and what a kilogram of
 imports is worth inside and outside the EU. Same rules as the overview panels: every number
 comes from guarded SQL on the semantic views (shown as evidence), every sentence is a fixed
@@ -33,9 +33,9 @@ _EU = "partner_is_eu27_2020 OR (partner_is_special AND trade_type = 'intra')"
 
 _T = {
     "intro": {
-        "en": "**When the next shock hits, which goods and which supply routes should Luxembourg watch first?** Four findings from the data and a conclusion. Open each one for its charts, queries and method.",
-        "fr": "**Quand le prochain choc surviendra, quels biens et quelles routes d'approvisionnement le Luxembourg doit-il surveiller en priorité ?** Quatre constats tirés des données et une conclusion. Ouvrez chacun pour voir ses graphiques, ses requêtes et sa méthode.",
-        "de": "**Welche Waren und welche Versorgungswege sollte Luxemburg beim nächsten Schock zuerst im Blick haben?** Vier Befunde aus den Daten und ein Fazit. Öffnen Sie jeden für Grafiken, Abfragen und Methode.",
+        "en": "**When the next shock hits, which goods and which supply routes should Luxembourg watch first?** Five findings from the data and a conclusion. Open each one for its charts, queries and method.",
+        "fr": "**Quand le prochain choc surviendra, quels biens et quelles routes d'approvisionnement le Luxembourg doit-il surveiller en priorité ?** Cinq constats tirés des données et une conclusion. Ouvrez chacun pour voir ses graphiques, ses requêtes et sa méthode.",
+        "de": "**Welche Waren und welche Versorgungswege sollte Luxemburg beim nächsten Schock zuerst im Blick haben?** Fünf Befunde aus den Daten und ein Fazit. Öffnen Sie jeden für Grafiken, Abfragen und Methode.",
     },
     # the story in one line, and its plain fallback when the data stops supporting it
     "hero": {
@@ -125,6 +125,163 @@ _T = {
         "en": "In {y}, the price per kg rose by {p}.",
         "fr": "En {y}, le prix par kg a augmenté de {p}.",
         "de": "{y} stieg der Preis je kg um {p}.",
+    },
+    # "why it matters": the analysis paragraph on each card
+    "why": {
+        "en": "**Why it matters.**",
+        "fr": "**Pourquoi c'est important.**",
+        "de": "**Warum das wichtig ist.**",
+    },
+    "a_div": {
+        "en": "Spreading exports over more products cushions a shock in any one sector: the two largest export chapters of {y0} went from {s0} to {s1} of exports. But {nb} of imports now come from three neighbours ({names}), so a disruption at one border would reach most supplies at once.",
+        "fr": "Répartir les exportations sur davantage de produits amortit un choc dans un secteur : les deux premiers chapitres à l'exportation de {y0} sont passés de {s0} à {s1} des exportations. Mais {nb} des importations viennent désormais de trois voisins ({names}) : une perturbation à une frontière toucherait la plupart des approvisionnements à la fois.",
+        "de": "Mehr Warenvielfalt im Export federt einen Schock in einer Branche ab: Die zwei größten Exportkapitel von {y0} veränderten sich von {s0} auf {s1} der Exporte. Doch {nb} der Importe kommen heute aus drei Nachbarländern ({names}) – eine Störung an einer Grenze träfe den Großteil der Versorgung auf einmal.",
+    },
+    "a_shock": {
+        "en": "Across the {n} crises, {name} fell on average {ratio} times as far as all exports ({w} against {a}).",
+        "fr": "Sur les {n} crises, {name} a reculé en moyenne {ratio} fois plus que l'ensemble des exportations ({w} contre {a}).",
+        "de": "Über die {n} Krisen fiel {name} im Schnitt {ratio}-mal so stark wie alle Exporte ({w} gegenüber {a}).",
+    },
+    "a_shock_lag": {
+        "en": "Its {ylag} fall came one year after the {yshock} energy price shock, when fuel cost {p} more per kilo.",
+        "fr": "Sa baisse de {ylag} est survenue un an après le choc des prix de l'énergie de {yshock}, quand le carburant coûtait {p} de plus par kilo.",
+        "de": "Der Rückgang von {ylag} kam ein Jahr nach dem Energiepreisschock von {yshock}, als Brennstoff je Kilo {p} mehr kostete.",
+    },
+    "a_eu": {
+        "en": "With {eu1} of imports from EU countries, the single market (open borders, cross-border transport, common rules) is Luxembourg's main supply line.",
+        "fr": "Avec {eu1} des importations venant de l'UE, le marché unique (frontières ouvertes, transport transfrontalier, règles communes) est la principale ligne d'approvisionnement du Luxembourg.",
+        "de": "Mit {eu1} der Importe aus EU-Ländern ist der Binnenmarkt (offene Grenzen, grenzüberschreitender Verkehr, gemeinsame Regeln) Luxemburgs wichtigste Versorgungslinie.",
+    },
+    "a_eu_swap": {
+        "en": "Outside the EU, partners changed places: China went from {c0} to {c1} of imports, Japan from {j0} to {j1}.",
+        "fr": "Hors UE, les partenaires ont changé de place : la Chine est passée de {c0} à {c1} des importations, le Japon de {j0} à {j1}.",
+        "de": "Außerhalb der EU haben die Partner die Plätze getauscht: China ging von {c0} auf {c1} der Importe, Japan von {j0} auf {j1}.",
+    },
+    "a_price": {
+        "en": "Imports from EU partners are heavy and cheap per kilo; imports from further away are light and valuable.",
+        "fr": "Les importations de l'UE sont lourdes et bon marché au kilo ; celles venant de plus loin sont légères et de grande valeur.",
+        "de": "Importe aus der EU sind schwer und je Kilo günstig, Importe von weiter her leicht und wertvoll.",
+    },
+    "a_price_fuel": {
+        "en": "A price shock shows in value before mass: in {y}, fuel imports rose by {v} in value but only by {q} in mass.",
+        "fr": "Un choc de prix se voit dans la valeur avant la masse : en {y}, les importations de carburants ont augmenté de {v} en valeur, mais de {q} seulement en masse.",
+        "de": "Ein Preisschock zeigt sich im Wert vor der Menge: {y} stiegen die Brennstoffimporte wertmäßig um {v}, mengenmäßig nur um {q}.",
+    },
+    # 5. main goods over time
+    "n_comp": {
+        "en": "Main goods over time",
+        "fr": "Principales marchandises dans le temps",
+        "de": "Wichtigste Waren im Zeitverlauf",
+    },
+    "h_comp": {
+        "en": "{name}: from {s0} of {flow} in {y0} to {s1} in {y1}",
+        "fr": "{name} : de {s0} des {flow} en {y0} à {s1} en {y1}",
+        "de": "{name}: von {s0} der {flow} im Jahr {y0} auf {s1} im Jahr {y1}",
+    },
+    "t_comp": {
+        "en": "Top 3 export chapters in {y1}: {exports}. Top 3 import chapters: {imports}.",
+        "fr": "Les 3 premiers chapitres à l'exportation en {y1} : {exports}. À l'importation : {imports}.",
+        "de": "Die 3 größten Exportkapitel {y1}: {exports}. Die 3 größten Importkapitel: {imports}.",
+    },
+    "s_comp": {
+        "en": "Each bar is one year. A colour is a chapter; its darkest shade is the chapter's largest heading in {y1}, the next two are lighter, and the palest is the rest of the chapter (including confidential trade). Lengths are % of all exports or imports.",
+        "fr": "Chaque barre est une année. Une couleur est un chapitre ; sa teinte la plus foncée est la première position du chapitre en {y1}, les deux suivantes sont plus claires, et la plus pâle est le reste du chapitre (commerce confidentiel compris). Les longueurs sont en % du total des exportations ou des importations.",
+        "de": "Jeder Balken ist ein Jahr. Eine Farbe ist ein Kapitel; der dunkelste Ton ist die größte Position des Kapitels im Jahr {y1}, die nächsten zwei sind heller, der hellste ist der Rest des Kapitels (einschließlich vertraulichem Handel). Die Längen sind % aller Exporte bzw. Importe.",
+    },
+    "a_comp": {
+        "en": "The top three chapters made up {e0} of exports in {y0} and {e1} in {y1}; for imports, {i0} and {i1}. The fastest riser among their headings: {name}, from {s0} to {s1} of {flow}.",
+        "fr": "Les trois premiers chapitres représentaient {e0} des exportations en {y0} et {e1} en {y1} ; pour les importations, {i0} et {i1}. Plus forte progression parmi leurs positions : {name}, de {s0} à {s1} des {flow}.",
+        "de": "Die drei größten Kapitel machten {y0} {e0} der Exporte aus und {y1} {e1}; bei den Importen {i0} und {i1}. Am stärksten gewachsen unter ihren Positionen: {name}, von {s0} auf {s1} der {flow}.",
+    },
+    "m_comp": {
+        "en": "{name}: share of {flow} since {y0}",
+        "fr": "{name} : part des {flow} depuis {y0}",
+        "de": "{name}: Anteil an den {flow} seit {y0}",
+    },
+    "rest_chapter": {
+        "en": "rest of the chapter (incl. confidential)",
+        "fr": "reste du chapitre (y c. confidentiel)",
+        "de": "Rest des Kapitels (inkl. vertraulich)",
+    },
+    "c_comp": {
+        "en": "Top 3 chapters and their top 3 headings, share of trade, {years}",
+        "fr": "3 premiers chapitres et leurs 3 premières positions, part des échanges, {years}",
+        "de": "3 größte Kapitel und ihre 3 größten Positionen, Anteil am Handel, {years}",
+    },
+    "lim_hs4": {
+        "en": "HS4 headings can change when the Harmonized System is revised (2007, 2012, 2017, 2022), so a heading's long series may break. Confidential trade stays in the rest of its chapter.",
+        "fr": "Les positions SH4 peuvent changer lors des révisions du Système harmonisé (2007, 2012, 2017, 2022) : la série longue d'une position peut être rompue. Le commerce confidentiel reste dans le reste de son chapitre.",
+        "de": "HS4-Positionen können sich bei Revisionen des Harmonisierten Systems ändern (2007, 2012, 2017, 2022), lange Reihen einer Position können daher brechen. Vertraulicher Handel bleibt im Rest seines Kapitels.",
+    },
+    "x_comp": {
+        "en": "How have the top 3 export chapters developed since {start}?",
+        "fr": "Comment les 3 premiers chapitres à l'exportation ont-ils évolué depuis {start} ?",
+        "de": "Wie haben sich die 3 größten Exportkapitel seit {start} entwickelt?",
+    },
+    # the challenge (first tab and first slide)
+    "ch_kicker": {"en": "The challenge", "fr": "Le défi", "de": "Die Herausforderung"},
+    "ch_statement": {
+        "en": "Luxembourg trades {total} of goods a year with {partners} partner countries. When the next shock hits, which goods and which supply routes should it watch first?",
+        "fr": "Le Luxembourg échange {total} de marchandises par an avec {partners} pays partenaires. Quand le prochain choc surviendra, quels biens et quelles routes d'approvisionnement doit-il surveiller en priorité ?",
+        "de": "Luxemburg handelt jährlich Waren im Wert von {total} mit {partners} Partnerländern. Welche Waren und welche Versorgungswege sollte es beim nächsten Schock zuerst im Blick haben?",
+    },
+    "ch_open_t": {"en": "Small and open", "fr": "Petit et ouvert", "de": "Klein und offen"},
+    "ch_open": {
+        "en": "In {year}, exports reached {exp} and imports {imp}: {gap} more bought than sold. {nb} of it is traded with the three neighbours.",
+        "fr": "En {year}, les exportations ont atteint {exp} et les importations {imp} : {gap} de plus achetés que vendus. {nb} sont échangés avec les trois pays voisins.",
+        "de": "{year} erreichten die Exporte {exp} und die Importe {imp}: {gap} mehr gekauft als verkauft. {nb} davon entfallen auf die drei Nachbarländer.",
+    },
+    "ch_shocks_t": {
+        "en": "Three shocks in 15 years",
+        "fr": "Trois chocs en 15 ans",
+        "de": "Drei Schocks in 15 Jahren",
+    },
+    "ch_shocks": {
+        "en": "The financial crisis, COVID-19 and the energy crisis each hit trade differently; exports fell by up to {worst} in a single year.",
+        "fr": "La crise financière, la COVID-19 et la crise énergétique ont chacune touché le commerce différemment ; les exportations ont reculé jusqu'à {worst} en une seule année.",
+        "de": "Finanzkrise, COVID-19 und Energiekrise trafen den Handel jeweils anders; die Exporte fielen in einem einzigen Jahr um bis zu {worst}.",
+    },
+    "ch_evidence_t": {
+        "en": "Decisions need evidence",
+        "fr": "Décider sur des preuves",
+        "de": "Entscheiden auf Basis von Belegen",
+    },
+    "ch_evidence": {
+        "en": "The official data exists, but it is vast and technical: {records} records, {products} products and {partners} partners since {first}.",
+        "fr": "Les données officielles existent, mais elles sont vastes et techniques : {records} lignes, {products} produits et {partners} partenaires depuis {first}.",
+        "de": "Die amtlichen Daten gibt es, aber sie sind umfangreich und technisch: {records} Datensätze, {products} Produkte und {partners} Partner seit {first}.",
+    },
+    "ch_task": {
+        "en": "**Our task:** turn one large public dataset into evidence that shows decision-makers where Luxembourg's trade in goods is exposed, and how to prepare.",
+        "fr": "**Notre mission :** transformer un vaste jeu de données public en preuves qui montrent aux décideurs où le commerce de biens du Luxembourg est exposé, et comment s'y préparer.",
+        "de": "**Unsere Aufgabe:** einen großen öffentlichen Datensatz in Belege verwandeln, die Entscheidungsträgern zeigen, wo Luxemburgs Warenhandel verwundbar ist und wie man sich vorbereitet.",
+    },
+    "ch_approach": {"en": "Our approach", "fr": "Notre démarche", "de": "Unser Vorgehen"},
+    "ch_a1_t": {
+        "en": "One official dataset",
+        "fr": "Un seul jeu de données officiel",
+        "de": "Ein amtlicher Datensatz",
+    },
+    "ch_a1": {
+        "en": "Eurostat Comext DS-045409: Luxembourg's monthly trade in goods since {first}, by partner and product, used as published.",
+        "fr": "Eurostat Comext DS-045409 : le commerce mensuel de biens du Luxembourg depuis {first}, par partenaire et produit, utilisé tel que publié.",
+        "de": "Eurostat Comext DS-045409: Luxemburgs monatlicher Warenhandel seit {first}, nach Partner und Produkt, so wie veröffentlicht.",
+    },
+    "ch_a2_t": {"en": "Five lenses", "fr": "Cinq angles", "de": "Fünf Blickwinkel"},
+    "ch_a2": {
+        "en": "Diversification, shocks, Europe, price vs volume and the main goods: each measured, charted and checked.",
+        "fr": "Diversification, chocs, Europe, prix et volume, principales marchandises : chacun mesuré, illustré et vérifié.",
+        "de": "Diversifizierung, Schocks, Europa, Preis und Menge, wichtigste Waren: jeweils gemessen, dargestellt und geprüft.",
+    },
+    "ch_a3_t": {
+        "en": "Evidence you can check",
+        "fr": "Des preuves vérifiables",
+        "de": "Überprüfbare Belege",
+    },
+    "ch_a3": {
+        "en": "Every number comes from SQL shown on the page; the assistant answers new questions the same way, in English, French and German.",
+        "fr": "Chaque chiffre provient d'une requête SQL affichée sur la page ; l'assistant répond aux nouvelles questions de la même façon, en français, anglais et allemand.",
+        "de": "Jede Zahl stammt aus einer auf der Seite gezeigten SQL-Abfrage; der Assistent beantwortet neue Fragen genauso, auf Deutsch, Englisch und Französisch.",
     },
     "all_exports": {"en": "All exports", "fr": "Toutes les exportations", "de": "Alle Exporte"},
     "k_vs": {"en": "vs {year}", "fr": "vs {year}", "de": "ggü. {year}"},
@@ -577,6 +734,7 @@ class Finding:
     note: str = ""
     headline: str = ""  # the engaging line on the card; ``title`` is its evidence
     tiles: list[tuple[str, str]] = field(default_factory=list)  # conclusion: (title, text)
+    analysis: str = ""  # "why it matters": what the numbers mean, on the card
 
 
 def _t(key: str, lang: str, **values: object) -> str:
@@ -587,6 +745,11 @@ def _q(sem: SemanticLayer, sql: str) -> tuple[pd.DataFrame, str]:
     """Run guarded SQL; return the rows and the SQL as shown in the evidence."""
     checked = check_sql(sql)
     return sem.query(checked), checked
+
+
+def _why(lang: str, text: str) -> str:
+    """'**Why it matters.** …' (empty when there is nothing to say)."""
+    return f"{_T['why'][lang]} {text}" if text else ""
 
 
 def _pct(value: float, lang: str) -> str:
@@ -799,6 +962,18 @@ ORDER BY year, share DESC""",
         metric_delta=f"HHI {_hhi(hx0, lang)} → {_hhi(hx1, lang)}",
         delta_arrow="off",
         headline=_T["h_div" if story else "h_div_n"][lang],
+        analysis=_why(
+            lang,
+            _t(
+                "a_div",
+                lang,
+                y0=y0,
+                s0=_pct(then_now.get(y0, 0.0), lang),
+                s1=_pct(then_now.get(y1, 0.0), lang),
+                nb=_pct(nbm1, lang),
+                names=nb_names,
+            ),
+        ),
         explore_question=question,
         explore_spec=explore,
     )
@@ -1005,6 +1180,30 @@ ORDER BY year, value_eur DESC""",
         ],
         columns=["episode", "series", "change"],
     )
+    # how much further the weak spot fell than all exports, on average over the crises
+    by_series = episodes_frame.groupby("series", sort=False)["change"].mean()
+    w_avg = by_series.get(label[weak], 0.0)
+    a_avg = by_series.get(_T["all_exports"][lang], 0.0)
+    shock_analysis = ""
+    if episodes and a_avg < 0 and w_avg < a_avg:
+        ratio = w_avg / a_avg
+        shock_analysis = _t(
+            "a_shock",
+            lang,
+            n=len(episodes),
+            name=label[weak],
+            ratio=fmt_number(ratio, 0 if ratio >= 10 else 1, lang),
+            w=fmt_pct(w_avg, lang, signed=True),
+            a=fmt_pct(a_avg, lang, signed=True),
+        )
+    energy = next((b for k, _, b in episodes if k == "energy"), None)
+    if energy is not None:
+        fell = episodes_frame[
+            (episodes_frame["series"] == label[weak])
+            & (episodes_frame["episode"] == _t("ep_energy", lang, y=energy))
+        ]["change"]
+        if (fell < 0).any():
+            ctx.update(energy_lag=energy)  # the fuel sentence is added once prices are known
     ctx.update(
         shock=shock_text,
         weak_name=label[weak],
@@ -1053,6 +1252,7 @@ ORDER BY year, value_eur DESC""",
         metric_delta=changes_text if all_fell else None,
         delta_arrow="off",
         headline=_t("h_shock", lang, name=label[weak]) if all_fell else _T["h_shock_n"][lang],
+        analysis=_why(lang, shock_analysis),
         explore_question=_t("x_chapter", lang, name=label[weak], start=first),
         explore_spec=explore,
     )
@@ -1143,6 +1343,17 @@ ORDER BY partner, flow, year""",
     eu_lines = eu.rename(columns={"year": "period", "share": "value"})
     ctx.update(eu1=m1)
     china = watch[(watch["partner"] == "CN") & (watch["flow"] == "import")]
+    japan = watch[(watch["partner"] == "JP") & (watch["flow"] == "import")]
+    swap = ""
+    if all(y in set(d["year"]) for d in (china, japan) for y in (y0, y1)):
+        swap = _t(
+            "a_eu_swap",
+            lang,
+            c0=_pct(_cell(china, "share", year=y0), lang),
+            c1=_pct(_cell(china, "share", year=y1), lang),
+            j0=_pct(_cell(japan, "share", year=y0), lang),
+            j1=_pct(_cell(japan, "share", year=y1), lang),
+        )
     china_down = (
         y0 in set(china["year"])
         and y1 in set(china["year"])
@@ -1183,6 +1394,7 @@ ORDER BY partner, flow, year""",
         limits=[guard.make("L06", "warn").message, _T["lim_consign"][lang]],
         metric_label=_t("e_m", lang, y1=y1),
         headline=_T["h_eu" if m1 > m0 and china_down else "h_eu_n"][lang],
+        analysis=_why(lang, " ".join(t for t in (_t("a_eu", lang, eu1=_pct(m1, lang)), swap) if t)),
         metric_value=_pct(m1, lang),
         metric_delta=_pp(m0, m1, lang, y0),
         explore_question=_t("x_eu", lang, start=first),
@@ -1244,9 +1456,16 @@ ORDER BY year""",
         _T["v_f_read"][lang],
     ]
     base = ENERGY_SHOCK - 1
+    fuel_text = ""
     f = fuel.set_index("year")
     if base in f.index and ENERGY_SHOCK in f.index:
         r0, r1 = f.loc[base], f.loc[ENERGY_SHOCK]
+        dv = 100 * (r1["value_eur"] / r0["value_eur"] - 1)
+        dq = 100 * (r1["qty_kg"] / r0["qty_kg"] - 1)
+        if dv > dq > 0:
+            fuel_text = _t(
+                "a_price_fuel", lang, y=ENERGY_SHOCK, v=fmt_pct(dv, lang), q=fmt_pct(dq, lang)
+            )
         facts.append(
             _t(
                 "v_f_fuel",
@@ -1329,6 +1548,7 @@ ORDER BY year""",
         limits=[guard.make("L06", "warn").message, _T["lim_uv"][lang]],
         metric_label=_T["v_m"][lang],
         headline=_t("h_price", lang, ratio=ratio_text) if ratio >= 2 else _T["h_price_n"][lang],
+        analysis=_why(lang, " ".join(t for t in (_T["a_price"][lang], fuel_text) if t)),
         metric_value=f"{ratio_text} ×",
         metric_delta=f"{_eur_kg(ex, lang)} vs {_eur_kg(in_, lang)} / kg",
         delta_arrow="off",
@@ -1337,7 +1557,192 @@ ORDER BY year""",
     )
 
 
-# --- 5. conclusion ----------------------------------------------------------------------------
+# --- 5. main goods over time ------------------------------------------------------------------
+TOP_CHAPTERS, TOP_HEADINGS = 3, 3
+
+
+def _composition(sem: SemanticLayer, lang: str, years: list[int]) -> Finding:
+    """Top chapters per flow and their top headings, each as % of the flow, at the snapshots.
+
+    The chapters and headings are those of the latest year, tracked back, so every bar compares
+    the same goods; confidential (masked) headings stay in the rest of their chapter.
+    """
+    y0, y1 = years[0], years[-1]
+    chapters, chapters_sql = _q(
+        sem,
+        f"""SELECT year, flow, hs2, sum(value_eur) AS value_eur
+FROM v_lu_trade_hs2
+WHERE year IN ({_in(years)})
+GROUP BY year, flow, hs2""",
+    )
+    totals = chapters.groupby(["year", "flow"])["value_eur"].sum()
+    chapters["share"] = (
+        100
+        * chapters["value_eur"]
+        / [totals[(y, fl)] for y, fl in zip(chapters["year"], chapters["flow"], strict=True)]
+    )
+    top = {
+        flow: chapters[(chapters["flow"] == flow) & (chapters["year"] == y1)]
+        .nlargest(TOP_CHAPTERS, "share")["hs2"]
+        .tolist()
+        for flow in ("export", "import")
+    }
+    where = " OR ".join(
+        f"(flow = '{flow}' AND hs2 IN ({', '.join(repr(c) for c in codes)}))"
+        for flow, codes in top.items()
+    )
+    headings, headings_sql = _q(
+        sem,
+        f"""SELECT year, flow, hs2, hs4, sum(value_eur) AS value_eur
+FROM v_lu_trade
+WHERE year IN ({_in(years)}) AND ({where})
+GROUP BY year, flow, hs2, hs4""",
+    )
+    headings["share"] = (
+        100
+        * headings["value_eur"]
+        / [totals[(y, fl)] for y, fl in zip(headings["year"], headings["flow"], strict=True)]
+    )
+
+    def share(frame: pd.DataFrame, col: str, code: str, flow: str, year: int) -> float:
+        part = frame[(frame[col] == code) & (frame["flow"] == flow) & (frame["year"] == year)]
+        return float(part["share"].sum())
+
+    rows = []  # one row per flow × year × chapter × slot (3 headings + the rest)
+    picked = []  # (flow, hs4) of the headings shown
+    for flow, codes in top.items():
+        for hs2 in codes:
+            latest = headings[
+                (headings["flow"] == flow)
+                & (headings["hs2"] == hs2)
+                & (headings["year"] == y1)
+                & ~headings["hs4"].str.contains("X")
+            ].nlargest(TOP_HEADINGS, "value_eur")["hs4"]
+            picked += [(flow, h) for h in latest]
+            for year in years:
+                total = share(chapters, "hs2", hs2, flow, year)
+                shown = 0.0
+                for slot, hs4 in enumerate(latest, start=1):
+                    value = share(headings, "hs4", hs4, flow, year)
+                    shown += value
+                    rows.append((flow, year, hs2, slot, hs4, value))
+                rows.append((flow, year, hs2, 0, "", max(total - shown, 0.0)))
+    main = pd.DataFrame(rows, columns=["flow", "year", "hs2", "slot", "hs4", "share"])
+    main["chapter"] = main["hs2"].map(lambda c: sem.label(c, "product", lang))
+    main["label"] = [
+        sem.label(h, "product", lang) if h else _T["rest_chapter"][lang] for h in main["hs4"]
+    ]
+
+    # headline: the heading that moved most; analysis: the fastest riser among them
+    moves = pd.DataFrame(
+        [
+            (flow, h, share(headings, "hs4", h, flow, y0), share(headings, "hs4", h, flow, y1))
+            for flow, h in picked
+        ],
+        columns=["flow", "hs4", "s0", "s1"],
+    ).assign(change=lambda d: d["s1"] - d["s0"])
+    mover = moves.loc[moves["change"].abs().idxmax()]
+    riser = moves.loc[moves["change"].idxmax()]
+
+    def flow_text(flow: str) -> str:
+        return flow_label(flow, lang)
+
+    def chapter_list(flow: str) -> str:
+        return ", ".join(
+            f"{sem.label(c, 'product', lang)} ({_pct(share(chapters, 'hs2', c, flow, y1), lang)})"
+            for c in top[flow]
+        )
+
+    def top_sum(flow: str, year: int) -> str:
+        return _pct(sum(share(chapters, "hs2", c, flow, year) for c in top[flow]), lang)
+
+    explore = QuerySpec(
+        language=lang,
+        intent="time_series",
+        freq="A",
+        flow="export",
+        breakdown="product",
+        products=top["export"],
+        period_start=str(y0),
+        period_end=str(y1),
+    )
+    return Finding(
+        key="composition",
+        name=_T["n_comp"][lang],
+        title=_t(
+            "t_comp", lang, y1=y1, exports=chapter_list("export"), imports=chapter_list("import")
+        ),
+        summary=_t("s_comp", lang, y1=y1),
+        facts=[
+            _t(
+                "h_comp",
+                lang,
+                name=sem.label(r.hs4, "product", lang),
+                s0=_pct(r.s0, lang),
+                s1=_pct(r.s1, lang),
+                flow=flow_text(r.flow),
+                y0=y0,
+                y1=y1,
+            )
+            + "."
+            for r in moves.sort_values("change").itertuples()
+        ],
+        chart_titles=[_t("c_comp", lang, years=", ".join(str(y) for y in years))],
+        frames={"main": main},
+        sql=[chapters_sql, headings_sql],
+        methods=[
+            f"chapters and headings = the {TOP_CHAPTERS} largest HS2 chapters of each flow in "
+            f"{y1}, and the {TOP_HEADINGS} largest disclosed HS4 headings of each, tracked back",
+            "share = value ÷ all exports (or imports) of that year",
+            "rest of the chapter = chapter share − its three headings (confidential codes included)",
+        ],
+        limits=[guard.make("L06", "warn").message, _T["lim_hs4"][lang]],
+        headline=_t(
+            "h_comp",
+            lang,
+            name=sem.label(mover["hs4"], "product", lang),
+            s0=_pct(mover["s0"], lang),
+            s1=_pct(mover["s1"], lang),
+            flow=flow_text(mover["flow"]),
+            y0=y0,
+            y1=y1,
+        ),
+        analysis=_why(
+            lang,
+            _t(
+                "a_comp",
+                lang,
+                e0=top_sum("export", y0),
+                e1=top_sum("export", y1),
+                i0=top_sum("import", y0),
+                i1=top_sum("import", y1),
+                y0=y0,
+                y1=y1,
+                name=sem.label(riser["hs4"], "product", lang),
+                s0=_pct(riser["s0"], lang),
+                s1=_pct(riser["s1"], lang),
+                flow=flow_text(riser["flow"]),
+            ),
+        ),
+        metric_label=_t(
+            "m_comp",
+            lang,
+            name=sem.label(mover["hs4"], "product", lang),
+            flow=flow_text(mover["flow"]),
+            y0=y0,
+        ),
+        metric_value=(
+            ("+" if mover["change"] >= 0 else "−")
+            + f"{fmt_number(abs(mover['change']), 1, lang)} {_T['k_pp'][lang]}"
+        ),
+        metric_delta=f"{_pct(mover['s0'], lang)} → {_pct(mover['s1'], lang)}",
+        delta_arrow="off",
+        explore_question=_t("x_comp", lang, start=y0),
+        explore_spec=explore,
+    )
+
+
+# --- 6. conclusion ----------------------------------------------------------------------------
 
 
 def _conclusion(lang: str, ctx: dict[str, object]) -> Finding:
@@ -1406,7 +1811,97 @@ def build_findings(sem: SemanticLayer, lang: str = "en") -> tuple[str, str, list
         _shocks(sem, lang, first, year, ctx),
         _europe(sem, lang, first, years, ctx),
         _prices(sem, lang, first, years, ctx),
+        _composition(sem, lang, years),
     ]
+    if "energy_lag" in ctx and "fuel_rise" in ctx:
+        lag = _t(
+            "a_shock_lag", lang, ylag=ctx["energy_lag"], yshock=ENERGY_SHOCK, p=ctx["fuel_rise"]
+        )
+        shocks = findings[1]
+        shocks.analysis = f"{shocks.analysis} {lag}" if shocks.analysis else _why(lang, lag)
     findings.append(_conclusion(lang, ctx))
     hero = _T["hero" if ctx.get("story") else "hero_n"][lang]
     return hero, _T["intro"][lang], findings
+
+
+@dataclass
+class Challenge:
+    """The problem the Overview answers: first tab and first slide (texts filled from the data)."""
+
+    kicker: str
+    statement: str
+    context: list[tuple[str, str, str]]  # (tint key, title, text)
+    task: str
+    approach_title: str
+    approach: list[tuple[str, str, str]]  # (icon, title, text)
+
+
+def build_challenge(
+    sem: SemanticLayer, lang: str, findings: list[Finding], about: dict[str, object]
+) -> Challenge:
+    """Frame the decision question with the latest numbers: trade size, shocks, data scale."""
+    year = sem.coverage.latest_complete_year
+    nb_codes = ", ".join(f"'{c}'" for c in NEIGHBOURS)
+    row = _q(
+        sem,
+        f"""SELECT sum(value_eur) FILTER (WHERE flow = 'export') AS exports,
+       sum(value_eur) FILTER (WHERE flow = 'import') AS imports,
+       sum(value_eur) FILTER (WHERE partner IN ({nb_codes})) AS neighbours,
+       count(DISTINCT partner) FILTER (WHERE NOT partner_is_special AND value_eur > 0)
+         AS partners
+FROM v_lu_trade_hs2
+WHERE year = {year}""",
+    )[0].iloc[0]
+    exp, imp = float(row["exports"] or 0.0), float(row["imports"] or 0.0)
+    nb_share = 100 * float(row["neighbours"] or 0.0) / (exp + imp) if exp + imp else 0.0
+    partners = int(row["partners"])
+    episodes = next((f.frames.get("episodes") for f in findings if f.key == "shocks"), None)
+    worst = (
+        float(episodes.loc[episodes["series"] == _T["all_exports"][lang], "change"].min())
+        if episodes is not None and not episodes.empty
+        else 0.0
+    )
+    first = about["first_period"].year
+    return Challenge(
+        kicker=_T["ch_kicker"][lang],
+        statement=_t("ch_statement", lang, total=fmt_eur(exp + imp, lang), partners=partners),
+        context=[
+            (
+                "diversification",
+                _T["ch_open_t"][lang],
+                _t(
+                    "ch_open",
+                    lang,
+                    year=year,
+                    exp=fmt_eur(exp, lang),
+                    imp=fmt_eur(imp, lang),
+                    gap=fmt_eur(abs(imp - exp), lang),
+                    nb=_pct(nb_share, lang),
+                ),
+            ),
+            (
+                "shocks",
+                _T["ch_shocks_t"][lang],
+                _t("ch_shocks", lang, worst=fmt_pct(abs(worst), lang)),
+            ),
+            (
+                "europe",
+                _T["ch_evidence_t"][lang],
+                _t(
+                    "ch_evidence",
+                    lang,
+                    records=fmt_number(about["records"], 0, lang),
+                    products=fmt_number(about["products"], 0, lang),
+                    partners=about["partners"],
+                    first=first,
+                ),
+            ),
+        ],
+        task=_T["ch_task"][lang],
+        approach_title=_T["ch_approach"][lang],
+        approach=[
+            (":material/database:", _T["ch_a1_t"][lang], _t("ch_a1", lang, first=first)),
+            (":material/insights:", _T["ch_a2_t"][lang], _T["ch_a2"][lang]),
+            (":material/verified:", _T["ch_a3_t"][lang], _T["ch_a3"][lang]),
+        ],
+    )

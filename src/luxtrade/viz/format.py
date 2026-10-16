@@ -1,5 +1,6 @@
 """Locale-aware number, period and flow formatting (EN/FR/DE) for charts, facts, grounding."""
 
+import math
 from datetime import date
 
 _UNITS = {
@@ -25,8 +26,17 @@ MONTHS = {
 }
 
 
-def fmt_number(value: float, decimals: int, lang: str) -> str:
-    """Format with the locale's thousands and decimal separators."""
+MISSING = "–"  # how a missing value is shown (e.g. a share of a trade balance)
+
+
+def _missing(value: object) -> bool:
+    return value is None or (isinstance(value, float) and math.isnan(value))
+
+
+def fmt_number(value: float | None, decimals: int, lang: str) -> str:
+    """Format with the locale's thousands and decimal separators ('–' when missing)."""
+    if _missing(value):
+        return MISSING
     text = f"{value:,.{decimals}f}"
     if lang == "fr":
         return text.replace(",", " ").replace(".", ",")
@@ -35,8 +45,10 @@ def fmt_number(value: float, decimals: int, lang: str) -> str:
     return text
 
 
-def fmt_eur(value: float, lang: str = "en") -> str:
+def fmt_eur(value: float | None, lang: str = "en") -> str:
     """Format euros with a readable unit: '16.25 bn €', '16,25 Mrd. €', '967.0 M€'."""
+    if _missing(value):
+        return MISSING
     a = abs(value)
     if a >= 1e9:
         return f"{fmt_number(value / 1e9, 2, lang)} {_UNITS['bn'][lang]}"
@@ -45,8 +57,10 @@ def fmt_eur(value: float, lang: str = "en") -> str:
     return f"{fmt_number(value / 1e3, 0, lang)} {_UNITS['k'][lang]}"
 
 
-def fmt_pct(value: float, lang: str = "en", decimals: int = 1, signed: bool = False) -> str:
-    """Format a percentage: '24.6 %' / '24,6 %', optionally with a sign."""
+def fmt_pct(value: float | None, lang: str = "en", decimals: int = 1, signed: bool = False) -> str:
+    """Format a percentage: '24.6 %' / '24,6 %', optionally with a sign ('–' when missing)."""
+    if _missing(value):
+        return MISSING
     text = fmt_number(abs(value) if signed else value, decimals, lang)
     if signed:
         text = ("+" if value >= 0 else "−") + text

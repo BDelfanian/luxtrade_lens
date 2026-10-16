@@ -1,0 +1,513 @@
+{
+ "run_id": "3a6b26c7c2",
+ "session_id": "qxqvk3",
+ "turn": 7,
+ "created_at": "2026-10-15T18:34:08+00:00",
+ "origin": "refine",
+ "status": "answered",
+ "question": "What were Luxembourg's top 6 imported product categories from Japan in 2015? (refined)",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": "6e8cfa15f9",
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "JP"
+  ],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS4",
+  "freq": "A",
+  "period_start": "2015",
+  "period_end": "2015",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 6,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "bar",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2015-01-01' AS DATE)\n  AND period < CAST('2016-01-01' AS DATE)\n  AND partner IN ('JP')\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "c84fcb2c2c40dd751fab5e5a536710232748cea77659c304d2e22ff1be035dcd",
+ "row_count": 487,
+ "view_kind": "bar",
+ "title": "Main product groups — 2015",
+ "frames": {
+  "main": [
+   {
+    "key": "5603",
+    "value": 40895743.0,
+    "share": 66.6964091857,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Nonwovens",
+    "parent": "56",
+    "parent_label": "Wadding, felt and nonwovens"
+   },
+   {
+    "key": "7410",
+    "value": 2180187.0,
+    "share": 3.555642558,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Copper foil \"whether or not printed or backed with paper, paperboard, plastics or similar backing materials\", of a thickness \"excl. any backing\" of <= 0,15 mm (excl. stamping foils of heading 3212, metal yarns and metallised yarns and foil made up as christmas tree decorating material)",
+    "parent": "74",
+    "parent_label": "Copper and articles thereof"
+   },
+   {
+    "key": "8475",
+    "value": 2146782.0,
+    "share": 3.5011627177,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machines for assembling electric or electronic lamps, tubes or valves or flashbulbs, in glass envelopes; machines for manufacturing or hot working glass or glassware (excl. furnaces and heating apparatus for manufacturing toughened glass); parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "6403",
+    "value": 1927809.0,
+    "share": 3.1440421047,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Leather footwear",
+    "parent": "64",
+    "parent_label": "Footwear"
+   },
+   {
+    "key": "9031",
+    "value": 1902626.0,
+    "share": 3.1029714321,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Measuring or checking instruments, appliances and machines not elsewhere specified in chapter 90; profile projectors",
+    "parent": "90",
+    "parent_label": "Optical, measuring and medical instruments"
+   },
+   {
+    "key": "2402",
+    "value": 1694107.0,
+    "share": 2.7629001306,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Cigars, cheroots, cigarillos and cigarettes of tobacco or of tobacco substitutes",
+    "parent": "24",
+    "parent_label": "Tobacco and manufactured tobacco substitutes"
+   },
+   {
+    "key": "OTHER",
+    "value": 10568525.0,
+    "share": 17.2360890445,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 480.0,
+    "share": 0.0007828266,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "8537",
+    "value": 57507565.0,
+    "share": 25.7038826494,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8501",
+    "value": 29408964.0,
+    "share": 13.1447846817,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electric motors and generators (excl. generating sets)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8414",
+    "value": 22285289.0,
+    "share": 9.9607495686,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Air or vacuum pumps (excl. gas compound elevators and pneumatic elevators and conveyors); air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "8504",
+    "value": 22118302.0,
+    "share": 9.8861121839,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8428",
+    "value": 15401129.0,
+    "share": 6.8837693351,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Lifting and handling machinery",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "8538",
+    "value": 9621106.0,
+    "share": 4.3002999619,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Parts suitable for use solely or principally with the apparatus of heading 8535, 8536 or 8537, n.e.s.",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "OTHER",
+    "value": 67387542.0,
+    "share": 30.1198889502,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 1147.0,
+    "share": 0.0005126691,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "8537",
+    "value": 57593762.0,
+    "share": 20.2049840128,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "5603",
+    "value": 40895888.0,
+    "share": 14.3470531275,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Nonwovens",
+    "parent": "56",
+    "parent_label": "Wadding, felt and nonwovens"
+   },
+   {
+    "key": "8501",
+    "value": 29524746.0,
+    "share": 10.3578408528,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Electric motors and generators (excl. generating sets)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8414",
+    "value": 22662567.0,
+    "share": 7.9504583139,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Air or vacuum pumps (excl. gas compound elevators and pneumatic elevators and conveyors); air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "8504",
+    "value": 22137373.0,
+    "share": 7.7662102981,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "key": "8428",
+    "value": 15463390.0,
+    "share": 5.4248504853,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "total",
+    "label": "Lifting and handling machinery",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "key": "OTHER",
+    "value": 96767950.0,
+    "share": 33.9480321271,
+    "rank": null,
+    "kind": "other",
+    "flow": "total",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 1627.0,
+    "share": 0.0005707825,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "total",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "5603",
+   "8537",
+   "7410",
+   "8501",
+   "8414",
+   "8475",
+   "8504",
+   "6403",
+   "8428",
+   "9031"
+  ]
+ },
+ "insight": [
+  "Luxembourg's top 6 imported product categories from Japan in 2015 were led by boards, panels, consoles, desks, cabinets and other bases equipped with electric control apparatus, valued at 57.5 million euros.",
+  "The total imports amounted to 223.7 million euros, with the top three categories making up 48.8% of imports.",
+  "Electric motors and generators were the second largest import category at 29.4 million euros, followed by air or vacuum pumps and related equipment at 22.3 million euros.",
+  "The total trade with Japan was 285.0 million euros, with the top three total trade categories accounting for 44.9%.",
+  "The data are nominal values in current euros and are not adjusted for price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2015: 61.3 M€"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Nonwovens: 40.9 M€, 66.7 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Copper foil \"whether or not printed or backed with paper, paperboard, plastics or similar backing materials\", of a thickness \"excl. any backing\" of <= 0,15 mm (excl. stamping foils of heading 3212, metal yarns and metallised yarns and foil made up as christmas tree decorating material): 2.2 M€, 3.6 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Machines for assembling electric or electronic lamps, tubes or valves or flashbulbs, in glass envelopes; machines for manufacturing or hot working glass or glassware (excl. furnaces and heating apparatus for manufacturing toughened glass); parts thereof: 2.1 M€, 3.5 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Leather footwear: 1.9 M€, 3.1 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Measuring or checking instruments, appliances and machines not elsewhere specified in chapter 90; profile projectors: 1.9 M€, 3.1 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 10.6 M€, 17.2 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 0 k €, 0.0 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 73.8 %"
+  },
+  {
+   "key": "import.total",
+   "text": "imports 2015: 223.7 M€"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy): 57.5 M€, 25.7 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Electric motors and generators (excl. generating sets): 29.4 M€, 13.1 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Air or vacuum pumps (excl. gas compound elevators and pneumatic elevators and conveyors); air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; parts thereof: 22.3 M€, 10.0 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof: 22.1 M€, 9.9 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Lifting and handling machinery: 15.4 M€, 6.9 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 67.4 M€, 30.1 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 1 k €, 0.0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 48.8 %"
+  },
+  {
+   "key": "total.total",
+   "text": "total trade 2015: 285.0 M€"
+  },
+  {
+   "key": "total.rank1",
+   "text": "#1 Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy): 57.6 M€, 20.2 %"
+  },
+  {
+   "key": "total.rank2",
+   "text": "#2 Nonwovens: 40.9 M€, 14.3 %"
+  },
+  {
+   "key": "total.rank3",
+   "text": "#3 Electric motors and generators (excl. generating sets): 29.5 M€, 10.4 %"
+  },
+  {
+   "key": "total.rank4",
+   "text": "#4 Air or vacuum pumps (excl. gas compound elevators and pneumatic elevators and conveyors); air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; parts thereof: 22.7 M€, 8.0 %"
+  },
+  {
+   "key": "total.rank5",
+   "text": "#5 Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof: 22.1 M€, 7.8 %"
+  },
+  {
+   "key": "total.other",
+   "text": "Other: 96.8 M€, 33.9 %"
+  },
+  {
+   "key": "total.confidential",
+   "text": "Confidential: 2 k €, 0.0 %"
+  },
+  {
+   "key": "total.top3_share",
+   "text": "top 3 total trade: 44.9 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-6 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 136,
+   "outcome": "ok",
+   "detail": "487 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 70,
+   "outcome": "ok",
+   "detail": "view=bar; Top-6 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 2223,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1842,
+   "output_tokens": 157,
+   "cache_read_tokens": 0,
+   "ms": 2095
+  }
+ ],
+ "code_version": "1b0db9a",
+ "error": null
+}

@@ -1,14 +1,14 @@
 """LuxTrade Lens: Luxembourg's trade in goods (EN · FR · DE).
 
-Run with ``streamlit run src/luxtrade/app/Home.py``. Entry point: shared top bar (provenance,
-language) and navigation between Overview (the big picture), Ask (the assistant, with presets
-and sessions), and Dashboard (mapped SQL charts). UI only: every computation happens in the
-agents layer (GUIDELINES §1.1).
+Run with ``streamlit run src/luxtrade/app/Home.py``. Entry point: the app's name, one row of tabs
+(Overview: the big picture · Assistant, with presets and sessions · Dashboard: mapped
+SQL charts on the left; Data · How it works and the language switch on the right), and a footer
+naming the team. UI only: every computation happens in the agents layer (GUIDELINES §1.1).
 """
 
 import streamlit as st
 
-from luxtrade.app.components import ASK_PAGE, get_assistant
+from luxtrade.app.components import ASK_PAGE, CONTRIBUTORS, get_assistant
 from luxtrade.runs.sessions import new_session_id
 
 st.set_page_config(page_title="LuxTrade Lens", page_icon="📦", layout="wide")
@@ -22,16 +22,31 @@ except FileNotFoundError as exc:
 overview_page = st.Page(
     "app_pages/overview.py", title="Overview", icon=":material/insights:", default=True
 )
-ask_page = st.Page(ASK_PAGE, title="Ask", icon=":material/forum:", url_path="ask")
+ask_page = st.Page(ASK_PAGE, title="Assistant", icon=":material/forum:", url_path="ask")
 dashboard_page = st.Page(
     "app_pages/dashboard.py", title="Dashboard", icon=":material/dashboard:", url_path="dashboard"
 )
-page = st.navigation([overview_page, ask_page, dashboard_page], position="top")
-# larger top tabs: Streamlit has no size option for the top navigation
+data_page = st.Page("app_pages/data.py", title="Data", icon=":material/database:", url_path="data")
+method_page = st.Page(
+    "app_pages/method.py",
+    title="How it works",
+    icon=":material/settings_suggest:",
+    url_path="how-it-works",
+)
+MAIN_TABS = (overview_page, ask_page, dashboard_page)  # left of the top bar
+INFO_TABS = (data_page, method_page)  # right of the top bar, before the language switch
+# Streamlit's own navigation is hidden: the five pages are tabs in the top bar below, in one row
+page = st.navigation([*MAIN_TABS, *INFO_TABS], position="hidden")
+# larger tab labels (Streamlit has no size option for page links); the app's name sits close to
+# the top edge, with only the room Streamlit's header needs
 st.html(
     """<style>
-    [data-testid="stTopNavLink"] { padding: 0.5rem 1.1rem; }
-    [data-testid="stTopNavLink"] * { font-size: 1.2rem !important; font-weight: 600; }
+    .st-key-top-tabs [data-testid="stPageLink"] p { font-size: 1.15rem; font-weight: 600; }
+    [data-testid="stMainBlockContainer"] { padding-top: 3rem; }
+    [data-testid="stHeader"] { background: transparent; }
+    /* tables: let cell text use the whole column (Streamlit caps it at 400 px) */
+    [data-testid="stTable"] td [data-testid="stMarkdownContainer"] { max-width: none; width: 100%; }
+    .st-key-app-name h1 { padding: 0; }
     </style>"""
 )
 
@@ -53,18 +68,15 @@ if "session_id" not in ss:
         st.switch_page(ask_page, query_params=params.to_dict())
 
 
-# --- top bar, shared by all pages: data provenance and language -----------------------------
-with st.container(horizontal=True, vertical_alignment="center"):
-    status = (
-        "🟢 Free questions enabled"
-        if assistant.online
-        else "⚪ Offline: overview, presets and stored runs only (set OPENAI_API_KEY)"
-    )
-    st.caption(
-        f"**LuxTrade Lens** · Eurostat Comext DS-045409 · data {cov.first_period:%b %Y} → "
-        f"{cov.latest_complete_period:%b %Y} (complete) · vintage {cov.extraction_date} · "
-        f"{status}"
-    )
+# --- top bar, shared by all pages: the app's name, the page tabs and the language -----------
+with st.container(key="app-name"):
+    st.title("LuxTrade Lens", anchor=False)
+with st.container(horizontal=True, vertical_alignment="center", key="top-tabs"):
+    for p in MAIN_TABS:
+        st.page_link(p, label=p.title, icon=p.icon)
+    st.space("stretch")
+    for p in INFO_TABS:
+        st.page_link(p, label=p.title, icon=p.icon)
     # the choice lives in ss.lang: widget state alone doesn't survive a page switch
     ss.setdefault("lang", "en")
     choice = st.segmented_control(
@@ -78,7 +90,17 @@ with st.container(horizontal=True, vertical_alignment="center"):
     )
     if choice:
         ss.lang = choice
+if not assistant.online:  # only worth saying when free questions are switched off
+    st.caption("⚪ Offline: overview, presets and stored runs only (set OPENAI_API_KEY)")
 if cov.is_placeholder:
     st.warning("**Placeholder data.** Synthetic figures for development, not Eurostat values.")
 
 page.run()
+
+# --- footer, on every page: the team and the status of the app ---------------------------------
+with st.container(key="app-footer"):
+    st.divider()
+    st.caption(
+        "**Proof of concept** built with vibe coding for the STATEC Hackathon 2026 · "
+        "The Outliers: " + " · ".join(f"{name} ({org})" for name, org in CONTRIBUTORS)
+    )

@@ -6,7 +6,7 @@ from luxtrade.agents.findings import build_findings, snapshot_years
 from luxtrade.agents.sql_guard import check_sql
 from luxtrade.viz.charts import finding_figures
 
-KEYS = ["diversification", "shocks", "europe", "prices", "conclusion"]
+KEYS = ["diversification", "shocks", "europe", "prices", "composition", "conclusion"]
 
 
 @pytest.fixture(scope="module")
@@ -14,7 +14,7 @@ def findings_en(semantic):
     return build_findings(semantic, "en")[2]
 
 
-def test_four_findings_and_a_conclusion(findings_en):
+def test_five_findings_and_a_conclusion(findings_en):
     assert [f.key for f in findings_en] == KEYS
     for f in findings_en:
         assert f.name and f.title and f.summary and f.facts
@@ -29,7 +29,7 @@ def test_four_findings_and_a_conclusion(findings_en):
 
 
 def test_every_finding_shows_guarded_sql(findings_en):
-    for f in findings_en[:4]:
+    for f in findings_en[:-1]:
         assert f.sql
         for sql in f.sql:
             assert check_sql(sql) == sql  # already normalised by the guard
@@ -73,13 +73,23 @@ def test_snapshot_years_step_back_from_the_latest_year():
 
 
 def test_finding_figures_render(findings_en):
-    for f in findings_en[:4]:
+    for f in findings_en[:-1]:
         figs = finding_figures(f.key, f.frames, f.chart_titles, "en")
         assert figs, f.key
 
 
-@pytest.mark.parametrize("key", KEYS[:4])
+@pytest.mark.parametrize("key", KEYS[:-1])
 def test_explore_answers_in_the_assistant(make_assistant, findings_en, key):
     f = next(x for x in findings_en if x.key == key)
     rec = make_assistant().run_spec(f.explore_spec, question=f.explore_question, origin="overview")
     assert rec.status == "answered", rec.status
+
+
+def test_composition_shares_add_up(findings_en):
+    """Each chapter = its three headings + the rest; every share is a % of the flow."""
+    comp = next(f for f in findings_en if f.key == "composition").frames["main"]
+    assert set(comp["flow"]) == {"export", "import"}
+    assert (comp["share"] >= 0).all() and (comp["share"] <= 100).all()
+    by_chapter = comp.groupby(["flow", "year", "hs2"])["share"].sum()
+    assert (by_chapter <= 100).all()
+    assert comp.groupby(["flow", "year"])["hs2"].nunique().max() <= 3

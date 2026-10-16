@@ -1,11 +1,12 @@
 """Overview: Luxembourg's trade in goods at a glance, the landing page (SOLUTION_DESIGN §8a).
 
-Two tabs. **Key findings** tells the story for decision-makers, ready to present: one line, the
-story in four numbers, a chapter per finding (headline, evidence, chart) and three things to
-watch; "To know more" opens a finding's charts, queries and method in a dialog. **At a
-glance** answers five business questions from the data. The data description, how to use the
-app and what the data can't tell sit in a closed section at the end. Each finding and question
-opens in the assistant for details.
+Three tabs. **The challenge** states the problem the page answers. **Key findings** tells the
+story for decision-makers, ready to present: one line, the story in four numbers, a chapter per
+finding (headline, evidence, chart) and three things to watch; "To know more" opens a finding's
+charts, queries and method in a dialog. **More evidence** covers the sample questions of
+the hackathon brief and one of our own. Presentation mode shows the challenge and the key
+findings as full-screen slides. Each finding and question opens in the assistant for details;
+the data itself is described on the Data page.
 UI only: the content comes from ``Assistant.overview`` (agents/overview.py, agents/findings.py).
 """
 
@@ -13,15 +14,21 @@ import pandas as pd
 import streamlit as st
 
 from luxtrade.agents.findings import Finding
-from luxtrade.app.components import ASK_PAGE, get_assistant, load_overview, queue
-from luxtrade.config import ATTRIBUTION
+from luxtrade.agents.pitch import tool_pitch
+from luxtrade.app.components import (
+    ASK_PAGE,
+    CONTRIBUTORS,
+    POC_NOTE,
+    get_assistant,
+    load_overview,
+    queue,
+)
 from luxtrade.viz.charts import finding_figures, hero_figure, overview_figures
 
 assistant = get_assistant()
 cov = assistant.sem.coverage
 lang = st.session_state.get("lang") or "en"
 ov = load_overview(lang, cov.vintage)
-about = ov.about
 chart_config = {"displaylogo": False}
 hero_config = {"displayModeBar": False}  # the card charts: a picture, not a tool
 
@@ -75,38 +82,500 @@ def finding_detail(f: Finding) -> None:
         explore_button(f"finding-{f.key}", f.explore_question, f.explore_spec)
 
 
-def more_button(f: Finding, primary: bool = False) -> None:
+def more_button(f: Finding) -> None:
     """'To know more': the finding's charts, queries and method in a dialog."""
     if st.button(
         "To know more",
         key=f"more-{f.key}",
         icon=":material/open_in_full:",
-        type="primary" if primary else "secondary",
     ):
         st.dialog(f.name, width="large")(finding_detail)(f)
 
 
-# icon and badge colour of each chapter; the conclusion's three things to watch
+# icon and colour of each chapter; the conclusion's three things to watch (and their chapters)
 CHAPTER = {
     "diversification": (":material/category:", "blue"),
     "shocks": (":material/bolt:", "red"),
-    "europe": (":material/public:", "violet"),
+    "europe": (":material/public:", "green"),
     "prices": (":material/scale:", "orange"),
+    "composition": (":material/stacked_bar_chart:", "violet"),
     "conclusion": (":material/flag:", "gray"),
 }
-WATCH_ICONS = (":material/factory:", ":material/local_shipping:", ":material/local_gas_station:")
+# which sample question of the hackathon brief each 'More evidence' panel covers
+BRIEF = {"partners": "Q1", "products": "Q2", "peers": "Q5", "season": "Q6"}
+WIDE = {"composition"}  # findings whose chart takes the card's full width
+WATCH = (
+    (":material/factory:", "shocks"),
+    (":material/local_shipping:", "diversification"),
+    (":material/local_gas_station:", "prices"),
+)
+# Soft two-tone tints per chapter (translucent, so they read in light and dark themes), and a
+# print layout: landscape pages, panels kept whole, charts scaled to the printed column.
+TINTS = {  # pale blue, rose, pale green, sand, light sky blue: one family per chapter
+    "diversification": "rgba(42,120,214,.24), rgba(42,120,214,.10)",
+    "shocks": "rgba(227,73,72,.13), rgba(235,104,52,.05)",
+    "europe": "rgba(27,175,122,.17), rgba(27,175,122,.05)",
+    "prices": "rgba(237,161,0,.18), rgba(237,161,0,.05)",
+    "composition": "rgba(98,80,214,.14), rgba(98,80,214,.04)",
+    "conclusion": "rgba(64,160,235,.16), rgba(64,160,235,.04)",
+}
+_tint_css = "\n".join(
+    f".st-key-card-{k}, .st-key-tile-{k}, .st-key-watch-{k}, .st-key-ctx-{k} "
+    f"{{ background: linear-gradient(135deg, {v}); border-color: transparent !important; }}"
+    for k, v in TINTS.items()
+)
+st.html(
+    f"""<style>
+{_tint_css}
+[class*="st-key-card-"] {{ padding: 1.5rem 1.75rem !important; }}
+[class*="st-key-tile-"] [data-testid="stMetricLabel"] * {{
+  white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }}
+[class*="st-key-ctx-"], .st-key-task {{
+  border-radius: 0.75rem; padding: 1.25rem 1.5rem !important; }}
+.st-key-task {{ background: linear-gradient(135deg, {TINTS["conclusion"]}); }}
+.st-key-present-start {{
+  margin-bottom: -3.4rem; position: relative; z-index: 2; pointer-events: none; }}
+.st-key-present-start button {{ pointer-events: auto; }}
+@media print {{
+  @page {{ size: A4 landscape; margin: 8mm; }}
+  [data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"],
+  [data-testid="stSidebar"], [data-testid="stBottom"], [role="tablist"], .stButton,
+  [data-testid="stExpander"], [data-testid="stButtonGroup"] {{ display: none !important; }}
+  [data-testid="stApp"], [data-testid="stAppViewContainer"], [data-testid="stMain"],
+  [data-testid="stMainBlockContainer"] {{
+    overflow: visible !important; height: auto !important; position: static !important; }}
+  [data-testid="stMainBlockContainer"] {{
+    padding: 0 !important; max-width: 100% !important; zoom: 0.85; }}
+  .st-key-next-step, .st-key-present-start, [data-testid="stHeading"]:has(h1) {{
+    display: none !important; }}
+  [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; }}
+  [data-testid="stColumn"] {{ min-width: 0 !important; }}
+  [data-testid="stMetricLabel"] * {{
+    white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }}
+  [class*="st-key-card-"], [class*="st-key-tile-"] {{
+    break-inside: avoid; page-break-inside: avoid; }}
+  [class*="st-key-card-"] {{ margin-bottom: 3mm; }}
+  /* charts: every wrapper fills the column; the plot layer sets the height, the label
+     layer (annotations, legend) lies on top of it, both scaled by their viewBox */
+  .stPlotlyChart, .stPlotlyChart div {{
+    width: 100% !important; max-width: 100% !important; height: auto !important; }}
+  .stPlotlyChart .svg-container {{ position: relative !important; }}
+  .stPlotlyChart .main-svg {{ width: 100% !important; height: auto !important; }}
+  .stPlotlyChart .main-svg:first-of-type {{ position: relative !important; }}
+  .stPlotlyChart .main-svg ~ .main-svg {{ position: absolute !important; top: 0; left: 0; }}
+  .stPlotlyChart .modebar-container {{ display: none !important; }}
+  * {{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }}
+}}
+</style>
+<script>
+// Before printing, give each chart a viewBox so it scales to the printed column.
+window.addEventListener("beforeprint", () => {{
+  document.querySelectorAll(".stPlotlyChart .main-svg").forEach((svg) => {{
+    const w = svg.getAttribute("width"), h = svg.getAttribute("height");
+    if (w && h) {{
+      svg.setAttribute("viewBox", `0 0 ${{w}} ${{h}}`);
+      svg.setAttribute("preserveAspectRatio", "xMinYMin meet");
+    }}
+  }});
+}});
+</script>""",
+    unsafe_allow_javascript=True,
+)
+
+
+def chapter_label(number: str, f: Finding) -> None:
+    """The chapter's name, large and in its colour: '1 · Diversification'."""
+    icon, color = CHAPTER[f.key]
+    st.markdown(f"#### :{color}[{icon} {number}{f.name}]")
+
+
+def render_challenge(slide: bool = False) -> None:
+    """The problem the page answers: the question, three facts of context, the task, our approach.
+
+    On a slide, the approach is left out so the question and the context fill the screen.
+    """
+    c = ov.challenge
+    if c is None:
+        return
+    st.markdown(f"#### :blue[:material/flag_circle: {c.kicker}]")
+    st.markdown(f"# {c.statement}" if slide else f"## {c.statement}")
+    for col, (tint, title, text) in zip(st.columns(len(c.context)), c.context, strict=True):
+        key = f"dctx-{tint}" if slide else f"ctx-{tint}"
+        with col, st.container(key=key, height="stretch"):
+            st.markdown(f"#### {title}")
+            st.markdown(text)
+    with st.container(key="dtask" if slide else "task"):
+        st.markdown(c.task)
+    if slide:
+        return
+    st.markdown(f"### {c.approach_title}")
+    for col, (icon, title, text) in zip(st.columns(len(c.approach)), c.approach, strict=True):
+        with col, st.container(border=True, height="stretch"):
+            st.markdown(f"**{icon} {title}**")
+            st.markdown(text)
+
+
+def render_tool() -> None:
+    """The assistant on one slide: the promise, who it is for, four features, how it works."""
+    t = tool_pitch(lang)
+    st.markdown(f"#### :violet[:material/smart_toy: {t.kicker}]")
+    st.markdown(f"# {t.headline}")
+    st.markdown(t.audience)
+    for col, (tint, icon, title, text) in zip(st.columns(len(t.features)), t.features, strict=True):
+        with col, st.container(key=f"dfeat-{tint}", height="stretch"):
+            st.markdown(f"#### {icon} {title}")
+            st.markdown(text)
+    with st.container(key="dflow"):
+        st.markdown("  →  ".join(t.flow))
+    st.caption(t.bridge)
+
+
+# --- presentation mode: the Key findings as full-screen slides -----------------------------------
+ss = st.session_state
+SLIDE_TINTS = {  # slide background: the chapter's tint; extra slides get their own
+    "challenge": "rgba(82,81,78,.06), rgba(64,160,235,.06)",
+    "tool": "rgba(98,80,214,.12), rgba(42,120,214,.10)",
+    "title": "rgba(42,120,214,.12), rgba(27,175,122,.08)",
+    "options": TINTS["conclusion"],
+    "team": "rgba(82,81,78,.10), rgba(64,160,235,.08)",
+    **TINTS,
+}
+CHART_HEIGHT = 560  # charts on a slide: taller than on the page
+
+
+def start_presentation() -> None:
+    """Callback: open the slides at the first one."""
+    ss.deck_on, ss.deck_slide = True, 0
+
+
+def stop_presentation() -> None:
+    """Callback: back to the Overview page."""
+    ss.deck_on = ss.deck_print = False
+
+
+def move(step: int, last: int) -> None:
+    """Callback: go ``step`` slides forward (or back), staying within the deck."""
+    ss.deck_slide = min(max(ss.get("deck_slide", 0) + step, 0), last)
+
+
+def deck_css(slides: list[str]) -> str:
+    """Hide the app's frame; make each slide fill the screen with larger type."""
+    deck = ", ".join(f".st-key-deck-{k}" for k in slides)
+    centred = ", ".join(f".st-key-dbody-{k}" for k in CENTRED)
+    tints = "\n".join(
+        f".st-key-deck-{k}, .st-key-dtile-{k}, .st-key-dwatch-{k}, .st-key-dctx-{k}, "
+        f".st-key-dfeat-{k} "
+        f"{{ background: linear-gradient(135deg, {v}); }}"
+        for k, v in SLIDE_TINTS.items()
+    )
+    return f"""<style>
+[data-testid="stHeader"], .st-key-app-name, .st-key-top-tabs, .st-key-app-footer,
+.st-key-deckkeys {{ display: none !important; }}
+[data-testid="stMainBlockContainer"] {{
+  padding: 1.25rem 2.5rem 0.75rem !important; max-width: 100% !important; }}
+{deck} {{ min-height: 84vh; padding: 1.4rem 3.25rem 1rem !important; border-radius: 1rem;
+  justify-content: flex-start; }}
+:is({deck}) > div:has(> [class*="st-key-dbody-"]) {{
+  flex-grow: 1; display: flex; flex-direction: column; }}
+[class*="st-key-dbody-"] {{ flex-grow: 1; justify-content: flex-start; padding-top: 1rem; }}
+{centred} {{ justify-content: center; padding-top: 0; }}
+.st-key-dtask {{ background: linear-gradient(135deg, {TINTS["conclusion"]}); }}
+[class*="st-key-dtile-"], [class*="st-key-dwatch-"], [class*="st-key-dctx-"], .st-key-dtask,
+[class*="st-key-dfeat-"] {{
+  border-radius: 0.75rem; padding: 1.25rem 1.5rem !important; }}
+{tints}
+.st-key-deck-title h1 {{ font-size: 3.4rem !important; line-height: 1.15; }}
+.st-key-deck-challenge h1 {{ font-size: 2.9rem !important; line-height: 1.2; }}
+.st-key-deck-tool h1 {{ font-size: 2.7rem !important; line-height: 1.2; }}
+.st-key-dflow {{ border-radius: 0.75rem; padding: 0.9rem 1.5rem !important;
+  background: rgba(98,80,214,.10); }}
+.st-key-dflow p {{ font-size: 1.35rem !important; font-weight: 600; text-align: center; }}
+:is({deck}) [data-testid="stHeaderActionElements"] {{ display: none !important; }}
+:is({deck}) h2 {{ font-size: 2.6rem !important; line-height: 1.2; }}
+:is({deck}) h4 {{ font-size: 1.6rem !important; }}
+:is({deck}) p, :is({deck}) li, :is({deck}) td, :is({deck}) th {{
+  font-size: 1.3rem !important; line-height: 1.55; }}
+:is({deck}) [data-testid="stMetricValue"], :is({deck}) [data-testid="stMetricValue"] * {{
+  font-size: 3.6rem !important; line-height: 1.2; }}
+:is({deck}) [data-testid="stMetricLabel"] * {{ font-size: 1.15rem !important;
+  white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }}
+</style>"""
+
+
+def deck_chart(f: Finding, height: int = CHART_HEIGHT) -> None:
+    """The finding's chart, sized for a screen at the back of a room."""
+    fig = hero_figure(f.key, f.frames, lang)
+    if fig is None:
+        return
+    fig.update_layout(height=height, font={"size": 17}, legend={"font": {"size": 16}})
+    fig.update_xaxes(tickfont={"size": 16}, title_font={"size": 16})
+    fig.update_yaxes(tickfont={"size": 16}, title_font={"size": 16})
+    fig.update_annotations(font_size=16)
+    fig.update_traces(textfont_size=16, selector={"type": "bar"})
+    st.plotly_chart(fig, key=f"dchart-{f.key}", config={"displayModeBar": False}, alt=f.headline)
+
+
+def deck_slides() -> list[str]:
+    """The slide order: challenge, tool, title, findings, conclusion, options, team.
+
+    The tool comes before the results: the findings show what it can do.
+    """
+    story = ov.findings[:-1]
+    keys = [f.key for f in story]
+    return ["challenge", "tool", "title", *keys, "conclusion", "options", "team"]
+
+
+# The slide template: the LuxTrade Lens logo top left, the event top right, and a footer
+# with the source and the slide number (also in the PDF, where the controls are not shown).
+# Title slides are centred; on the others the title sits under the header, always in one place.
+CENTRED = ("challenge", "tool", "title", "team")
+EVENT = "STATEC Hackathon 2026"
+REPO_URL = "https://github.com/mina-naseh/statec-hackathon-outliers"
+LOGO_TEXT = "LuxTrade <span>Lens</span>"
+
+
+def brand_css() -> str:
+    """The logo's typeface and colours (navy on a light theme, the theme's text on a dark one)."""
+    ink = "inherit" if st.context.theme.type == "dark" else "#13213C"
+    font = "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800"
+    return f"""<style>
+@import url("{font}&display=swap");
+.lt-head {{ display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding-bottom: 0.9rem; border-bottom: 1px solid rgba(19,33,60,.14); }}
+.lt-logo {{ font-family: "Bricolage Grotesque", "Arial Black", sans-serif; font-weight: 800;
+  font-size: 2.1rem; line-height: 1; letter-spacing: -0.035em; color: {ink}; }}
+.lt-logo.lt-big {{ font-size: 6rem; margin-bottom: 1rem; }}
+.lt-logo span {{ color: #0B7DB8; }}
+.lt-event {{ background: #C62F35; color: #FFFFFF; font-size: 0.95rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; padding: 0.4rem 0.95rem;
+  border-radius: 999px; white-space: nowrap; }}
+.lt-foot {{ display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.7rem;
+  border-top: 1px solid rgba(19,33,60,.14); font-size: 1rem; opacity: 0.7; }}
+</style>"""
+
+
+def render_slide(kind: str, number: int, total: int) -> None:
+    """One slide in its own full-screen container: header, content, footer."""
+    with st.container(key=f"deck-{kind}"):
+        st.html(
+            f'<div class="lt-head"><span class="lt-logo">{LOGO_TEXT}</span>'
+            f'<span class="lt-event">{EVENT}</span></div>'
+        )
+        with st.container(key=f"dbody-{kind}"):
+            slide_body(kind)
+        st.html(
+            '<div class="lt-foot"><span>The Outliers · Source: Eurostat Comext DS-045409</span>'
+            f"<span>{number} / {total}</span></div>"
+        )
+
+
+def slide_body(kind: str) -> None:
+    """One slide's content."""
+    story, end = ov.findings[:-1], ov.findings[-1]
+    if kind == "challenge":
+        render_challenge(slide=True)
+    elif kind == "tool":
+        render_tool()
+    elif kind == "title":
+        st.markdown(f"# {ov.findings_hero}")
+        question = ov.findings_intro.split("**")[1] if "**" in ov.findings_intro else ""
+        st.markdown(f"#### {question}")
+        tiles = [f for f in story if f.metric_value]
+        for col, f in zip(st.columns(len(tiles)), tiles, strict=True):
+            with col, st.container(key=f"dtile-{f.key}", height="stretch"):
+                st.metric(
+                    f.metric_label,
+                    f.metric_value,
+                    f.metric_delta,
+                    delta_color=f.delta_color,
+                    delta_arrow=f.delta_arrow,
+                )
+    elif kind in {f.key for f in story}:
+        i = [f.key for f in story].index(kind)
+        f = story[i]
+        if f.key in WIDE:  # two panels: text on top, the chart across the slide
+            chapter_label(f"{i + 1} · ", f)
+            st.markdown(f"## {f.headline}")
+            deck_chart(f, height=480)
+            st.caption(f.summary)
+        else:
+            text, chart = st.columns([2, 3], gap="large", vertical_alignment="center")
+            with text:
+                chapter_label(f"{i + 1} · ", f)
+                st.markdown(f"## {f.headline}")
+                st.markdown(f.title)
+                if f.analysis:
+                    st.markdown(f.analysis)
+            with chart:
+                deck_chart(f)
+    elif kind == "conclusion":
+        chapter_label("", end)
+        st.markdown(f"## {end.headline}")
+        st.markdown(end.summary)
+        for col, (title, body), (tile_icon, chapter) in zip(
+            st.columns(len(end.tiles)), end.tiles, WATCH, strict=False
+        ):
+            with col, st.container(key=f"dwatch-{chapter}", height="stretch"):
+                st.markdown(f"#### {tile_icon} {title}")
+                st.markdown(body)
+    elif kind == "options":
+        heading, _, rest = end.note.partition(":")
+        chapter_label("", end)
+        st.markdown(f"## {heading}")
+        st.table(end.frames["main"], hide_index=True, alt=heading)
+        note = rest.strip()
+        st.caption(note[:1].upper() + note[1:])
+    else:  # team: the closing slide
+        st.html(f'<div class="lt-logo lt-big">{LOGO_TEXT}</div>')
+        st.markdown("## Thank you. Questions?")
+        st.markdown("\n".join(f"- **{name}**, {org}" for name, org in CONTRIBUTORS))
+        st.markdown(f":material/code: [{REPO_URL.removeprefix('https://')}]({REPO_URL})")
+        st.caption(POC_NOTE)
+
+
+def start_print() -> None:
+    """Callback: lay out every slide for the browser's print dialog."""
+    ss.deck_print = True
+
+
+def stop_print() -> None:
+    """Callback: back to presenting one slide at a time."""
+    ss.deck_print = False
+
+
+# Printing the deck: one slide per landscape A4 page. The screen layout is scaled down
+# (zoom) so a slide drawn for a wide screen fits a page; heights are in page millimetres
+# divided by that zoom.
+DECK_PRINT_ZOOM = 0.6
+
+
+def deck_print_css(slides: list[str]) -> str:
+    """Print rules: each slide fills one page; the controls are not printed."""
+    deck = ", ".join(f".st-key-deck-{k}" for k in slides)
+    page_mm = 210 / DECK_PRINT_ZOOM - 24  # one A4 landscape page, room for the gaps around
+    return f"""<style>
+@media print {{
+  @page {{ size: A4 landscape; margin: 0; }}
+  [data-testid="stMainBlockContainer"] {{
+    zoom: {DECK_PRINT_ZOOM} !important; padding: 0 !important; }}
+  .st-key-deckprintbar {{ display: none !important; }}
+  :is({deck}) {{ min-height: {page_mm:.0f}mm !important; height: {page_mm:.0f}mm !important;
+    overflow: hidden; box-sizing: border-box;
+    margin: 0 !important; border-radius: 0 !important; break-inside: avoid; }}
+  :is({deck}):not(.st-key-deck-{slides[0]}) {{ break-before: page; page-break-before: always; }}
+}}
+@media screen {{
+  :is({deck}) {{ margin-bottom: 1.5rem; }}
+}}
+</style>"""
+
+
+def present() -> None:
+    """Show one slide and the controls: Back, Next, Close (also ←, →, Page Up/Down, Esc).
+
+    'Save as PDF' lays out all slides, one per page, and opens the browser's print dialog.
+    """
+    slides = deck_slides()
+    last = len(slides) - 1
+    n = min(ss.get("deck_slide", 0), last)
+    st.html(deck_css(slides))
+    st.html(brand_css())
+    if ss.get("deck_print"):
+        st.html(deck_print_css(slides))
+        with st.container(horizontal=True, vertical_alignment="center", key="deckprintbar"):
+            st.button(
+                "Back to slides",
+                icon=":material/arrow_back:",
+                on_click=stop_print,
+                key="deck-print-back",
+            )
+            st.caption(
+                "All slides are below, one per page. In the print dialog choose **Save as "
+                "PDF**, landscape, with **background graphics** on. Use Ctrl+P to open it again."
+            )
+        for i, kind in enumerate(slides, start=1):
+            render_slide(kind, i, len(slides))
+        # open the print dialog once the charts have been drawn
+        st.html(
+            "<script>setTimeout(() => window.print(), 3000);</script>",
+            unsafe_allow_javascript=True,
+        )
+        return
+    render_slide(slides[n], n + 1, len(slides))
+    # controls; the buttons also answer the arrow keys, Page Up/Down (clickers) and Esc
+    with st.container(horizontal=True, vertical_alignment="center", key="decknav"):
+        st.button(
+            "Back",
+            icon=":material/arrow_back:",
+            on_click=move,
+            args=(-1, last),
+            disabled=n == 0,
+            shortcut="Left",
+            key="deck-back",
+        )
+        st.markdown(f"**{n + 1}** / {len(slides)}")
+        st.button(
+            "Next",
+            icon=":material/arrow_forward:",
+            on_click=move,
+            args=(1, last),
+            disabled=n == last,
+            shortcut="Right",
+            key="deck-next",
+        )
+        st.space("stretch")
+        st.button(
+            "Save as PDF",
+            icon=":material/picture_as_pdf:",
+            on_click=start_print,
+            help="All slides, one per page, through the browser's print dialog",
+            key="deck-pdf",
+        )
+        st.button(
+            "Close",
+            icon=":material/close:",
+            on_click=stop_presentation,
+            shortcut="Esc",
+            key="deck-close",
+        )
+    with st.container(key="deckkeys"):  # hidden: the keys a presentation clicker sends
+        st.button("Next page", on_click=move, args=(1, last), shortcut="PageDown", key="pg-next")
+        st.button("Previous page", on_click=move, args=(-1, last), shortcut="PageUp", key="pg-back")
+
+
+if ss.get("deck_on"):
+    present()
+    st.stop()
+
 
 st.title("Luxembourg's trade in goods at a glance")
-findings_tab, glance_tab = st.tabs(["Key findings", "At a glance"])
+# the start button sits on the right of the tab row (pulled down onto it by the style below)
+with st.container(horizontal=True, key="present-start"):
+    st.space("stretch")
+    st.button(
+        "Presentation mode",
+        icon=":material/slideshow:",
+        on_click=start_presentation,
+        key="present-btn",  # not the state's name: a button's key holds its own value
+        help="Show the key findings as full-screen slides (Back, Next, Close; arrow keys)",
+    )
+challenge_tab, findings_tab, glance_tab = st.tabs(
+    ["The challenge", "Key findings", "More evidence"], default="Key findings"
+)
 
-# --- key findings: the story for decision-makers, ready to present ------------------------------
+# --- the challenge: the problem the page answers -------------------------------------------------
+with challenge_tab:
+    render_challenge()
+
+# --- key findings: the story for decision-makers, ready to present or print ---------------------
 with findings_tab:
     story, end = ov.findings[:-1], ov.findings[-1]
     st.markdown(f"## {ov.findings_hero}")
     st.markdown(ov.findings_intro)
-    # the story in four numbers
-    with st.container(horizontal=True):
-        for f in story:
+    # the story in four numbers: equal tiles, each in its chapter's tint
+    tiles = [f for f in story if f.metric_value]
+    for col, f in zip(st.columns(len(tiles)), tiles, strict=True):
+        with col, st.container(border=True, key=f"tile-{f.key}", height="stretch"):
             st.metric(
                 f.metric_label,
                 f.metric_value,
@@ -114,46 +583,62 @@ with findings_tab:
                 delta_color=f.delta_color,
                 delta_arrow=f.delta_arrow,
                 help=f.title,
-                border=True,
-                height="stretch",
             )
-    # one chapter per finding: headline, evidence and its chart, alternating sides
+    # one chapter per finding: headline, evidence, why it matters and its chart, alternating
     for i, f in enumerate(story, start=1):
-        icon, color = CHAPTER[f.key]
-        with st.container(border=True):
+        if f.key in WIDE:  # two panels need the card's full width: text on top, chart below
+            with st.container(border=True, key=f"card-{f.key}"):
+                text, why = st.columns([1, 1], gap="large")
+                with text:
+                    chapter_label(f"{i} · ", f)
+                    st.markdown(f"### {f.headline}")
+                    st.markdown(f.title)
+                with why:
+                    if f.analysis:
+                        st.markdown(f.analysis)
+                    more_button(f)
+                fig = hero_figure(f.key, f.frames, lang)
+                if fig is not None:
+                    st.plotly_chart(fig, key=f"hero-{f.key}", config=hero_config, alt=f.headline)
+                st.caption(f.summary)
+            continue
+        with st.container(border=True, key=f"card-{f.key}"):
             if i % 2:
-                text, chart = st.columns([5, 6], gap="large", vertical_alignment="center")
+                text, chart = st.columns([1, 1], gap="large", vertical_alignment="center")
             else:
-                chart, text = st.columns([6, 5], gap="large", vertical_alignment="center")
+                chart, text = st.columns([1, 1], gap="large", vertical_alignment="center")
             with text:
-                st.badge(f"{i} · {f.name}", icon=icon, color=color)
+                chapter_label(f"{i} · ", f)
                 st.markdown(f"### {f.headline}")
                 st.markdown(f.title)
+                if f.analysis:
+                    st.markdown(f.analysis)
                 more_button(f)
             with chart:
                 fig = hero_figure(f.key, f.frames, lang)
                 if fig is not None:
                     st.plotly_chart(fig, key=f"hero-{f.key}", config=hero_config, alt=f.headline)
-    # the conclusion: three things to watch
-    icon, color = CHAPTER["conclusion"]
-    with st.container(border=True):
-        st.badge(end.name, icon=icon, color=color)
+    # the conclusion: three things to watch, each in the tint of its chapter
+    with st.container(border=True, key=f"card-{end.key}"):
+        chapter_label("", end)
         st.markdown(f"### {end.headline}")
         st.markdown(end.summary)
         if end.tiles:
-            for col, (title, body), tile_icon in zip(
-                st.columns(len(end.tiles)), end.tiles, WATCH_ICONS, strict=False
+            for col, (title, body), (tile_icon, chapter) in zip(
+                st.columns(len(end.tiles)), end.tiles, WATCH, strict=False
             ):
-                with col, st.container(border=True, height="stretch"):
+                with col, st.container(border=True, key=f"watch-{chapter}", height="stretch"):
                     st.markdown(f"**{tile_icon} {title}**")
                     st.markdown(body)
-        more_button(end, primary=True)
+        more_button(end)
 
 # --- at a glance: five business questions ------------------------------------------------------
 with glance_tab:
     for i, p in enumerate(ov.panels, start=1):
         figs = overview_figures(p.key, p.frames, p.chart_titles, lang)
         with st.container(border=True):
+            source = BRIEF.get(p.key)
+            st.caption(f"Hackathon brief · {source}" if source else "Our own question")
             st.subheader(f"{i}. {p.question}")
             st.markdown(f"##### {p.takeaway}")
             left, right = st.columns([2, 3], gap="large")
@@ -175,45 +660,8 @@ with glance_tab:
                         st.plotly_chart(fig, key=f"ov-{p.key}-{j}", config=chart_config)
             evidence(p.key, p.sql, p.frames["main"], p.methods)
 
-# --- context, on demand: the data, how to use the app, what the data can't tell ------------
-with st.expander(
-    "About the data, how to use this app and what the data can't tell you",
-    icon=":material/info:",
-):
-    st.caption(
-        f"Eurostat Comext {about['dataset']} · {ov.year} unless stated. Every number on this "
-        "page is computed from the data by fixed rules, and the query behind each section is "
-        "under **Evidence**. No AI writes these texts."
-    )
-    # columns, not a horizontal container: three across on desktop, fully stacked on a phone
-    data_col, use_col, limits_col = st.columns(3)
-    with data_col, st.container(border=True, height="stretch"):
-        st.markdown("**:material/database: The data**")
-        st.markdown(
-            f"- **{about['dataset']}** (Eurostat Comext): Luxembourg's declared trade in goods\n"
-            f"- Monthly, {about['first_period']:%b %Y} → "
-            f"{about['latest_complete_period']:%b %Y} complete ({about['months']} months)\n"
-            f"- {about['partners']} partner countries × {about['products']:,} CN8 products × "
-            "exports and imports\n"
-            f"- {about['records']:,} records · extracted {about['extraction_date']}"
-        )
-    with use_col, st.container(border=True, height="stretch"):
-        st.markdown("**:material/route: How to use this app**")
-        st.markdown(
-            "1. **Start here** with the key findings, or the big picture in five questions.\n"
-            "2. **To know more** opens a finding's charts and evidence; **Explore** opens the "
-            "same question in the assistant, with filters, tables and a full trace.\n"
-            "3. **Ask** your own question in English, French or German."
-        )
-    with limits_col, st.container(border=True, height="stretch"):
-        st.markdown("**:material/block: What the data can't tell you**")
-        st.markdown("\n".join(f"- {m}" for m in ov.limits))
-
-# --- next step and provenance ---------------------------------------------------------------
-with st.container(horizontal=True, vertical_alignment="center"):
+# --- next step (not printed) -----------------------------------------------------------------
+with st.container(horizontal=True, vertical_alignment="center", key="next-step"):
     st.markdown("**Have a more specific question?** Ask it in your own words.")
     if st.button("Ask the assistant", icon=":material/forum:", type="primary"):
         st.switch_page(ASK_PAGE)
-st.caption(ATTRIBUTION.format(date=about["extraction_date"]))
-with st.expander("How the dataset summary was computed"):
-    st.code(about["sql"], language="sql")
