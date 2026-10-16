@@ -1,4 +1,4 @@
-# statec-hackathon-outliers
+# LuxTrade Lens
 
 ## Comext downloader and database importer
 
@@ -128,7 +128,7 @@ pip install -e .            # installs the luxtrade package (src/) in editable m
 **Conda (alternative)**
 ```bash
 conda env create -f environment.yml
-conda activate statec-outliers
+conda activate luxtrade_lens
 pip install -e .
 ```
 
@@ -175,7 +175,7 @@ python -m luxtrade.process.build        # contract Parquet + quality report + Du
 - Other options: `--to 2025-12`, `--workers 3`, `--dry-run`, `--force` (`--help` for all).
 
 For notebooks, register the kernel once:
-`python -m ipykernel install --user --name statec-outliers --display-name "Python (statec-outliers)"`
+`python -m ipykernel install --user --name luxtrade_lens --display-name "Python (luxtrade_lens)"`
 
 ### Dashboard builder and chart API
 

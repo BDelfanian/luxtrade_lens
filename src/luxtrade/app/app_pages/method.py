@@ -94,7 +94,7 @@ def rule_fired(ex: dict) -> str:
     return f"Intent {spec.intent} → {kind}"
 
 
-REPO_URL = "https://github.com/mina-naseh/statec-hackathon-outliers"
+REPO_URL = "https://github.com/BDelfanian/luxtrade_lens"
 
 st.title("How it works")
 st.markdown(
