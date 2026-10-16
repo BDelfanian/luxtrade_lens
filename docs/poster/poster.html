@@ -1,0 +1,360 @@
+<!doctype html>
+<!--
+  LuxTrade Lens poster (A-series portrait, 1123 × 1587 CSS px; rendered at 2× = 2246 × 3174 px).
+  Render with headless Chrome (needs internet for the Google Fonts), from the repository root:
+    chrome --headless=new --hide-scrollbars --force-device-scale-factor=2 --window-size=1123,1587
+           --virtual-time-budget=15000 --screenshot=Poster_v2.png file:///<repo>/docs/poster/poster.html
+  The QR code (segno, error level Q, inlined below) encodes https://github.com/BDelfanian/luxtrade_lens;
+  checked by decoding the rendered PNG with zxing-cpp.
+  Numbers come from the app: the Data page, the Overview findings and the recorded scenario
+  7f38f30acf (demo/runs/scenarios/).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LuxTrade Lens poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=block" rel="stylesheet">
+<style>
+  :root {
+    --ink: #13213C; --text: #2B3346; --muted: #5B6476; --faint: #8A93A3;
+    --blue: #0B7DB8; --sky: #00A3E0; --red: #C62F35; --bar-red: #E0383E;
+    --bg: #FAFBFC; --panel: #E8F4FB; --line: #CBD9E6; --card-line: #DCE6EF;
+    --violet: #5B47D1; --violet-bg: #F0EEFC; --violet-line: #D9D3F6;
+    --c1: #2A78D6; --c2: #E34948; --c3: #1BAF7A; --c4: #EDA100; --c5: #6250D6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1123px; height: 1587px; background: var(--bg); overflow: hidden; }
+  body { font-family: "IBM Plex Sans", Arial, sans-serif; color: var(--text); position: relative; }
+  .bars { height: 5px; background: var(--bar-red); box-shadow: 0 5px 0 var(--sky); }
+  .page { padding: 0 56px; }
+  .display { font-family: "Bricolage Grotesque", "Arial Black", sans-serif; color: var(--ink); }
+  .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 11.5px;
+    letter-spacing: 0.22em; color: var(--blue); text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px; }
+  .kicker::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .kicker.violet { color: var(--violet); }
+  .kicker.violet::after { background: var(--violet-line); }
+  .new { font-family: "IBM Plex Sans"; letter-spacing: 0.1em; font-size: 10px; font-weight: 700;
+    color: #fff; background: var(--violet); padding: 3px 8px; border-radius: 999px; }
+
+  /* header */
+  header { position: relative; padding-top: 32px; height: 243px; }
+  .badge-row { display: flex; align-items: center; gap: 14px; }
+  .badge { background: var(--red); color: #fff; font-weight: 700; font-size: 13px;
+    letter-spacing: 0.16em; padding: 8px 18px; border-radius: 999px; }
+  .team { color: var(--muted); font-size: 15px; }
+  h1 { font-size: 88px; font-weight: 800; letter-spacing: -0.045em; line-height: 1;
+    margin: 12px 0 10px -3px; }
+  h1 span { color: var(--blue); }
+  .tagline { font-size: 20.5px; line-height: 1.36; color: var(--ink); max-width: 845px;
+    font-weight: 500; }
+  .lens { position: absolute; top: -12px; right: -24px; width: 290px; height: 290px; }
+
+  /* 01 / 02 */
+  .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: 190px; }
+  .intro h3 { font-size: 18.5px; line-height: 1.3; font-weight: 700; margin: 10px 0 8px; }
+  .intro p { font-size: 13.8px; line-height: 1.55; color: var(--muted); }
+  .intro .lead { color: var(--text); font-size: 14px; margin-top: 12px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 24px; margin-top: 8px; }
+  .stat b { font-family: "Bricolage Grotesque"; font-size: 24px; font-weight: 800;
+    color: var(--ink); display: block; line-height: 1.1; }
+  .stat small { font-size: 12.5px; color: var(--muted); }
+
+  /* panels */
+  .panel { border-radius: 18px; padding: 15px 28px 17px; margin: 0 -16px; }
+  .panel.blue { background: var(--panel); }
+  .panel.violet { background: var(--violet-bg); }
+  h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+    margin: 6px 0 6px; }
+  .chips { display: flex; align-items: center; gap: 7px; font-size: 12.5px; }
+  .chips b { color: var(--ink); margin-right: 3px; }
+  .chip { border: 1px solid var(--card-line); background: #fff; border-radius: 999px;
+    padding: 3px 11px; color: var(--text); }
+  .chips em { font-style: normal; color: var(--muted); margin-left: 6px; }
+
+  .flow { display: grid; grid-template-columns: 1.7fr repeat(4, 1fr); gap: 10px;
+    margin: 11px 0 10px; }
+  .quote { background: var(--ink); color: #fff; border-radius: 12px; padding: 12px 14px;
+    font-style: italic; font-size: 12.6px; line-height: 1.42; display: flex;
+    flex-direction: column; justify-content: center; gap: 6px; }
+  .quote b { font-style: normal; font-family: "Bricolage Grotesque"; font-size: 14px;
+    color: #7FD3F5; }
+  .fstep { background: #fff; border: 1px solid var(--card-line); border-radius: 12px;
+    padding: 8px 11px; position: relative; }
+  .fstep .n { width: 21px; height: 21px; border-radius: 50%; background: var(--panel);
+    color: var(--ink); font-weight: 700; font-size: 11.5px; display: inline-flex;
+    align-items: center; justify-content: center; margin-right: 6px; }
+  .fstep b { color: var(--ink); font-size: 13.5px; }
+  .fstep p { font-size: 11.4px; line-height: 1.35; color: var(--muted); margin-top: 4px; }
+  .fstep:not(:last-child)::after { content: "›"; position: absolute; right: -9px; top: 50%;
+    transform: translateY(-55%); color: var(--faint); font-size: 18px; z-index: 2; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .card { background: #fff; border: 1px solid var(--card-line); border-radius: 12px;
+    padding: 9px 13px 10px; }
+  .card h4 { display: flex; align-items: center; gap: 9px; color: var(--ink); font-size: 14.2px;
+    font-weight: 600; }
+  .ico { width: 26px; height: 26px; border-radius: 7px; background: var(--panel);
+    display: inline-flex; align-items: center; justify-content: center; flex: none; }
+  .ico svg { width: 15px; height: 15px; stroke: var(--blue); fill: none; stroke-width: 1.9;
+    stroke-linecap: round; stroke-linejoin: round; }
+  .card p { font-size: 12.2px; line-height: 1.4; color: var(--muted); margin-top: 4px; }
+  .motto { display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 11px; }
+  .motto b { font-family: "Bricolage Grotesque"; font-size: 17px; color: var(--ink); }
+  .motto span { font-size: 12px; color: var(--muted); }
+
+  /* scenario */
+  .scn-lead { font-size: 13.6px; line-height: 1.5; color: var(--text); max-width: 940px; }
+  .sflow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 10px 0 10px; }
+  .sstep { background: #fff; border: 1px solid var(--violet-line); border-radius: 12px;
+    padding: 7px 10px 8px; position: relative; font-size: 12px; line-height: 1.35; color: var(--muted); }
+  .sstep b { display: block; color: var(--ink); font-size: 13px; margin-bottom: 2px; }
+  .sstep .who { font-family: "IBM Plex Mono"; font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--violet); }
+  .sstep:not(:last-child)::after { content: "›"; position: absolute; right: -9px; top: 50%;
+    transform: translateY(-55%); color: var(--violet); font-size: 18px; }
+  .scn-grid { display: grid; grid-template-columns: 1.45fr 1fr; gap: 12px; }
+  .ex { background: #fff; border: 1px solid var(--violet-line); border-radius: 12px;
+    padding: 12px 15px 13px; }
+  .tag { font-family: "IBM Plex Mono"; font-size: 9.8px; letter-spacing: 0.14em;
+    color: var(--violet); text-transform: uppercase; font-weight: 600; }
+  .ex .q { background: var(--ink); color: #fff; font-style: italic; border-radius: 10px;
+    padding: 8px 12px; font-size: 12.6px; line-height: 1.4; margin: 7px 0 8px; }
+  .ex ol { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px;
+    font-size: 11.6px; color: var(--text); }
+  .ex li { display: flex; gap: 6px; align-items: baseline; }
+  .ex li i { font-style: normal; font-weight: 700; color: var(--violet); min-width: 13px; }
+  .ex li em { font-style: normal; font-size: 9.5px; font-weight: 700; color: var(--violet);
+    background: var(--violet-bg); border-radius: 4px; padding: 0 5px; margin-left: 2px; }
+  .answer { margin-top: 9px; border-left: 3px solid var(--violet); padding: 2px 0 0 11px; }
+  .answer b { font-family: "Bricolage Grotesque"; font-size: 15.5px; color: var(--ink);
+    line-height: 1.25; display: block; }
+  .duo { display: flex; gap: 22px; margin-top: 6px; }
+  .duo div { font-size: 11.5px; color: var(--muted); }
+  .duo strong { font-family: "Bricolage Grotesque"; font-size: 17px; color: var(--ink);
+    display: block; }
+  .checks { background: #fff; border: 1px solid var(--violet-line); border-radius: 12px;
+    padding: 12px 15px; }
+  .checks ul { list-style: none; margin-top: 10px; display: grid; gap: 10.5px; }
+  .checks li { display: grid; grid-template-columns: 18px 1fr; gap: 7px; font-size: 12px;
+    line-height: 1.38; color: var(--text); }
+  .checks li svg { width: 15px; height: 15px; stroke: var(--violet); fill: none;
+    stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
+  .checks li b { color: var(--ink); }
+
+  /* findings */
+  .findings h2 { font-size: 24px; margin: 7px 0 3px; }
+  .trail-note { display: flex; align-items: center; gap: 8px; font-size: 12.6px;
+    color: var(--muted); margin-bottom: 9px; }
+  .trail-note svg { width: 15px; height: 15px; stroke: var(--blue); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .trail-note b { color: var(--text); font-weight: 600; }
+  .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 11px; }
+  .tile { background: #fff; border: 1px solid var(--card-line); border-radius: 12px;
+    padding: 10px 13px 11px; border-top: 4px solid var(--c); }
+  .tile b { font-family: "Bricolage Grotesque"; font-size: 27px; font-weight: 800;
+    color: var(--ink); display: block; line-height: 1.12; letter-spacing: -0.01em; }
+  .tile span { display: block; font-size: 12.2px; color: var(--ink); font-weight: 600;
+    line-height: 1.3; margin-top: 3px; }
+  .tile small { display: block; font-size: 11.6px; color: var(--muted); margin-top: 4px; }
+
+  /* footer */
+  footer { display: grid; grid-template-columns: 1.55fr 1.05fr 1.35fr; gap: 24px;
+    padding-top: 13px; }
+  .mono-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .mono-chips span { font-family: "IBM Plex Mono"; font-weight: 500; font-size: 11px;
+    border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; color: var(--ink);
+    background: #fff; }
+  .devs { margin-top: 8px; font-size: 13.5px; line-height: 1.7; color: var(--muted); }
+  .devs b { color: var(--ink); font-weight: 600; }
+  .code { display: flex; gap: 16px; align-items: center; }
+  .qr { width: 96px; height: 96px; padding: 8px; background: #fff; border: 1px solid var(--line);
+    border-radius: 10px; flex: none; }
+  .qr svg { width: 100%; height: 100%; display: block; }
+  .code a { font-family: "IBM Plex Mono"; font-size: 12.8px; color: var(--blue);
+    text-decoration: none; line-height: 1.45; display: block; margin-top: 7px; }
+  .code small { font-size: 12.5px; color: var(--muted); display: block; margin-top: 5px; }
+  .rule { position: absolute; left: 56px; right: 56px; bottom: 20px; height: 1px;
+    background: var(--line); }
+  .fine { position: absolute; left: 56px; right: 56px; bottom: 8px; font-size: 10.5px;
+    color: var(--faint); display: flex; justify-content: space-between; }
+  .gap { height: 15px; }
+</style>
+</head>
+<body>
+<div class="bars"></div>
+
+<!-- the lens: the app's logo idea, a magnifier over a bar chart -->
+<svg class="lens" viewBox="0 0 290 290" aria-hidden="true">
+  <circle cx="160" cy="135" r="122" fill="none" stroke="#BFE3F4" stroke-width="1.5"/>
+  <g stroke="#A9B4C2" stroke-width="2" stroke-linecap="round"><line x1="263.0" y1="135.0" x2="276.0" y2="135.0"/><line x1="265.4" y1="146.1" x2="274.4" y2="147.0"/><line x1="263.7" y1="157.0" x2="272.5" y2="158.9"/><line x1="260.8" y1="167.8" x2="269.4" y2="170.5"/><line x1="256.8" y1="178.1" x2="265.1" y2="181.8"/><line x1="249.2" y1="186.5" x2="260.5" y2="193.0"/><line x1="245.8" y1="197.3" x2="253.0" y2="202.6"/><line x1="238.8" y1="205.9" x2="245.5" y2="212.0"/><line x1="230.9" y1="213.8" x2="237.0" y2="220.5"/><line x1="222.3" y1="220.8" x2="227.6" y2="228.0"/><line x1="211.5" y1="224.2" x2="218.0" y2="235.5"/><line x1="203.1" y1="231.8" x2="206.8" y2="240.1"/><line x1="192.8" y1="235.8" x2="195.5" y2="244.4"/><line x1="182.0" y1="238.7" x2="183.9" y2="247.5"/><line x1="171.1" y1="240.4" x2="172.0" y2="249.4"/><line x1="160.0" y1="238.0" x2="160.0" y2="251.0"/><line x1="148.9" y1="240.4" x2="148.0" y2="249.4"/><line x1="138.0" y1="238.7" x2="136.1" y2="247.5"/><line x1="127.2" y1="235.8" x2="124.5" y2="244.4"/><line x1="116.9" y1="231.8" x2="113.2" y2="240.1"/><line x1="108.5" y1="224.2" x2="102.0" y2="235.5"/><line x1="97.7" y1="220.8" x2="92.4" y2="228.0"/><line x1="89.1" y1="213.8" x2="83.0" y2="220.5"/><line x1="81.2" y1="205.9" x2="74.5" y2="212.0"/><line x1="74.2" y1="197.3" x2="67.0" y2="202.6"/><line x1="70.8" y1="186.5" x2="59.5" y2="193.0"/><line x1="63.2" y1="178.1" x2="54.9" y2="181.8"/><line x1="59.2" y1="167.8" x2="50.6" y2="170.5"/><line x1="56.3" y1="157.0" x2="47.5" y2="158.9"/><line x1="54.6" y1="146.1" x2="45.6" y2="147.0"/><line x1="57.0" y1="135.0" x2="44.0" y2="135.0"/><line x1="54.6" y1="123.9" x2="45.6" y2="123.0"/><line x1="56.3" y1="113.0" x2="47.5" y2="111.1"/><line x1="59.2" y1="102.2" x2="50.6" y2="99.5"/><line x1="63.2" y1="91.9" x2="54.9" y2="88.2"/><line x1="70.8" y1="83.5" x2="59.5" y2="77.0"/><line x1="74.2" y1="72.7" x2="67.0" y2="67.4"/><line x1="81.2" y1="64.1" x2="74.5" y2="58.0"/><line x1="89.1" y1="56.2" x2="83.0" y2="49.5"/><line x1="97.7" y1="49.2" x2="92.4" y2="42.0"/><line x1="108.5" y1="45.8" x2="102.0" y2="34.5"/><line x1="116.9" y1="38.2" x2="113.2" y2="29.9"/><line x1="127.2" y1="34.2" x2="124.5" y2="25.6"/><line x1="138.0" y1="31.3" x2="136.1" y2="22.5"/><line x1="148.9" y1="29.6" x2="148.0" y2="20.6"/><line x1="160.0" y1="32.0" x2="160.0" y2="19.0"/><line x1="171.1" y1="29.6" x2="172.0" y2="20.6"/><line x1="182.0" y1="31.3" x2="183.9" y2="22.5"/><line x1="192.8" y1="34.2" x2="195.5" y2="25.6"/><line x1="203.1" y1="38.2" x2="206.8" y2="29.9"/><line x1="211.5" y1="45.8" x2="218.0" y2="34.5"/><line x1="222.3" y1="49.2" x2="227.6" y2="42.0"/><line x1="230.9" y1="56.2" x2="237.0" y2="49.5"/><line x1="238.8" y1="64.1" x2="245.5" y2="58.0"/><line x1="245.8" y1="72.7" x2="253.0" y2="67.4"/><line x1="249.2" y1="83.5" x2="260.5" y2="77.0"/><line x1="256.8" y1="91.9" x2="265.1" y2="88.2"/><line x1="260.8" y1="102.2" x2="269.4" y2="99.5"/><line x1="263.7" y1="113.0" x2="272.5" y2="111.1"/><line x1="265.4" y1="123.9" x2="274.4" y2="123.0"/></g>
+  <circle cx="160" cy="135" r="92" fill="#E6F3FB" stroke="#00A3E0" stroke-width="13"/>
+  <line x1="227" y1="203" x2="290" y2="266" stroke="#13213C" stroke-width="20" stroke-linecap="round"/>
+  <g>
+    <rect x="113" y="148" width="15" height="37" rx="2.5" fill="#2A78D6"/>
+    <rect x="135" y="120" width="15" height="65" rx="2.5" fill="#E34948"/>
+    <rect x="157" y="134" width="15" height="51" rx="2.5" fill="#1BAF7A"/>
+    <rect x="179" y="103" width="15" height="82" rx="2.5" fill="#EDA100"/>
+    <rect x="201" y="126" width="15" height="59" rx="2.5" fill="#6250D6"/>
+    <line x1="104" y1="187" x2="226" y2="187" stroke="#8A93A3" stroke-width="2"/>
+  </g>
+</svg>
+
+<div class="page">
+<header>
+  <div class="badge-row">
+    <span class="badge">STATEC HACKATHON 2026</span>
+    <span class="team">Team The Outliers · Luxembourg's trade in goods</span>
+  </div>
+  <h1 class="display">LuxTrade <span>Lens</span></h1>
+  <p class="tagline">Ask Luxembourg's trade data in your own words, from a single figure to a broad question.
+    Get checked answers, charts and reports in seconds.</p>
+</header>
+
+<section class="intro">
+  <div>
+    <div class="kicker">01 · The challenge</div>
+    <h3 class="display">Luxembourg trades €41.35 bn of goods a year with 210 partner countries.
+      When the next shock hits, which goods and supply routes should it watch first?</h3>
+    <p>The official data exists, but it is vast and technical. Our task: turn it into evidence
+      that anyone can query, check and share, not only statisticians.</p>
+  </div>
+  <div>
+    <div class="kicker">02 · The dataset</div>
+    <p class="lead"><b style="color:var(--ink)">Eurostat Comext DS-045409</b>: EU trade in goods
+      by partner and product, monthly. Luxembourg as reporter, used as published. No other data.</p>
+    <div class="stats">
+      <div class="stat"><b>14.6 M</b><small>records for Luxembourg</small></div>
+      <div class="stat"><b>14,815</b><small>products (CN8 codes)</small></div>
+      <div class="stat"><b>242</b><small>partner countries</small></div>
+      <div class="stat"><b>295</b><small>months, 2002 to 2026</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel blue">
+  <div class="kicker">03 · The assistant</div>
+  <h2 class="display">Statistical analysis for everyone, in plain language</h2>
+  <div class="chips"><b>Built for</b>
+    <span class="chip">Policy officers</span><span class="chip">Analysts</span>
+    <span class="chip">Journalists</span><span class="chip">Businesses</span>
+    <span class="chip">Students</span><em>No SQL, no product codes needed.</em></div>
+  <div class="flow">
+    <div class="quote"><span>“Quels produits le Luxembourg a-t-il importés de Chine en 2024 ?”</span><b>LLMs translate, code computes.</b></div>
+    <div class="fstep"><span class="n">1</span><b>Understand</b>
+      <p>The LLM turns the question into a query plan.</p></div>
+    <div class="fstep"><span class="n">2</span><b>Compute</b>
+      <p>Code compiles it to SQL; a guard keeps it read-only.</p></div>
+    <div class="fstep"><span class="n">3</span><b>Show</b>
+      <p>DuckDB runs it; the chart fits the result.</p></div>
+    <div class="fstep"><span class="n">4</span><b>Explain</b>
+      <p>A plain-language insight, checked against the numbers.</p></div>
+  </div>
+  <div class="cards">
+    <div class="card"><h4><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></span>Ask in your own words</h4>
+      <p>EN, FR or DE. No SQL, no codes. Six presets.</p></div>
+    <div class="card"><h4><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 16v-4M11 16V8M15 16v-6M19 16V5"/></svg></span>Automatic charts and maps</h4>
+      <p>Map, bars, line, treemap or pivot, picked by rule.</p></div>
+    <div class="card"><h4><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 19 15 9"/><path d="m14 4 1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/><path d="M19 12l.6 1.2 1.2.6-1.2.6-.6 1.2-.6-1.2-1.2-.6 1.2-.6z"/></svg></span>A question optimiser</h4>
+      <p>A vague question? Three checked, precise rewrites.</p></div>
+    <div class="card"><h4><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Follow-ups and Refine</h4>
+      <p>Context kept; Refine without calling the LLM.</p></div>
+    <div class="card"><h4><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Every number traceable</h4>
+      <p>Readable SQL, checked sentences, a run ID.</p></div>
+    <div class="card"><h4><span class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4" rx="1.5"/><rect x="13" y="10" width="7" height="10" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/></svg></span>Dashboards and reports</h4>
+      <p>Dashboards, CSV, slides saved to PDF.</p></div>
+  </div>
+</section>
+
+<div class="gap"></div>
+
+<section class="panel violet">
+  <div class="kicker violet">04 · The scenario builder <span class="new">NEW</span></div>
+  <h2 class="display">Broad questions, answered step by step</h2>
+  <p class="scn-lead">One query rarely settles a concern: the assistant plans a chain of checked questions,
+    follows up on what it finds and combines the answers.</p>
+  <div class="sflow">
+    <div class="sstep"><span class="who">you</span><b>1 · Your question</b>Broad, in EN, FR or DE.</div>
+    <div class="sstep"><span class="who">LLM + code</span><b>2 · Proposed chain</b>3–5 checked, editable.</div>
+    <div class="sstep"><span class="who">assistant</span><b>3 · Each step answered</b>A full run each: SQL, chart.</div>
+    <div class="sstep"><span class="who">LLM + code</span><b>4 · Follow-ups</b>Up to 2, from what it found.</div>
+    <div class="sstep"><span class="who">LLM + 2 checks</span><b>5 · Combined answer</b>Every point cites its steps.</div>
+  </div>
+  <div class="scn-grid">
+    <div class="ex">
+      <div class="tag">Worked example · recorded in the app</div>
+      <div class="q">“Has Luxembourg spread its risk, across the goods it sells and the countries it buys from?”</div>
+      <ol>
+        <li><i>1</i>Export shares by chapter, 2005</li>
+        <li><i>4</i>Import shares by partner, 2025</li>
+        <li><i>2</i>Export shares by chapter, 2025</li>
+        <li><i>5</i>Top 3 export chapters, yearly <em>follow-up</em></li>
+        <li><i>3</i>Import shares by partner, 2005</li>
+        <li><i>6</i>Belgium, Germany, China, yearly <em>follow-up</em></li>
+      </ol>
+      <div class="answer"><b>Diversified what it sells, but more concentrated in whom it buys from.</b>
+        <div class="duo">
+          <div><strong>59.0 % → 31.8 %</strong>top 3 export chapters, 2005 → 2025</div>
+          <div><strong>59.6 % → 65.8 %</strong>top 3 import partners, 2005 → 2025</div>
+        </div>
+      </div>
+    </div>
+    <div class="checks">
+      <div class="tag">How it stays honest</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg><span><b>Questions checked</b> before they run: codes, limits, SQL.</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg><span><b>Every number</b> found in the facts of the steps it cites,</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg><span><b>matched to the years</b> it is told for.</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg><span><b>A reasoning check</b> on directions and superlatives.</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg><span><b>Failing claims removed</b> and listed, never hidden.</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg><span><b>Re-verify</b> re-runs every step: same result hash.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="gap"></div>
+
+<section class="findings">
+  <div class="kicker">05 · Key findings, made with the assistant</div>
+  <h2 class="display">Luxembourg diversified what it sells, not whom it depends on.</h2>
+  <div class="trail-note"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H14a3.5 3.5 0 0 1 0 7h-4a3.5 3.5 0 0 0 0 7h5.5"/></svg>
+    <span><b>How the assistant got here:</b> each finding opens the chain of real assistant runs behind it, 4–6 questions with their follow-ups.</span></div>
+  <div class="tiles">
+    <div class="tile" style="--c: var(--c1)"><b>−56 %</b><span>Export concentration since 2005</span><small>HHI 1,374 → 602</small></div>
+    <div class="tile" style="--c: var(--c2)"><b>3 / 3</b><span>Crises in which iron and steel exports fell</span><small>−48 % · −26 % · −27 %</small></div>
+    <div class="tile" style="--c: var(--c3)"><b>86.6 %</b><span>Imports from EU countries, 2025</span><small>+16.3 pp vs 2005</small></div>
+    <div class="tile" style="--c: var(--c4)"><b>16 ×</b><span>Value per kg, non-EU vs EU imports</span><small>€19.71 vs €1.23 per kg</small></div>
+    <div class="tile" style="--c: var(--c5)"><b>−11.8 pp</b><span>Computers' share of imports since 2005</span><small>13.1 % → 1.3 %</small></div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="kicker" style="display:block">Tech stack</div>
+    <div class="mono-chips">
+      <span>Python 3.12</span><span>Streamlit</span><span>DuckDB</span><span>LangGraph</span>
+      <span>Plotly</span><span>pandas</span><span>Pydantic</span><span>sqlglot</span>
+      <span>statsmodels</span><span>FastAPI</span><span>GPT-4.1 mini or Claude Sonnet 4.6</span>
+    </div>
+  </div>
+  <div>
+    <div class="kicker" style="display:block">Developers · The Outliers</div>
+    <div class="devs"><b>Mina Naseh</b> · PwC<br><b>Behrouz Delfanian</b> · ArcelorMittal<br>
+      <b>Kasra Eskandarizanjani</b> · Amfie</div>
+  </div>
+  <div class="code">
+    <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 330" role="img" aria-label="QR code: github.com/BDelfanian/luxtrade_lens" class="segno"><path transform="scale(10)" class="qrline" stroke="#13213c" d="M0 0.5h7m6 0h1m1 0h1m1 0h5m1 0h1m2 0h7m-33 1h1m5 0h1m1 0h2m1 0h1m1 0h1m4 0h1m1 0h1m1 0h3m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m4 0h3m1 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m7 0h2m6 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h1m4 0h2m2 0h1m3 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m2 0h1m3 0h3m2 0h2m1 0h2m1 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-23 1h1m1 0h2m1 0h1m1 0h2m1 0h1m2 0h1m-23 1h3m1 0h2m2 0h2m6 0h3m1 0h2m1 0h1m5 0h2m-25 1h4m1 0h1m3 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h1m-33 1h2m2 0h8m3 0h3m2 0h1m1 0h2m1 0h1m1 0h3m1 0h2m-32 1h3m4 0h3m1 0h1m1 0h2m2 0h1m6 0h1m1 0h1m1 0h1m-30 1h1m2 0h1m2 0h1m1 0h1m2 0h1m1 0h4m1 0h1m2 0h5m1 0h3m-29 1h3m3 0h8m3 0h1m1 0h3m1 0h2m1 0h1m2 0h2m-32 1h1m3 0h3m1 0h3m1 0h2m2 0h1m2 0h3m4 0h2m2 0h1m-31 1h1m4 0h1m1 0h1m4 0h3m1 0h1m2 0h1m1 0h1m1 0h4m1 0h3m-31 1h1m2 0h1m1 0h5m8 0h1m1 0h4m1 0h2m1 0h3m-30 1h3m8 0h1m3 0h1m2 0h8m1 0h2m1 0h2m-33 1h2m1 0h1m2 0h3m1 0h1m2 0h1m1 0h4m1 0h1m1 0h1m1 0h2m1 0h2m1 0h2m-30 1h4m5 0h2m2 0h2m2 0h1m2 0h5m1 0h1m-28 1h2m3 0h3m2 0h1m1 0h2m1 0h1m1 0h1m1 0h2m2 0h1m4 0h2m-31 1h2m1 0h2m2 0h1m1 0h4m2 0h1m1 0h5m1 0h1m1 0h3m4 0h1m-31 1h1m2 0h2m4 0h1m2 0h1m3 0h1m1 0h2m1 0h1m1 0h2m1 0h1m2 0h2m-32 1h3m1 0h1m1 0h2m1 0h1m1 0h6m2 0h1m3 0h1m1 0h2m1 0h1m2 0h1m-33 1h1m1 0h1m3 0h2m1 0h1m1 0h1m2 0h3m2 0h1m2 0h1m1 0h5m3 0h1m-25 1h2m4 0h3m2 0h3m2 0h1m3 0h2m-30 1h7m4 0h1m3 0h1m1 0h4m2 0h2m1 0h1m1 0h1m-29 1h1m5 0h1m1 0h4m1 0h2m1 0h1m3 0h2m1 0h2m3 0h3m-31 1h1m1 0h3m1 0h1m2 0h1m2 0h1m2 0h2m1 0h11m1 0h2m-32 1h1m1 0h3m1 0h1m1 0h1m1 0h2m3 0h3m2 0h4m3 0h1m3 0h2m-33 1h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h5m2 0h1m1 0h1m3 0h2m1 0h2m-31 1h1m5 0h1m1 0h1m2 0h2m1 0h2m6 0h1m1 0h1m2 0h2m3 0h1m-33 1h7m2 0h2m5 0h4m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1"/></svg></div>
+    <div>
+      <div class="kicker" style="display:block">Code and docs</div>
+      <a>github.com/BDelfanian/<br>luxtrade_lens</a>
+      <small>Open source · EUPL-1.2</small>
+    </div>
+  </div>
+</footer>
+</div>
+<div class="rule"></div>
+</body>
+</html>
