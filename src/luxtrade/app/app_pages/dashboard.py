@@ -159,7 +159,9 @@ def _example_controls(service: DashboardService) -> None:
 def _builder(service: DashboardService, dashboard: DashboardSpec) -> None:
     st.subheader("Add a chart")
     _example_controls(service)
-    query = st.text_area("SQL query", value=EXAMPLE_QUERY, height=160, key="dashboard-query")
+    with st.expander("Edit SQL"):
+        query = st.text_area("SQL query", value=EXAMPLE_QUERY, height=160, key="dashboard-query")
+    st.code(query, language="sql")
     if st.button("Run query", type="primary", key="dashboard-run-query"):
         try:
             result = service.preview(QueryRequest(query=query))
