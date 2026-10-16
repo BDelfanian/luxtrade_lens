@@ -1,0 +1,174 @@
+{
+ "scenario_id": "6c1780272a",
+ "session_id": "msa5g9",
+ "created_at": "2026-10-16T22:25:40+00:00",
+ "question": "Hat Luxemburg sein Risiko gestreut, bei den Waren, die es verkauft, und den Ländern, bei denen es einkauft?",
+ "language": "de",
+ "title": "Luxemburgs Risikostreuung im Warenhandel",
+ "approach": "Die Kette analysiert die Risikostreuung Luxemburgs im Warenhandel, indem sie die Konzentration der Exporte nach Produkten und der Importe nach Partnerländern im Zeitverlauf untersucht. Sie vergleicht die Anteile der wichtigsten Produkte und Partnerländer im Jahr 2005 und 2025, um Veränderungen in der Diversifikation zu erkennen.",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "plan",
+   "question": "Wie verteilt sich der Anteil der wichtigsten exportierten Warenkapitel (HS2) Luxemburgs im Jahr 2005?",
+   "purpose": "Diese Frage zeigt die Produktdiversifikation der Exporte im Ausgangsjahr 2005.",
+   "builds_on": [],
+   "run_id": "66d7140661",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2005 · share of the whole flow in %",
+   "note": "Im Jahr 2005 machten die drei wichtigsten exportierten Warenkapitel 59,0 % der Exporte aus, mit Maschinen und mechanischen Geräten als größtem Produkt."
+  },
+  {
+   "n": 2,
+   "kind": "plan",
+   "question": "Wie verteilt sich der Anteil der wichtigsten exportierten Warenkapitel (HS2) Luxemburgs im Jahr 2025?",
+   "purpose": "Diese Frage zeigt die Produktdiversifikation der Exporte im Vergleichsjahr 2025, um Veränderungen gegenüber 2005 zu erkennen.",
+   "builds_on": [],
+   "run_id": "1593deb760",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2025 · share of the whole flow in %",
+   "note": "Im Jahr 2025 sank der Anteil der drei wichtigsten exportierten Warenkapitel auf 31,8 %, wobei Maschinen und mechanische Geräte nur noch 12,5 % ausmachten."
+  },
+  {
+   "n": 3,
+   "kind": "plan",
+   "question": "Wie verteilt sich der Anteil der wichtigsten Importpartner Luxemburgs im Jahr 2005?",
+   "purpose": "Diese Frage zeigt die Partnerländerdiversifikation der Importe im Ausgangsjahr 2005.",
+   "builds_on": [],
+   "run_id": "7e9fea00d6",
+   "status": "answered",
+   "queried": "imports · by partner (top 10) · 2005 · share of the whole flow in %",
+   "note": "Im Jahr 2005 kamen 59,6 % der Importe aus den drei wichtigsten Partnerländern, angeführt von Belgien mit 26,9 %."
+  },
+  {
+   "n": 4,
+   "kind": "plan",
+   "question": "Wie verteilt sich der Anteil der wichtigsten Importpartner Luxemburgs im Jahr 2025?",
+   "purpose": "Diese Frage zeigt die Partnerländerdiversifikation der Importe im Vergleichsjahr 2025, um Veränderungen gegenüber 2005 zu erkennen.",
+   "builds_on": [],
+   "run_id": "14ec82e814",
+   "status": "answered",
+   "queried": "imports · by partner (top 10) · 2025 · share of the whole flow in %",
+   "note": "Im Jahr 2025 stieg der Anteil der drei wichtigsten Importpartner auf 65,8 %, mit Belgien und Deutschland als den größten Partnern."
+  },
+  {
+   "n": 5,
+   "kind": "follow-up",
+   "question": "Wie hat sich der Anteil der wichtigsten exportierten Warenkapitel (HS2) Luxemburgs jährlich von 2005 bis 2025 entwickelt?",
+   "purpose": "Die Antworten in Schritt 1 und 2 zeigen die Anteile der wichtigsten exportierten Warenkapitel in den Jahren 2005 und 2025, aber nicht die Entwicklung dazwischen, um die Dynamik der Produktdiversifikation besser zu verstehen.",
+   "builds_on": [
+    1,
+    2
+   ],
+   "run_id": "aef3fcbac4",
+   "status": "answered",
+   "queried": "exports · products 84, 39, 87, 85, 72 · by HS2 product (top 5) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Von 2005 bis 2025 sank der Anteil von Maschinen und mechanischen Geräten und elektrischen Maschinen an den Exporten deutlich, während Kunststoffe ihren Anteil mehr als verdoppelten."
+  },
+  {
+   "n": 6,
+   "kind": "follow-up",
+   "question": "Wie hat sich der Anteil der wichtigsten Importpartner Luxemburgs jährlich von 2005 bis 2025 entwickelt?",
+   "purpose": "Die Antworten in Schritt 3 und 4 zeigen die Anteile der wichtigsten Importpartner in den Jahren 2005 und 2025, aber nicht die Entwicklung dazwischen, um die Dynamik der Partnerdiversifikation besser zu verstehen.",
+   "builds_on": [
+    3,
+    4
+   ],
+   "run_id": "efe409816d",
+   "status": "answered",
+   "queried": "imports · partners BE, DE, FR, NL, CN, JP · by partner (top 6) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Belgien und Deutschland erhöhten ihre Importanteile von 2005 bis 2025, während China einen starken Rückgang verzeichnete."
+  }
+ ],
+ "headline": "Luxemburg hat sein Risiko bei den exportierten Waren von 2005 bis 2025 deutlich gestreut, während die Importe stärker auf wenige Partnerländer konzentriert blieben.",
+ "points": [
+  {
+   "text": "Der Anteil der drei wichtigsten exportierten Warenkapitel sank von 59,0 % im Jahr 2005 auf 31,8 % im Jahr 2025, was auf eine stärkere Produktdiversifikation bei den Exporten hinweist.",
+   "steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "text": "Die Exporte von Maschinen und mechanischen Geräten sowie elektrischen Maschinen und Geräten haben sich von 2005 bis 2025 mehr als halbiert, während Kunststoffe und Waren daraus ihren Anteil mehr als verdoppelt haben, was die Verschiebung der Exportstruktur zeigt.",
+   "steps": [
+    5
+   ]
+  },
+  {
+   "text": "Die Importe sind hingegen stärker auf wenige Partnerländer konzentriert geblieben, wobei der Anteil der drei wichtigsten Importpartner von 59,6 % im Jahr 2005 auf 65,8 % im Jahr 2025 gestiegen ist, was auf eine geringere Diversifikation bei den Importpartnern hindeutet.",
+   "steps": [
+    3,
+    4
+   ]
+  },
+  {
+   "text": "Belgien und Deutschland haben ihre Anteile an den Importen von 2005 bis 2025 erhöht, während China einen starken Rückgang verzeichnete, was die Verschiebung der Importpartnerstruktur zeigt.",
+   "steps": [
+    6
+   ]
+  }
+ ],
+ "conclusion": "Insgesamt zeigt die Analyse, dass Luxemburg sein Risiko bei den exportierten Waren durch eine breitere Produktpalette deutlich gestreut hat, während die Importe stärker auf wenige Länder konzentriert sind und sich die Partnerstruktur zugunsten von Belgien und Deutschland verschoben hat. Diese Daten geben jedoch keine Auskunft über die Gründe für diese Veränderungen oder über die Diversifikation innerhalb der sonstigen Kategorien. Zudem sind nominale Werte ohne Preisbereinigung verwendet worden, was die Interpretation der Entwicklung einschränkt.",
+ "charts": [
+  5,
+  6,
+  2
+ ],
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "2.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L03",
+   "message": "4.0 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "combined answer passed the number, country, wording and reasoning checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_plan",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 7850,
+   "output_tokens": 658,
+   "cache_read_tokens": 1664,
+   "ms": 4895
+  },
+  {
+   "step": "scenario_follow_up",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 8648,
+   "output_tokens": 381,
+   "cache_read_tokens": 0,
+   "ms": 2771
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3604,
+   "output_tokens": 653,
+   "cache_read_tokens": 0,
+   "ms": 4905
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3812,
+   "output_tokens": 629,
+   "cache_read_tokens": 0,
+   "ms": 4056
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "88aa27d",
+ "status": "answered"
+}

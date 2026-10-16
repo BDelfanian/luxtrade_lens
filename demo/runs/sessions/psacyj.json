@@ -1,0 +1,15 @@
+{
+ "session_id": "psacyj",
+ "created_at": "2026-10-16T22:25:52+00:00",
+ "updated_at": "2026-10-16T22:26:10+00:00",
+ "language": "en",
+ "title": "Scenario: Luxembourg Trade Crisis Impact on Goods",
+ "runs": [
+  "5b9823609f",
+  "a149c71e3f",
+  "67df03afbb",
+  "61b6cb2277",
+  "14eb8402cc",
+  "f77da739cd"
+ ]
+}

@@ -1,0 +1,161 @@
+{
+ "run_id": "a5cef1f32d",
+ "session_id": "ks9g77",
+ "turn": 2,
+ "created_at": "2026-10-16T22:25:53+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Wie hat sich der Anteil der EU27-Partner am Gesamteimport Luxemburgs im Jahr 2025 entwickelt?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "de",
+  "intent": "composition",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "EU27 and non-EU27 partners both kept, to split the total"
+  ]
+ },
+ "assumptions": [
+  "EU27 and non-EU27 partners both kept, to split the total"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "25b7cda3023fc4e204b4eac559f1d2a00fcbdfa2c9a86f360dffc7d0b9539ba4",
+ "row_count": 2,
+ "view_kind": "bar",
+ "title": "EU27-Länder — Importe 2025: 86,6 %",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "EU27",
+    "value": 21723778482.0,
+    "share": 86.5560066022,
+    "rank": 1,
+    "kind": "item",
+    "label": "EU27-Länder"
+   },
+   {
+    "flow": "import",
+    "key": "NON_EU27",
+    "value": 3374165999.0,
+    "share": 13.4439933978,
+    "rank": 2,
+    "kind": "item",
+    "label": "Nicht-EU27-Länder"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Der Anteil der EU27-Partner am Gesamteimport Luxemburgs im Jahr 2025 betrug 86,6 Prozent.",
+  "Die gesamten Importe Luxemburgs erreichten 25,10 Milliarden Euro.",
+  "Davon entfielen 21,72 Milliarden Euro auf EU27-Länder und 3,37 Milliarden Euro auf Nicht-EU27-Länder.",
+  "Der Anteil der EU27-Länder am Import ist damit deutlich höher als der der Nicht-EU27-Länder.",
+  "Die Werte sind nominal und nicht inflationsbereinigt, was die Vergleichbarkeit über die Zeit einschränkt."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "Importe 2025: 25,10 Mrd. €"
+  },
+  {
+   "key": "import.eu27",
+   "text": "EU27-Länder: 21,72 Mrd. €, 86,6 %"
+  },
+  {
+   "key": "import.non_eu27",
+   "text": "Nicht-EU27-Länder: 3,37 Mrd. €, 13,4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of each flow's total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 233,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 9,
+   "outcome": "ok",
+   "detail": "view=bar; share of each flow's total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1201,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 707,
+   "output_tokens": 124,
+   "cache_read_tokens": 0,
+   "ms": 1168
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

@@ -1,0 +1,303 @@
+{
+ "run_id": "7e9fea00d6",
+ "session_id": "msa5g9",
+ "turn": 3,
+ "created_at": "2026-10-16T22:25:13+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Wie verteilt sich der Anteil der wichtigsten Importpartner Luxemburgs im Jahr 2005?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "de",
+  "intent": "composition",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2005",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "4.0 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 4.005345805815015
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2006-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "2fd1ce50f538624b4fb9275b170f0380e0222c9ea5f88ad3eec1e41616c00732",
+ "row_count": 127,
+ "view_kind": "map",
+ "title": "Wichtigste Handelspartner — Importe 2005",
+ "frames": {
+  "main": [
+   {
+    "key": "BE",
+    "value": 4879289981.0,
+    "share": 26.8762994741,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "key": "DE",
+    "value": 3690407545.0,
+    "share": 20.3276498727,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "key": "CN",
+    "value": 2248814548.0,
+    "share": 12.3870098906,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "key": "FR",
+    "value": 1701887904.0,
+    "share": 9.3744067595,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "key": "NL",
+    "value": 889788417.0,
+    "share": 4.9011680095,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "key": "US",
+    "value": 572389774.0,
+    "share": 3.1528601583,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vereinigte Staaten",
+    "iso3": "USA"
+   },
+   {
+    "key": "CH",
+    "value": 474588894.0,
+    "share": 2.6141494545,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Schweiz",
+    "iso3": "CHE"
+   },
+   {
+    "key": "IT",
+    "value": 441348792.0,
+    "share": 2.4310550003,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Italien",
+    "iso3": "ITA"
+   },
+   {
+    "key": "GB",
+    "value": 407549266.0,
+    "share": 2.2448791046,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vereinigtes Königreich",
+    "iso3": "GBR"
+   },
+   {
+    "key": "MY",
+    "value": 326884903.0,
+    "share": 1.8005604465,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Malaysia",
+    "iso3": "MYS"
+   },
+   {
+    "key": "OTHER",
+    "value": 1791951411.0,
+    "share": 9.870498157,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Sonstige",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 729718347.0,
+    "share": 4.0194636724,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Vertraulich",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "DE",
+   "CN",
+   "FR",
+   "NL",
+   "US",
+   "CH",
+   "IT",
+   "GB",
+   "MY"
+  ]
+ },
+ "insight": [
+  "Im Jahr 2005 betrugen die Importe Luxemburgs insgesamt 18,15 Milliarden Euro.",
+  "Die drei wichtigsten Importpartner waren Belgien mit 4,88 Milliarden Euro (26,9 %), Deutschland mit 3,69 Milliarden Euro (20,3 %) und China mit 2,25 Milliarden Euro (12,4 %).",
+  "Diese drei Länder machten zusammen 59,6 % der Importe aus.",
+  "Frankreich und die Niederlande folgten mit 1,70 Milliarden Euro (9,4 %) beziehungsweise 889,8 Millionen Euro (4,9 %).",
+  "4,0 % der Importe stammen von vertraulichen Partnern, deren Daten nicht einzeln ausgewiesen werden."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "Importe 2005: 18,15 Mrd. €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Belgien: 4,88 Mrd. €, 26,9 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Deutschland: 3,69 Mrd. €, 20,3 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 China: 2,25 Mrd. €, 12,4 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Frankreich: 1,70 Mrd. €, 9,4 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Niederlande: 889,8 Mio. €, 4,9 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Sonstige: 1,79 Mrd. €, 9,9 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Vertraulich: 729,7 Mio. €, 4,0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 Importe: 59,6 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 181,
+   "outcome": "ok",
+   "detail": "127 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 27,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1562,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 987,
+   "output_tokens": 150,
+   "cache_read_tokens": 0,
+   "ms": 1470
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

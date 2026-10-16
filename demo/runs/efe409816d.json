@@ -1,0 +1,1325 @@
+{
+ "run_id": "efe409816d",
+ "session_id": "msa5g9",
+ "turn": 6,
+ "created_at": "2026-10-16T22:25:30+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Wie hat sich der Anteil der wichtigsten Importpartner Luxemburgs jährlich von 2005 bis 2025 entwickelt?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "de",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [
+   "BE",
+   "DE",
+   "FR",
+   "NL",
+   "CN",
+   "JP"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 6,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('BE', 'DE', 'FR', 'NL', 'CN', 'JP')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "cf866f6804f6bd70672ba11ecbdd2b6c823ea7e7feebb9b4fb0f91aca70759e9",
+ "row_count": 126,
+ "view_kind": "line",
+ "title": "Belgien · Importe: +11,8 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "BE",
+    "flow": "import",
+    "value": 26.8762994741,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2005,
+    "key": "CN",
+    "flow": "import",
+    "value": 12.3870098906,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2005,
+    "key": "DE",
+    "flow": "import",
+    "value": 20.3276498727,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2005,
+    "key": "FR",
+    "flow": "import",
+    "value": 9.3744067595,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2005,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.7023619967,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2005,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.9011680095,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2006,
+    "key": "BE",
+    "flow": "import",
+    "value": 25.0109169649,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2006,
+    "key": "CN",
+    "flow": "import",
+    "value": 16.3617171581,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2006,
+    "key": "DE",
+    "flow": "import",
+    "value": 19.0557326632,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2006,
+    "key": "FR",
+    "flow": "import",
+    "value": 8.5421292828,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2006,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.688011024,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2006,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.1892176811,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2007,
+    "key": "BE",
+    "flow": "import",
+    "value": 26.4585822713,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2007,
+    "key": "CN",
+    "flow": "import",
+    "value": 16.6703472438,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2007,
+    "key": "DE",
+    "flow": "import",
+    "value": 22.1173107234,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2007,
+    "key": "FR",
+    "flow": "import",
+    "value": 9.6038972715,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2007,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.5067307346,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2007,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.8845677032,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2008,
+    "key": "BE",
+    "flow": "import",
+    "value": 26.6548378433,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2008,
+    "key": "CN",
+    "flow": "import",
+    "value": 18.6169319777,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2008,
+    "key": "DE",
+    "flow": "import",
+    "value": 21.8927251483,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2008,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.2560326464,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2008,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.3227134381,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2008,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.7730309713,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2009,
+    "key": "BE",
+    "flow": "import",
+    "value": 26.0319842007,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2009,
+    "key": "CN",
+    "flow": "import",
+    "value": 18.2528962167,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2009,
+    "key": "DE",
+    "flow": "import",
+    "value": 20.729108893,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2009,
+    "key": "FR",
+    "flow": "import",
+    "value": 8.8537108289,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2009,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.2599710976,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2009,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.968781812,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2010,
+    "key": "BE",
+    "flow": "import",
+    "value": 29.6375699638,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2010,
+    "key": "CN",
+    "flow": "import",
+    "value": 8.7467539389,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2010,
+    "key": "DE",
+    "flow": "import",
+    "value": 23.1687414982,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2010,
+    "key": "FR",
+    "flow": "import",
+    "value": 11.4208656131,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2010,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.6451235467,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2010,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.7040580266,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2011,
+    "key": "BE",
+    "flow": "import",
+    "value": 30.229289935,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2011,
+    "key": "CN",
+    "flow": "import",
+    "value": 6.870887665,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2011,
+    "key": "DE",
+    "flow": "import",
+    "value": 24.0051291488,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2011,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.4620943252,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2011,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.795456349,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2011,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.6323941328,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2012,
+    "key": "BE",
+    "flow": "import",
+    "value": 29.6490800221,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2012,
+    "key": "CN",
+    "flow": "import",
+    "value": 7.1613961727,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2012,
+    "key": "DE",
+    "flow": "import",
+    "value": 21.7693212998,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2012,
+    "key": "FR",
+    "flow": "import",
+    "value": 9.7711084954,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2012,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.7573932949,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2012,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.2370540028,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2013,
+    "key": "BE",
+    "flow": "import",
+    "value": 30.2331007775,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2013,
+    "key": "CN",
+    "flow": "import",
+    "value": 6.3660365229,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2013,
+    "key": "DE",
+    "flow": "import",
+    "value": 22.5924691008,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2013,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.3439044865,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2013,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.845969857,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2013,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.7849662494,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2014,
+    "key": "BE",
+    "flow": "import",
+    "value": 30.0374795214,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2014,
+    "key": "CN",
+    "flow": "import",
+    "value": 5.9091828245,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2014,
+    "key": "DE",
+    "flow": "import",
+    "value": 22.8692545642,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2014,
+    "key": "FR",
+    "flow": "import",
+    "value": 11.6490313285,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2014,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.9560569889,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2014,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.8179948842,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2015,
+    "key": "BE",
+    "flow": "import",
+    "value": 26.9974955448,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2015,
+    "key": "CN",
+    "flow": "import",
+    "value": 11.5994561982,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2015,
+    "key": "DE",
+    "flow": "import",
+    "value": 21.7330263778,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2015,
+    "key": "FR",
+    "flow": "import",
+    "value": 9.4361169482,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2015,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.0645677894,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2015,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.2943639961,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2016,
+    "key": "BE",
+    "flow": "import",
+    "value": 29.0712599701,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2016,
+    "key": "CN",
+    "flow": "import",
+    "value": 5.7440232665,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2016,
+    "key": "DE",
+    "flow": "import",
+    "value": 23.278773357,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2016,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.1432738199,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2016,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.1418796912,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2016,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.3585431578,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2017,
+    "key": "BE",
+    "flow": "import",
+    "value": 31.2067671995,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2017,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.5293039524,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2017,
+    "key": "DE",
+    "flow": "import",
+    "value": 24.0921575969,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2017,
+    "key": "FR",
+    "flow": "import",
+    "value": 11.3387406838,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2017,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.5602255247,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2017,
+    "key": "NL",
+    "flow": "import",
+    "value": 4.7155921954,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2018,
+    "key": "BE",
+    "flow": "import",
+    "value": 33.9584967659,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2018,
+    "key": "CN",
+    "flow": "import",
+    "value": 2.1159671101,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2018,
+    "key": "DE",
+    "flow": "import",
+    "value": 24.6539307856,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2018,
+    "key": "FR",
+    "flow": "import",
+    "value": 11.1887205399,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2018,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.1212015526,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2018,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.408369992,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2019,
+    "key": "BE",
+    "flow": "import",
+    "value": 33.1131111586,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2019,
+    "key": "CN",
+    "flow": "import",
+    "value": 6.9911126434,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2019,
+    "key": "DE",
+    "flow": "import",
+    "value": 23.2212641889,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2019,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.5992249665,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2019,
+    "key": "JP",
+    "flow": "import",
+    "value": 2.2459800966,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2019,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.5968673775,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2020,
+    "key": "BE",
+    "flow": "import",
+    "value": 33.3472133479,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2020,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.5346583166,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2020,
+    "key": "DE",
+    "flow": "import",
+    "value": 26.1947993751,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2020,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.5417264291,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2020,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.8288037159,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2020,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.4840657744,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2021,
+    "key": "BE",
+    "flow": "import",
+    "value": 30.9959275818,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2021,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.2181146157,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2021,
+    "key": "DE",
+    "flow": "import",
+    "value": 25.5277173105,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2021,
+    "key": "FR",
+    "flow": "import",
+    "value": 12.3607351378,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2021,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.7273523442,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2021,
+    "key": "NL",
+    "flow": "import",
+    "value": 6.4325081323,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2022,
+    "key": "BE",
+    "flow": "import",
+    "value": 31.568453725,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2022,
+    "key": "CN",
+    "flow": "import",
+    "value": 1.0685951257,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2022,
+    "key": "DE",
+    "flow": "import",
+    "value": 24.603739686,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2022,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.649869613,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2022,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.7171406906,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2022,
+    "key": "NL",
+    "flow": "import",
+    "value": 7.2220841831,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2023,
+    "key": "BE",
+    "flow": "import",
+    "value": 32.5189074953,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2023,
+    "key": "CN",
+    "flow": "import",
+    "value": 0.8223373657,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2023,
+    "key": "DE",
+    "flow": "import",
+    "value": 24.1912609506,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2023,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.9573163826,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2023,
+    "key": "JP",
+    "flow": "import",
+    "value": 1.5464983098,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2023,
+    "key": "NL",
+    "flow": "import",
+    "value": 6.5837417789,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2024,
+    "key": "BE",
+    "flow": "import",
+    "value": 31.8640766363,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2024,
+    "key": "CN",
+    "flow": "import",
+    "value": 0.6393368635,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2024,
+    "key": "DE",
+    "flow": "import",
+    "value": 25.5551385907,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2024,
+    "key": "FR",
+    "flow": "import",
+    "value": 12.2952733628,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2024,
+    "key": "JP",
+    "flow": "import",
+    "value": 0.9253028694,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2024,
+    "key": "NL",
+    "flow": "import",
+    "value": 6.0269821878,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2025,
+    "key": "BE",
+    "flow": "import",
+    "value": 30.0498907499,
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2025,
+    "key": "CN",
+    "flow": "import",
+    "value": 3.0333552836,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "period": 2025,
+    "key": "DE",
+    "flow": "import",
+    "value": 24.9766522304,
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2025,
+    "key": "FR",
+    "flow": "import",
+    "value": 10.7584604829,
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2025,
+    "key": "JP",
+    "flow": "import",
+    "value": 4.4909090816,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "period": 2025,
+    "key": "NL",
+    "flow": "import",
+    "value": 5.5503490338,
+    "label": "Niederlande",
+    "iso3": "NLD"
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 18154619782.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 21610814188.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 20451620342.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 21863560875.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 18160433767.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 18713336015.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 20732587803.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 21228221332.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 20077758043.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 20098125346.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 21016138777.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 19761934890.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 20274152140.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 20463000768.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 21657598157.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 18504346533.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 22146665635.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 25660352026.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 24322124998.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 24087714129.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 25097944481.0
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "CN",
+   "DE",
+   "FR",
+   "JP",
+   "NL"
+  ]
+ },
+ "insight": [
+  "Der Anteil der wichtigsten Importpartner Luxemburgs hat sich von 2005 bis 2025 unterschiedlich entwickelt.",
+  "Belgien stieg von 26,9 % auf 30,0 %, Deutschland von 20,3 % auf 25,0 %, Frankreich von 9,4 % auf 10,8 %, während China von 12,4 % auf 3,0 % sank.",
+  "Der höchste Anteil bei Belgien wurde 2018 mit 34,0 % erreicht, bei Deutschland 2020 mit 26,2 % und bei Frankreich 2021 mit 12,4 %.",
+  "Der Anteil Chinas erreichte seinen Höchstwert 2008 mit 18,6 % und fiel danach stark ab.",
+  "Die Werte sind nominale Anteile in aktuellen Euro und berücksichtigen keine Preisänderungen."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Belgien · Importe.start",
+   "text": "Belgien · Importe 2005: 26,9 %"
+  },
+  {
+   "key": "Belgien · Importe.end",
+   "text": "Belgien · Importe 2025: 30,0 %"
+  },
+  {
+   "key": "Belgien · Importe.change",
+   "text": "Belgien · Importe change 2005–2025: +11,8 %"
+  },
+  {
+   "key": "Belgien · Importe.peak",
+   "text": "Belgien · Importe peak 2018: 34,0 %"
+  },
+  {
+   "key": "China · Importe.start",
+   "text": "China · Importe 2005: 12,4 %"
+  },
+  {
+   "key": "China · Importe.end",
+   "text": "China · Importe 2025: 3,0 %"
+  },
+  {
+   "key": "China · Importe.change",
+   "text": "China · Importe change 2005–2025: −75,5 %"
+  },
+  {
+   "key": "China · Importe.peak",
+   "text": "China · Importe peak 2008: 18,6 %"
+  },
+  {
+   "key": "Deutschland · Importe.start",
+   "text": "Deutschland · Importe 2005: 20,3 %"
+  },
+  {
+   "key": "Deutschland · Importe.end",
+   "text": "Deutschland · Importe 2025: 25,0 %"
+  },
+  {
+   "key": "Deutschland · Importe.change",
+   "text": "Deutschland · Importe change 2005–2025: +22,9 %"
+  },
+  {
+   "key": "Deutschland · Importe.peak",
+   "text": "Deutschland · Importe peak 2020: 26,2 %"
+  },
+  {
+   "key": "Frankreich · Importe.start",
+   "text": "Frankreich · Importe 2005: 9,4 %"
+  },
+  {
+   "key": "Frankreich · Importe.end",
+   "text": "Frankreich · Importe 2025: 10,8 %"
+  },
+  {
+   "key": "Frankreich · Importe.change",
+   "text": "Frankreich · Importe change 2005–2025: +14,8 %"
+  },
+  {
+   "key": "Frankreich · Importe.peak",
+   "text": "Frankreich · Importe peak 2021: 12,4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all partners), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 1319,
+   "outcome": "ok",
+   "detail": "126 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 72,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all partners), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1723,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1205,
+   "output_tokens": 170,
+   "cache_read_tokens": 0,
+   "ms": 1644
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

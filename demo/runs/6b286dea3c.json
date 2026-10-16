@@ -1,0 +1,184 @@
+{
+ "run_id": "6b286dea3c",
+ "session_id": "zcn7xw",
+ "turn": 4,
+ "created_at": "2026-10-16T22:27:39+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the yearly trend in import volume (kg) of the top 3 mineral fuel products (HS4) identified in Luxembourg from 2018 to 2023?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "2716",
+   "3606",
+   "4401"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "period_start": "2018",
+  "period_end": "2023",
+  "flow": "import",
+  "measure": "qty_kg",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2018-01-01' AS DATE)\n  AND period < CAST('2024-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('2716', '3606', '4401')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "7dddd369bd453cac4a8f02bb9b3866f9159ba190c1a9a865af6287ef2d0fdc3a",
+ "row_count": 6,
+ "view_kind": "line",
+ "title": "imports: −22.7 % (2018–2023)",
+ "frames": {
+  "main": [
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 183392635.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 138561278.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 149135900.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 193351348.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 101750847.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 141702063.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The yearly trend in import volume of the top 3 mineral fuel products in Luxembourg decreased from 183.4 million kilograms in 2018 to 141.7 million kilograms in 2023.",
+  "The total import volume fell by 22.7% over this period.",
+  "The highest import volume was recorded in 2021, reaching 193.4 million kilograms.",
+  "This trend shows a peak in 2021 followed by a decline to 2023 levels.",
+  "The data only includes quantities for trade rows with known quantities, so some volumes may be missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2018: 183.4 M kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2023: 141.7 M kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2018–2023: −22.7 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2021: 193.4 M kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 376,
+   "outcome": "ok",
+   "detail": "6 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 10,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 2784,
+   "outcome": "ok",
+   "detail": "grounding failed: number 2020 is not in the fact sheet"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 738,
+   "output_tokens": 118,
+   "cache_read_tokens": 0,
+   "ms": 1198
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 757,
+   "output_tokens": 118,
+   "cache_read_tokens": 0,
+   "ms": 1478
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

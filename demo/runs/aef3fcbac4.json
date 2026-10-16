@@ -1,0 +1,1267 @@
+{
+ "run_id": "aef3fcbac4",
+ "session_id": "msa5g9",
+ "turn": 5,
+ "created_at": "2026-10-16T22:25:27+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Wie hat sich der Anteil der wichtigsten exportierten Warenkapitel (HS2) Luxemburgs jährlich von 2005 bis 2025 entwickelt?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "de",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "84",
+   "39",
+   "87",
+   "85",
+   "72"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "share",
+  "top_n": 5,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.4 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.362849390965659
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND hs2 IN ('84', '39', '87', '85', '72')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "3059a6b0dcbff0315c0d29c2f4f46c057be2ae17fc8572baa639729c35207e52",
+ "row_count": 105,
+ "view_kind": "line",
+ "title": "Kunststoffe und Waren daraus · Exporte: +106,4 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "39",
+    "flow": "export",
+    "value": 4.6973100149,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "72",
+    "flow": "export",
+    "value": 11.194721117,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "84",
+    "flow": "export",
+    "value": 26.8058480084,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "85",
+    "flow": "export",
+    "value": 21.0426096594,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "87",
+    "flow": "export",
+    "value": 3.9236764129,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "39",
+    "flow": "export",
+    "value": 4.1439284511,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "72",
+    "flow": "export",
+    "value": 11.805549219,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "84",
+    "flow": "export",
+    "value": 26.4855124543,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "85",
+    "flow": "export",
+    "value": 23.5600212231,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "87",
+    "flow": "export",
+    "value": 3.9804514895,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "39",
+    "flow": "export",
+    "value": 4.4169300329,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "72",
+    "flow": "export",
+    "value": 14.2155865629,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "84",
+    "flow": "export",
+    "value": 32.753644335,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "85",
+    "flow": "export",
+    "value": 8.5292843022,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "87",
+    "flow": "export",
+    "value": 5.0030040197,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "39",
+    "flow": "export",
+    "value": 4.7467194394,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "72",
+    "flow": "export",
+    "value": 15.2684986911,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "84",
+    "flow": "export",
+    "value": 34.8597803072,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "85",
+    "flow": "export",
+    "value": 7.9705667505,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "87",
+    "flow": "export",
+    "value": 4.6539098149,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "39",
+    "flow": "export",
+    "value": 5.0109715604,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "72",
+    "flow": "export",
+    "value": 9.0005803769,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "84",
+    "flow": "export",
+    "value": 31.317324067,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "85",
+    "flow": "export",
+    "value": 16.4192389418,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "87",
+    "flow": "export",
+    "value": 4.1638212318,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "39",
+    "flow": "export",
+    "value": 6.4703688356,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "72",
+    "flow": "export",
+    "value": 12.6655484265,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "84",
+    "flow": "export",
+    "value": 14.2876317196,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "85",
+    "flow": "export",
+    "value": 22.8741102808,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "87",
+    "flow": "export",
+    "value": 4.1313413539,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "39",
+    "flow": "export",
+    "value": 6.4211418102,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "72",
+    "flow": "export",
+    "value": 13.1875098886,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "84",
+    "flow": "export",
+    "value": 9.0984453405,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "85",
+    "flow": "export",
+    "value": 22.7334315107,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "87",
+    "flow": "export",
+    "value": 4.4295861368,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "39",
+    "flow": "export",
+    "value": 6.4378497021,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "72",
+    "flow": "export",
+    "value": 10.7418645505,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "84",
+    "flow": "export",
+    "value": 9.4130238168,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "85",
+    "flow": "export",
+    "value": 24.6914921347,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "87",
+    "flow": "export",
+    "value": 4.5990136747,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "39",
+    "flow": "export",
+    "value": 7.2138189745,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "72",
+    "flow": "export",
+    "value": 10.5412043505,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "84",
+    "flow": "export",
+    "value": 9.7006869405,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "85",
+    "flow": "export",
+    "value": 19.7687948697,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "87",
+    "flow": "export",
+    "value": 5.1649478847,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "39",
+    "flow": "export",
+    "value": 7.0036625201,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "72",
+    "flow": "export",
+    "value": 11.0293119275,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "84",
+    "flow": "export",
+    "value": 9.9761991695,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "85",
+    "flow": "export",
+    "value": 18.0225563469,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "87",
+    "flow": "export",
+    "value": 5.4851559828,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "39",
+    "flow": "export",
+    "value": 7.149101406,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "72",
+    "flow": "export",
+    "value": 9.5495337297,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "84",
+    "flow": "export",
+    "value": 10.6834225564,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "85",
+    "flow": "export",
+    "value": 18.8917273632,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "87",
+    "flow": "export",
+    "value": 5.3476270854,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "39",
+    "flow": "export",
+    "value": 7.6904158902,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "72",
+    "flow": "export",
+    "value": 9.563898943,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "84",
+    "flow": "export",
+    "value": 13.0997386207,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "85",
+    "flow": "export",
+    "value": 12.266333514,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "87",
+    "flow": "export",
+    "value": 6.2571656814,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "39",
+    "flow": "export",
+    "value": 8.2462994212,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "72",
+    "flow": "export",
+    "value": 10.7967885864,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "84",
+    "flow": "export",
+    "value": 12.880488391,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "85",
+    "flow": "export",
+    "value": 5.523364299,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "87",
+    "flow": "export",
+    "value": 7.1523372598,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "39",
+    "flow": "export",
+    "value": 9.4899614692,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "72",
+    "flow": "export",
+    "value": 12.4202437098,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "84",
+    "flow": "export",
+    "value": 12.5325424086,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "85",
+    "flow": "export",
+    "value": 7.0032112129,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "87",
+    "flow": "export",
+    "value": 7.3906224071,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "39",
+    "flow": "export",
+    "value": 9.3986747689,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "72",
+    "flow": "export",
+    "value": 10.6149835419,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "84",
+    "flow": "export",
+    "value": 12.6595730303,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "85",
+    "flow": "export",
+    "value": 14.4718000217,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "87",
+    "flow": "export",
+    "value": 7.9336883218,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "39",
+    "flow": "export",
+    "value": 10.7554478131,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "72",
+    "flow": "export",
+    "value": 9.517435431,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "84",
+    "flow": "export",
+    "value": 13.4179264123,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "85",
+    "flow": "export",
+    "value": 5.2620103836,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "87",
+    "flow": "export",
+    "value": 9.229414055,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "39",
+    "flow": "export",
+    "value": 10.7292529955,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "72",
+    "flow": "export",
+    "value": 11.1357992641,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "84",
+    "flow": "export",
+    "value": 12.9730699791,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "85",
+    "flow": "export",
+    "value": 5.1648434851,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "87",
+    "flow": "export",
+    "value": 8.6750255903,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "39",
+    "flow": "export",
+    "value": 10.7916941398,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "72",
+    "flow": "export",
+    "value": 11.5110528214,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "84",
+    "flow": "export",
+    "value": 13.2266356849,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "85",
+    "flow": "export",
+    "value": 5.0596594533,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "87",
+    "flow": "export",
+    "value": 7.9989652344,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "39",
+    "flow": "export",
+    "value": 9.366495962,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "72",
+    "flow": "export",
+    "value": 8.712071249,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "84",
+    "flow": "export",
+    "value": 13.9226237321,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "85",
+    "flow": "export",
+    "value": 5.4355850354,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "87",
+    "flow": "export",
+    "value": 9.5814280713,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "39",
+    "flow": "export",
+    "value": 9.9121934143,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "72",
+    "flow": "export",
+    "value": 8.1736917287,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "84",
+    "flow": "export",
+    "value": 13.4653842423,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "85",
+    "flow": "export",
+    "value": 4.413811851,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "87",
+    "flow": "export",
+    "value": 9.9785194922,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "39",
+    "flow": "export",
+    "value": 9.6930522782,
+    "label": "Kunststoffe und Waren daraus",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "72",
+    "flow": "export",
+    "value": 6.8926463584,
+    "label": "Eisen und Stahl",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "84",
+    "flow": "export",
+    "value": 12.5415774007,
+    "label": "Maschinen und mechanische Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "85",
+    "flow": "export",
+    "value": 9.2702963806,
+    "label": "Elektrische Maschinen und Geräte",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "87",
+    "flow": "export",
+    "value": 9.5750972223,
+    "label": "Kraftfahrzeuge und Teile davon",
+    "parent": "",
+    "parent_label": ""
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 15394146750.0
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 18336982599.0
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 16733525152.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 17469519014.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 15298785071.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 14180328901.0
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 14990138864.0
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 14658638997.0
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 13868196853.0
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 14400955059.0
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 15460367090.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 14259781352.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 13972896449.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 13883405747.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 14673098473.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 12113291205.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 14208430248.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 16506246887.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 15898896685.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 14966963688.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 16253860299.0
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "39",
+   "72",
+   "84",
+   "85",
+   "87"
+  ]
+ },
+ "insight": [
+  "Der Anteil der wichtigsten exportierten Warenkapitel Luxemburgs hat sich von 2005 bis 2025 unterschiedlich entwickelt.",
+  "Der Anteil von Kunststoffen und Waren daraus stieg von 4,7 % im Jahr 2005 auf 9,7 % im Jahr 2025, was eine Zunahme von 106,4 % bedeutet.",
+  "Im Gegensatz dazu sank der Anteil von Maschinen und mechanischen Geräten von 26,8 % im Jahr 2005 auf 12,5 % im Jahr 2025.",
+  "Der Anteil von Kunststoffen erreichte 2022 mit 10,8 % seinen Höchststand, während der Anteil von Eisen und Stahl 2008 mit 15,3 % am höchsten war.",
+  "Die Werte sind nominale Beträge in aktuellen Euro und nicht inflationsbereinigt, zudem sind 1,4 % der Werte vertraulich und werden separat ausgewiesen."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Kunststoffe und Waren daraus · Exporte.start",
+   "text": "Kunststoffe und Waren daraus · Exporte 2005: 4,7 %"
+  },
+  {
+   "key": "Kunststoffe und Waren daraus · Exporte.end",
+   "text": "Kunststoffe und Waren daraus · Exporte 2025: 9,7 %"
+  },
+  {
+   "key": "Kunststoffe und Waren daraus · Exporte.change",
+   "text": "Kunststoffe und Waren daraus · Exporte change 2005–2025: +106,4 %"
+  },
+  {
+   "key": "Kunststoffe und Waren daraus · Exporte.peak",
+   "text": "Kunststoffe und Waren daraus · Exporte peak 2022: 10,8 %"
+  },
+  {
+   "key": "Eisen und Stahl · Exporte.start",
+   "text": "Eisen und Stahl · Exporte 2005: 11,2 %"
+  },
+  {
+   "key": "Eisen und Stahl · Exporte.end",
+   "text": "Eisen und Stahl · Exporte 2025: 6,9 %"
+  },
+  {
+   "key": "Eisen und Stahl · Exporte.change",
+   "text": "Eisen und Stahl · Exporte change 2005–2025: −38,4 %"
+  },
+  {
+   "key": "Eisen und Stahl · Exporte.peak",
+   "text": "Eisen und Stahl · Exporte peak 2008: 15,3 %"
+  },
+  {
+   "key": "Maschinen und mechanische Geräte · Exporte.start",
+   "text": "Maschinen und mechanische Geräte · Exporte 2005: 26,8 %"
+  },
+  {
+   "key": "Maschinen und mechanische Geräte · Exporte.end",
+   "text": "Maschinen und mechanische Geräte · Exporte 2025: 12,5 %"
+  },
+  {
+   "key": "Maschinen und mechanische Geräte · Exporte.change",
+   "text": "Maschinen und mechanische Geräte · Exporte change 2005–2025: −53,2 %"
+  },
+  {
+   "key": "Maschinen und mechanische Geräte · Exporte.peak",
+   "text": "Maschinen und mechanische Geräte · Exporte peak 2008: 34,9 %"
+  },
+  {
+   "key": "Elektrische Maschinen und Geräte · Exporte.start",
+   "text": "Elektrische Maschinen und Geräte · Exporte 2005: 21,0 %"
+  },
+  {
+   "key": "Elektrische Maschinen und Geräte · Exporte.end",
+   "text": "Elektrische Maschinen und Geräte · Exporte 2025: 9,3 %"
+  },
+  {
+   "key": "Elektrische Maschinen und Geräte · Exporte.change",
+   "text": "Elektrische Maschinen und Geräte · Exporte change 2005–2025: −55,9 %"
+  },
+  {
+   "key": "Elektrische Maschinen und Geräte · Exporte.peak",
+   "text": "Elektrische Maschinen und Geräte · Exporte peak 2012: 24,7 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all products), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 960,
+   "outcome": "ok",
+   "detail": "105 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 59,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all products), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1721,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1341,
+   "output_tokens": 187,
+   "cache_read_tokens": 0,
+   "ms": 1639
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

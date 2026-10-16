@@ -1,0 +1,176 @@
+{
+ "run_id": "f42ce6046a",
+ "session_id": "zcn7xw",
+ "turn": 5,
+ "created_at": "2026-10-16T22:27:41+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the yearly trend in unit value (price per kg) of the top 3 mineral fuel products (HS4) identified in Luxembourg from 2018 to 2023?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "2716",
+   "3606",
+   "4401"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "period_start": "2018",
+  "period_end": "2023",
+  "flow": "import",
+  "measure": "unit_value",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2018-01-01' AS DATE)\n  AND period < CAST('2024-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('2716', '3606', '4401')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "7dddd369bd453cac4a8f02bb9b3866f9159ba190c1a9a865af6287ef2d0fdc3a",
+ "row_count": 6,
+ "view_kind": "line",
+ "title": "imports: +61.4 % (2018–2023)",
+ "frames": {
+  "main": [
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 0.0855740308
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 0.0851680583
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 0.072617921
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 0.074901919
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 0.2736153243
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 0.1381345168
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The yearly trend in unit value of the top 3 mineral fuel products imported by Luxembourg increased from 0.09 €/kg in 2018 to 0.14 €/kg in 2023.",
+  "This represents a 61.4% rise in unit value over the five-year period.",
+  "The highest unit value was recorded in 2022, reaching 0.27 €/kg, before decreasing in 2023.",
+  "The unit values in 2023 were still higher than in 2018, showing an overall upward trend.",
+  "However, the data only includes trade rows with known quantities, so some volumes and unit values may be missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2018: 0.09 €/kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2023: 0.14 €/kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2018–2023: +61.4 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2022: 0.27 €/kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 286,
+   "outcome": "ok",
+   "detail": "6 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 6,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1476,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 740,
+   "output_tokens": 135,
+   "cache_read_tokens": 0,
+   "ms": 1401
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}
