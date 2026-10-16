@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 
 from luxtrade.agents.overview import Overview
+from luxtrade.agents.scenario import ScenarioBuilder
 from luxtrade.agents.service import Assistant
 from luxtrade.agents.spec import QuerySpec
 from luxtrade.config import ATTRIBUTION, SERIES_FIRST_YEAR
@@ -21,6 +22,7 @@ ORIGIN_LABEL = {
     "preset": "preset",
     "projection": "projection",
     "overview": "from the overview",
+    "scenario": "scenario step",
 }
 ASK_PAGE = "app_pages/ask.py"  # relative to the entry point, Home.py
 
@@ -41,6 +43,12 @@ POC_NOTE = (
 def get_assistant() -> Assistant:
     """One assistant per server process (read-only data, stateless graph)."""
     return Assistant()
+
+
+@st.cache_resource(show_spinner=False)
+def get_scenario_builder() -> ScenarioBuilder:
+    """The scenario builder on the shared assistant."""
+    return ScenarioBuilder(get_assistant())
 
 
 @st.cache_data(show_spinner="Building the overview…", max_entries=12)
@@ -94,8 +102,8 @@ def render_suggestions(rec: RunRecord) -> None:
             queue("ask", question=text)
 
 
-def render_chart(rec: RunRecord) -> None:
-    """The data product chosen for this answer."""
+def render_chart(rec: RunRecord, key: str = "fig") -> None:
+    """The data product chosen for this answer (``key`` keeps two drawings of a run apart)."""
     main = rec.frame("main")
     spec = _spec(rec)
     lang = rec.language
@@ -114,7 +122,7 @@ def render_chart(rec: RunRecord) -> None:
             )
         return
     if rec.view_kind == "pivot":
-        render_pivot(rec, key="chart")
+        render_pivot(rec, key=f"{key}-chart")
         return
     if rec.view_kind == "table":
         st.dataframe(main, width="stretch", hide_index=True)
@@ -129,7 +137,7 @@ def render_chart(rec: RunRecord) -> None:
     )
     for i, fig in enumerate(figs):
         st.plotly_chart(
-            fig, width="stretch", key=f"fig-{rec.run_id}-{i}", config={"displaylogo": False}
+            fig, width="stretch", key=f"{key}-{rec.run_id}-{i}", config={"displaylogo": False}
         )
 
 
@@ -222,6 +230,59 @@ def render_trace(rec: RunRecord) -> None:
             )[:20000],
             language="json",
         )
+
+
+def render_chain_step(
+    n: int,
+    rec: RunRecord,
+    *,
+    why: str,
+    meta: str = "",
+    queried: str = "",
+    takeaway: str = "",
+    takeaway_label: str = "What we took from it",
+    badges: list[str] = (),
+    key: str = "chain",
+) -> None:
+    """One question of a chain (an investigation trail or a scenario step).
+
+    Shows why it was asked, the assistant's stored answer with its chart and trace, and what it
+    adds. ``meta`` follows the step number (e.g. "follow-up of step 2"); ``badges`` are numbers that
+    were found in the answer; ``key`` keeps the step's charts apart from other drawings.
+    """
+    with st.container(border=True):
+        st.caption(f"**Step {n}** · run `{rec.run_id}`" + (f" · {meta}" if meta else ""))
+        st.markdown(f"**:material/person: Asked:** *{rec.question}*")
+        if why:
+            st.caption(f"Why: {why}")
+        if queried:
+            st.caption(f":material/database: Queried: {queried}")
+        answer, chart, how = st.tabs(["Answer", "Chart", "How the assistant got this"])
+        with answer:
+            if rec.status == "answered":
+                st.markdown(" ".join(rec.insight))
+                if rec.facts:
+                    st.markdown("\n".join(f"- {x['text']}" for x in rec.facts[:6]))
+            elif rec.status == "error":
+                st.error(rec.error or "Something went wrong.")
+            else:
+                st.markdown(
+                    "The assistant did not answer this one as written. It explained why and "
+                    "offered answerable versions:"
+                )
+                st.markdown("\n".join(f"- *{s['question']}*" for s in rec.suggestions))
+        with chart:
+            if rec.status == "answered":
+                render_chart(rec, key=f"{key}-{n}")
+            else:
+                st.caption("No chart: no query was run.")
+        with how:
+            render_trace(rec)
+        if takeaway:
+            st.markdown(f"**:material/lightbulb: {takeaway_label}:** {takeaway}")
+        if badges:
+            ticks = " ".join(f":green-badge[:material/check: {b}]" for b in badges)
+            st.markdown(f"In the answer: {ticks}")
 
 
 def refined_question(spec: QuerySpec) -> str:

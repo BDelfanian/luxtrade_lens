@@ -23,8 +23,7 @@ from luxtrade.app.components import (
     get_assistant,
     load_overview,
     queue,
-    render_chart,
-    render_trace,
+    render_chain_step,
 )
 from luxtrade.runs.store import RunRecord
 from luxtrade.viz.charts import finding_figures, hero_figure, overview_figures
@@ -69,45 +68,21 @@ def evidence(key: str, sql: list[str], main: pd.DataFrame, methods: list[str]) -
 def trail_step(
     n: int, step: trails.Step, done: trails.BuiltStep, rec: RunRecord, numbers: dict[str, int]
 ) -> None:
-    """One question of the trail: why we asked, what the assistant answered, what we took.
-
-    ``numbers`` maps the trail's run IDs to step numbers, to say which step a follow-up builds on.
-    """
-    with st.container(border=True):
-        meta = f"**Step {n}** · run `{rec.run_id}`"
-        if rec.followup_of:
-            meta += f" · follow-up of step {numbers.get(rec.followup_of, '?')}"
-            if rec.inherited:
-                meta += f", kept: {', '.join(rec.inherited)}"
-        else:
-            meta += " · new question"
-        st.caption(meta)
-        st.markdown(f"**:material/person: We asked:** *{rec.question}*")
-        st.caption(f"Why: {step.why}")
-        answer, chart, how = st.tabs(["Answer", "Chart", "How the assistant got this"])
-        with answer:
-            if rec.status == "answered":
-                st.markdown(" ".join(rec.insight))
-                if rec.facts:
-                    st.markdown("\n".join(f"- {x['text']}" for x in rec.facts[:6]))
-            else:
-                st.markdown(
-                    "The assistant did not answer this one as written. It explained why and "
-                    "offered answerable versions:"
-                )
-                st.markdown("\n".join(f"- *{s['question']}*" for s in rec.suggestions))
-        with chart:
-            if rec.status == "answered":
-                render_chart(rec)
-            else:
-                st.caption("No chart: no query was run.")
-        with how:
-            render_trace(rec)
-        found = [e for e, ok in done.checks.items() if ok]
-        ticks = " ".join(f":green-badge[:material/check: {e}]" for e in found)
-        st.markdown(f"**:material/lightbulb: What we took from it:** {step.learnt}")
-        if ticks:
-            st.markdown(f"In the answer: {ticks}")
+    """One question of the trail. ``numbers`` maps run IDs to steps, for the follow-up label."""
+    meta = "new question"
+    if rec.followup_of:
+        meta = f"follow-up of step {numbers.get(rec.followup_of, '?')}"
+        if rec.inherited:
+            meta += f", kept: {', '.join(rec.inherited)}"
+    render_chain_step(
+        n,
+        rec,
+        why=step.why,
+        meta=meta,
+        takeaway=step.learnt,
+        badges=[e for e, ok in done.checks.items() if ok],
+        key=f"trail-{step.question[:12]}",
+    )
 
 
 def render_trail(f: Finding) -> None:

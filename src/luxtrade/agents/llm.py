@@ -121,7 +121,11 @@ def strict_schema(schema: type[BaseModel]) -> dict:
         if isinstance(node, dict):
             if "$ref" in node:
                 return {"$ref": node["$ref"]}  # strict mode allows no siblings next to $ref
+            # drop the schema keywords "default" and "title", never a property of that name
+            props = node.get("properties")
             node = {k: fix(v) for k, v in node.items() if k not in ("default", "title")}
+            if isinstance(props, dict):
+                node["properties"] = {name: fix(sub) for name, sub in props.items()}
             if "properties" in node:
                 node["required"] = list(node["properties"])
                 node["additionalProperties"] = False

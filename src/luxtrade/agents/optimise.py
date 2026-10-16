@@ -47,7 +47,8 @@ def validate_suggestion(s: Suggestion, sem: SemanticLayer) -> str | None:
     return None
 
 
-def _known_codes(sem: SemanticLayer, lang: str) -> str:
+def known_codes(sem: SemanticLayer, lang: str) -> str:
+    """Partner names and HS2 chapters by code, for prompts that propose specs."""
     col = {"en": "label_en", "fr": "label_fr", "de": "label_de"}[lang]
     partners = sem.partners[~sem.partners["is_special"]][col].to_dict()
     chapters = sem.products[(sem.products["level"] == 2) & ~sem.products["is_confidential"]][
@@ -94,7 +95,7 @@ def optimise(
                     ],
                     ensure_ascii=False,
                 ),
-                "KNOWN CODES:\n" + _known_codes(sem, lang),
+                "KNOWN CODES:\n" + known_codes(sem, lang),
                 "SESSION CONTEXT:\n" + context.to_prompt(),
             ]
         )

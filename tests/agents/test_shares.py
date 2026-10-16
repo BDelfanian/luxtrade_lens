@@ -80,3 +80,18 @@ def test_eu_split_never_filters_on_one_group(make_assistant):
     rec = make_assistant().run_spec(spec, question="EU share", origin="preset")
     assert rec.spec["partner_group"] == "WORLD"
     assert {r["key"] for r in rec.frames["main"]} == {"EU27", "NON_EU27"}
+
+
+def test_a_share_of_nothing_is_shown_as_values(make_assistant):
+    spec = QuerySpec(
+        intent="time_series",
+        flow="export",
+        measure="share",
+        period_start="2023",
+        period_end="2024",
+        freq="A",
+    )
+    rec = make_assistant().run_spec(spec, question="share of exports", origin="preset")
+    assert rec.spec["measure"] == "value_eur"
+    assert any("a share needs a breakdown" in a for a in rec.assumptions)
+    assert not any(f["text"].endswith(" %") and "change" not in f["text"] for f in rec.facts)

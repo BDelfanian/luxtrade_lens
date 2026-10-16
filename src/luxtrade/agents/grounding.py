@@ -43,28 +43,77 @@ def _matches(value: float, decimals: int, allowed: list[float]) -> bool:
     return any(abs(value - a) <= tol or abs(value - round(a, decimals)) <= 1e-9 for a in allowed)
 
 
+ALWAYS_ALLOWED = [float(n) for n in range(0, 13)] + [100.0, 80.0, 95.0]
+
+
+def supports(value: float, decimals: int, allowed: list[float]) -> bool:
+    """True if ``value``, written with ``decimals``, is one of ``allowed`` at that rounding."""
+    return _matches(value, decimals, allowed)
+
+
+def numbers_in(texts: list[str], lang: str) -> list[float]:
+    """Every number written in ``texts``: what a grounded text may quote."""
+    return [v for t in texts for v, _ in parse_numbers(t, lang)]
+
+
+_YEAR_SPAN = re.compile(r"\b((?:19|20)\d{2})\s*([–-])\s*(\d{2})\b")
+_EVENT_NUMBERS = re.compile(r"\bCOVID-19\b", re.IGNORECASE)
+
+
+def plain_numbers(text: str) -> str:
+    """``text`` as the number checks read it: '2022–23' → '2022–2023', 'COVID-19' → 'COVID'.
+
+    Seen on real data: "the 2022–23 aftershock" failed as the number 23, "COVID-19" as 19.
+    """
+    text = _EVENT_NUMBERS.sub("COVID", text)
+    return _YEAR_SPAN.sub(lambda m: f"{m[1]}{m[2]}{m[1][:2]}{m[3]}", text)
+
+
+def unsupported_numbers(text: str, allowed: list[float], lang: str) -> list[str]:
+    """Problems for each number in ``text`` that is not in ``allowed`` (at its rounding)."""
+    return [
+        f"number {value:g} is not in the facts"
+        for value, decimals in parse_numbers(plain_numbers(text), lang)
+        if not _matches(value, decimals, allowed + ALWAYS_ALLOWED)
+    ]
+
+
+def partners_named(text: str, sem: SemanticLayer, lang: str) -> dict[str, str]:
+    """The partner countries named in ``text``, as {code: label}."""
+    norm = f" {normalise(text)} "
+    col = {"en": "label_en", "fr": "label_fr", "de": "label_de"}.get(lang, "label_en")
+    return {
+        code: str(row[col])
+        for code, row in sem.partners.iterrows()
+        if not row["is_special"] and f" {normalise(str(row[col]))} " in norm
+    }
+
+
+def unknown_partners(text: str, allowed: set[str], sem: SemanticLayer, lang: str) -> list[str]:
+    """Problems for each partner country named in ``text`` whose code is not in ``allowed``."""
+    return [
+        f"partner {label} is not in the result"
+        for code, label in partners_named(text, sem, lang).items()
+        if code not in allowed
+    ]
+
+
+def describes_future(text: str) -> bool:
+    """True if ``text`` calls something projected, expected or forecast."""
+    return bool(_FUTURE.search(text))
+
+
 def check(sentences: list[str], sheet: FactSheet, sem: SemanticLayer) -> list[str]:
     """Return the grounding problems found (empty list = grounded)."""
     lang = sheet.language
-    allowed = [v for f in sheet.facts for v, _ in parse_numbers(f.text, lang)]
-    allowed += [v for v, _ in parse_numbers(sheet.question, lang)]
-    allowed += [v for msg in sheet.limitations for v, _ in parse_numbers(msg, "en")]
-    allowed += [v for s in sheet.template for v, _ in parse_numbers(s, lang)]
-    allowed += [float(n) for n in range(0, 13)] + [100.0, 80.0, 95.0]
-    problems = []
+    texts = [f.text for f in sheet.facts] + [sheet.question, *sheet.template]
+    allowed = numbers_in(texts, lang)
+    allowed += numbers_in(sheet.limitations, "en")
     text = " ".join(sentences)
-    for value, decimals in parse_numbers(text, lang):
-        if not _matches(value, decimals, allowed):
-            problems.append(f"number {value:g} is not in the fact sheet")
-    norm = f" {normalise(text)} "
-    col = {"en": "label_en", "fr": "label_fr", "de": "label_de"}.get(lang, "label_en")
-    for code, row in sem.partners.iterrows():
-        if row["is_special"] or code in sheet.entities:
-            continue
-        label = normalise(str(row[col]))
-        if f" {label} " in norm:
-            problems.append(f"partner {row[col]} is not in the result")
-    if _FUTURE.search(text) and not any("projection" in f.text for f in sheet.facts):
+    problems = unsupported_numbers(text, allowed, lang)
+    problems = [p.replace("in the facts", "in the fact sheet") for p in problems]
+    problems += unknown_partners(text, set(sheet.entities), sem, lang)
+    if describes_future(text) and not any("projection" in f.text for f in sheet.facts):
         problems.append("observed data described as projected or expected")
     if not 2 <= len(sentences) <= 6:
         problems.append(f"expected 4–5 sentences, got {len(sentences)}")
