@@ -735,6 +735,7 @@ class Finding:
     headline: str = ""  # the engaging line on the card; ``title`` is its evidence
     tiles: list[tuple[str, str]] = field(default_factory=list)  # conclusion: (title, text)
     analysis: str = ""  # "why it matters": what the numbers mean, on the card
+    tone: str = ""  # direction of the tile's number: "up", "down" or "" (colours the tile)
 
 
 def _t(key: str, lang: str, **values: object) -> str:
@@ -761,6 +762,11 @@ def _chg(v0: float, v1: float, lang: str, decimals: int = 1) -> str:
     if not v0:
         return "–"
     return fmt_pct(100 * (v1 / v0 - 1), lang, decimals=decimals, signed=True)
+
+
+def _tone(v0: float, v1: float) -> str:
+    """'up' or 'down' for a change from ``v0`` to ``v1``; '' when there is none."""
+    return "up" if v1 > v0 else "down" if v1 < v0 else ""
 
 
 def _hhi(value: float, lang: str) -> str:
@@ -961,6 +967,7 @@ ORDER BY year, share DESC""",
         metric_value=_chg(hx0, hx1, lang, 0),
         metric_delta=f"HHI {_hhi(hx0, lang)} → {_hhi(hx1, lang)}",
         delta_arrow="off",
+        tone=_tone(hx0, hx1),
         headline=_T["h_div" if story else "h_div_n"][lang],
         analysis=_why(
             lang,
@@ -1251,6 +1258,7 @@ ORDER BY year, value_eur DESC""",
         metric_value=f"{len(keys)} / {len(keys)}" if all_fell else changes_text,
         metric_delta=changes_text if all_fell else None,
         delta_arrow="off",
+        tone="down" if all_fell else "",  # a count of falls
         headline=_t("h_shock", lang, name=label[weak]) if all_fell else _T["h_shock_n"][lang],
         analysis=_why(lang, shock_analysis),
         explore_question=_t("x_chapter", lang, name=label[weak], start=first),
@@ -1397,6 +1405,7 @@ ORDER BY partner, flow, year""",
         analysis=_why(lang, " ".join(t for t in (_t("a_eu", lang, eu1=_pct(m1, lang)), swap) if t)),
         metric_value=_pct(m1, lang),
         metric_delta=_pp(m0, m1, lang, y0),
+        tone=_tone(m0, m1),
         explore_question=_t("x_eu", lang, start=first),
         explore_spec=explore,
     )
@@ -1737,6 +1746,7 @@ GROUP BY year, flow, hs2, hs4""",
         ),
         metric_delta=f"{_pct(mover['s0'], lang)} → {_pct(mover['s1'], lang)}",
         delta_arrow="off",
+        tone=_tone(mover["s0"], mover["s1"]),
         explore_question=_t("x_comp", lang, start=y0),
         explore_spec=explore,
     )

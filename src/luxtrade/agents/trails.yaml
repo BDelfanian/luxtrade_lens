@@ -1,0 +1,181 @@
+# The questions behind each Overview finding, asked to the assistant in one session per finding
+# (follow-ups keep their context). `why`: the reason for asking; `learnt`: what the answer told
+# us; `expect`: numbers the answer must contain (checked by `python -m luxtrade.agents.trails`).
+# Numbers in `learnt` and `synthesis` are the assistant's answers, quoted, not computed here.
+trails:
+  - key: diversification
+    goal: Has Luxembourg spread its risk, across the goods it sells and the countries it buys from?
+    steps:
+      - question: What share of Luxembourg's exports did each of the top 10 HS2 chapters have in 2005?
+        why: Start with the products. How much of the export trade sat in its largest chapters twenty years ago?
+        learnt: In 2005 two chapters dominated. Machinery (26.8 %) and electrical equipment (21.0 %) made up almost half of all exports between them.
+        expect: ["26.8 %", "21.0 %"]
+      - question: And in 2025?
+        why: Same view, twenty years later. As a follow-up, the assistant keeps the chapter level, the flow and the share.
+        learnt: The same two chapters now make up 12.5 % and 9.3 %. No chapter takes more than an eighth of exports, so the exports are much more spread out.
+        expect: ["12.5 %", "9.3 %"]
+      - question: What share of Luxembourg's imports came from each of its top 10 partner countries in 2005?
+        why: Now the other side of the risk. Where do the supplies come from?
+        learnt: Belgium (26.9 %), Germany (20.3 %) and France (9.4 %) were already the main suppliers. China was third, with 12.4 %.
+        expect: ["26.9 %", "20.3 %", "9.4 %", "12.4 %"]
+      - question: And in 2025?
+        why: Has the supplier base widened like the product base?
+        learnt: No, it narrowed. Belgium 30.0 %, Germany 25.0 % and France 10.8 %, so the three neighbours together supply 65.8 % of imports.
+        expect: ["30.0 %", "25.0 %", "10.8 %", "65.8 %"]
+      - question: What was the Herfindahl-Hirschman index of Luxembourg's exports by HS2 chapter in 2005 and in 2025?
+        why: Can the assistant sum up concentration in one index?
+        learnt: No. The assistant has no concentration measure, so it says so and offers answerable rewrites instead of guessing a number. The HHI on the card comes from the panel's own guarded query over the same shares (see Charts, queries and method).
+    synthesis: >-
+      Steps 1–2 show the product side spreading out: the two largest chapters of 2005 fell from
+      47.8 % to 21.8 % of exports. Steps 3–4 show the partner side concentrating: Belgium, Germany
+      and France rose to 65.8 % of imports. Together this is the card's message, "eggs in more
+      baskets, but bought from the same three neighbours". Step 5 is why the concentration index
+      (HHI) is computed outside the assistant, from the same shares.
+    beyond: The HHI (sum of squared shares) and the 47.8 % and 21.8 % totals add up shares the assistant returned; the panel's own query computes them.
+
+  - key: shocks
+    goal: Which goods break first when a crisis hits, and which import is critical?
+    steps:
+      - question: How did Luxembourg's yearly exports and imports develop from 2002 to 2025?
+        why: Find the crises in the data first, instead of assuming them.
+        learnt: The yearly series (Chart tab) dips in 2009, 2020 and 2023. Exports peaked in 2006 at 18.34 bn € and stood at 16.25 bn € in 2025.
+        expect: ["18.34 bn €", "16.25 bn €"]
+      - question: Which HS2 chapters' exports fell the most between 2008 and 2009?
+        why: Zoom in on the first dip, the financial crisis, chapter by chapter.
+        learnt: Iron and steel lost 48.4 % (2.67 → 1.38 bn €), the deepest fall among the large chapters. Articles of iron or steel fell 34.6 %.
+        expect: ["−48.4 %", "−34.6 %"]
+      - question: And between 2019 and 2020?
+        why: Same question for COVID-19. The follow-up keeps the HS2 chapters, the export flow and the change ranking.
+        learnt: Iron and steel again lost the most value of any chapter, −26.0 % (1.56 → 1.15 bn €).
+        expect: ["−26.0 %"]
+      - question: And between 2022 and 2023?
+        why: The energy crisis. Did iron and steel fall a third time?
+        learnt: Yes. Iron and steel lost 27.1 %, the largest fall in value again (the 10th row of the Chart tab), so it fell in all three crises.
+        expect: ["27.1 percent"]
+      - question: How did exports of iron and steel (HS 72) develop yearly from 2002 to 2025?
+        why: Check the pattern on the chapter's whole series, not only on crisis years.
+        learnt: Iron and steel peaked in 2008 (2.67 bn €) and has not recovered. In 2025 it stood at 1.12 bn €.
+        expect: ["2.67 bn €", "1.12 bn €"]
+      - question: Who supplied Luxembourg's fuel imports (HS 27) in 2025?
+        why: The critical import for an energy-intensive sector is fuel. Where does it come from?
+        learnt: Belgium supplied 50.3 % and undisclosed partners 39.3 %, so one neighbour carries most of the known supply.
+        expect: ["50.3 %", "39.3 %"]
+    synthesis: >-
+      Step 1 locates three crises. Steps 2–4 rank the chapters in each one, and iron and steel
+      falls every time (−48 %, −26 % and −27 % on the card). Step 5 confirms it never recovered.
+      Step 6 adds the dependency: half of the fuel arrives from Belgium. The energy price signal
+      behind the 2023 aftershock (+45.2 % per kg in 2022) is traced in the "Price vs volume" trail.
+    beyond: The card's average ratio (3.0 times as far as all exports) and the 2 % size threshold for chapters come from the panel's own query; the crisis years are reading aids, not data.
+
+  - key: europe
+    goal: Is Luxembourg's trade becoming more European, and who changed places outside the EU?
+    steps:
+      - question: How has the share of Luxembourg's imports from EU27 and non-EU countries developed yearly from 2005 to 2025?
+        why: The headline measure, which is the EU27 share of imports over twenty years.
+        learnt: The EU27 share of imports rose from 70.3 % to 86.6 %, and the non-EU share fell from 29.7 % to 13.4 %.
+        expect: ["70.3 %", "86.6 %"]
+      - question: And for exports?
+        why: Is it the same on the selling side? The follow-up keeps the EU/non-EU split and the years.
+        learnt: Exports were already European and barely moved, from 80.9 % to 83.1 %.
+        expect: ["80.9 %", "83.1 %"]
+      - question: Who were Luxembourg's top 5 non-EU import partners in 2005?
+        why: Outside the EU, who were the suppliers then?
+        learnt: China led the non-EU suppliers by far in 2005, with 2.25 bn € (41.7 % of non-EU imports).
+        expect: ["2.25 bn €", "41.7 %"]
+      - question: Who were Luxembourg's top 5 non-EU import partners in 2025?
+        why: Same question twenty years later. Did the order change?
+        learnt: Japan now leads (1.13 bn €), ahead of China and the United States, so the partners swapped places.
+        expect: ["1.13 bn €"]
+      - question: What share of Luxembourg's imports came from each of its top 10 partner countries in 2025?
+        why: Put the swap in proportion of all imports, not only non-EU ones.
+        learnt: Japan 4.5 % and China 3.0 % of all imports. In 2005 China had 12.4 % (see the Diversification trail).
+        expect: ["4.5 %", "3.0 %"]
+    synthesis: >-
+      Steps 1–2 give the card's headline: 86.6 % of imports now come from EU countries, while the
+      export side was already European. Steps 3–5 explain the swap outside the EU: China fell from
+      12.4 % to 3.0 % of imports and Japan rose to 4.5 %. Hence "Less China, more Europe".
+    beyond: Peak years (China 18.6 % in 2008) come from the panel's yearly query of each partner's share.
+
+  - key: prices
+    goal: What is a kilo of imports worth, and does a price shock show in value or in volume?
+    steps:
+      - question: What was the value per kg of Luxembourg's imports from EU27 and non-EU partners in 2025?
+        why: Value per kilogram is the only price signal in this dataset. Compare the two origins.
+        learnt: A kilo from outside the EU is worth 19.71 €, a kilo from the EU 1.23 €, about 16 times less.
+        expect: ["19.71 €/kg", "1.23 €/kg"]
+      - question: And for exports?
+        why: Is the gap specific to imports?
+        learnt: The export gap is much smaller, 4.20 € per kg outside the EU against 2.14 € inside.
+        expect: ["4.20 €/kg", "2.14 €/kg"]
+      - question: How has the value per kg of imports from EU27 and non-EU partners developed yearly from 2005 to 2025?
+        why: Is the gap structural or a one-year effect?
+        learnt: It is structural. In 2005 the two were 11.86 € and 0.51 € per kg, and both rose since. The 2025 values match the card exactly. The card's own query gives 14.82 € and 0.52 € for 2005, so the two queries count 2005 differently; we flag this for review.
+        expect: ["11.86 €/kg", "0.51 €/kg", "19.71 €/kg"]
+      - question: How did the value of Luxembourg's fuel imports (HS 27) change from 2021 to 2022?
+        why: Now the energy shock. How much did the fuel bill move?
+        learnt: The fuel import bill almost doubled, from 2.05 to 4.00 bn € (+95.3 %).
+        expect: ["+95.3 %"]
+      - question: And in kilograms?
+        why: Did Luxembourg import more fuel, or pay more for it?
+        learnt: The mass rose only 34.7 % (3.42 → 4.61 bn kg), much less than the value.
+        expect: ["+34.7 %"]
+      - question: How did the value per kg of Luxembourg's fuel imports (HS 27) change from 2021 to 2022?
+        why: Separate the price from the volume directly.
+        learnt: The price per kilo rose 45.2 % (0.60 → 0.87 € per kg), so the shock was mainly a price shock, not a supply cut.
+        expect: ["+45.2 %"]
+    synthesis: >-
+      Steps 1–3 give the card's headline. Imports from outside the EU are light and valuable
+      (19.71 € per kg) and imports from the EU are heavy and cheap (1.23 €), every year since 2005.
+      Steps 4–6 split the 2022 energy shock into price and volume. The value doubled, the mass rose
+      far less and the price per kilo jumped, so the shock showed in value before mass.
+    beyond: The ratio (16 times) is the quotient of two numbers the assistant returned. The data has no transport mode, so "light goods by air" is a reading, not a measurement.
+
+  - key: composition
+    goal: Which goods make up Luxembourg's trade, and which ones changed most over twenty years?
+    steps:
+      - question: What were Luxembourg's top 10 export chapters (HS2) in 2025, as a share of exports?
+        why: The current export mix, chapter by chapter.
+        learnt: Machinery (12.5 %), plastics (9.7 %) and vehicles (9.6 %) lead, and the top 3 make up 31.8 % of exports.
+        expect: ["12.5 %", "9.7 %", "9.6 %", "31.8 %"]
+      - question: And for imports?
+        why: The same view for imports. The follow-up keeps the year, the level and the share.
+        learnt: Vehicles (13.2 %), machinery (11.5 %) and mineral fuels (8.9 %) lead, and the top 3 make up 33.6 % of imports.
+        expect: ["13.2 %", "11.5 %", "8.9 %", "33.6 %"]
+      - question: What were Luxembourg's top 10 imported HS4 headings in 2005, as a share of imports?
+        why: Go one level down to headings and back in time, to find the goods that changed most.
+        learnt: Computers (HS 8471) were the largest single import heading in 2005, with 13.1 % of all imports.
+        expect: ["13.1 %"]
+      - question: How did imports of computers (HS 8471) develop yearly from 2005 to 2025?
+        why: Follow that heading over time.
+        learnt: Computer imports peaked in 2008 (4.29 bn €). Over the twenty years they fell by 85.9 %, to 335.5 M€ in 2025.
+        expect: ["4.29 bn €", "335.5 M€", "−85.9 %"]
+    synthesis: >-
+      Steps 1–2 give the card's top three chapters for exports and imports. Steps 3–4 find the
+      largest change in the mix. Computers went from the top import heading (13.1 % in 2005) to
+      335.5 M€ in 2025, which is 1.3 % of the 25.10 bn € of imports in step 2.
+    beyond: The 1.3 % share for 2025 divides two numbers the assistant returned (steps 2 and 4). The stacked chart of headings per chapter comes from the panel's own query.
+
+  - key: conclusion
+    goal: Can the three things to watch be monitored with the assistant, month by month?
+    steps:
+      - question: How did monthly exports of iron and steel (HS 72) develop since January 2022?
+        why: "Thing to watch 1: the sector that falls first. A monthly series shows a new fall early."
+        learnt: Monthly exports peaked in May 2022 (202.6 M€) and are lower since. The assistant gives this series on demand, up to the latest month.
+        expect: ["202.6 M€"]
+      - question: How have Luxembourg's monthly imports from Belgium, Germany and France developed since January 2024?
+        why: "Thing to watch 2: the neighbour routes that carry most supplies."
+        learnt: One question gives the three routes side by side, month by month. Imports from Belgium rose 12.3 % and from Germany 16.3 % since January 2024, so a disruption at one border would show at once.
+        expect: ["+12.3 %", "+16.3 %"]
+      - question: How has the value per kg of fuel imports (HS 27) developed yearly since 2015?
+        why: "Thing to watch 3: the fuel price, the signal behind the energy aftershock."
+        learnt: The price per kilo of fuel went from 0.54 € (2015) to a peak of 0.93 € (2023) and 0.79 € in 2025. This is the early-warning measure for the next energy shock.
+        expect: ["0.54 €/kg", "0.93 €/kg", "0.79 €/kg"]
+      - question: How has the share of imports from EU27 and non-EU countries developed yearly since 2015?
+        why: The supply line behind all three, the single market.
+        learnt: The EU share of imports went from 71.1 % in 2015 to 86.6 % in 2025 (peak 91.5 % in 2024), so the single market remains the main supply line.
+        expect: ["71.1 %", "86.6 %", "91.5 %"]
+    synthesis: >-
+      Each thing to watch maps to a question the assistant already answers: iron and steel exports
+      monthly (step 1), the neighbour routes (step 2), the fuel price per kg (step 3) and the EU
+      share (step 4). The conclusion is a monitoring plan, not a one-off chart.
+    beyond: The options in the table (support triggers, corridor agreements) are our reading of the findings, not computed from the data.

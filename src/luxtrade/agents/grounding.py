@@ -13,6 +13,15 @@ _NUM = {
 }
 
 
+# observed years written as forecasts ("exports are projected to reach … in 2025", seen on real
+# data): only a fact sheet with a projection may use these words
+_FUTURE = re.compile(
+    r"\b(projected|expected to|forecast to|will (?:reach|be|represent|make up|remain)|"
+    r"devrai(?:t|ent)|prévu(?:e|es|s)? |voraussichtlich|werden .{0,40} erreichen)\b",
+    re.IGNORECASE,
+)
+
+
 def parse_numbers(text: str, lang: str) -> list[tuple[float, int]]:
     """Numbers in ``text`` as (value, decimals), parsed with the locale's separators."""
     out = []
@@ -55,6 +64,8 @@ def check(sentences: list[str], sheet: FactSheet, sem: SemanticLayer) -> list[st
         label = normalise(str(row[col]))
         if f" {label} " in norm:
             problems.append(f"partner {row[col]} is not in the result")
+    if _FUTURE.search(text) and not any("projection" in f.text for f in sheet.facts):
+        problems.append("observed data described as projected or expected")
     if not 2 <= len(sentences) <= 6:
         problems.append(f"expected 4–5 sentences, got {len(sentences)}")
     return problems

@@ -1,0 +1,40 @@
+{
+ "session_id": "3pa6r8",
+ "built_at": "2026-10-16T07:50:52+00:00",
+ "code_version": "6438c33",
+ "steps": [
+  {
+   "run_id": "894c650b85",
+   "status": "answered",
+   "checks": {
+    "202.6 M€": true
+   }
+  },
+  {
+   "run_id": "bada9d481c",
+   "status": "answered",
+   "checks": {
+    "+12.3 %": true,
+    "+16.3 %": true
+   }
+  },
+  {
+   "run_id": "59a46a337e",
+   "status": "answered",
+   "checks": {
+    "0.54 €/kg": true,
+    "0.93 €/kg": true,
+    "0.79 €/kg": true
+   }
+  },
+  {
+   "run_id": "87cd811d7c",
+   "status": "answered",
+   "checks": {
+    "71.1 %": true,
+    "86.6 %": true,
+    "91.5 %": true
+   }
+  }
+ ]
+}

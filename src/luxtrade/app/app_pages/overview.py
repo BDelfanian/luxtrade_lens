@@ -13,8 +13,9 @@ UI only: the content comes from ``Assistant.overview`` (agents/overview.py, agen
 import pandas as pd
 import streamlit as st
 
+from luxtrade.agents import trails
 from luxtrade.agents.findings import Finding
-from luxtrade.agents.pitch import tool_pitch
+from luxtrade.agents.pitch import numbers_kicker, tool_pitch
 from luxtrade.app.components import (
     ASK_PAGE,
     CONTRIBUTORS,
@@ -22,7 +23,10 @@ from luxtrade.app.components import (
     get_assistant,
     load_overview,
     queue,
+    render_chart,
+    render_trace,
 )
+from luxtrade.runs.store import RunRecord
 from luxtrade.viz.charts import finding_figures, hero_figure, overview_figures
 
 assistant = get_assistant()
@@ -62,9 +66,95 @@ def evidence(key: str, sql: list[str], main: pd.DataFrame, methods: list[str]) -
         st.markdown("**Method**\n" + "\n".join(f"- {m}" for m in methods))
 
 
+def trail_step(
+    n: int, step: trails.Step, done: trails.BuiltStep, rec: RunRecord, numbers: dict[str, int]
+) -> None:
+    """One question of the trail: why we asked, what the assistant answered, what we took.
+
+    ``numbers`` maps the trail's run IDs to step numbers, to say which step a follow-up builds on.
+    """
+    with st.container(border=True):
+        meta = f"**Step {n}** · run `{rec.run_id}`"
+        if rec.followup_of:
+            meta += f" · follow-up of step {numbers.get(rec.followup_of, '?')}"
+            if rec.inherited:
+                meta += f", kept: {', '.join(rec.inherited)}"
+        else:
+            meta += " · new question"
+        st.caption(meta)
+        st.markdown(f"**:material/person: We asked:** *{rec.question}*")
+        st.caption(f"Why: {step.why}")
+        answer, chart, how = st.tabs(["Answer", "Chart", "How the assistant got this"])
+        with answer:
+            if rec.status == "answered":
+                st.markdown(" ".join(rec.insight))
+                if rec.facts:
+                    st.markdown("\n".join(f"- {x['text']}" for x in rec.facts[:6]))
+            else:
+                st.markdown(
+                    "The assistant did not answer this one as written. It explained why and "
+                    "offered answerable versions:"
+                )
+                st.markdown("\n".join(f"- *{s['question']}*" for s in rec.suggestions))
+        with chart:
+            if rec.status == "answered":
+                render_chart(rec)
+            else:
+                st.caption("No chart: no query was run.")
+        with how:
+            render_trace(rec)
+        found = [e for e, ok in done.checks.items() if ok]
+        ticks = " ".join(f":green-badge[:material/check: {e}]" for e in found)
+        st.markdown(f"**:material/lightbulb: What we took from it:** {step.learnt}")
+        if ticks:
+            st.markdown(f"In the answer: {ticks}")
+
+
+def render_trail(f: Finding) -> None:
+    """The chain of real assistant runs that leads to the finding."""
+    view = trails.load(f.key, assistant.runs)
+    if view is None:
+        st.info(
+            "The investigation for this finding has not been recorded yet "
+            "(run `python -m luxtrade.agents.trails`)."
+        )
+        return
+    t = view.trail
+    st.markdown(f"**The concern:** {t.goal}")
+    st.caption(
+        f"One question rarely settles a concern. These are the {len(view.steps)} questions we "
+        f"asked the assistant, in order, in one session (`{view.session_id}`, recorded "
+        f"{view.built_at[:10]}). Each answer is the stored run, unedited."
+    )
+    numbers = {rec.run_id: n for n, (_, _, rec) in enumerate(view.steps, start=1)}
+    for n, (step, done, rec) in enumerate(view.steps, start=1):
+        trail_step(n, step, done, rec, numbers)
+    with st.container(border=True, key=f"trail-sum-{f.key}"):
+        st.markdown(f"**:material/merge: Putting it together.** {t.synthesis}")
+        if t.beyond:
+            st.caption(f":material/info: Not from the assistant: {t.beyond}")
+    if st.button(
+        "Continue this investigation in the assistant",
+        key=f"trail-open-{f.key}",
+        icon=":material/forum:",
+        help="Opens this session in the assistant: ask your own follow-up",
+    ):
+        st.session_state.session_id = view.session_id
+        st.switch_page(ASK_PAGE)
+
+
 def finding_detail(f: Finding) -> None:
-    """Body of the 'To know more' dialog: facts, charts, caveats and evidence."""
+    """Body of the 'To know more' dialog: the assistant's trail, then charts and evidence."""
     st.markdown(f"### {f.headline}")
+    trail_tab, evidence_tab = st.tabs(["How the assistant got here", "Charts, queries and method"])
+    with trail_tab:
+        render_trail(f)
+    with evidence_tab:
+        finding_evidence(f)
+
+
+def finding_evidence(f: Finding) -> None:
+    """The finding's facts, charts, caveats and the panel's own queries."""
     st.markdown(f"**{f.title}**")
     st.markdown(f.summary)
     st.markdown("\n".join(f"- {fact}" for fact in f.facts))
@@ -124,10 +214,26 @@ _tint_css = "\n".join(
     f"{{ background: linear-gradient(135deg, {v}); border-color: transparent !important; }}"
     for k, v in TINTS.items()
 )
+# The tiles' numbers in a colour that says which way they went: green for a rise, red for a fall
+# (and for a count of falls); a ratio or a level keeps the text colour. The delta pill follows.
+TONES = {"up": ("#0E8A45", "rgba(14,138,69,.13)"), "down": ("#D33A36", "rgba(211,58,54,.12)")}
+_tone_css = "\n".join(
+    f".st-key-tile-{f.key} [data-testid='stMetricValue'], "
+    f".st-key-dtile-{f.key} [data-testid='stMetricValue'] {{ color: {ink}; }}\n"
+    f".st-key-tile-{f.key} [data-testid='stMetricDelta'], "
+    f".st-key-dtile-{f.key} [data-testid='stMetricDelta'] {{ color: {ink} !important; "
+    f"background: {wash} !important; }}"
+    for f in ov.findings
+    if f.tone in TONES
+    for ink, wash in [TONES[f.tone]]
+)
 st.html(
     f"""<style>
 {_tint_css}
+{_tone_css}
 [class*="st-key-card-"] {{ padding: 1.5rem 1.75rem !important; }}
+[class*="st-key-tile-"] [data-testid="stMetricLabel"] {{
+  min-height: 2.9rem; align-items: flex-start; }}
 [class*="st-key-tile-"] [data-testid="stMetricLabel"] * {{
   white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }}
 [class*="st-key-ctx-"], .st-key-task {{
@@ -262,6 +368,7 @@ def deck_css(slides: list[str]) -> str:
     """Hide the app's frame; make each slide fill the screen with larger type."""
     deck = ", ".join(f".st-key-deck-{k}" for k in slides)
     centred = ", ".join(f".st-key-dbody-{k}" for k in CENTRED)
+    ground = "#0E1117" if st.context.theme.type == "dark" else "#FFFFFF"  # behind the controls
     tints = "\n".join(
         f".st-key-deck-{k}, .st-key-dtile-{k}, .st-key-dwatch-{k}, .st-key-dctx-{k}, "
         f".st-key-dfeat-{k} "
@@ -286,10 +393,17 @@ def deck_css(slides: list[str]) -> str:
 {tints}
 .st-key-deck-title h1 {{ font-size: 3.4rem !important; line-height: 1.15; }}
 .st-key-deck-challenge h1 {{ font-size: 2.9rem !important; line-height: 1.2; }}
-.st-key-deck-tool h1 {{ font-size: 2.7rem !important; line-height: 1.2; }}
-.st-key-dflow {{ border-radius: 0.75rem; padding: 0.9rem 1.5rem !important;
+.st-key-deck-tool h1 {{ font-size: 2.3rem !important; line-height: 1.2; padding: 0.4rem 0; }}
+.st-key-deck-tool p {{ font-size: 1.12rem !important; line-height: 1.42; }}
+.st-key-deck-tool h4 {{ font-size: 1.35rem !important; padding: 0.25rem 0 0.75rem; }}
+.st-key-deck-tool [class*="st-key-dfeat-"] {{ padding: 0.9rem 1.2rem !important; gap: 0.75rem; }}
+.st-key-dflow {{ border-radius: 0.75rem; padding: 0.6rem 1.5rem !important;
   background: rgba(98,80,214,.10); }}
-.st-key-dflow p {{ font-size: 1.35rem !important; font-weight: 600; text-align: center; }}
+.st-key-dflow p {{ font-size: 1.25rem !important; font-weight: 600; text-align: center; }}
+:is({deck}) h1 {{ text-wrap: balance; }}
+/* the controls stay at the bottom of the screen, even when a slide is taller than it */
+div:has(> .st-key-decknav) {{ position: sticky; bottom: 0; z-index: 5; padding: 0.5rem 0;
+  background: {ground}; }}
 :is({deck}) [data-testid="stHeaderActionElements"] {{ display: none !important; }}
 :is({deck}) h2 {{ font-size: 2.6rem !important; line-height: 1.2; }}
 :is({deck}) h4 {{ font-size: 1.6rem !important; }}
@@ -297,6 +411,8 @@ def deck_css(slides: list[str]) -> str:
   font-size: 1.3rem !important; line-height: 1.55; }}
 :is({deck}) [data-testid="stMetricValue"], :is({deck}) [data-testid="stMetricValue"] * {{
   font-size: 3.6rem !important; line-height: 1.2; }}
+[class*="st-key-dtile-"] [data-testid="stMetricLabel"] {{
+  min-height: 5.4rem; align-items: flex-start; }}
 :is({deck}) [data-testid="stMetricLabel"] * {{ font-size: 1.15rem !important;
   white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }}
 </style>"""
@@ -377,6 +493,7 @@ def slide_body(kind: str) -> None:
     elif kind == "tool":
         render_tool()
     elif kind == "title":
+        st.markdown(f"#### :blue[:material/insights: {numbers_kicker(lang)}]")
         st.markdown(f"# {ov.findings_hero}")
         question = ov.findings_intro.split("**")[1] if "**" in ov.findings_intro else ""
         st.markdown(f"#### {question}")
@@ -470,10 +587,55 @@ def deck_print_css(slides: list[str]) -> str:
 </style>"""
 
 
+# Full screen is a browser button, not a Streamlit one: browsers allow it only from a click
+# (or key press) in the page itself, never from a script run after a rerun. One listener on the
+# page handles the button's clicks and the F key (inline onclick is stripped by st.html); the
+# label follows the state. Looks like the Streamlit buttons beside it.
+FULL_SCREEN = """<button type="button" class="lt-fs" title="Full screen (F)">
+<span class="lt-fs-label">Full screen</span></button>
+<style>
+.lt-fs { display: inline-flex; align-items: center; gap: 0.5rem; height: 2.5rem;
+  padding: 0 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(49,51,63,.2);
+  background: transparent; color: inherit; font: inherit; font-size: 0.875rem; cursor: pointer; }
+.lt-fs:hover { border-color: #ff4b4b; color: #ff4b4b; }
+.lt-fs::before { content: ""; width: 18px; height: 18px; background: currentColor;
+  -webkit-mask: ICON; mask: ICON; }
+.st-key-decknav [data-testid="stElementContainer"]:has(.lt-fs),
+.st-key-decknav [data-testid="stHtml"]:has(.lt-fs) { flex: 0 0 auto !important; width: auto; }
+</style>
+<script>
+(function () {
+  const label = () => document.querySelectorAll(".lt-fs-label").forEach((el) => {
+    el.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen"; });
+  label();
+  if (window.ltFullScreenKeys) return;  // once per page, however often the slide redraws
+  window.ltFullScreenKeys = true;
+  const toggle = () => document.fullscreenElement ? document.exitFullscreen()
+                                                  : document.documentElement.requestFullscreen();
+  document.addEventListener("fullscreenchange", label);
+  document.addEventListener("click", (e) => { if (e.target.closest(".lt-fs")) toggle(); });
+  document.addEventListener("keydown", (e) => {
+    if ((e.key === "f" || e.key === "F") && !e.ctrlKey && !e.metaKey && !e.altKey
+        && !e.target.closest("input, textarea, [contenteditable]")
+        && document.querySelector(".st-key-decknav")) toggle();
+  });
+})();
+</script>"""
+FULL_SCREEN_ICON = (  # the 'expand' corners, drawn in the text colour through a CSS mask
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' "
+    "fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath "
+    "d='M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5'/%3E%3C/svg%3E\") center / contain no-repeat"
+)
+FULL_SCREEN = FULL_SCREEN.replace("ICON", FULL_SCREEN_ICON)
+# leaving the slides also leaves full screen (allowed without a click)
+EXIT_FULL_SCREEN = "<script>if (document.fullscreenElement) document.exitFullscreen();</script>"
+
+
 def present() -> None:
     """Show one slide and the controls: Back, Next, Close (also ←, →, Page Up/Down, Esc).
 
-    'Save as PDF' lays out all slides, one per page, and opens the browser's print dialog.
+    'Full screen' (or F) fills the screen; 'Save as PDF' lays out all slides, one per page,
+    and opens the browser's print dialog.
     """
     slides = deck_slides()
     last = len(slides) - 1
@@ -524,6 +686,7 @@ def present() -> None:
             key="deck-next",
         )
         st.space("stretch")
+        st.html(FULL_SCREEN, unsafe_allow_javascript=True)
         st.button(
             "Save as PDF",
             icon=":material/picture_as_pdf:",
@@ -546,6 +709,7 @@ def present() -> None:
 if ss.get("deck_on"):
     present()
     st.stop()
+st.html(EXIT_FULL_SCREEN, unsafe_allow_javascript=True)
 
 
 st.title("Luxembourg's trade in goods at a glance")

@@ -1,0 +1,463 @@
+{
+ "run_id": "894c650b85",
+ "session_id": "3pa6r8",
+ "turn": 1,
+ "created_at": "2026-10-16T07:50:28+00:00",
+ "origin": "ask",
+ "status": "answered",
+ "question": "How did monthly exports of iron and steel (HS 72) develop since January 2022?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": {
+  "spec": {
+   "language": "en",
+   "intent": "time_series",
+   "breakdown": "none",
+   "partners": [],
+   "partner_group": "WORLD",
+   "compare_reporters": [],
+   "products": [
+    "72"
+   ],
+   "product_level": "HS2",
+   "freq": "M",
+   "period_start": "2022-01",
+   "period_end": null,
+   "flow": "export",
+   "measure": "value_eur",
+   "top_n": null,
+   "seasonal_adjust": false,
+   "forecast_horizon": null,
+   "view": "auto",
+   "assumptions": [
+    "'iron and steel' read as HS2 code 72"
+   ]
+  },
+  "followup_of": null,
+  "inherited": [],
+  "view_only": false,
+  "ambiguities": [],
+  "unresolved": [],
+  "out_of_scope": [],
+  "needs_custom_sql": false
+ },
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "72"
+  ],
+  "product_level": "HS2",
+  "freq": "M",
+  "period_start": "2022-01",
+  "period_end": "2026-06",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'iron and steel' read as HS2 code 72"
+  ]
+ },
+ "assumptions": [
+  "'iron and steel' read as HS2 code 72"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  period AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2022-01-01' AS DATE)\n  AND period < CAST('2026-07-01' AS DATE)\n  AND flow = 'export'\n  AND hs2 IN ('72')\nGROUP BY\n  period,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "custom_sql": false,
+ "result_hash": "7af6da3452ad35a611354b158852e4093ff818be7e64bc0e689fd7fa9070515d",
+ "row_count": 54,
+ "view_kind": "line",
+ "title": "exports: −23.3 % (Jan 2022–Jun 2026)",
+ "frames": {
+  "main": [
+   {
+    "period": "2022-01-01",
+    "flow": "export",
+    "value": 146001491.0
+   },
+   {
+    "period": "2022-02-01",
+    "flow": "export",
+    "value": 167623564.0
+   },
+   {
+    "period": "2022-03-01",
+    "flow": "export",
+    "value": 175130672.0
+   },
+   {
+    "period": "2022-04-01",
+    "flow": "export",
+    "value": 173998874.0
+   },
+   {
+    "period": "2022-05-01",
+    "flow": "export",
+    "value": 202574978.0
+   },
+   {
+    "period": "2022-06-01",
+    "flow": "export",
+    "value": 185721477.0
+   },
+   {
+    "period": "2022-07-01",
+    "flow": "export",
+    "value": 149203982.0
+   },
+   {
+    "period": "2022-08-01",
+    "flow": "export",
+    "value": 129521541.0
+   },
+   {
+    "period": "2022-09-01",
+    "flow": "export",
+    "value": 156467878.0
+   },
+   {
+    "period": "2022-10-01",
+    "flow": "export",
+    "value": 168884771.0
+   },
+   {
+    "period": "2022-11-01",
+    "flow": "export",
+    "value": 141324562.0
+   },
+   {
+    "period": "2022-12-01",
+    "flow": "export",
+    "value": 103589008.0
+   },
+   {
+    "period": "2023-01-01",
+    "flow": "export",
+    "value": 118787779.0
+   },
+   {
+    "period": "2023-02-01",
+    "flow": "export",
+    "value": 128267601.0
+   },
+   {
+    "period": "2023-03-01",
+    "flow": "export",
+    "value": 143461475.0
+   },
+   {
+    "period": "2023-04-01",
+    "flow": "export",
+    "value": 129333560.0
+   },
+   {
+    "period": "2023-05-01",
+    "flow": "export",
+    "value": 135767599.0
+   },
+   {
+    "period": "2023-06-01",
+    "flow": "export",
+    "value": 105287347.0
+   },
+   {
+    "period": "2023-07-01",
+    "flow": "export",
+    "value": 107589011.0
+   },
+   {
+    "period": "2023-08-01",
+    "flow": "export",
+    "value": 98060357.0
+   },
+   {
+    "period": "2023-09-01",
+    "flow": "export",
+    "value": 113025606.0
+   },
+   {
+    "period": "2023-10-01",
+    "flow": "export",
+    "value": 127667782.0
+   },
+   {
+    "period": "2023-11-01",
+    "flow": "export",
+    "value": 114507711.0
+   },
+   {
+    "period": "2023-12-01",
+    "flow": "export",
+    "value": 63367379.0
+   },
+   {
+    "period": "2024-01-01",
+    "flow": "export",
+    "value": 74338167.0
+   },
+   {
+    "period": "2024-02-01",
+    "flow": "export",
+    "value": 114993330.0
+   },
+   {
+    "period": "2024-03-01",
+    "flow": "export",
+    "value": 117883167.0
+   },
+   {
+    "period": "2024-04-01",
+    "flow": "export",
+    "value": 103472338.0
+   },
+   {
+    "period": "2024-05-01",
+    "flow": "export",
+    "value": 117925131.0
+   },
+   {
+    "period": "2024-06-01",
+    "flow": "export",
+    "value": 113367667.0
+   },
+   {
+    "period": "2024-07-01",
+    "flow": "export",
+    "value": 121858341.0
+   },
+   {
+    "period": "2024-08-01",
+    "flow": "export",
+    "value": 69720724.0
+   },
+   {
+    "period": "2024-09-01",
+    "flow": "export",
+    "value": 101244540.0
+   },
+   {
+    "period": "2024-10-01",
+    "flow": "export",
+    "value": 114953503.0
+   },
+   {
+    "period": "2024-11-01",
+    "flow": "export",
+    "value": 110050663.0
+   },
+   {
+    "period": "2024-12-01",
+    "flow": "export",
+    "value": 63545902.0
+   },
+   {
+    "period": "2025-01-01",
+    "flow": "export",
+    "value": 97427819.0
+   },
+   {
+    "period": "2025-02-01",
+    "flow": "export",
+    "value": 103632298.0
+   },
+   {
+    "period": "2025-03-01",
+    "flow": "export",
+    "value": 93732826.0
+   },
+   {
+    "period": "2025-04-01",
+    "flow": "export",
+    "value": 105284711.0
+   },
+   {
+    "period": "2025-05-01",
+    "flow": "export",
+    "value": 120011965.0
+   },
+   {
+    "period": "2025-06-01",
+    "flow": "export",
+    "value": 96236959.0
+   },
+   {
+    "period": "2025-07-01",
+    "flow": "export",
+    "value": 97541164.0
+   },
+   {
+    "period": "2025-08-01",
+    "flow": "export",
+    "value": 74334726.0
+   },
+   {
+    "period": "2025-09-01",
+    "flow": "export",
+    "value": 98564854.0
+   },
+   {
+    "period": "2025-10-01",
+    "flow": "export",
+    "value": 95814189.0
+   },
+   {
+    "period": "2025-11-01",
+    "flow": "export",
+    "value": 83993824.0
+   },
+   {
+    "period": "2025-12-01",
+    "flow": "export",
+    "value": 53745775.0
+   },
+   {
+    "period": "2026-01-01",
+    "flow": "export",
+    "value": 83923827.0
+   },
+   {
+    "period": "2026-02-01",
+    "flow": "export",
+    "value": 89345131.0
+   },
+   {
+    "period": "2026-03-01",
+    "flow": "export",
+    "value": 96449844.0
+   },
+   {
+    "period": "2026-04-01",
+    "flow": "export",
+    "value": 98756950.0
+   },
+   {
+    "period": "2026-05-01",
+    "flow": "export",
+    "value": 97117588.0
+   },
+   {
+    "period": "2026-06-01",
+    "flow": "export",
+    "value": 111959556.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Monthly exports of iron and steel started at 146.0 million euros in January 2022 and decreased to 112.0 million euros by June 2026.",
+  "This represents a decline of 23.3% over the period from January 2022 to June 2026.",
+  "The highest monthly export value was in May 2022, reaching 202.6 million euros.",
+  "Exports have generally trended downward since the peak in May 2022.",
+  "The values are nominal and not adjusted for price changes, which may affect the interpretation of the trend."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "exports.start",
+   "text": "exports Jan 2022: 146.0 M€"
+  },
+  {
+   "key": "exports.end",
+   "text": "exports Jun 2026: 112.0 M€"
+  },
+  {
+   "key": "exports.change",
+   "text": "exports change Jan 2022–Jun 2026: −23.3 %"
+  },
+  {
+   "key": "exports.peak",
+   "text": "exports peak May 2022: 202.6 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "interpret",
+   "ms": 6890,
+   "outcome": "ok",
+   "detail": "intent=time_series breakdown=none"
+  },
+  {
+   "node": "guard_pre",
+   "ms": 35,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 442,
+   "outcome": "ok",
+   "detail": "54 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 26,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1553,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "interpret",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3638,
+   "output_tokens": 141,
+   "cache_read_tokens": 3456,
+   "ms": 1983
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 721,
+   "output_tokens": 119,
+   "cache_read_tokens": 0,
+   "ms": 1516
+  }
+ ],
+ "code_version": "6438c33",
+ "error": null
+}

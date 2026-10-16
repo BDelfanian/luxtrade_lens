@@ -30,11 +30,12 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
   - `qty_kg`
   - `unit_value`
   - `share`
-  - `growth_yoy`
+  - `growth_yoy`: year-on-year growth over time
+  - `change`: which items rose or fell most between two years ("which products grew most since 2015", "biggest declines"); use it with `ranking`
 - `top_n`
 - `seasonal_adjust`
 - `forecast_horizon`: months ahead.
-- `view`: `auto` unless the user asks for a presentation: `table`, `bar`, `line`, `area`, `map`, `treemap`, `pivot` or `kpi`.
+- `view`: `auto` unless the user asks for a presentation: `table`, `bar`, `line`, `area`, `stacked` (stacked bars per year), `heatmap`, `map`, `treemap`, `pivot` or `kpi`.
 
 ## Rules
 
@@ -60,6 +61,8 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
 7. `needs_custom_sql`: true only when the question cannot be expressed with these fields, for example "months in which imports from China exceeded exports to France".
 8. **Follow-ups.** SESSION CONTEXT lists earlier turns (oldest first), each with its `run_id`, question, spec and result entities.
    - If the new question builds on a turn ("and imports?", "only Germany", "zoom in on the second one", "since 2010 instead", "what about next year?"), set `followup_of` to that turn's `run_id`. Copy its spec, change only what the new question changes, and list the copied field names in `inherited`.
+   - A short follow-up that names no earlier turn ("and between 2019 and 2020?", "and in 2025?") builds on the **most recent** turn, the last one in SESSION CONTEXT.
+   - Never copy codes from a turn's result entities into `partners` or `products` unless the new question asks for those items ("these", "the top 3", "the second one").
    - "The second one" means the second code in that turn's entity list.
    - If the question only changes the presentation ("as a table", "show it on a map"), set `view_only = true` and set `view`; keep the spec otherwise identical.
    - If the question is unrelated to every earlier turn, set `followup_of = null` and leave `inherited` empty.

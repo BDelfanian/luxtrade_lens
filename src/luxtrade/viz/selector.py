@@ -7,10 +7,13 @@ from luxtrade.agents.spec import SPLIT_BREAKDOWNS, QuerySpec
 KINDS = (
     "kpi",
     "bar",
+    "change",
     "map",
     "treemap",
     "line",
     "area",
+    "stacked",
+    "heatmap",
     "pivot",
     "season",
     "forecast",
@@ -19,19 +22,24 @@ KINDS = (
 )
 MAP_MIN_COUNTRIES = 5
 MAP_MAX_UNDISCLOSED_PCT = 50.0
+STACKED_MAX_YEARS = 15  # one bar per year; longer share series read better as stacked areas
 
 
 def _compatible(view: str, spec: QuerySpec, main: pd.DataFrame) -> bool:
-    has_key = "key" in main.columns
     has_time = "period" in main.columns
+    is_change = "change" in main.columns  # rises and falls: only diverging bars read right
+    has_key = "key" in main.columns and not is_change
     return {
         "table": True,
         "kpi": spec.intent == "single_value",
         "bar": has_key,
+        "change": is_change,
         "treemap": has_key and spec.breakdown == "product",
         "map": has_key and spec.breakdown == "partner",
         "line": has_time,
         "area": has_time,
+        "stacked": has_key and has_time,
+        "heatmap": has_time and (has_key or spec.freq == "M"),
         "pivot": has_key and has_time,
     }.get(view, False)
 
@@ -44,6 +52,8 @@ def choose_view(
         return spec.view
     if spec.intent == "single_value":
         return "kpi"
+    if "change" in main.columns:
+        return "change"
     if spec.intent in ("ranking", "composition"):
         if spec.breakdown in SPLIT_BREAKDOWNS:
             return "bar"
@@ -55,7 +65,11 @@ def choose_view(
     if spec.intent == "drilldown":
         return "treemap"
     if spec.intent == "time_series":
-        return "area" if spec.measure == "share" else "line"
+        if spec.measure != "share":
+            return "line"
+        years = main["period"].nunique() if "period" in main.columns else 0
+        annual = spec.freq == "A" and "key" in main.columns and years <= STACKED_MAX_YEARS
+        return "stacked" if annual else "area"
     return {
         "pivot": "pivot",
         "seasonality": "season",

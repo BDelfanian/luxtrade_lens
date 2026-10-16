@@ -1,0 +1,43 @@
+{
+ "session_id": "nghuc8",
+ "built_at": "2026-10-16T07:50:50+00:00",
+ "code_version": "6438c33",
+ "steps": [
+  {
+   "run_id": "c5ffd51901",
+   "status": "answered",
+   "checks": {
+    "12.5 %": true,
+    "9.7 %": true,
+    "9.6 %": true,
+    "31.8 %": true
+   }
+  },
+  {
+   "run_id": "ed29cf57cd",
+   "status": "answered",
+   "checks": {
+    "13.2 %": true,
+    "11.5 %": true,
+    "8.9 %": true,
+    "33.6 %": true
+   }
+  },
+  {
+   "run_id": "ca48604eae",
+   "status": "answered",
+   "checks": {
+    "13.1 %": true
+   }
+  },
+  {
+   "run_id": "25a7e1477c",
+   "status": "answered",
+   "checks": {
+    "4.29 bn €": true,
+    "335.5 M€": true,
+    "−85.9 %": true
+   }
+  }
+ ]
+}

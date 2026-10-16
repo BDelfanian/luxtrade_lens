@@ -1,0 +1,46 @@
+{
+ "session_id": "rpfzre",
+ "built_at": "2026-10-16T07:55:05+00:00",
+ "code_version": "6438c33",
+ "steps": [
+  {
+   "run_id": "8e2f0f8751",
+   "status": "answered",
+   "checks": {
+    "70.3 %": true,
+    "86.6 %": true
+   }
+  },
+  {
+   "run_id": "e697c5c976",
+   "status": "answered",
+   "checks": {
+    "80.9 %": true,
+    "83.1 %": true
+   }
+  },
+  {
+   "run_id": "827d4f52d9",
+   "status": "answered",
+   "checks": {
+    "2.25 bn €": true,
+    "41.7 %": true
+   }
+  },
+  {
+   "run_id": "5d8c56fd72",
+   "status": "answered",
+   "checks": {
+    "1.13 bn €": true
+   }
+  },
+  {
+   "run_id": "2521342984",
+   "status": "answered",
+   "checks": {
+    "4.5 %": true,
+    "3.0 %": true
+   }
+  }
+ ]
+}

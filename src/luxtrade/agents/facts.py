@@ -11,7 +11,7 @@ from luxtrade.agents.analyse import Analysis
 from luxtrade.agents.spec import SPLIT_BREAKDOWNS, Limitation, QuerySpec
 from luxtrade.analytics import rankings, timeseries
 from luxtrade.semantic.layer import SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_eur, fmt_pct, fmt_period, month_name
+from luxtrade.viz.format import flow_label, fmt_eur, fmt_measure, fmt_pct, fmt_period, month_name
 
 _T = {
     "rank": {
@@ -90,6 +90,23 @@ _T = {
         "fr": "Sur {start}–{end}, la valeur la plus élevée est {name} en {period} avec {value}.",
         "de": "Im Zeitraum {start}–{end} ist der größte Wert {name} im Jahr {period} mit {value}.",
     },
+    "rise": {
+        "en": "Between {start} and {end}, the largest rise in {flow} was {name}: +{delta} ({v0} to {v1}).",
+        "fr": "Entre {start} et {end}, la plus forte hausse des {flow} concerne {name} : +{delta} (de {v0} à {v1}).",
+        "de": "Zwischen {start} und {end} verzeichnete {name} den stärksten Anstieg der {flow}: +{delta} (von {v0} auf {v1}).",
+    },
+    "fall": {
+        "en": "The largest fall in {flow} was {name}: −{delta} ({v0} to {v1}).",
+        "fr": "La plus forte baisse des {flow} concerne {name} : −{delta} (de {v0} à {v1}).",
+        "de": "Den stärksten Rückgang der {flow} verzeichnete {name}: −{delta} (von {v0} auf {v1}).",
+    },
+    "title_change": {
+        "en": "Largest changes by {what}",
+        "fr": "Plus fortes variations par {what}",
+        "de": "Größte Veränderungen nach {what}",
+    },
+    "by_partner": {"en": "partner", "fr": "partenaire", "de": "Partner"},
+    "by_product": {"en": "product group", "fr": "groupe de produits", "de": "Warengruppe"},
     "limits": {
         "en": "See the notes below for the data limits that apply.",
         "fr": "Voir les remarques ci-dessous sur les limites des données qui s'appliquent.",
@@ -212,6 +229,49 @@ def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact],
     return facts, sents, title
 
 
+def _change_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact], list[str], str]:
+    facts, sents = [], []
+    start, end = spec.period_start, spec.period_end
+    flows = [f for f in ("export", "import", "balance") if f in set(a.main["flow"])]
+    what = _t("by_partner" if spec.breakdown == "partner" else "by_product", lang)
+    scope = f"{flow_label(flows[0], lang)} " if len(flows) == 1 else ""
+    title = f"{_t('title_change', lang, what=what)} — {scope}{start}–{end}"
+    for flow in flows:
+        part = a.main[a.main["flow"] == flow].sort_values("change", ascending=False)
+        fl = flow_label(flow, lang)
+        for _, row in part.iterrows():
+            pct = (
+                fmt_pct(row["change_pct"], lang, signed=True)
+                if pd.notna(row["change_pct"])
+                else "–"
+            )
+            facts.append(
+                Fact(
+                    key=f"{flow}.{row['key']}",
+                    text=f"{fl} {row['label']}: {fmt_eur(row['base'], lang)} {start} → "
+                    f"{fmt_eur(row['value'], lang)} {end} ({fmt_eur(row['change'], lang)}, {pct})",
+                )
+            )
+        for name, rows in (("rise", part[part["change"] > 0]), ("fall", part[part["change"] < 0])):
+            if rows.empty or len(sents) >= 4:
+                continue
+            row = rows.iloc[0] if name == "rise" else rows.iloc[-1]  # sorted by change, desc
+            sents.append(
+                _t(
+                    name,
+                    lang,
+                    start=start,
+                    end=end,
+                    flow=fl,
+                    name=row["label"],
+                    delta=fmt_eur(abs(row["change"]), lang),
+                    v0=fmt_eur(row["base"], lang),
+                    v1=fmt_eur(row["value"], lang),
+                )
+            )
+    return facts, sents, title
+
+
 def _split_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str):  # noqa: ANN202
     """Facts for a two-way split: each part's value and share, the subject part first."""
     facts, sents, title = [], [], ""
@@ -220,6 +280,17 @@ def _split_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str):  
     for flow in [f for f in ("export", "import") if f in set(a.main["flow"])]:
         part = a.main[a.main["flow"] == flow].sort_values("rank")
         total, fl = part["value"].sum(), flow_label(flow, lang)
+        if spec.measure == "unit_value":  # a price per kg: no total, no shares
+            for _, row in part.iterrows():
+                value = fmt_measure(row["value"], spec.measure, lang)
+                facts.append(
+                    Fact(key=f"{flow}.{row['key'].lower()}", text=f"{row['label']}: {value}")
+                )
+            title = title or f"{fl} {period}: " + " · ".join(
+                f"{r['label']} {fmt_measure(r['value'], spec.measure, lang)}"
+                for _, r in part.iterrows()
+            )
+            continue
         facts.append(Fact(key=f"{flow}.total", text=f"{fl} {period}: {fmt_eur(total, lang)}"))
         for _, row in part.iterrows():
             facts.append(
@@ -249,6 +320,10 @@ def _split_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str):  
 
 def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str):  # noqa: ANN202
     facts, sents, title = [], [], ""
+
+    def fmt_v(value: float, lang: str) -> str:  # percentages, €/kg, kg or euros
+        return fmt_measure(value, spec.measure, lang)
+
     by = "key" if "key" in a.main.columns else "flow"
     groups = list(a.main.groupby([by, "flow"] if by == "key" else ["flow"]))[:4]
     for gkey, g in groups:
@@ -266,15 +341,15 @@ def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str): 
         p0, p1 = fmt_period(_py(first["period"]), lang), fmt_period(_py(last["period"]), lang)
         label = f"{name} · {fl}" if name else fl
         facts += [
-            Fact(key=f"{label}.start", text=f"{label} {p0}: {fmt_eur(v0, lang)}"),
-            Fact(key=f"{label}.end", text=f"{label} {p1}: {fmt_eur(v1, lang)}"),
+            Fact(key=f"{label}.start", text=f"{label} {p0}: {fmt_v(v0, lang)}"),
+            Fact(key=f"{label}.end", text=f"{label} {p1}: {fmt_v(v1, lang)}"),
             Fact(key=f"{label}.change", text=f"{label} change {p0}–{p1}: {chg_text}"),
         ]
         pk_idx, pk_val = timeseries.peak(g.set_index("period")["value"])
         facts.append(
             Fact(
                 key=f"{label}.peak",
-                text=f"{label} peak {fmt_period(_py(pk_idx), lang)}: {fmt_eur(pk_val, lang)}",
+                text=f"{label} peak {fmt_period(_py(pk_idx), lang)}: {fmt_v(pk_val, lang)}",
             )
         )
         if len(sents) < 2:
@@ -287,8 +362,8 @@ def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str): 
                     end=p1,
                     flow=fl,
                     scope=scope,
-                    v0=fmt_eur(v0, lang),
-                    v1=fmt_eur(v1, lang),
+                    v0=fmt_v(v0, lang),
+                    v1=fmt_v(v1, lang),
                     chg=chg_text,
                 )
             )
@@ -298,7 +373,7 @@ def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str): 
         g = groups[0][1].sort_values("period")
         pk_idx, pk_val = timeseries.peak(g.set_index("period")["value"])
         sents.append(
-            _t("peak", lang, when=fmt_period(_py(pk_idx), lang), value=fmt_eur(pk_val, lang))
+            _t("peak", lang, when=fmt_period(_py(pk_idx), lang), value=fmt_v(pk_val, lang))
         )
     return facts, sents, title
 
@@ -328,6 +403,8 @@ def build_fact_sheet(
         sents.append(_t("nodata", lang))
     elif spec.intent in ("ranking", "composition") and spec.breakdown in SPLIT_BREAKDOWNS:
         facts, sents, title = _split_facts(spec, a, sem, lang)
+    elif spec.intent in ("ranking", "composition", "drilldown") and spec.measure == "change":
+        facts, sents, title = _change_facts(spec, a, lang)
     elif spec.intent in ("ranking", "composition", "drilldown"):
         facts, sents, title = _ranking_facts(spec, a, lang)
     elif spec.intent == "time_series":
