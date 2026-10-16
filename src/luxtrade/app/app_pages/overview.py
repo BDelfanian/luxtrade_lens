@@ -446,7 +446,7 @@ def deck_slides() -> list[str]:
 # Title slides are centred; on the others the title sits under the header, always in one place.
 CENTRED = ("challenge", "tool", "title", "team")
 EVENT = "STATEC Hackathon 2026"
-REPO_URL = "https://github.com/mina-naseh/statec-hackathon-outliers"
+REPO_URL = "https://github.com/BDelfanian/luxtrade_lens"
 LOGO_TEXT = "LuxTrade <span>Lens</span>"
 
 

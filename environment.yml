@@ -1,5 +1,5 @@
 # Conda alternative to the venv workflow. Exact pins live in requirements.txt.
-name: statec-outliers
+name: luxtrade_lens
 channels:
   - conda-forge
 dependencies:
