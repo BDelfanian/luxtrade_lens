@@ -36,11 +36,49 @@ class SpecError(ValueError):
 
 @dataclass(frozen=True)
 class CompiledQuery:
-    """SQL for the answer plus SQL for the scope statistics used by the guard."""
+    """SQL for the answer, for the scope statistics used by the guard and for share totals."""
 
     sql: str
     view: str
     stats_sql: str | None
+    total_sql: str | None = None  # the whole a share is taken of (see ``share_base``)
+    share_of: str = ""  # which filter that total leaves out: "partner" or "product"
+
+
+def share_base(spec: QuerySpec) -> tuple[QuerySpec, str] | None:
+    """The whole a share is taken of, when the spec filters the dimension being shared.
+
+    "What share of imports came from Belgium, Germany and France?" ranks three partners, but
+    their shares are of *all* imports, not of the three. So the total drops the filter on the
+    shared dimension (partners for a partner breakdown, products for a product breakdown, and
+    for one series the partner filter first, else the product filter) and keeps every other
+    filter: shares of fuel imports by partner stay shares of fuel imports. ``None`` when no
+    such filter is set (the result's own total is then the whole).
+    """
+    if spec.measure != "share" or spec.flow == "balance":
+        return None
+    if spec.intent not in RANKED_INTENTS | {"time_series", "pivot"}:
+        return None
+    partner_filter = bool(spec.partners) or spec.partner_group != "WORLD"
+    if spec.breakdown == "partner" or (spec.breakdown == "none" and partner_filter):
+        if not partner_filter:
+            return None
+        return spec.model_copy(update={"partners": [], "partner_group": "WORLD"}), "partner"
+    if spec.breakdown in ("product", "none") and spec.products:
+        return spec.model_copy(update={"products": []}), "product"
+    return None
+
+
+def _total_sql(spec: QuerySpec, base: QuerySpec, view: str) -> str:
+    """Totals per flow (snapshots) or per period and flow (series) for ``share_base``."""
+    where = _filters(base)
+    measures = "sum(value_eur) AS value_eur"
+    if spec.intent in RANKED_INTENTS:
+        return _render(["flow", measures], view, where, ["flow"], "flow")
+    bucket = "year" if spec.freq == "A" or spec.intent == "pivot" else "period"
+    return _render(
+        [f"{bucket} AS period", "flow", measures], view, where, [bucket, "flow"], "period, flow"
+    )
 
 
 def _quote(code: str) -> str:
@@ -149,7 +187,17 @@ def compile_spec(spec: QuerySpec) -> CompiledQuery:
         "       sum(value_eur) FILTER (WHERE partner_is_special) AS special\n"
         "FROM v_lu_trade\nWHERE " + "\n  AND ".join(_filters(spec))
     )
-    return CompiledQuery(sql=sql, view=view, stats_sql=stats_sql)
+    based = share_base(spec)
+    if based is None:
+        return CompiledQuery(sql=sql, view=view, stats_sql=stats_sql)
+    base, share_of = based
+    return CompiledQuery(
+        sql=sql,
+        view=view,
+        stats_sql=stats_sql,
+        total_sql=_total_sql(spec, base, view),
+        share_of=share_of,
+    )
 
 
 def _benchmark(spec: QuerySpec) -> str:

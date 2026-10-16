@@ -71,6 +71,10 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
         notes.append(f"broken down by {s.breakdown} (not stated)")
     if s.intent == "drilldown":
         s.breakdown = "product"
+    if s.breakdown == "partner_group" and s.partner_group != "WORLD":
+        # "the EU27 share of imports": the split needs both groups; filtering on one gives 100 %
+        s.partner_group = "WORLD"
+        notes.append("EU27 and non-EU27 partners both kept, to split the total")
     # "which products grew most": a ranking needs one change per item, a series a yearly rate
     ranked = s.intent in RANKED_INTENTS and s.breakdown not in SPLIT_BREAKDOWNS
     if s.measure == "growth_yoy" and ranked:

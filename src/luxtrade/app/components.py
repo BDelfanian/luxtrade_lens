@@ -196,6 +196,9 @@ def render_trace(rec: RunRecord) -> None:
             f"result hash `{(rec.result_hash or '')[:16]}…`"
         )
         st.code(rec.sql, language="sql")
+    for sql in rec.support_sql:
+        st.markdown("**Total for the shares** (the same scope without the shared filter):")
+        st.code(sql, language="sql")
     if rec.methods:
         st.markdown("**Methods:**\n" + "\n".join(f"- {m}" for m in rec.methods))
     p = rec.provenance

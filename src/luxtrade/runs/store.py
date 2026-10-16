@@ -41,6 +41,7 @@ class RunRecord(BaseModel):
     suggestions: list[dict] = Field(default_factory=list)
     missing_hint: str = ""
     sql: str | None = None
+    support_sql: list[str] = Field(default_factory=list)  # e.g. the total a share is taken of
     custom_sql: bool = False
     result_hash: str | None = None
     row_count: int = 0
