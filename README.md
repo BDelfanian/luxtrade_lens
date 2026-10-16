@@ -177,6 +177,19 @@ python -m luxtrade.process.build        # contract Parquet + quality report + Du
 For notebooks, register the kernel once:
 `python -m ipykernel install --user --name luxtrade_lens --display-name "Python (luxtrade_lens)"`
 
+### Scenario builder
+
+Open **Scenario builder** in the top bar (direct path: `/scenarios`). Ask a broad question such
+as *"Has Luxembourg spread its risk, across the goods it sells and the countries it buys
+from?"*. The assistant proposes a chain of 3–5 precise questions (each checked by code before
+it is shown), you edit or extend it, and every step runs as an ordinary assistant run in one
+session. The assistant then follows up on what the answers revealed and writes a combined answer
+in which every number is checked against the steps it cites. Each scenario has an ID
+(`?scenario=<id>`), can be re-verified step by step, continued in the assistant, and downloaded
+as a Markdown report. Design: [SOLUTION_DESIGN §5.10](docs/SOLUTION_DESIGN.md). Planning needs
+an LLM key; the recorded examples in `demo/runs/scenarios/` open without one. Re-record them with
+`python -m luxtrade.agents.scenario --demo --lang en fr de`.
+
 ### Dashboard builder and chart API
 
 Open **Dashboard** in the Streamlit navigation (direct path: `/dashboard`). Run SQL against

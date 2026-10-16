@@ -1,0 +1,157 @@
+{
+ "run_id": "0d624fcc36",
+ "session_id": "j6aq7m",
+ "turn": 1,
+ "created_at": "2026-10-16T22:26:50+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the share of Luxembourg's total exports by partner group (EU27 vs extra-EU27) in 2005?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2005",
+  "flow": "export",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2006-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "b60aee2342900cd432a6ed2f22c9d0f1477d728e72c30a14f40e4318ed301645",
+ "row_count": 2,
+ "view_kind": "bar",
+ "title": "EU27 countries — exports 2005: 80.9 %",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "EU27",
+    "value": 12458509981.0,
+    "share": 80.9301754967,
+    "rank": 1,
+    "kind": "item",
+    "label": "EU27 countries"
+   },
+   {
+    "flow": "export",
+    "key": "NON_EU27",
+    "value": 2935636769.0,
+    "share": 19.0698245033,
+    "rank": 2,
+    "kind": "item",
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "In 2005, Luxembourg's total exports amounted to 15.39 billion euros.",
+  "The largest share of exports, 80.9%, went to EU27 countries, totaling 12.46 billion euros.",
+  "Exports to non-EU27 countries made up 19.1%, or 2.94 billion euros.",
+  "These values are nominal and not adjusted for price changes.",
+  "This means the data does not account for inflation or deflation over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2005: 15.39 bn €"
+  },
+  {
+   "key": "export.eu27",
+   "text": "EU27 countries: 12.46 bn €, 80.9 %"
+  },
+  {
+   "key": "export.non_eu27",
+   "text": "Non-EU27 countries: 2.94 bn €, 19.1 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of each flow's total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 167,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 26,
+   "outcome": "ok",
+   "detail": "view=bar; share of each flow's total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1076,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 701,
+   "output_tokens": 98,
+   "cache_read_tokens": 0,
+   "ms": 1037
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

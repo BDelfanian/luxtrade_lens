@@ -1,0 +1,249 @@
+{
+ "run_id": "b49ee68942",
+ "session_id": "3my7yv",
+ "turn": 6,
+ "created_at": "2026-10-16T22:31:35+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Quelle est l'évolution de la répartition des importations du Luxembourg par partenaires commerciaux entre 2005 et 2025 ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "fr",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [
+   "BE",
+   "DE",
+   "FR",
+   "NL",
+   "JP",
+   "IT",
+   "CN",
+   "US",
+   "PL",
+   "ES"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('BE', 'DE', 'FR', 'NL', 'JP', 'IT', 'CN', 'US', 'PL', 'ES')\n  AND year IN (2005, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "a250d4014020fc680d5997a9c8309d5cb1922fe3f842f2174fb1e75c65441917",
+ "row_count": 20,
+ "view_kind": "change",
+ "title": "Plus fortes variations par partenaire — importations 2005–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "BE",
+    "base": 4879289981.0,
+    "value": 7541904897.0,
+    "change": 2662614916.0,
+    "change_pct": 54.5697207251,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Belgique",
+    "iso3": "BEL"
+   },
+   {
+    "flow": "import",
+    "key": "DE",
+    "base": 3690407545.0,
+    "value": 6268626310.0,
+    "change": 2578218765.0,
+    "change_pct": 69.8627111928,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Allemagne",
+    "iso3": "DEU"
+   },
+   {
+    "flow": "import",
+    "key": "JP",
+    "base": 127511150.0,
+    "value": 1127125868.0,
+    "change": 999614718.0,
+    "change_pct": 783.9429869466,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Japon",
+    "iso3": "JPN"
+   },
+   {
+    "flow": "import",
+    "key": "FR",
+    "base": 1701887904.0,
+    "value": 2700152439.0,
+    "change": 998264535.0,
+    "change_pct": 58.656303547,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "flow": "import",
+    "key": "NL",
+    "base": 889788417.0,
+    "value": 1393023519.0,
+    "change": 503235102.0,
+    "change_pct": 56.5567153253,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Pays-Bas",
+    "iso3": "NLD"
+   },
+   {
+    "flow": "import",
+    "key": "CN",
+    "base": 2248814548.0,
+    "value": 761309825.0,
+    "change": -1487504723.0,
+    "change_pct": -66.1461712938,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Chine",
+    "iso3": "CHN"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "DE",
+   "JP",
+   "FR",
+   "NL",
+   "CN"
+  ]
+ },
+ "insight": [
+  "Les importations du Luxembourg par partenaires commerciaux ont évolué entre 2005 et 2025 avec des hausses marquées pour plusieurs pays.",
+  "Les importations en provenance d'Allemagne ont augmenté de 3,69 milliards d'euros en 2005 à 6,27 milliards d'euros en 2025, soit une hausse de 69,9 %.",
+  "La plus forte augmentation concerne le Japon, dont les importations sont passées de 127,5 millions d'euros en 2005 à 1,13 milliard d'euros en 2025, soit une hausse de 783,9 %.",
+  "En revanche, les importations en provenance de Chine ont diminué de 2,25 milliards d'euros en 2005 à 761,3 millions d'euros en 2025, soit une baisse de 66,1 %.",
+  "Ces valeurs sont exprimées en euros courants, sans ajustement pour les variations de prix, ce qui limite la comparaison réelle dans le temps."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.BE",
+   "text": "importations Belgique: 4,88 Md € 2005 → 7,54 Md € 2025 (2,66 Md €, +54,6 %)"
+  },
+  {
+   "key": "import.DE",
+   "text": "importations Allemagne: 3,69 Md € 2005 → 6,27 Md € 2025 (2,58 Md €, +69,9 %)"
+  },
+  {
+   "key": "import.JP",
+   "text": "importations Japon: 127,5 M€ 2005 → 1,13 Md € 2025 (999,6 M€, +783,9 %)"
+  },
+  {
+   "key": "import.FR",
+   "text": "importations France: 1,70 Md € 2005 → 2,70 Md € 2025 (998,3 M€, +58,7 %)"
+  },
+  {
+   "key": "import.NL",
+   "text": "importations Pays-Bas: 889,8 M€ 2005 → 1,39 Md € 2025 (503,2 M€, +56,6 %)"
+  },
+  {
+   "key": "import.CN",
+   "text": "importations Chine: 2,25 Md € 2005 → 761,3 M€ 2025 (-1,49 Md €, −66,1 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 396,
+   "outcome": "ok",
+   "detail": "20 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 54,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1725,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 959,
+   "output_tokens": 207,
+   "cache_read_tokens": 0,
+   "ms": 1639
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

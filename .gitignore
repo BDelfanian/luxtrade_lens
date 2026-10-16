@@ -52,6 +52,8 @@ Thumbs.db
 
 # HTML exports (rendered notebooks, Plotly/Streamlit exports)
 *.html
+# ...but the poster is hand-written HTML, the source of Poster_v2.png
+!docs/poster/poster.html
 # Quarto/Pandoc HTML render assets
 *_files/
 

@@ -1,0 +1,13 @@
+{
+ "session_id": "ks9g77",
+ "created_at": "2026-10-16T22:25:52+00:00",
+ "updated_at": "2026-10-16T22:26:05+00:00",
+ "language": "de",
+ "title": "Scenario: Luxemburgs Handel: Europäischer Trend",
+ "runs": [
+  "b499ed93be",
+  "a5cef1f32d",
+  "7218ae78e1",
+  "2b69ffc78d"
+ ]
+}

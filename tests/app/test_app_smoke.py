@@ -1,4 +1,5 @@
 import pytest
+import streamlit as st
 from streamlit.testing.v1 import AppTest
 
 from luxtrade import config
@@ -219,3 +220,78 @@ def test_presentation_mode_steps_through_the_slides_and_closes(app_env):
     assert not at.exception and at.button(key="deck-close")
     at.button(key="deck-close").click().run()
     assert at.title[1].value == "Luxembourg's trade in goods at a glance"
+
+
+def test_scenario_builder_tab_opens_offline(app_env):
+    at = _app().run()
+    at.switch_page("app_pages/scenario.py").run()
+    assert not at.exception
+    assert at.button(key="scn-plan").disabled  # planning needs the language model
+    assert any("needs the language model" in i.value for i in at.info)
+
+
+def test_a_stored_scenario_opens_from_its_link(app_env, processed_dir):
+    from conftest import insight_from_facts
+
+    from luxtrade.agents.llm import FakeLLM
+    from luxtrade.agents.scenario import (
+        AnswerPoint,
+        AnswerVerdicts,
+        PlanStep,
+        ScenarioAnswer,
+        ScenarioBuilder,
+        ScenarioPlan,
+        StepInput,
+    )
+    from luxtrade.agents.service import Assistant
+    from luxtrade.agents.spec import QuerySpec
+    from luxtrade.semantic.layer import SemanticLayer
+
+    spec = QuerySpec(
+        intent="composition",
+        breakdown="partner",
+        flow="import",
+        measure="share",
+        period_start="2024",
+        period_end="2024",
+    )
+    plan = ScenarioPlan(
+        title="Import partners",
+        approach="One ranking.",
+        steps=[PlanStep(question="Import partners in 2024?", purpose="who supplies", spec=spec)],
+        out_of_scope=[],
+    )
+    answer = ScenarioAnswer(
+        headline="A few partners supply most imports.",
+        points=[AnswerPoint(text="Imports come from a few partners.", steps=[1])] * 2,
+        conclusion="Goods only.",
+        step_notes=[{"step": 1, "text": "It names the suppliers."}],
+        charts=[1],
+    )
+    llm = FakeLLM(
+        responses={
+            "scenario_plan": plan,
+            "scenario_answer": answer,
+            "scenario_review": AnswerVerdicts(
+                headline={"check": "ok", "supported": True, "problem": ""},
+                points=[{"check": "ok", "supported": True, "problem": ""}] * 2,
+                conclusion={"check": "ok", "supported": True, "problem": ""},
+            ),
+            "insight": insight_from_facts,
+        }
+    )
+    builder = ScenarioBuilder(
+        Assistant(sem=SemanticLayer(processed_dir / config.DUCKDB_FILE), llm=llm)
+    )
+    checked = builder.plan("Who supplies Luxembourg?", "en")
+    steps = [StepInput(question=s.question, purpose=s.purpose, spec=s.spec) for s in checked.steps]
+    rec = builder.run("Who supplies Luxembourg?", steps, plan=checked, follow_ups=False)
+
+    st.cache_resource.clear()  # the app's assistant must read this test's run store
+    at = _app()
+    at.query_params["scenario"] = rec.scenario_id
+    at.run()
+    assert not at.exception
+    assert any(m.value == "### A few partners supply most imports." for m in at.markdown)
+    assert any("It names the suppliers." in m.value for m in at.markdown)
+    assert any(b.key == "scn-verify" for b in at.button)

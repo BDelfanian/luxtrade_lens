@@ -1,0 +1,16 @@
+{
+ "session_id": "3my7yv",
+ "created_at": "2026-10-16T22:31:15+00:00",
+ "updated_at": "2026-10-16T22:31:37+00:00",
+ "language": "fr",
+ "title": "Scenario: Répartition des risques commerciaux du Luxembourg",
+ "runs": [
+  "b90c9a8648",
+  "6ce52ad6ec",
+  "a614b4c35f",
+  "c16cd05743",
+  "b84c41cc03",
+  "b49ee68942",
+  "b2d715dd49"
+ ]
+}

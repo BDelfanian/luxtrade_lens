@@ -1,0 +1,15 @@
+{
+ "session_id": "msa5g9",
+ "created_at": "2026-10-16T22:25:09+00:00",
+ "updated_at": "2026-10-16T22:25:30+00:00",
+ "language": "de",
+ "title": "Scenario: Luxemburgs Risikostreuung im Warenhandel",
+ "runs": [
+  "66d7140661",
+  "1593deb760",
+  "7e9fea00d6",
+  "14ec82e814",
+  "aef3fcbac4",
+  "efe409816d"
+ ]
+}

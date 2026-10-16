@@ -72,6 +72,13 @@ class SessionStore:
         )
         return session
 
+    def retitle(self, session_id: str, title: str) -> None:
+        """Rename a session (e.g. after the scenario its runs belong to)."""
+        session = self.get(session_id)
+        if session is not None:
+            session.title = title[:80]
+            self._path(session_id).write_text(session.model_dump_json(indent=1), encoding="utf-8")
+
     def records(self, session_id: str) -> list[RunRecord]:
         """The session's run records, in turn order."""
         session = self.get(session_id)

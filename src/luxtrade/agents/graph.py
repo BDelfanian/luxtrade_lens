@@ -60,6 +60,9 @@ class RunState(TypedDict, total=False):
     limitations: list[Limitation]
     sql: str | None
     stats_sql: str | None
+    total_sql: str | None  # the whole a share is taken of (compile_sql.share_base)
+    totals: pd.DataFrame | None
+    share_of: str
     custom_sql: bool
     custom_explanation: str
     sql_error: str | None
@@ -199,6 +202,7 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
         retries = _bump(state, "query")
         explanation = ""
         sql: str | None = None
+        total_sql, totals, share_of = None, None, ""
         try:
             if custom:
                 if llm is None:
@@ -246,7 +250,11 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
                 compiled = compile_spec(spec)
                 sql = check_sql(compiled.sql)
                 stats_sql = check_sql(compiled.stats_sql) if compiled.stats_sql else None
+                if compiled.total_sql:
+                    total_sql, share_of = check_sql(compiled.total_sql), compiled.share_of
             df = sem.query(sql)
+            if total_sql:
+                totals = sem.query(total_sql)
             stats = None
             if stats_sql:
                 row = sem.query(stats_sql).fillna(0.0).iloc[0]
@@ -265,6 +273,9 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
         update = {
             "sql": sql,
             "stats_sql": stats_sql,
+            "total_sql": total_sql,
+            "totals": totals,
+            "share_of": share_of,
             "result": df,
             "stats": stats,
             "custom_sql": custom,
@@ -302,7 +313,7 @@ def build_graph(deps: Deps):  # noqa: ANN201 - compiled LangGraph type
                     flow=df.get("flow", "total")
                 )
             return {"analysis": a, "view_kind": kind, "_detail": kind}
-        a = analyse(spec, df, sem)
+        a = analyse(spec, df, sem, totals=state.get("totals"), share_of=state.get("share_of", ""))
         stats = state.get("stats")
         iso3 = int(a.main["iso3"].notna().sum()) if "iso3" in a.main.columns else 0
         special_pct = stats.pct(stats.special) if stats else 0.0

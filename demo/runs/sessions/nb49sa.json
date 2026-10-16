@@ -1,0 +1,13 @@
+{
+ "session_id": "nb49sa",
+ "created_at": "2026-10-16T22:29:42+00:00",
+ "updated_at": "2026-10-16T22:29:46+00:00",
+ "language": "fr",
+ "title": "Scenario: Évolution du commerce européen du Luxembourg",
+ "runs": [
+  "f92d1c8ff4",
+  "3d38faa6c2",
+  "7123baa608",
+  "7dc134f220"
+ ]
+}

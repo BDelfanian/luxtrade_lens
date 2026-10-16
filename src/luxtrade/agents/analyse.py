@@ -106,6 +106,27 @@ def _entities(main: pd.DataFrame, spec: QuerySpec) -> dict[str, list[str]]:
     return {"partners" if spec.breakdown == "partner" else "products": codes}
 
 
+_SHARE_OF = {"partner": "all partners", "product": "all products"}
+
+
+def _share_of_totals(
+    main: pd.DataFrame, totals: pd.DataFrame, on: list[str], share_of: str
+) -> tuple[pd.Series, str]:
+    """Shares in % of the whole from the total query (``compile_sql.share_base``).
+
+    ``on`` joins a result row to its total: the flow, plus the period for series (both queries
+    bucket periods the same way). The "total" flow of a two-flow ranking is both flows together.
+    """
+    whole = totals.rename(columns={"value_eur": "whole"})[[*on, "whole"]]
+    if "period" not in on:
+        both = whole.loc[whole["flow"].isin(["export", "import"]), "whole"].sum()
+        whole = pd.concat([whole, pd.DataFrame({"flow": ["total"], "whole": [both]})])
+    merged = main[on].merge(whole, on=on, how="left")
+    share = 100 * main["value"].to_numpy() / merged["whole"].to_numpy()
+    method = f"share of the whole flow ({_SHARE_OF.get(share_of, share_of)}), from a total query"
+    return pd.Series(share, index=main.index), method
+
+
 def _split(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
     """Two-way split of each flow's total (EU27 vs non-EU27, confidential vs published)."""
     df = df.assign(value=_measure(df, spec)).groupby(["flow", "key"], as_index=False)["value"].sum()
@@ -117,7 +138,13 @@ def _split(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
     return Analysis(main=main, methods=["share of each flow's total in %"])
 
 
-def _ranking(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
+def _ranking(
+    df: pd.DataFrame,
+    spec: QuerySpec,
+    sem: SemanticLayer,
+    totals: pd.DataFrame | None = None,
+    share_of: str = "",
+) -> Analysis:
     if spec.breakdown in SPLIT_BREAKDOWNS:
         return _split(df, spec, sem)
     df = df.assign(value=_measure(df, spec))[["key", "flow", "value"]]
@@ -131,7 +158,12 @@ def _ranking(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
         main = rankings.rank_by_flow(df, n)
         method = f"Top-{n} per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
     main = _label(main.reset_index(drop=True), spec, sem)
-    return Analysis(main=main, methods=[method])
+    a = Analysis(main=main, methods=[method])
+    if totals is not None and spec.flow != "balance":
+        main["share"], note = _share_of_totals(main, totals, ["flow"], share_of)
+        a.methods.append(note)
+        a.extra["totals"] = totals.rename(columns={"value_eur": "value"})
+    return a
 
 
 def _change(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
@@ -171,7 +203,9 @@ def _change(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
     return Analysis(main=main, methods=[method])
 
 
-def _time_series(df: pd.DataFrame, spec: QuerySpec) -> Analysis:
+def _time_series(
+    df: pd.DataFrame, spec: QuerySpec, totals: pd.DataFrame | None = None, share_of: str = ""
+) -> Analysis:
     df = df.assign(value=_measure(df, spec))
     cols = ["period"] + (["key"] if "key" in df.columns else []) + ["flow", "value"]
     df = df[cols]
@@ -187,6 +221,15 @@ def _time_series(df: pd.DataFrame, spec: QuerySpec) -> Analysis:
         lag = 1 if spec.freq == "A" else 12
         df["value"] = df.groupby(group)["value"].transform(lambda s: timeseries.yoy_pct(s, lag))
         methods.append(f"year-on-year change in % (lag {lag})")
+    elif spec.measure == "share" and totals is not None:
+        df = df.reset_index(drop=True)
+        df["value"], note = _share_of_totals(df, totals, ["period", "flow"], share_of)
+        methods.append(note)
+        return Analysis(
+            main=df,
+            methods=methods,
+            extra={"totals": totals.rename(columns={"value_eur": "value"})},
+        )
     elif spec.measure == "share" and "key" in df.columns:
         df["value"] = 100 * df["value"] / df.groupby(["period", "flow"])["value"].transform("sum")
         methods.append("share of the period total in %")
@@ -247,18 +290,28 @@ def _benchmark(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysi
     )
 
 
-def analyse(spec: QuerySpec, df: pd.DataFrame, sem: SemanticLayer) -> Analysis:
-    """Turn the SQL result into display frames for the spec's intent."""
+def analyse(
+    spec: QuerySpec,
+    df: pd.DataFrame,
+    sem: SemanticLayer,
+    totals: pd.DataFrame | None = None,
+    share_of: str = "",
+) -> Analysis:
+    """Turn the SQL result into display frames for the spec's intent.
+
+    ``totals`` (from the total query of ``compile_sql.share_base``) makes shares relative to the
+    whole flow rather than to the filtered selection; ``share_of`` names the filter left out.
+    """
     if spec.intent in RANKED_INTENTS and spec.measure == "change":
         result = _change(df, spec, sem)
     elif spec.intent in RANKED_INTENTS:
-        result = _ranking(df, spec, sem)
+        result = _ranking(df, spec, sem, totals, share_of)
     elif spec.intent == "time_series":
-        result = _time_series(df, spec)
+        result = _time_series(df, spec, totals, share_of)
         if "key" in result.main.columns:
             result.main = _label(result.main, spec, sem)
     elif spec.intent == "pivot":
-        result = _time_series(df, spec)
+        result = _time_series(df, spec, totals, share_of)
         result.main = _label(result.main, spec, sem)
     elif spec.intent == "single_value":
         main = df.assign(value=_measure(df, spec)).rename(columns={"year": "period"})

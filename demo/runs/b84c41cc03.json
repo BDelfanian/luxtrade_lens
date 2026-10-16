@@ -1,0 +1,317 @@
+{
+ "run_id": "b84c41cc03",
+ "session_id": "3my7yv",
+ "turn": 5,
+ "created_at": "2026-10-16T22:31:24+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Quels sont les changements dans la répartition des exportations du Luxembourg par partenaires commerciaux entre 2005 et 2025 ?",
+ "language": "fr",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "fr",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "2.8 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 2.7790594132283997
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND year IN (2005, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "43118eb5b671ab92091dab9c1562dec40979859f5a59d53f868c6329068584ec",
+ "row_count": 398,
+ "view_kind": "change",
+ "title": "Plus fortes variations par partenaire — exportations 2005–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "DE",
+    "base": 3077921183.0,
+    "value": 3914507497.0,
+    "change": 836586314.0,
+    "change_pct": 27.1802383576,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Allemagne",
+    "iso3": "DEU"
+   },
+   {
+    "flow": "export",
+    "key": "BE",
+    "base": 1385464130.0,
+    "value": 2136972196.0,
+    "change": 751508066.0,
+    "change_pct": 54.2423329285,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Belgique",
+    "iso3": "BEL"
+   },
+   {
+    "flow": "export",
+    "key": "FR",
+    "base": 2664892104.0,
+    "value": 3103251302.0,
+    "change": 438359198.0,
+    "change_pct": 16.4494163701,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "flow": "export",
+    "key": "NL",
+    "base": 627638799.0,
+    "value": 964214803.0,
+    "change": 336576004.0,
+    "change_pct": 53.6257485255,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Pays-Bas",
+    "iso3": "NLD"
+   },
+   {
+    "flow": "export",
+    "key": "PL",
+    "base": 188912874.0,
+    "value": 379291606.0,
+    "change": 190378732.0,
+    "change_pct": 100.7759439412,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Pologne",
+    "iso3": "POL"
+   },
+   {
+    "flow": "export",
+    "key": "FI",
+    "base": 154501348.0,
+    "value": 59714208.0,
+    "change": -94787140.0,
+    "change_pct": -61.3503643994,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Finlande",
+    "iso3": "FIN"
+   },
+   {
+    "flow": "export",
+    "key": "SE",
+    "base": 384085547.0,
+    "value": 188093380.0,
+    "change": -195992167.0,
+    "change_pct": -51.0282588165,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Suède",
+    "iso3": "SWE"
+   },
+   {
+    "flow": "export",
+    "key": "IT",
+    "base": 1123936190.0,
+    "value": 652476939.0,
+    "change": -471459251.0,
+    "change_pct": -41.94715458,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Italie",
+    "iso3": "ITA"
+   },
+   {
+    "flow": "export",
+    "key": "ES",
+    "base": 1233229008.0,
+    "value": 511133132.0,
+    "change": -722095876.0,
+    "change_pct": -58.5532671804,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Espagne",
+    "iso3": "ESP"
+   },
+   {
+    "flow": "export",
+    "key": "GB",
+    "base": 1318511832.0,
+    "value": 359563457.0,
+    "change": -958948375.0,
+    "change_pct": -72.7295995172,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Royaume-Uni",
+    "iso3": "GBR"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "DE",
+   "BE",
+   "FR",
+   "NL",
+   "PL",
+   "FI",
+   "SE",
+   "IT",
+   "ES",
+   "GB"
+  ]
+ },
+ "insight": [
+  "Entre 2005 et 2025, les exportations du Luxembourg vers ses partenaires commerciaux ont globalement augmenté, avec des variations selon les pays.",
+  "Les exportations vers l'Allemagne ont atteint 3,91 milliards d'euros en 2025, en hausse de 27,2 % par rapport à 2005.",
+  "La Belgique et les Pays-Bas ont connu des augmentations importantes, respectivement de 54,2 % et 53,6 %, tandis que les exportations vers le Royaume-Uni ont chuté de 72,7 %.",
+  "Les exportations vers la Pologne ont doublé, passant de 188,9 millions d'euros à 379,3 millions d'euros, contrastant avec la baisse marquée vers la Finlande et la Suède.",
+  "Les valeurs sont exprimées en euros courants, sans ajustement pour l'inflation, et 2,8 % des échanges concernent des partenaires non divulgués, ce qui limite la précision des classements par pays."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.DE",
+   "text": "exportations Allemagne: 3,08 Md € 2005 → 3,91 Md € 2025 (836,6 M€, +27,2 %)"
+  },
+  {
+   "key": "export.BE",
+   "text": "exportations Belgique: 1,39 Md € 2005 → 2,14 Md € 2025 (751,5 M€, +54,2 %)"
+  },
+  {
+   "key": "export.FR",
+   "text": "exportations France: 2,66 Md € 2005 → 3,10 Md € 2025 (438,4 M€, +16,4 %)"
+  },
+  {
+   "key": "export.NL",
+   "text": "exportations Pays-Bas: 627,6 M€ 2005 → 964,2 M€ 2025 (336,6 M€, +53,6 %)"
+  },
+  {
+   "key": "export.PL",
+   "text": "exportations Pologne: 188,9 M€ 2005 → 379,3 M€ 2025 (190,4 M€, +100,8 %)"
+  },
+  {
+   "key": "export.FI",
+   "text": "exportations Finlande: 154,5 M€ 2005 → 59,7 M€ 2025 (-94,8 M€, −61,4 %)"
+  },
+  {
+   "key": "export.SE",
+   "text": "exportations Suède: 384,1 M€ 2005 → 188,1 M€ 2025 (-196,0 M€, −51,0 %)"
+  },
+  {
+   "key": "export.IT",
+   "text": "exportations Italie: 1,12 Md € 2005 → 652,5 M€ 2025 (-471,5 M€, −41,9 %)"
+  },
+  {
+   "key": "export.ES",
+   "text": "exportations Espagne: 1,23 Md € 2005 → 511,1 M€ 2025 (-722,1 M€, −58,6 %)"
+  },
+  {
+   "key": "export.GB",
+   "text": "exportations Royaume-Uni: 1,32 Md € 2005 → 359,6 M€ 2025 (-958,9 M€, −72,7 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 327,
+   "outcome": "ok",
+   "detail": "398 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 28,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1881,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1209,
+   "output_tokens": 211,
+   "cache_read_tokens": 0,
+   "ms": 1859
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

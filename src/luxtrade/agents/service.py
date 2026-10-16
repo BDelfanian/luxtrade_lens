@@ -182,6 +182,7 @@ class Assistant:
             suggestions=[x.model_dump(mode="json") for x in s.get("suggestions", [])],
             missing_hint=s.get("missing_hint", ""),
             sql=s.get("sql"),
+            support_sql=[s["total_sql"]] if s.get("total_sql") else [],
             custom_sql=bool(s.get("custom_sql")),
             result_hash=result_hash(s.get("result")),
             row_count=0 if s.get("result") is None else len(s["result"]),

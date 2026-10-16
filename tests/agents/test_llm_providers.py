@@ -5,6 +5,7 @@ import openai
 import pytest
 
 from luxtrade.agents import llm
+from luxtrade.agents.scenario import AnswerVerdicts, FollowUps, ScenarioAnswer, ScenarioPlan
 from luxtrade.agents.spec import CustomSQL, InsightOutput, Interpretation, OptimiserOutput
 
 
@@ -23,9 +24,29 @@ def _walk(node, path="$"):
             _walk(value, f"{path}[{i}]")
 
 
-@pytest.mark.parametrize("schema", [Interpretation, OptimiserOutput, InsightOutput, CustomSQL])
+SCHEMAS = [
+    Interpretation,
+    OptimiserOutput,
+    InsightOutput,
+    CustomSQL,
+    ScenarioPlan,
+    FollowUps,
+    ScenarioAnswer,
+    AnswerVerdicts,
+]
+
+
+@pytest.mark.parametrize("schema", SCHEMAS)
 def test_strict_schema_follows_openai_rules(schema):
     _walk(llm.strict_schema(schema))
+
+
+def test_strict_schema_keeps_a_property_named_title():
+    # "title" is also a JSON-schema keyword; only the keyword is dropped (seen on real data:
+    # the scenario plan's title went missing and every plan failed validation)
+    schema = llm.strict_schema(ScenarioPlan)
+    assert "title" in schema["properties"] and "title" in schema["required"]
+    assert "title" not in schema["properties"]["title"]
 
 
 @pytest.fixture

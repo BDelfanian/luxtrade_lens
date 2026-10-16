@@ -133,6 +133,10 @@ llm_use = pd.DataFrame(
         ("Insight", "Always", "Writes 4–5 sentences from a fact sheet computed by code"),
         ("Optimise", "Vague, blocked or failed questions", "Proposes three rewrites"),
         ("SQL fallback", "Questions the spec can't express", "Writes SQL, then guarded"),
+        ("Scenario plan", "Scenario builder", "Proposes 3–5 questions, each checked by code"),
+        ("Scenario follow-up", "Scenario builder", "Proposes 0–2 questions from the answers"),
+        ("Scenario answer", "Scenario builder", "Combines the steps' facts, checked by code"),
+        ("Scenario review", "Scenario builder", "Judges whether each claim follows; adds no text"),
     ],
     columns=["LLM step", "When", "What it does"],
 )
@@ -369,6 +373,40 @@ st.markdown(
     "Follow-ups inherit the previous question's fields, shown on the answer so you can "
     "start fresh. Each answer has a **run ID** and each conversation a **session ID** that "
     "can be reopened from a link."
+)
+
+# --- scenarios -----------------------------------------------------------------------------------
+st.subheader(":material/route: Scenario builder: a broad question, step by step", anchor=False)
+st.graphviz_chart(
+    """digraph {
+    rankdir=LR; bgcolor="transparent";
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11,
+          color="#c9c8c2", fillcolor="#ffffff"];
+    edge [color="#8a8984", arrowsize=0.7];
+    q [label="Broad question", fillcolor="#eef4ff"];
+    p [label="1 Plan\\nLLM: 3–5 questions", fillcolor="#fff3e0"];
+    c [label="Checks\\ncodes, limits, SQL,\\nyears match"];
+    u [label="2 Review\\nyou edit the chain", fillcolor="#eef4ff"];
+    r [label="3 Run each step\\nthe assistant above"];
+    f [label="4 Follow up\\nLLM: 0–2 questions\\nfrom the facts", fillcolor="#fff3e0"];
+    a [label="5 Answer\\nLLM + per-step\\nnumber check", fillcolor="#fff3e0"];
+    s [label="Scenario record\\nsteps' run IDs", fillcolor="#eef4ff"];
+    q -> p -> c -> u -> r -> f -> a -> s;
+    f -> c [style=dashed];
+    }""",
+    width="stretch",
+)
+st.markdown(
+    "Some questions need several answers. The scenario builder proposes a chain of precise "
+    "questions; code keeps only those it can answer from the data. You review the chain, the "
+    "assistant answers every step as an ordinary run, then proposes follow-ups about what the "
+    "answers revealed. The combined answer is written from the steps' facts only. **Every "
+    "number in a point must come from the steps that point cites**, and a number told next to "
+    "years must come from a step covering those years. A second, separate language-model call "
+    "then checks only the reasoning: directions (more or less), comparisons and superlatives "
+    "against the cited numbers. A point that fails is removed, and an answer that fails falls "
+    "back to each step's own checked headline. Each scenario has an ID, can be re-verified "
+    "step by step and exported as a report."
 )
 
 # --- tools ---------------------------------------------------------------------------------------

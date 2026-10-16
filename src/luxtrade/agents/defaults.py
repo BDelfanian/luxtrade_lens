@@ -71,6 +71,15 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
         notes.append(f"broken down by {s.breakdown} (not stated)")
     if s.intent == "drilldown":
         s.breakdown = "product"
+    if share_of_nothing(s):
+        # "the share of exports over time" with no item selected or split is 100 % every year
+        # (seen on real data: euros printed as percentages); show the values instead
+        s.measure = "value_eur"
+        notes.append("values shown: a share needs a breakdown or a partner or product filter")
+    if s.breakdown == "partner_group" and s.partner_group != "WORLD":
+        # "the EU27 share of imports": the split needs both groups; filtering on one gives 100 %
+        s.partner_group = "WORLD"
+        notes.append("EU27 and non-EU27 partners both kept, to split the total")
     # "which products grew most": a ranking needs one change per item, a series a yearly rate
     ranked = s.intent in RANKED_INTENTS and s.breakdown not in SPLIT_BREAKDOWNS
     if s.measure == "growth_yoy" and ranked:
@@ -153,6 +162,21 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
     s.partners = [p.upper() for p in s.partners]
     s.assumptions = list(dict.fromkeys(notes))
     return s
+
+
+def share_of_nothing(spec: QuerySpec) -> bool:
+    """True for a share that selects and splits nothing: the whole flow, 100 % by definition.
+
+    Rankings and compositions get a breakdown by default, so only series and totals qualify.
+    """
+    return (
+        spec.measure == "share"
+        and spec.intent not in ("ranking", "composition", "drilldown")
+        and spec.breakdown in (None, "none")
+        and not spec.partners
+        and not spec.products
+        and spec.partner_group == "WORLD"
+    )
 
 
 def product_digits(level: str | None) -> int:

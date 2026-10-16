@@ -1,0 +1,309 @@
+{
+ "run_id": "14ec82e814",
+ "session_id": "msa5g9",
+ "turn": 4,
+ "created_at": "2026-10-16T22:25:16+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Wie verteilt sich der Anteil der wichtigsten Importpartner Luxemburgs im Jahr 2025?",
+ "language": "de",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "de",
+  "intent": "composition",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "4.1 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 4.121261539099505
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "066bc7252fb895264fcaf00dad7eee7724e2ccb2b4d2a82e26416e272a02667c",
+ "row_count": 173,
+ "view_kind": "map",
+ "title": "Wichtigste Handelspartner — Importe 2025",
+ "frames": {
+  "main": [
+   {
+    "key": "BE",
+    "value": 7541904897.0,
+    "share": 30.0498907499,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgien",
+    "iso3": "BEL"
+   },
+   {
+    "key": "DE",
+    "value": 6268626310.0,
+    "share": 24.9766522304,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Deutschland",
+    "iso3": "DEU"
+   },
+   {
+    "key": "FR",
+    "value": 2700152439.0,
+    "share": 10.7584604829,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Frankreich",
+    "iso3": "FRA"
+   },
+   {
+    "key": "NL",
+    "value": 1393023519.0,
+    "share": 5.5503490338,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Niederlande",
+    "iso3": "NLD"
+   },
+   {
+    "key": "JP",
+    "value": 1127125868.0,
+    "share": 4.4909090816,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "key": "IT",
+    "value": 820441735.0,
+    "share": 3.2689598769,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Italien",
+    "iso3": "ITA"
+   },
+   {
+    "key": "CN",
+    "value": 761309825.0,
+    "share": 3.0333552836,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "key": "US",
+    "value": 638055574.0,
+    "share": 2.5422622736,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vereinigte Staaten",
+    "iso3": "USA"
+   },
+   {
+    "key": "PL",
+    "value": 527583430.0,
+    "share": 2.1020981635,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Polen",
+    "iso3": "POL"
+   },
+   {
+    "key": "ES",
+    "value": 377705753.0,
+    "share": 1.5049270401,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Spanien",
+    "iso3": "ESP"
+   },
+   {
+    "key": "OTHER",
+    "value": 1881149974.0,
+    "share": 7.4952352191,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Sonstige",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 1060865157.0,
+    "share": 4.2269005647,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Vertraulich",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "DE",
+   "FR",
+   "NL",
+   "JP",
+   "IT",
+   "CN",
+   "US",
+   "PL",
+   "ES"
+  ]
+ },
+ "insight": [
+  "2025 war Belgien der wichtigste Partner für die Importe mit 7,54 Mrd. € (30,0 % von insgesamt 25,10 Mrd. €).",
+  "Die drei größten (Belgien, Deutschland, Frankreich) machen 65,8 % des Gesamtwerts aus (Importe).",
+  "Hinweise zu den geltenden Datengrenzen finden Sie unten."
+ ],
+ "insight_source": "template",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "Importe 2025: 25,10 Mrd. €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Belgien: 7,54 Mrd. €, 30,0 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Deutschland: 6,27 Mrd. €, 25,0 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Frankreich: 2,70 Mrd. €, 10,8 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Niederlande: 1,39 Mrd. €, 5,6 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Japan: 1,13 Mrd. €, 4,5 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Sonstige: 1,88 Mrd. €, 7,5 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Vertraulich: 1,06 Mrd. €, 4,2 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 Importe: 65,8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 184,
+   "outcome": "ok",
+   "detail": "173 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 47,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 3088,
+   "outcome": "fallback",
+   "detail": "grounding failed: number 11.7 is not in the fact sheet; grounding failed: number 11.7 is not in the fact sheet; fell back to the template insight"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 989,
+   "output_tokens": 157,
+   "cache_read_tokens": 0,
+   "ms": 1452
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1009,
+   "output_tokens": 161,
+   "cache_read_tokens": 0,
+   "ms": 1456
+  }
+ ],
+ "code_version": "88aa27d",
+ "error": null
+}

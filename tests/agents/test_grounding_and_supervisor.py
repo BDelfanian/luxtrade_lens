@@ -111,3 +111,11 @@ def test_query_retry_only_for_llm_sql():
     )
     assert supervisor.after_query(_state(status="no_data")) == "optimise"
     assert supervisor.after_query(_state()) == "guard_post"
+
+
+def test_year_spans_and_event_names_are_not_read_as_statistics():
+    from luxtrade.agents.grounding import unsupported_numbers
+
+    text = "In the 2022–23 aftershock and during COVID-19, exports fell 3.7 %."
+    assert unsupported_numbers(text, [2022.0, 2023.0, 3.7], "en") == []
+    assert unsupported_numbers("Exports fell 23 % in 2023.", [2023.0], "en") != []

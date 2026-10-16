@@ -239,6 +239,8 @@ The guard runs **twice**: before the query, on the spec (fast blocks), and after
 
 The executed SQL is **always shown** in the trace, so a STATEC analyst can copy and re-run it.
 
+**Shares are of the whole flow (added 17 Oct).** *"What share of imports came from Belgium, Germany and France?"* filters three partners, but their shares are of all imports. When a share's own dimension is filtered (partners for a partner breakdown, products for a product breakdown, or the filter of a single series), the compiler adds a second guarded **total query** without that filter; every other filter stays, so partner shares of fuel imports remain shares of fuel imports. The facts then state the selection and the whole (*"imports 2025, selection: 16.51 bn €"*, *"imports 2025, all partners: 25.10 bn €"*), and the total query is stored on the run record (`support_sql`) and shown in "How we got this". An EU27 vs non-EU27 split never filters on one group (that always gave 100 %).
+
 **Semantic layer** (DuckDB views over `data/processed/`, owned by Kasra; the final names belong in the data contract, [GUIDELINES §1.3](GUIDELINES.md)):
 
 | View | Grain | Purpose |
@@ -386,6 +388,30 @@ This keeps prompts small and deterministic, and every carried field shows up in 
 - On disk, each turn's run record carries `session_id`, `turn`, `followup_of` and `origin` (`ask` · `followup` · `optimiser` · `refine` · `preset`).
 - A session file `data/runs/sessions/<session_id>.json` lists its run IDs in order. A session can be **resumed** later from the history panel or with `?session=<id>`, and the context is rebuilt from the stored run records.
 - **Scope:** context lives within one session only. There is no memory across sessions and no user profile.
+
+### 5.10 Scenario builder: a broad question as a chain of checked runs (added 17 Oct)
+
+A concern such as *"Has Luxembourg spread its risk, across the goods it sells and the countries it buys from?"* needs several answers combined. A person splits it into precise questions, asks them one by one, follows up on what the answers reveal and puts the evidence together; the investigation trails behind the Overview findings were built exactly this way, by hand. The **Scenario builder** tab does the same for any question. Code: `agents/scenario.py` (`ScenarioBuilder`), `runs/scenarios.py`, `app/app_pages/scenario.py`; prompts `scenario_plan.md`, `scenario_follow_up.md`, `scenario_answer.md`.
+
+| Step | Who | What happens |
+|---|---|---|
+| 1. Plan | LLM, then code | 3–5 self-contained questions, each with a purpose and a `QuerySpec`. Code keeps a question only if it passes the optimiser's checks (§5.8: codes exist, no blocking limitation, SQL compiles and passes the guard), if its text and spec name the same years, if a snapshot does not silently add up several years, and if it is not a repeat. One redraft if too few survive. Product rankings without a product filter stay at chapter level (HS2) unless the user asks for headings. Parts of the question the data cannot answer are listed (`out_of_scope`, plus the limitation guard on the question). |
+| 2. Review | User | The chain is shown as an editable table: untick, edit or add questions. Unchanged questions run their checked spec; edited or added ones go through the normal interpreter. |
+| 3. Run | Assistant | Every step is an ordinary assistant run (origin `scenario`) in **one session**, with its own SQL, trace, grounded insight and run ID. |
+| 4. Follow up | LLM, then code | The LLM reads the facts the steps returned and proposes 0–2 questions about what they revealed (*"iron and steel fell most in 2009: did it fall in 2020 and 2023 too?"*), each naming the steps it builds on. Checked like the plan, then run. |
+| 5. Answer | LLM, then code, then LLM | A headline, 3–5 analytical points and a conclusion, each point citing its steps, plus one note per step and up to three supporting charts. Checked by code (numbers, years, countries), then by a reasoning check (below). |
+
+**How the combined answer is checked (no LLM).** The language model only sees the steps' fact sheets, never raw data or its own memory:
+- every number in a point or step note must be in the facts of **the steps it cites**; the headline and conclusion may use any answered step;
+- a number written next to years must come from a cited step **whose period covers those years** (catches *"the 2019–2020 fall"* told as *"during the 2008–09 crisis"*);
+- every country must be in the cited steps' results; observed years are never "projected";
+- a failing point or note is **removed and the removal noted**; a failing headline or conclusion, or fewer than two surviving points, triggers one redraft, then a **template answer** made of each step's own checked headline.
+
+**Reasoning check (a second, separate LLM call).** Code can confirm that *26.8 %* and *12.5 %* are in the facts, not that "exports became more concentrated" contradicts them. Seen on real data: exactly that headline, and *33.6 %* called "less concentrated" than *31.8 %*. So a judge reads the steps' facts and the drafted answer and gives a verdict per part, writing out the comparison first (`check`, then `supported`, then `problem`). It checks directions, comparisons, superlatives that must hold in every cited step, changes claimed from one year only, and contradictions. It writes nothing into the answer: an unsupported point is removed (noted), and an unsupported headline or conclusion asks for a redraft with the judge's reason. On the recorded examples, with the explicit `check` field, it caught both errors above and passed the correct answers; without it, it passed everything. Remaining claims are still best verified by eye: the citations and the steps below the answer make that easy.
+
+**Traceability.** A scenario record (`data/runs/scenarios/<id>.json`, content-addressed ID like run IDs) keeps the plan, the dropped questions and why, every step with its run ID and what was queried in words, the answer and its check notes, the data limits flagged by the runs, and the LLM calls. The page offers **Re-verify every step** (re-runs each step's SQL and compares result hashes), **Continue in the assistant** (opens the steps' session), a **Markdown report** and the **JSON record**. `?scenario=<id>` opens one. Recorded examples live in `demo/runs/scenarios/` (`python -m luxtrade.agents.scenario --demo`), so the tab works offline.
+
+In one sentence for the jury: *"For a broad question, the assistant plans its own chain of checked questions, follows up on what it finds, and writes an answer in which every number is traced to the step it came from."*
 
 ## 6. Traceability: "where does this answer come from?"
 

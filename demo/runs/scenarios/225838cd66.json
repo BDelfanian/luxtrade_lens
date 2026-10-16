@@ -1,0 +1,193 @@
+{
+ "scenario_id": "225838cd66",
+ "session_id": "psacyj",
+ "created_at": "2026-10-16T22:26:37+00:00",
+ "question": "Which goods break first when a crisis hits Luxembourg's exports, and which import is critical?",
+ "language": "en",
+ "title": "Luxembourg Trade Crisis Impact on Goods",
+ "approach": "This chain identifies which export goods break first during crises by analyzing changes in exports during crisis years and identifies critical imports by examining the largest import values in the latest year. It compares export changes during three recent crises and ranks imports by value to find critical goods.",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "plan",
+   "question": "Which export goods experienced the largest declines in value between 2008 and 2009 during the financial crisis in Luxembourg?",
+   "purpose": "To identify which export goods broke first during the 2008 financial crisis by ranking the largest export value declines between 2008 and 2009.",
+   "builds_on": [],
+   "run_id": "5b9823609f",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2008–2009 · change between the two years",
+   "note": "Iron and steel and machinery exports had the largest declines between 2008 and 2009, while electrical machinery exports increased."
+  },
+  {
+   "n": 2,
+   "kind": "plan",
+   "question": "Which export goods experienced the largest declines in value between 2019 and 2020 during the COVID-19 crisis in Luxembourg?",
+   "purpose": "To identify which export goods broke first during the 2019-2020 COVID-19 crisis by ranking the largest export value declines between 2019 and 2020.",
+   "builds_on": [],
+   "run_id": "a149c71e3f",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2019–2020 · change between the two years",
+   "note": "Electrical machinery exports had the largest decline between 2019 and 2020, with iron and steel also declining but less, and vehicles and parts did not decline."
+  },
+  {
+   "n": 3,
+   "kind": "plan",
+   "question": "Which export goods experienced the largest declines in value between 2022 and 2023 during the post-energy price shock crisis in Luxembourg?",
+   "purpose": "To identify which export goods broke first during the 2022-2023 crisis by ranking the largest export value declines between 2022 and 2023.",
+   "builds_on": [],
+   "run_id": "67df03afbb",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2022–2023 · change between the two years",
+   "note": "Iron and steel exports declined significantly between 2022 and 2023, while vehicles and parts exports increased."
+  },
+  {
+   "n": 4,
+   "kind": "plan",
+   "question": "What were the largest import goods by value in Luxembourg in 2025?",
+   "purpose": "To identify which import goods are critical by ranking the largest import values in the latest complete year 2025.",
+   "builds_on": [],
+   "run_id": "61b6cb2277",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2025 · value in €",
+   "note": "Vehicles and parts were the largest import goods by value in Luxembourg in 2025, followed by machinery and mineral fuels."
+  },
+  {
+   "n": 5,
+   "kind": "follow-up",
+   "question": "Which export goods experienced the largest declines in value between 2008 and 2010 during the financial crisis in Luxembourg?",
+   "purpose": "Step 1 shows the largest export declines between 2008 and 2009, but it is unclear if these goods continued to break or recover in 2010; this question checks the persistence of export declines during the financial crisis.",
+   "builds_on": [
+    1
+   ],
+   "run_id": "14eb8402cc",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2008–2010 · change between the two years",
+   "note": "Between 2008 and 2010, iron and steel and machinery exports remained below 2008 levels, showing persistent declines during the financial crisis."
+  },
+  {
+   "n": 6,
+   "kind": "follow-up",
+   "question": "Which import goods were the largest by value in Luxembourg in 2025 broken down by partner countries?",
+   "purpose": "Step 4 identifies the largest import goods by value in 2025 but does not show which partner countries supply these critical imports; this question reveals the main import partners for critical goods.",
+   "builds_on": [
+    4
+   ],
+   "run_id": "f77da739cd",
+   "status": "answered",
+   "queried": "imports · products 87, 84, 27, 85, 39 · by partner (top 10) · 2025 · value in €",
+   "note": "Belgium and Germany were the main partners supplying Luxembourg's largest imports of vehicles and machinery in 2025."
+  }
+ ],
+ "headline": "Iron and steel exports break first during crises in Luxembourg, while vehicles and parts are the most critical imports.",
+ "points": [
+  {
+   "text": "During the 2008–09 financial crisis, iron and steel exports experienced one of the largest declines, falling from 2.67 bn € to 1.38 bn €, and machinery and mechanical appliances also declined significantly; however, some products like electrical machinery and equipment actually increased in value during this period, indicating mixed impacts across products.",
+   "steps": [
+    1
+   ]
+  },
+  {
+   "text": "In the 2019–20 COVID-19 crisis, electrical machinery and equipment exports had the largest decline, dropping from 2.12 bn € to 637.4 M€, while iron and steel exports also fell substantially but less than electrical machinery; vehicles and parts did not decline but increased or were not among the largest falls, showing different products broke first in this crisis compared to 2008–09.",
+   "steps": [
+    2
+   ]
+  },
+  {
+   "text": "Following the 2022–23 energy price shock, iron and steel exports again showed a large decline from 1.90 bn € to 1.39 bn €, along with declines in plastics and articles thereof and aluminium, while vehicles and parts exports increased, indicating iron and steel remain vulnerable in crises but vehicles and parts exports are more resilient.",
+   "steps": [
+    3
+   ]
+  },
+  {
+   "text": "Vehicles and parts are the largest import goods in Luxembourg in 2025, valued at 3.32 bn € and representing 13.2% of total imports, followed by machinery and mechanical appliances and mineral fuels and oils, highlighting vehicles and parts as a critical import sector.",
+   "steps": [
+    4
+   ]
+  },
+  {
+   "text": "The main partners supplying these critical imports of vehicles and parts and machinery in 2025 are Belgium and Germany, which together account for over half of these imports, emphasizing the importance of these countries for Luxembourg's critical imports.",
+   "steps": [
+    6
+   ]
+  }
+ ],
+ "conclusion": "Iron and steel exports tend to break first or among the first during crises in Luxembourg, especially in the 2008–09 financial crisis and the 2022–23 energy price shock, while electrical machinery was most affected during the COVID-19 crisis. Vehicles and parts, despite being a large export sector, did not decline in all crises and are instead the largest and most critical import goods in 2025, mainly supplied by Belgium and Germany. This analysis does not cover the causes of these patterns or the full range of products and partners, and it is limited to observed nominal values without price adjustment.",
+ "charts": [
+  1,
+  2,
+  4
+ ],
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "1.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L03",
+   "message": "7.7 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "reasoning check failed: conclusion: Iron and steel did not have the largest decline during the 2019-20 crisis, so 'consistently' largest declines is overstated.; point 1: Iron and steel did not have the largest decline during the 2019-20 COVID-19 crisis; electrical machinery declined more.; point 3: Vehicles and parts did not decline during the 2019-20 COVID-19 crisis; they increased or were not among largest declines.",
+  "combined answer passed the number, country, wording and reasoning checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_plan",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 7241,
+   "output_tokens": 671,
+   "cache_read_tokens": 0,
+   "ms": 4198
+  },
+  {
+   "step": "scenario_follow_up",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 8755,
+   "output_tokens": 344,
+   "cache_read_tokens": 0,
+   "ms": 2817
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4278,
+   "output_tokens": 591,
+   "cache_read_tokens": 0,
+   "ms": 4466
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4542,
+   "output_tokens": 1242,
+   "cache_read_tokens": 0,
+   "ms": 8151
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4382,
+   "output_tokens": 717,
+   "cache_read_tokens": 4096,
+   "ms": 5006
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4637,
+   "output_tokens": 786,
+   "cache_read_tokens": 2944,
+   "ms": 6354
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "88aa27d",
+ "status": "answered"
+}

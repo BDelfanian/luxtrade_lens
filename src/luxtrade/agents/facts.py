@@ -29,6 +29,19 @@ _T = {
         "fr": "En {period}, {name} représentaient {share} des {flow}{scope} ({value} sur {total}).",
         "de": "{period} entfielen {share} der {flow}{scope} auf {name} ({value} von {total}).",
     },
+    # shares of the whole flow (compile_sql.share_base): the selection and the whole it is of
+    "selection": {
+        "en": "{flow} {period}, selection: {value}",
+        "fr": "{flow} {period}, sélection : {value}",
+        "de": "{flow} {period}, Auswahl: {value}",
+    },
+    "whole": {
+        "en": "{flow} {period}, all {of}: {value}",
+        "fr": "{flow} {period}, tous {of} : {value}",
+        "de": "{flow} {period}, alle {of}: {value}",
+    },
+    "of_partner": {"en": "partners", "fr": "partenaires", "de": "Partner"},
+    "of_product": {"en": "products", "fr": "produits", "de": "Waren"},
     "what_partner": {"en": "partner", "fr": "partenaire", "de": "der wichtigste Partner"},
     "what_product": {
         "en": "product group",
@@ -172,6 +185,17 @@ def _period_text(spec: QuerySpec) -> str:
     return start if start == end else f"{start}–{end}"
 
 
+def _wholes(a: Analysis) -> dict[str, float]:
+    """Each flow's whole when shares are of the whole flow (``compile_sql.share_base``)."""
+    totals = a.extra.get("totals")
+    if totals is None or "period" in totals.columns:
+        return {}
+    wholes = {str(r["flow"]): float(r["value"]) for _, r in totals.iterrows()}
+    if {"export", "import"} <= set(wholes):
+        wholes["total"] = wholes["export"] + wholes["import"]
+    return wholes
+
+
 def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact], list[str], str]:
     facts, sents = [], []
     kind = "partner" if spec.breakdown == "partner" else "product"
@@ -181,6 +205,7 @@ def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact],
     # the chart shows the whole ranking, so the title names it (not the top item)
     scope = f"{flow_label(flows[0], lang)} {period}" if len(flows) == 1 else period
     title = f"{_t(f'title_{kind}', lang)} — {scope}"
+    wholes = _wholes(a)
     for flow in flows:
         part = a.main[a.main["flow"] == flow]
         items = part[part["kind"] == "item"].sort_values("rank")
@@ -188,7 +213,21 @@ def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact],
             continue
         total = part["value"].sum()
         fl = flow_label(flow, lang)
-        facts.append(Fact(key=f"{flow}.total", text=f"{fl} {period}: {fmt_eur(total, lang)}"))
+        if flow in wholes:  # shares are of the whole flow, not of the selection
+            sel = _t("selection", lang, flow=fl, period=period, value=fmt_eur(total, lang))
+            total = wholes[flow]
+            of = _t(f"of_{kind}", lang)
+            facts.append(Fact(key=f"{flow}.selection", text=sel))
+            facts.append(
+                Fact(
+                    key=f"{flow}.total",
+                    text=_t(
+                        "whole", lang, flow=fl, period=period, of=of, value=fmt_eur(total, lang)
+                    ),
+                )
+            )
+        else:
+            facts.append(Fact(key=f"{flow}.total", text=f"{fl} {period}: {fmt_eur(total, lang)}"))
         for _, row in items.head(5).iterrows():
             share = f", {fmt_pct(row['share'], lang)}" if pd.notna(row["share"]) else ""
             facts.append(

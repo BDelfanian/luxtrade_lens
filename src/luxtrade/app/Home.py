@@ -1,9 +1,10 @@
 """LuxTrade Lens: Luxembourg's trade in goods (EN · FR · DE).
 
 Run with ``streamlit run src/luxtrade/app/Home.py``. Entry point: the app's name, one row of tabs
-(Overview: the big picture · Assistant, with presets and sessions · Dashboard: mapped
-SQL charts on the left; Data · How it works and the language switch on the right), and a footer
-naming the team. UI only: every computation happens in the agents layer (GUIDELINES §1.1).
+(Overview: the big picture · Assistant, with presets and sessions · Scenario builder: a broad
+question answered by a chain of checked runs · Dashboard: mapped SQL charts on the left;
+Data · How it works and the language switch on the right), and a footer naming the team.
+UI only: every computation happens in the agents layer (GUIDELINES §1.1).
 """
 
 import streamlit as st
@@ -23,6 +24,12 @@ overview_page = st.Page(
     "app_pages/overview.py", title="Overview", icon=":material/insights:", default=True
 )
 ask_page = st.Page(ASK_PAGE, title="Assistant", icon=":material/forum:", url_path="ask")
+scenario_page = st.Page(
+    "app_pages/scenario.py",
+    title="Scenario builder",
+    icon=":material/route:",
+    url_path="scenarios",
+)
 dashboard_page = st.Page(
     "app_pages/dashboard.py", title="Dashboard", icon=":material/dashboard:", url_path="dashboard"
 )
@@ -33,7 +40,7 @@ method_page = st.Page(
     icon=":material/settings_suggest:",
     url_path="how-it-works",
 )
-MAIN_TABS = (overview_page, ask_page, dashboard_page)  # left of the top bar
+MAIN_TABS = (overview_page, ask_page, scenario_page, dashboard_page)  # left of the top bar
 INFO_TABS = (data_page, method_page)  # right of the top bar, before the language switch
 # Streamlit's own navigation is hidden: the five pages are tabs in the top bar below, in one row
 page = st.navigation([*MAIN_TABS, *INFO_TABS], position="hidden")
@@ -66,6 +73,8 @@ if "session_id" not in ss:
         deep_link = True
     if deep_link and page.url_path != ask_page.url_path:
         st.switch_page(ask_page, query_params=params.to_dict())
+    if "scenario" in params and page.url_path != scenario_page.url_path:
+        st.switch_page(scenario_page, query_params=params.to_dict())
 
 
 # --- top bar, shared by all pages: the app's name, the page tabs and the language -----------
