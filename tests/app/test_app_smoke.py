@@ -295,3 +295,49 @@ def test_a_stored_scenario_opens_from_its_link(app_env, processed_dir):
     assert any(m.value == "### A few partners supply most imports." for m in at.markdown)
     assert any("It names the suppliers." in m.value for m in at.markdown)
     assert any(b.key == "scn-verify" for b in at.button)
+
+
+def test_the_proposed_chain_can_be_reordered_extended_and_trimmed(app_env):
+    from luxtrade.agents.scenario import PlanResult, PlanStep
+    from luxtrade.agents.spec import QuerySpec
+
+    def share(year: str, flow: str) -> QuerySpec:
+        return QuerySpec(
+            intent="composition",
+            breakdown="product",
+            flow=flow,
+            measure="share",
+            period_start=year,
+            period_end=year,
+        )
+
+    plan = PlanResult(
+        question="Has Luxembourg spread its risk?",
+        title="Risk",
+        steps=[
+            PlanStep(question="Export shares in 2023?", purpose="a", spec=share("2023", "export")),
+            PlanStep(question="Export shares in 2024?", purpose="b", spec=share("2024", "export")),
+        ],
+    )
+    st.cache_resource.clear()
+    at = _app().run()
+    at.switch_page("app_pages/scenario.py")
+    at.session_state["scn_plan"] = plan.model_dump(mode="json")
+    at.run()
+    assert not at.exception
+    assert not at.expander[-1].proto.expanded  # previous scenarios start collapsed
+
+    def questions() -> list[str]:
+        return [at.session_state[f"scn-q-{r['id']}"] for r in at.session_state["scn_rows"]]
+
+    second = at.session_state["scn_rows"][1]["id"]
+    at.button(key=f"scn-up-{second}").click().run()
+    assert questions() == ["Export shares in 2024?", "Export shares in 2023?"]
+    at.button(key="scn-add").click().run()
+    new = at.session_state["scn_rows"][-1]["id"]
+    at.text_area(key=f"scn-q-{new}").input("Import shares in 2024?").run()
+    assert at.button(key="scn-run").label == "Run the chain (3 questions), after checking 1"
+    assert any("not checked yet" in m.value for m in at.markdown)
+    at.button(key=f"scn-del-{second}").click().run()
+    assert questions() == ["Export shares in 2023?", "Import shares in 2024?"]
+    assert not at.exception

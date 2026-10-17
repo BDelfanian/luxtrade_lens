@@ -1,9 +1,10 @@
 """Scenario builder: a broad question answered by a chain of checked assistant runs.
 
-Four parts, top to bottom: the question (or an example); the proposed chain of questions to
-review (edit, drop or add questions); the run, step by step; and the result: the combined answer
-with its supporting charts, every step of the chain with its own answer and trace, and how the
-scenario was built (IDs, checks, LLM calls, re-verify, report). ``?scenario=ID`` opens one.
+Four parts, top to bottom: the question (or an example card); the proposed chain of questions
+to review (tick, edit, reorder, delete or add questions; added and edited ones are checked for
+answerability and fit); the run, step by step; and the result: the combined answer with its
+supporting charts, every step of the chain with its own answer and trace, and how the scenario
+was built (IDs, checks, LLM calls, re-verify, report). ``?scenario=ID`` opens one.
 UI only: the work happens in agents/scenario.py (``ScenarioBuilder``).
 """
 
@@ -13,7 +14,15 @@ import pandas as pd
 import streamlit as st
 
 from luxtrade.agents.llm import LLMError
-from luxtrade.agents.scenario import EXAMPLES, MAX_FOLLOW_UPS, PlanResult, StepInput, to_markdown
+from luxtrade.agents.scenario import (
+    MAX_FOLLOW_UPS,
+    PlanResult,
+    StepCheck,
+    StepInput,
+    examples,
+    to_markdown,
+)
+from luxtrade.agents.spec import QuerySpec
 from luxtrade.app.components import (
     ASK_PAGE,
     get_scenario_builder,
@@ -29,11 +38,176 @@ if "scenario" in st.query_params and ss.get("scn_id") != st.query_params["scenar
     ss.scn_id, ss.scn_plan = st.query_params["scenario"], None
 
 KIND = {"plan": "planned question", "own": "your question", "follow-up": "follow-up"}
-EDITOR_COLUMNS = {
-    "run": st.column_config.CheckboxColumn("Run", width="small", default=True),
-    "question": st.column_config.TextColumn("Question", width="large", required=True),
-    "why": st.column_config.TextColumn("Why this question", width="large"),
+STEPS = (
+    "Your question",
+    "Proposed chain, you review it",
+    "The assistant answers each step",
+    "Follow-ups from the answers",
+    "Combined, checked answer",
+)
+EXAMPLE_ICONS = (
+    ":material/scatter_plot:",
+    ":material/bolt:",
+    ":material/public:",
+    ":material/local_gas_station:",
+)
+# a row's state → (accent colour, badge)
+ROW_LOOK = {
+    "plan": ("#5B47D1", ":violet-badge[:material/verified: proposed · checked]"),
+    "checked": ("#1BAF7A", ":green-badge[:material/check: your question · checked]"),
+    "warned": ("#EDA100", ":orange-badge[:material/warning: your question · see the notes]"),
+    "problem": ("#D33A36", ":red-badge[:material/block: cannot be answered as written]"),
+    "unchecked": ("#EDA100", ":orange-badge[:material/edit: your question · not checked yet]"),
+    "empty": ("#B5BCC8", ":gray-badge[empty]"),
 }
+st.html(
+    """<style>
+.scn-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 2px 0 6px; }
+.scn-chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px;
+  border-radius: 999px; background: #EEEBFB; border: 1px solid #D9D3F6; color: #2E2470;
+  font-size: 0.9rem; font-weight: 500; }
+.scn-chip b { width: 22px; height: 22px; border-radius: 50%; background: #5B47D1; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 0.78rem; }
+.scn-arrow { color: #8F84DE; font-weight: 700; }
+[class*="st-key-scn-excard-"] { background: linear-gradient(135deg, rgba(98,80,214,.09),
+  rgba(98,80,214,.03)); border-color: #D9D3F6 !important; }
+[class*="st-key-scn-excard-"] button { justify-content: flex-start; }
+.scn-head { display: grid; grid-template-columns: 0.55fr 5.2fr 4.2fr 0.9fr; gap: 1rem;
+  background: #5B47D1; color: #fff; border-radius: 10px; padding: 9px 30px 9px 18px;
+  font-weight: 600; font-size: 0.9rem; }
+[class*="st-key-scn-row-"] { background: #FFFFFF; border: 1px solid #DDD8F5;
+  border-left: 5px solid var(--scn-accent, #5B47D1); border-radius: 12px;
+  padding: 10px 12px 6px; box-shadow: 0 1px 3px rgba(19,33,60,.07); }
+[class*="st-key-scn-row-"] textarea { background: #FAF9FF; border-color: #E4E0F7;
+  font-size: 0.95rem; line-height: 1.45; }
+[class*="st-key-scn-row-skip-"] { opacity: 0.55; }
+.scn-num { width: 30px; height: 30px; border-radius: 50%; background: #5B47D1; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+  margin: 4px 0 6px; }
+.scn-num.skip { background: #B5BCC8; font-size: 0.7rem; }
+</style>"""
+)
+
+
+# --- the editable chain: one row per question, kept in session state -----------------------------
+def _key(kind: str, rid: str) -> str:
+    return f"scn-{kind}-{rid}"
+
+
+def add_row(question: str = "", why: str = "", spec: dict | None = None) -> None:
+    """Callback (and setup): append a row; a proposed row keeps its checked spec."""
+    rid = f"r{ss.get('scn_next_row', 0)}"
+    ss.scn_next_row = ss.get("scn_next_row", 0) + 1
+    ss[_key("q", rid)], ss[_key("why", rid)], ss[_key("run", rid)] = question, why, True
+    ss.scn_rows.append({"id": rid, "orig": question, "spec": spec, "check": None, "checked": ""})
+
+
+def load_rows(plan: PlanResult) -> None:
+    """Fill the editable chain from a checked plan."""
+    ss.scn_rows = []
+    for s in plan.steps:
+        add_row(s.question, s.purpose, s.spec.model_dump(mode="json"))
+
+
+def text(row: dict) -> str:
+    """The row's question as typed."""
+    return (ss.get(_key("q", row["id"])) or "").strip()
+
+
+def ticked(row: dict) -> bool:
+    """True if the row is ticked and has a question: it is a step of the chain."""
+    return bool(ss.get(_key("run", row["id"]), True)) and bool(text(row))
+
+
+def state(row: dict) -> str:
+    """Plan · checked · warned · problem · unchecked · empty."""
+    q = text(row)
+    if not q:
+        return "empty"
+    if row["spec"] is not None and q == row["orig"]:
+        return "plan"
+    if row["check"] is None or row["checked"] != q:
+        return "unchecked"
+    check = StepCheck.model_validate(row["check"])
+    if not check.ok:
+        return "problem"
+    return "warned" if check.warnings else "checked"
+
+
+def spec_of(row: dict) -> QuerySpec | None:
+    """The checked reading a row runs with: the plan's, or its own check's; None otherwise."""
+    st_ = state(row)
+    if st_ == "plan":
+        return QuerySpec.model_validate(row["spec"])
+    if st_ in ("checked", "warned") and row["check"].get("spec"):
+        return QuerySpec.model_validate(row["check"]["spec"])
+    return None
+
+
+def chain() -> list[dict]:
+    """The ticked, non-empty rows, in order: the steps that will run."""
+    return [r for r in ss.scn_rows if ticked(r)]
+
+
+def move_row(i: int, step: int) -> None:
+    """Callback: move row ``i`` up (-1) or down (+1)."""
+    j = i + step
+    if 0 <= j < len(ss.scn_rows):
+        ss.scn_rows[i], ss.scn_rows[j] = ss.scn_rows[j], ss.scn_rows[i]
+
+
+def move_to_step(rid: str, position: int) -> None:
+    """Callback: move a row to the place of the ``position``-th step of the chain."""
+    rows = ss.scn_rows
+    row = next(r for r in rows if r["id"] == rid)
+    target = chain()[position - 1]["id"]
+    rows.remove(row)
+    rows.insert(next(i for i, r in enumerate(rows) if r["id"] == target) + (position > 1), row)
+    row["check"] = None  # its place changed: check the fit again
+
+
+def delete_row(i: int) -> None:
+    """Callback: remove row ``i`` and its widget state."""
+    row = ss.scn_rows.pop(i)
+    for kind in ("q", "why", "run"):
+        ss.pop(_key(kind, row["id"]), None)
+
+
+def queue_check(rids: list[str]) -> None:
+    """Callback: check added or edited rows (answerable? fits the chain?)."""
+    ss.scn_job = {"action": "check", "rids": rids}
+
+
+def queue_run(force: bool = False) -> None:
+    """Callback: run the chain; unchecked rows are checked first, warnings stop the run once."""
+    ss.scn_job = {"action": "run", "follow_ups": ss.get("scn-follow", True), "force": force}
+
+
+def check_rows(rids: list[str], status: object) -> None:
+    """Check the given rows against the main question and their place in the chain."""
+    plan = PlanResult.model_validate(ss.scn_plan)
+    steps = chain()
+    pairs = [(text(r), (ss.get(_key("why", r["id"])) or "").strip()) for r in steps]
+    others = [spec_of(r) for r in steps]
+    for rid in rids:
+        row = next((r for r in steps if r["id"] == rid), None)
+        if row is None:
+            continue
+        n = steps.index(row) + 1
+        status.update(label=f"Checking step {n}: {text(row)}…")
+        found = builder.check_step(plan.question, pairs, n, lang, others)
+        row["check"], row["checked"] = found.model_dump(mode="json"), text(row)
+        others[n - 1] = found.spec
+
+
+def steps_to_run() -> list[StepInput]:
+    """The chain as the builder runs it: checked readings run as is, the rest are interpreted."""
+    out = []
+    for r in chain():
+        why = (ss.get(_key("why", r["id"])) or "").strip()
+        kind = "plan" if state(r) == "plan" else "own"
+        out.append(StepInput(question=text(r), purpose=why, spec=spec_of(r), kind=kind))
+    return out
 
 
 # --- actions: queued by buttons, run at the end of the page with live progress -----------------
@@ -56,30 +230,8 @@ def new_scenario() -> None:
     st.query_params.clear()
 
 
-def steps_from_editor(plan: PlanResult, table: pd.DataFrame) -> list[StepInput]:
-    """The ticked questions to run.
-
-    Unchanged proposals keep their checked spec; edited or added questions are read by the
-    assistant itself.
-    """
-    steps = []
-    proposed = {s.question: s for s in plan.steps}
-    for _, row in table.iterrows():
-        question = str(row.get("question") or "").strip()
-        if not row.get("run", True) or not question:
-            continue
-        why = str(row.get("why") or "").strip()
-        if question in proposed:
-            steps.append(
-                StepInput(question=question, purpose=why, spec=proposed[question].spec, kind="plan")
-            )
-        else:
-            steps.append(StepInput(question=question, purpose=why, kind="own"))
-    return steps
-
-
 def run_job() -> None:
-    """Execute the queued plan or run with a progress line per step, then redraw the page."""
+    """Execute the queued plan, check or run with live progress, then redraw the page."""
     job = ss.pop("scn_job", None)
     if not job:
         return
@@ -88,21 +240,28 @@ def run_job() -> None:
             if job["action"] == "plan":
                 status.update(label="Proposing a chain of questions…")
                 plan = builder.plan(job["question"], lang)
-                ss.scn_plan, ss.scn_id = plan.model_dump(mode="json"), None
+                ss.scn_plan, ss.scn_id, ss.scn_review = plan.model_dump(mode="json"), None, False
+                load_rows(plan)
                 if not job.get("run_now") or not plan.steps:
                     status.update(label="Chain proposed: review it below", state="complete")
                     st.rerun()
-                job = {
-                    "action": "run",
-                    "steps": [
-                        StepInput(question=s.question, purpose=s.purpose, spec=s.spec).model_dump(
-                            mode="json"
-                        )
-                        for s in plan.steps
-                    ],
-                    "follow_ups": True,
-                }
+                job = {"action": "run", "follow_ups": True, "force": True}
+            if job["action"] == "check":
+                check_rows(job["rids"], status)
+                status.update(label="Checked: see the notes on each question", state="complete")
+                st.rerun()
             plan = PlanResult.model_validate(ss.scn_plan)
+            todo = [r["id"] for r in chain() if state(r) == "unchecked"]
+            if todo:
+                check_rows(todo, status)
+            flagged = [r for r in chain() if state(r) in ("warned", "problem")]
+            if flagged and not job.get("force"):
+                ss.scn_review = True
+                status.update(
+                    label=f"{len(flagged)} question(s) need a look before the run",
+                    state="error",
+                )
+                st.rerun()
 
             def step(label: str) -> None:
                 status.update(label=label + "…")
@@ -110,7 +269,7 @@ def run_job() -> None:
 
             rec = builder.run(
                 plan.question,
-                [StepInput.model_validate(s) for s in job["steps"]],
+                steps_to_run(),
                 lang=lang,
                 plan=plan,
                 follow_ups=job["follow_ups"],
@@ -120,6 +279,7 @@ def run_job() -> None:
             status.update(label=f"The language model failed: {exc}", state="error")
             return
         status.update(label=f"Done · scenario {rec.scenario_id}", state="complete")
+    ss.scn_review = False
     open_scenario(rec.scenario_id)
     st.rerun()
 
@@ -134,10 +294,12 @@ st.caption(
     "questions, the assistant answers each one from the data, follows up on what the answers "
     "reveal, and combines them into one checked answer. Every number traces back to a run."
 )
-st.markdown(
-    ":gray-badge[1 · Your question] → :gray-badge[2 · Proposed chain, you review it] → "
-    ":gray-badge[3 · The assistant answers each step] → "
-    ":gray-badge[4 · Follow-ups from the answers] → :gray-badge[5 · Combined, checked answer]"
+st.html(
+    '<div class="scn-steps">'
+    + '<span class="scn-arrow">→</span>'.join(
+        f'<span class="scn-chip"><b>{n}</b>{label}</span>' for n, label in enumerate(STEPS, 1)
+    )
+    + "</div>"
 )
 
 with st.container(border=True):
@@ -170,18 +332,24 @@ with st.container(border=True):
             key="scn-plan-run",
             help="Run the proposed chain straight away, with follow-ups",
         )
-    st.caption("Examples:")
-    with st.container(horizontal=True):
-        for i, example in enumerate(EXAMPLES.get(lang, EXAMPLES["en"])):
-            st.button(
-                example,
-                key=f"scn-ex-{i}",
-                type="tertiary",
-                icon=":material/arrow_forward:",
-                disabled=not builder.online,
-                on_click=queue_plan,
-                args=(example,),
-            )
+    st.markdown("**Examples**")
+    cards = examples(lang)
+    for start in range(0, len(cards), 2):
+        for col, (i, (title, example)) in zip(
+            st.columns(2), list(enumerate(cards))[start : start + 2], strict=False
+        ):
+            with col, st.container(border=True, key=f"scn-excard-{i}", height="stretch"):
+                st.markdown(f"**{EXAMPLE_ICONS[i % len(EXAMPLE_ICONS)]} {title}**")
+                st.markdown(f"*{example}*")
+                st.button(
+                    "Propose a chain for this question",
+                    key=f"scn-ex-{i}",
+                    type="tertiary",
+                    icon=":material/arrow_forward:",
+                    disabled=not builder.online,
+                    on_click=queue_plan,
+                    args=(example,),
+                )
     if not builder.online:
         st.info(
             "Planning new scenarios needs the language model (set `OPENAI_API_KEY`). The recorded "
@@ -189,8 +357,104 @@ with st.container(border=True):
         )
 
 
+def render_row(i: int, row: dict, number: int | None) -> None:
+    """One question of the chain: number and Run tick, question, why, order buttons, notes.
+
+    ``number`` is the step number, or None for a row that will not run (unticked or empty).
+    """
+    look = state(row)
+    accent, badge = ROW_LOOK[look]
+    skip = "skip-" if number is None and look != "empty" else ""
+    with st.container(key=f"scn-row-{skip}{row['id']}"):
+        st.html(f"<style>.st-key-scn-row-{skip}{row['id']} {{ --scn-accent: {accent}; }}</style>")
+        num, q, why, order = st.columns([0.55, 5.2, 4.2, 0.9], vertical_alignment="top")
+        with num:
+            label = number if number is not None else ("new" if look == "empty" else "skip")
+            st.html(f'<div class="scn-num{" skip" if number is None else ""}">{label}</div>')
+            st.checkbox("Run", key=_key("run", row["id"]), label_visibility="collapsed")
+        with q:
+            st.text_area(
+                "Question",
+                key=_key("q", row["id"]),
+                height="content",
+                label_visibility="collapsed",
+                placeholder="Write a precise question: flow, period, partners or products",
+            )
+            notes = [badge]
+            if look == "plan":
+                notes.append(":gray[unchanged proposal: runs exactly as checked]")
+            elif look in ("checked", "warned") and row["check"].get("queried"):
+                notes.append(f":gray[:material/database: {row['check']['queried']}]")
+            st.markdown(" ".join(notes))
+        with why:
+            st.text_area(
+                "Why this question",
+                key=_key("why", row["id"]),
+                height="content",
+                label_visibility="collapsed",
+                placeholder="What this step adds to the answer",
+            )
+        with order, st.container(horizontal=True, gap="small"):
+            st.button(
+                "",
+                icon=":material/arrow_upward:",
+                key=f"scn-up-{row['id']}",
+                help="Move up",
+                disabled=i == 0,
+                on_click=move_row,
+                args=(i, -1),
+                type="tertiary",
+            )
+            st.button(
+                "",
+                icon=":material/arrow_downward:",
+                key=f"scn-down-{row['id']}",
+                help="Move down",
+                disabled=i == len(ss.scn_rows) - 1,
+                on_click=move_row,
+                args=(i, 1),
+                type="tertiary",
+            )
+            st.button(
+                "",
+                icon=":material/delete:",
+                key=f"scn-del-{row['id']}",
+                help="Delete this question",
+                on_click=delete_row,
+                args=(i,),
+                type="tertiary",
+            )
+        if look in ("warned", "problem"):
+            check = StepCheck.model_validate(row["check"])
+            for p in check.problems:
+                st.markdown(f":red[:material/block: {p}]")
+            for w in check.warnings:
+                st.markdown(f":orange[:material/warning: {w}]")
+            if check.position and number is not None and check.position != number:
+                st.button(
+                    f"Move it to step {check.position}",
+                    key=f"scn-moveto-{row['id']}",
+                    icon=":material/swap_vert:",
+                    on_click=move_to_step,
+                    args=(row["id"], check.position),
+                )
+        elif look == "unchecked" and number is not None:
+            st.button(
+                "Check this question",
+                key=f"scn-check-{row['id']}",
+                icon=":material/fact_check:",
+                type="tertiary",
+                disabled=not builder.online,
+                help="Can the data answer it, and does it fit the chain here?",
+                on_click=queue_check,
+                args=([row["id"]],),
+            )
+
+
 def render_plan(plan: PlanResult) -> None:
-    """The proposed chain, editable: tick, edit, delete or add questions, then run."""
+    """The proposed chain, editable: tick, edit, reorder, delete or add questions, then run."""
+    if "scn_rows" not in ss:
+        load_rows(plan)
     with st.container(border=True):
         st.markdown(f"#### :material/account_tree: Proposed chain · {plan.title}")
         if plan.approach:
@@ -204,44 +468,68 @@ def render_plan(plan: PlanResult) -> None:
             )
         st.caption(
             "Every proposed question passed the assistant's checks (known codes, data limits, "
-            "SQL compiles and passes the guard). Untick a question to skip it, edit its text or "
-            "add your own row: edited and added questions are read by the assistant itself."
+            "SQL compiles and passes the guard). Untick the box under a step's number to skip it, "
+            "edit it, reorder "
+            "it or add your own: added and edited questions are checked for whether the data "
+            "can answer them and whether they fit the chain where they stand."
         )
-        table = st.data_editor(
-            pd.DataFrame(
-                {
-                    "run": [True] * len(plan.steps),
-                    "question": [s.question for s in plan.steps],
-                    "why": [s.purpose for s in plan.steps],
-                }
-            ),
-            column_config=EDITOR_COLUMNS,
-            num_rows="dynamic",
-            hide_index=True,
-            width="stretch",
-            key=f"scn-editor-{hash(plan.question + plan.title)}",
+        st.html(
+            '<div class="scn-head"><span>Step</span><span>Question</span>'
+            "<span>Why this question</span><span>Order</span></div>"
         )
+        number = 0
+        for i, row in enumerate(list(ss.scn_rows)):
+            in_chain = ticked(row)
+            number += in_chain
+            render_row(i, row, number if in_chain else None)
+        unchecked = [r["id"] for r in chain() if state(r) == "unchecked"]
+        with st.container(horizontal=True):
+            st.button("Add a question", icon=":material/add:", on_click=add_row, key="scn-add")
+            if unchecked:
+                st.button(
+                    f"Check {len(unchecked)} new or edited question(s)",
+                    icon=":material/fact_check:",
+                    on_click=queue_check,
+                    args=(unchecked,),
+                    disabled=not builder.online,
+                    key="scn-check-all",
+                )
         if plan.notes:
             with st.expander(f"Questions the checks dropped ({len(plan.notes)})"):
                 st.markdown("\n".join(f"- {n}" for n in plan.notes))
-        follow = st.toggle(
+        st.toggle(
             f"Let the assistant add follow-up questions from the answers (up to {MAX_FOLLOW_UPS})",
             value=True,
             key="scn-follow",
         )
-        steps = steps_from_editor(plan, table)
-        if st.button(
-            f"Run the chain ({len(steps)} questions)",
-            type="primary",
-            icon=":material/play_arrow:",
-            disabled=not steps,
-            key="scn-run",
-        ):
-            ss.scn_job = {
-                "action": "run",
-                "steps": [s.model_dump(mode="json") for s in steps],
-                "follow_ups": follow,
-            }
+        steps = chain()
+        flagged = [r for r in steps if state(r) in ("warned", "problem")]
+        if ss.get("scn_review") and flagged:
+            st.warning(
+                f"{len(flagged)} question(s) have notes above. Fix, move or untick them, or run "
+                "the chain as it is: questions that cannot be answered as written return the "
+                "assistant's suggestions instead of an answer."
+            )
+        with st.container(horizontal=True):
+            label = f"Run the chain ({len(steps)} questions)"
+            if unchecked:
+                label += f", after checking {len(unchecked)}"
+            st.button(
+                label,
+                type="primary",
+                icon=":material/play_arrow:",
+                disabled=not steps,
+                on_click=queue_run,
+                key="scn-run",
+            )
+            if ss.get("scn_review") and flagged:
+                st.button(
+                    "Run anyway",
+                    icon=":material/fast_forward:",
+                    on_click=queue_run,
+                    args=(True,),
+                    key="scn-run-anyway",
+                )
 
 
 def step_badges(numbers: list[int]) -> str:
@@ -392,7 +680,7 @@ if shown is not None:
 elif ss.get("scn_plan"):
     render_plan(PlanResult.model_validate(ss.scn_plan))
 
-with st.expander("Previous scenarios", icon=":material/history:", expanded=shown is None):
+with st.expander("Previous scenarios", icon=":material/history:", expanded=False):
     previous = builder.store.recent(limit=30)
     examples = {r.scenario_id for r in builder.store.recent(limit=100, demo=True)}
     for r in previous:

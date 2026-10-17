@@ -408,3 +408,42 @@ def test_a_proposed_share_of_nothing_is_dropped():
     resolved = whole.model_copy(update={"measure": "value_eur"}).model_dump(mode="json")
     found = mismatch("Share of the top 3 exports from 2005 to 2025?", resolved, whole)
     assert "a share needs a breakdown" in found
+
+
+def test_check_step_reads_scores_and_places_an_added_question(builder):
+    from luxtrade.agents.scenario import FitVerdict
+
+    b = builder(
+        scenario_plan=GOOD_PLAN,
+        interpret=interp(
+            intent="time_series",
+            products=["72"],
+            flow="export",
+            period_start="2019",
+            period_end="2024",
+            freq="A",
+        ),
+        scenario_fit=FitVerdict(fits=True, problem="", position=1),
+    )
+    chain = [
+        ("What share of exports did each chapter have in 2024?", "baseline"),
+        ("How did iron and steel exports develop from 2019 to 2024?", ""),
+    ]
+    check = b.check_step(QUESTION, chain, 2, "en", [EXPORTS_BY_PRODUCT, None])
+    assert check.ok and check.spec.products == ["72"]
+    assert check.queried.startswith("exports · products 72")
+    assert check.position == 1 and any("step 1" in w for w in check.warnings)
+
+
+def test_check_step_flags_a_question_the_data_cannot_answer(builder):
+    from luxtrade.agents.scenario import FitVerdict
+
+    b = builder(
+        scenario_plan=GOOD_PLAN,
+        interpret=interp(intent="ranking", breakdown="product", unresolved=["tourists"]),
+        scenario_fit=FitVerdict(fits=False, problem="about tourism", position=2),
+    )
+    chain = [("Shares of exports by chapter in 2024?", ""), ("How many tourists came?", "")]
+    check = b.check_step(QUESTION, chain, 2, "en", [EXPORTS_BY_PRODUCT, None])
+    assert not check.ok and check.spec is None
+    assert any("tourists" in p for p in check.problems) and "about tourism" in check.warnings

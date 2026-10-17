@@ -34,6 +34,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 
 from luxtrade.agents import guard
+from luxtrade.agents.context import SessionContext
 from luxtrade.agents.defaults import apply_defaults, share_of_nothing
 from luxtrade.agents.grounding import (
     ALWAYS_ALLOWED,
@@ -46,7 +47,7 @@ from luxtrade.agents.grounding import (
     unknown_partners,
     unsupported_numbers,
 )
-from luxtrade.agents.interpret import candidates_for, coverage_text, prompt
+from luxtrade.agents.interpret import candidates_for, coverage_text, interpret, prompt
 from luxtrade.agents.llm import LLMError
 from luxtrade.agents.optimise import known_codes, validate_suggestion
 from luxtrade.agents.service import Assistant
@@ -135,6 +136,25 @@ class AnswerVerdicts(BaseModel):
     headline: Verdict
     points: list[Verdict]
     conclusion: Verdict
+
+
+class FitVerdict(BaseModel):
+    """Whether an added or edited question fits the chain, and where it reads best."""
+
+    fits: bool
+    problem: str
+    position: int
+
+
+class StepCheck(BaseModel):
+    """The check of a question the user added or edited (``ScenarioBuilder.check_step``)."""
+
+    ok: bool = False  # no problems: the assistant can answer it as written
+    problems: list[str] = Field(default_factory=list)  # why it cannot be answered as written
+    warnings: list[str] = Field(default_factory=list)  # fit, repetition, position
+    spec: QuerySpec | None = None  # the checked reading, run as is
+    queried: str = ""
+    position: int | None = None  # a better step number, if the order reads better
 
 
 # --- what the app hands over and keeps --------------------------------------------------------
@@ -941,6 +961,89 @@ class ScenarioBuilder:
                 out[s.n] = rec
         return out
 
+    # --- a question the user added or edited in the proposed chain -----------------------------
+    def check_step(
+        self,
+        main_question: str,
+        chain: list[tuple[str, str]],
+        n: int,
+        lang: str = "en",
+        others: list[QuerySpec | None] = (),
+    ) -> StepCheck:
+        """Check step ``n`` (1-based) of an edited chain of (question, why) pairs.
+
+        Code reads the question with the assistant's interpreter and applies the plan's checks
+        (codes, data limits, SQL guard, years, a share that selects something, repeats of the
+        ``others`` steps' specs); a short LLM call judges whether it fits the main question and
+        its neighbours, and where in the chain it reads best. Problems mean the assistant cannot
+        answer it as written; warnings mean it may not belong, or not there.
+        """
+        llm, sem = self.assistant.llm, self.assistant.sem
+        if llm is None:
+            raise LLMError("checking a question needs the LLM (set OPENAI_API_KEY)")
+        question = chain[n - 1][0].strip()
+        check = StepCheck()
+        interp = interpret(
+            question,
+            llm=llm,
+            sem=sem,
+            index=self.assistant.index,
+            context=SessionContext(session_id="check"),
+        )
+        if interp.unresolved:
+            check.problems.append("not found in the data: " + ", ".join(interp.unresolved))
+        unclear = [a.text for a in interp.ambiguities if a.dimension in ("who", "what", "intent")]
+        if unclear:
+            check.problems.append("unclear: " + "; ".join(unclear))
+        blocked = guard.check_question(question, interp.out_of_scope)
+        check.problems += [lim.message for lim in blocked if lim.severity == "block"]
+        if interp.needs_custom_sql:
+            check.warnings.append(
+                "needs SQL written by the language model; the assistant will try it as asked"
+            )
+        elif not check.problems:
+            notes: list[str] = []
+            spec = prepare(interp.spec, lang, main_question, question, notes)
+            problem = validate_suggestion(Suggestion(question=question, note="", spec=spec), sem)
+            resolved = apply_defaults(spec, sem.coverage).model_dump(mode="json")
+            problem = problem or mismatch(question, resolved, spec)
+            if problem:
+                check.problems.append(problem)
+            else:
+                check.spec, check.queried = spec, describe(resolved)
+                for k, other in enumerate(others, start=1):
+                    done = (
+                        apply_defaults(other, sem.coverage).model_dump(mode="json")
+                        if other
+                        else None
+                    )
+                    if k != n and _same_query(resolved, done):
+                        check.warnings.append(f"asks the same as step {k}")
+            check.warnings += notes
+        listed = "\n".join(
+            f"{k}. {q}" + (f" (why: {w})" if w else "") + ("   <- CANDIDATE" if k == n else "")
+            for k, (q, w) in enumerate(chain, start=1)
+        )
+        try:
+            fit = llm.parse(
+                step="scenario_fit",
+                system=prompt("scenario_fit"),
+                user=f"MAIN QUESTION: {main_question}\nLANGUAGE: {lang}\nCANDIDATE: {n}\n\n"
+                f"CHAIN:\n{listed}",
+                schema=FitVerdict,
+                effort="low",
+            )
+        except LLMError as exc:
+            check.warnings.append(f"the fit with the chain could not be checked: {exc}")
+        else:
+            if not fit.fits:
+                check.warnings.append(fit.problem or "it may not help answer the main question")
+            if 1 <= fit.position <= len(chain) and fit.position != n:
+                check.position = fit.position
+                check.warnings.append(f"it would read better as step {fit.position}")
+        check.ok = not check.problems
+        return check
+
     def verify(self, record: ScenarioRecord) -> dict[int, str]:
         """Re-run every step's stored SQL and compare result hashes."""
         return {n: self.assistant.verify(rec) for n, rec in self.records(record).items()}
@@ -966,6 +1069,25 @@ EXAMPLES = {
         "Wird Luxemburgs Handel europäischer?",
     ],
 }
+
+
+# a short title per example, in the same order as EXAMPLES (shown as the example card's header)
+EXAMPLE_TITLES = {
+    "en": [
+        "Spreading the risk",
+        "Crises and critical imports",
+        "A more European trade",
+        "The 2022 energy shock",
+    ],
+    "fr": ["Répartition des risques", "Un commerce plus européen"],
+    "de": ["Risikostreuung", "Ein europäischerer Handel"],
+}
+
+
+def examples(lang: str) -> list[tuple[str, str]]:
+    """The example scenarios in ``lang`` (English otherwise), as (title, question)."""
+    lang = lang if lang in EXAMPLES else "en"
+    return list(zip(EXAMPLE_TITLES[lang], EXAMPLES[lang], strict=True))
 
 
 def _forget(record: ScenarioRecord, root: Path) -> None:
