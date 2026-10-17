@@ -630,6 +630,7 @@ class ScenarioBuilder:
         plan: PlanResult | None = None,
         follow_ups: bool = True,
         on_progress: Progress | None = None,
+        based_on: str = "",
     ) -> ScenarioRecord:
         """Run the steps in one assistant session, follow up, answer, save and return the record."""
         say = on_progress or (lambda _label: None)
@@ -688,6 +689,7 @@ class ScenarioBuilder:
             created_at=now_iso(),
             question=question,
             language=lang,
+            based_on=based_on,
             title=(plan.title if plan else "") or question[:60],
             approach=plan.approach if plan else "",
             out_of_scope=plan.out_of_scope if plan else [],

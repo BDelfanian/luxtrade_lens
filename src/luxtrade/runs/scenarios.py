@@ -36,6 +36,7 @@ class ScenarioRecord(BaseModel):
     question: str
     language: str = "en"
     title: str = ""
+    based_on: str = ""  # the scenario this one revises (its questions edited and run again)
     approach: str = ""
     out_of_scope: list[str] = Field(default_factory=list)
     steps: list[ScenarioStep] = Field(default_factory=list)

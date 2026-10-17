@@ -380,3 +380,82 @@ def test_picking_a_rewrite_replaces_a_failing_question(app_env):
     assert at.session_state[f"scn-q-{row['id']}"] == "Export shares in 2023?"
     assert any("your question · checked" in m.value for m in at.markdown)
     assert not at.exception
+
+
+def _stored_scenario(processed_dir):
+    """A scenario recorded with a scripted LLM in the test's run store; returns its record."""
+    from conftest import insight_from_facts
+
+    from luxtrade.agents.llm import FakeLLM
+    from luxtrade.agents.scenario import (
+        AnswerPoint,
+        PlanStep,
+        ScenarioAnswer,
+        ScenarioBuilder,
+        ScenarioPlan,
+        StepInput,
+    )
+    from luxtrade.agents.service import Assistant
+    from luxtrade.agents.spec import QuerySpec
+    from luxtrade.semantic.layer import SemanticLayer
+
+    def share(flow: str) -> QuerySpec:
+        return QuerySpec(
+            intent="composition",
+            breakdown="partner",
+            flow=flow,
+            measure="share",
+            period_start="2024",
+            period_end="2024",
+        )
+
+    plan = ScenarioPlan(
+        title="Partners",
+        approach="Two rankings.",
+        steps=[
+            PlanStep(
+                question="Import partners in 2024?", purpose="suppliers", spec=share("import")
+            ),
+            PlanStep(question="Export partners in 2024?", purpose="buyers", spec=share("export")),
+        ],
+        out_of_scope=[],
+    )
+    answer = ScenarioAnswer(
+        headline="A few partners dominate.",
+        points=[AnswerPoint(text="Trade is concentrated.", steps=[1, 2])] * 2,
+        conclusion="Goods only.",
+        step_notes=[],
+        charts=[1],
+    )
+    responses = {"scenario_plan": plan, "scenario_answer": answer, "insight": insight_from_facts}
+    sem = SemanticLayer(processed_dir / config.DUCKDB_FILE)
+    builder = ScenarioBuilder(Assistant(sem=sem, llm=FakeLLM(responses=responses)))
+    checked = builder.plan("Who are Luxembourg's partners?", "en")
+    steps = [StepInput(question=s.question, purpose=s.purpose, spec=s.spec) for s in checked.steps]
+    return builder.run("Who are Luxembourg's partners?", steps, plan=checked, follow_ups=False)
+
+
+def test_a_scenario_can_be_edited_and_run_again_as_a_new_one(app_env, processed_dir):
+    from luxtrade.runs.scenarios import ScenarioStore
+
+    old = _stored_scenario(processed_dir)
+    st.cache_resource.clear()
+    at = _app().run()
+    at.switch_page("app_pages/scenario.py").run()
+    assert [e.label for e in at.expander][:1] == ["Examples"]
+    assert not at.expander[0].proto.expanded  # examples start collapsed
+    at.button(key=f"scn-open-{old.scenario_id}").click().run()
+    at.button(key="scn-revise").click().run()
+    assert not at.exception
+    rows = at.session_state["scn_rows"]
+    assert [at.session_state[f"scn-q-{r['id']}"] for r in rows] == [s.question for s in old.steps]
+    assert all(r["spec"] is not None for r in rows)  # steps that ran keep their checked reading
+    assert any(m.value == f"### {old.headline}" for m in at.markdown)  # results stay visible
+    at.checkbox(key=f"scn-run-{rows[1]['id']}").uncheck().run()
+    at.button(key="scn-run").click().run()
+    assert not at.exception
+    new = ScenarioStore().load(at.session_state["scn_id"])
+    assert new.scenario_id != old.scenario_id and new.based_on == old.scenario_id
+    assert [s.question for s in new.steps] == [old.steps[0].question]
+    assert ScenarioStore().load(old.scenario_id) is not None  # the revised scenario is kept
+    assert any(b.key == "scn-based-on" for b in at.button)

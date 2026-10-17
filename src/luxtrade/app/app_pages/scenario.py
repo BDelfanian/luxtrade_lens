@@ -53,7 +53,7 @@ EXAMPLE_ICONS = (
 )
 # a row's state → (accent colour, badge)
 ROW_LOOK = {
-    "plan": ("#5B47D1", ":violet-badge[:material/verified: proposed · checked]"),
+    "plan": ("#5B47D1", ":violet-badge[:material/verified: checked]"),
     "checked": ("#1BAF7A", ":green-badge[:material/check: your question · checked]"),
     "warned": ("#EDA100", ":orange-badge[:material/warning: your question · see the notes]"),
     "problem": ("#D33A36", ":red-badge[:material/block: cannot be answered as written]"),
@@ -235,13 +235,35 @@ def queue_plan(question: str, run_now: bool = False) -> None:
 
 def open_scenario(scenario_id: str) -> None:
     """Callback: show a stored scenario."""
-    ss.scn_id, ss.scn_plan = scenario_id, None
+    ss.scn_id, ss.scn_plan, ss.scn_revise = scenario_id, None, None
     st.query_params["scenario"] = scenario_id
+
+
+def revise(scenario_id: str) -> None:
+    """Callback: reopen a scenario's questions, follow-ups included, to edit and run again.
+
+    Steps that ran keep their checked reading (the run's spec) and run as before unless edited;
+    the scenario itself stays as it is, and the new run records which one it revises.
+    """
+    rec = builder.store.load(scenario_id)
+    runs = builder.records(rec)
+    ss.scn_plan = PlanResult(
+        question=rec.question,
+        language=rec.language,
+        title=rec.title,
+        approach=rec.approach,
+        out_of_scope=rec.out_of_scope,
+    ).model_dump(mode="json")
+    ss.scn_rows, ss.scn_revise, ss.scn_review = [], scenario_id, False
+    for step in rec.steps:
+        run = runs.get(step.n)
+        reusable = run is not None and run.status == "answered" and run.spec and not run.custom_sql
+        add_row(step.question, step.purpose, run.spec if reusable else None)
 
 
 def new_scenario() -> None:
     """Callback: back to an empty question."""
-    ss.scn_id = ss.scn_plan = None
+    ss.scn_id = ss.scn_plan = ss.scn_revise = None
     ss.scn_q = ""
     st.query_params.clear()
 
@@ -286,6 +308,7 @@ def run_job() -> None:
                 plan=plan,
                 follow_ups=job["follow_ups"],
                 on_progress=step,
+                based_on=ss.get("scn_revise") or "",
             )
         except LLMError as exc:
             status.update(label=f"The language model failed: {exc}", state="error")
@@ -344,7 +367,13 @@ with st.container(border=True):
             key="scn-plan-run",
             help="Run the proposed chain straight away, with follow-ups",
         )
-    st.markdown("**Examples**")
+    if not builder.online:
+        st.info(
+            "Planning new scenarios needs the language model (set `OPENAI_API_KEY`). The recorded "
+            "scenarios below can be opened without it."
+        )
+
+with st.expander("Examples", icon=":material/lightbulb:", expanded=False):
     cards = examples(lang)
     for start in range(0, len(cards), 2):
         for col, (i, (title, example)) in zip(
@@ -362,11 +391,6 @@ with st.container(border=True):
                     on_click=queue_plan,
                     args=(example,),
                 )
-    if not builder.online:
-        st.info(
-            "Planning new scenarios needs the language model (set `OPENAI_API_KEY`). The recorded "
-            "scenarios below can be opened without it."
-        )
 
 
 def render_row(i: int, row: dict, number: int | None) -> None:
@@ -394,7 +418,7 @@ def render_row(i: int, row: dict, number: int | None) -> None:
             )
             notes = [badge]
             if look == "plan":
-                notes.append(":gray[unchanged proposal: runs exactly as checked]")
+                notes.append(":gray[unchanged: runs exactly as checked]")
             elif look in ("checked", "warned") and row["check"].get("queried"):
                 notes.append(f":gray[:material/database: {row['check']['queried']}]")
             st.markdown(" ".join(notes))
@@ -499,28 +523,42 @@ def render_fixes(row: dict, check: StepCheck) -> None:
     st.markdown(f":blue[:material/lightbulb: **Or edit it yourself:** {hint}]")
 
 
-def render_plan(plan: PlanResult) -> None:
-    """The proposed chain, editable: tick, edit, reorder, delete or add questions, then run."""
+def render_plan(plan: PlanResult, revising: ScenarioRecord | None = None) -> None:
+    """The proposed chain, editable: tick, edit, reorder, delete or add questions, then run.
+
+    With ``revising``, the chain is that scenario's questions, to change and run again.
+    """
     if "scn_rows" not in ss:
         load_rows(plan)
-    with st.container(border=True):
-        st.markdown(f"#### :material/account_tree: Proposed chain · {plan.title}")
+    with st.container(border=True, key="scn-plan-box"):
+        if revising is not None:
+            st.markdown(
+                f"#### :material/edit_note: Edit the questions and run again · {plan.title}"
+            )
+            st.caption(
+                f"The questions of scenario `{revising.scenario_id}`, follow-ups included. "
+                "Questions that ran keep their checked reading and run as before unless you "
+                "edit them. The new run is saved as a new scenario; this one stays as it is."
+            )
+        else:
+            st.markdown(f"#### :material/account_tree: Proposed chain · {plan.title}")
         if plan.approach:
             st.markdown(plan.approach)
         if plan.out_of_scope:
             st.warning("**Not answerable with this data:** " + "; ".join(plan.out_of_scope))
-        if not plan.steps:
+        if not plan.steps and revising is None:
             st.error(
                 "No proposed question passed the checks. Try naming the flow, the period or the "
                 "partners and products you are interested in."
             )
-        st.caption(
-            "Every proposed question passed the assistant's checks (known codes, data limits, "
-            "SQL compiles and passes the guard). Untick the box under a step's number to skip it, "
-            "edit it, reorder "
-            "it or add your own: added and edited questions are checked for whether the data "
-            "can answer them and whether they fit the chain where they stand."
-        )
+        if revising is None:
+            st.caption(
+                "Every proposed question passed the assistant's checks (known codes, data "
+                "limits, SQL compiles and passes the guard). Untick the box under a step's number "
+                "to skip it, edit it, reorder it or add your own: added and edited questions are "
+                "checked for whether the data can answer them and whether they fit the chain "
+                "where they stand."
+            )
         st.html(
             '<div class="scn-head"><span>Step</span><span>Question</span>'
             "<span>Why this question</span><span>Order</span></div>"
@@ -669,6 +707,26 @@ def render_result(rec: ScenarioRecord) -> None:
             key=f"scn-{rec.scenario_id}",
         )
     render_built(rec, runs)
+    with st.container(horizontal=True, vertical_alignment="center"):
+        st.button(
+            "Edit the questions and run again",
+            icon=":material/edit_note:",
+            key="scn-revise",
+            disabled=ss.get("scn_revise") == rec.scenario_id,
+            on_click=revise,
+            args=(rec.scenario_id,),
+            help="Reopen this scenario's questions to change them and run a new scenario; "
+            "this one is kept",
+        )
+        if rec.based_on:
+            st.button(
+                f"Open the version it revises ({rec.based_on})",
+                icon=":material/history:",
+                key="scn-based-on",
+                type="tertiary",
+                on_click=open_scenario,
+                args=(rec.based_on,),
+            )
 
 
 def render_built(rec: ScenarioRecord, runs: dict) -> None:
@@ -728,6 +786,8 @@ if ss.get("scn_id") and shown is None:
     st.warning(f"Scenario `{ss.scn_id}` was not found.")
 if shown is not None:
     render_result(shown)
+    if ss.get("scn_revise") == shown.scenario_id and ss.get("scn_plan"):
+        render_plan(PlanResult.model_validate(ss.scn_plan), revising=shown)
 elif ss.get("scn_plan"):
     render_plan(PlanResult.model_validate(ss.scn_plan))
 
