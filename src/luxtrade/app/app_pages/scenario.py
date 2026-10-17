@@ -174,8 +174,23 @@ def delete_row(i: int) -> None:
 
 
 def queue_check(rids: list[str]) -> None:
-    """Callback: check added or edited rows (answerable? fits the chain?)."""
-    ss.scn_job = {"action": "check", "rids": rids}
+    """Callback: check added or edited rows (answerable? fits the chain?).
+
+    The check runs inside each row's card, under a spinner, as the chain is drawn.
+    """
+    ss.scn_checking = list(rids)
+
+
+def use_alternative(rid: str, k: int) -> None:
+    """Callback: replace a failing question by the ``k``-th checked rewrite."""
+    row = next(r for r in ss.scn_rows if r["id"] == rid)
+    alt = row["check"]["alternatives"][k]
+    ss[_key("q", rid)] = alt["question"]
+    note = "a rewrite proposed and checked by the assistant"
+    row["check"] = StepCheck(
+        ok=True, spec=alt["spec"], queried=alt["queried"], notes=[note]
+    ).model_dump(mode="json")
+    row["checked"] = alt["question"]
 
 
 def queue_run(force: bool = False) -> None:
@@ -183,7 +198,7 @@ def queue_run(force: bool = False) -> None:
     ss.scn_job = {"action": "run", "follow_ups": ss.get("scn-follow", True), "force": force}
 
 
-def check_rows(rids: list[str], status: object) -> None:
+def check_rows(rids: list[str], status: object | None = None) -> None:
     """Check the given rows against the main question and their place in the chain."""
     plan = PlanResult.model_validate(ss.scn_plan)
     steps = chain()
@@ -194,7 +209,8 @@ def check_rows(rids: list[str], status: object) -> None:
         if row is None:
             continue
         n = steps.index(row) + 1
-        status.update(label=f"Checking step {n}: {text(row)}…")
+        if status is not None:
+            status.update(label=f"Checking step {n}: {text(row)}…")
         found = builder.check_step(plan.question, pairs, n, lang, others)
         row["check"], row["checked"] = found.model_dump(mode="json"), text(row)
         others[n - 1] = found.spec
@@ -231,7 +247,7 @@ def new_scenario() -> None:
 
 
 def run_job() -> None:
-    """Execute the queued plan, check or run with live progress, then redraw the page."""
+    """Execute the queued plan or run with live progress, then redraw the page."""
     job = ss.pop("scn_job", None)
     if not job:
         return
@@ -246,10 +262,6 @@ def run_job() -> None:
                     status.update(label="Chain proposed: review it below", state="complete")
                     st.rerun()
                 job = {"action": "run", "follow_ups": True, "force": True}
-            if job["action"] == "check":
-                check_rows(job["rids"], status)
-                status.update(label="Checked: see the notes on each question", state="complete")
-                st.rerun()
             plan = PlanResult.model_validate(ss.scn_plan)
             todo = [r["id"] for r in chain() if state(r) == "unchecked"]
             if todo:
@@ -386,6 +398,9 @@ def render_row(i: int, row: dict, number: int | None) -> None:
             elif look in ("checked", "warned") and row["check"].get("queried"):
                 notes.append(f":gray[:material/database: {row['check']['queried']}]")
             st.markdown(" ".join(notes))
+            if look in ("checked", "warned"):
+                for note in row["check"].get("notes", []):
+                    st.caption(f":material/info: {note}")
         with why:
             st.text_area(
                 "Why this question",
@@ -438,6 +453,19 @@ def render_row(i: int, row: dict, number: int | None) -> None:
                     on_click=move_to_step,
                     args=(row["id"], check.position),
                 )
+            if look == "problem":
+                render_fixes(row, check)
+        if row["id"] in ss.get("scn_checking", []):
+            with st.spinner(
+                "Checking this question: can the data answer it, and does it fit the chain "
+                "here? This takes a few seconds."
+            ):
+                try:
+                    check_rows([row["id"]])
+                except LLMError as exc:  # kept on the card after the redraw
+                    failed = StepCheck(problems=[f"the check could not run: {exc}"])
+                    row["check"], row["checked"] = failed.model_dump(mode="json"), text(row)
+            ss.scn_checked_now = True
         elif look == "unchecked" and number is not None:
             st.button(
                 "Check this question",
@@ -449,6 +477,26 @@ def render_row(i: int, row: dict, number: int | None) -> None:
                 on_click=queue_check,
                 args=([row["id"]],),
             )
+
+
+def render_fixes(row: dict, check: StepCheck) -> None:
+    """For a question the data cannot answer: checked rewrites to pick, and how to fix it."""
+    if check.alternatives:
+        st.markdown("**Try one of these instead** (each one checked against the data):")
+        for k, alt in enumerate(check.alternatives):
+            with st.container(horizontal=True, vertical_alignment="center"):
+                st.button(
+                    alt.question,
+                    key=f"scn-alt-{row['id']}-{k}",
+                    icon=":material/arrow_forward:",
+                    help=alt.queried,
+                    on_click=use_alternative,
+                    args=(row["id"], k),
+                )
+                if alt.note:
+                    st.caption(alt.note)
+    hint = check.hint or "name the flow, the period, and the partners or products"
+    st.markdown(f":blue[:material/lightbulb: **Or edit it yourself:** {hint}]")
 
 
 def render_plan(plan: PlanResult) -> None:
@@ -482,6 +530,9 @@ def render_plan(plan: PlanResult) -> None:
             in_chain = ticked(row)
             number += in_chain
             render_row(i, row, number if in_chain else None)
+        if ss.pop("scn_checked_now", False):  # checks ran while drawing: redraw with results
+            ss.scn_checking = []
+            st.rerun()
         unchecked = [r["id"] for r in chain() if state(r) == "unchecked"]
         with st.container(horizontal=True):
             st.button("Add a question", icon=":material/add:", on_click=add_row, key="scn-add")

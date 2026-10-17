@@ -49,7 +49,8 @@ from luxtrade.agents.grounding import (
 )
 from luxtrade.agents.interpret import candidates_for, coverage_text, interpret, prompt
 from luxtrade.agents.llm import LLMError
-from luxtrade.agents.optimise import known_codes, validate_suggestion
+from luxtrade.agents.optimise import known_codes, optimise, validate_suggestion
+from luxtrade.agents.presets import PRESETS
 from luxtrade.agents.service import Assistant
 from luxtrade.agents.spec import SNAPSHOT_INTENTS, Language, QuerySpec, Suggestion
 from luxtrade.runs.scenarios import ScenarioRecord, ScenarioStep, ScenarioStore
@@ -146,6 +147,15 @@ class FitVerdict(BaseModel):
     position: int
 
 
+class Alternative(BaseModel):
+    """An answerable rewrite of a question that failed its check."""
+
+    question: str
+    note: str = ""
+    spec: QuerySpec
+    queried: str = ""
+
+
 class StepCheck(BaseModel):
     """The check of a question the user added or edited (``ScenarioBuilder.check_step``)."""
 
@@ -155,6 +165,9 @@ class StepCheck(BaseModel):
     spec: QuerySpec | None = None  # the checked reading, run as is
     queried: str = ""
     position: int | None = None  # a better step number, if the order reads better
+    notes: list[str] = Field(default_factory=list)  # how it was read; informational only
+    alternatives: list[Alternative] = Field(default_factory=list)  # answerable rewrites
+    hint: str = ""  # what to add or change to make it answerable
 
 
 # --- what the app hands over and keeps --------------------------------------------------------
@@ -992,9 +1005,10 @@ class ScenarioBuilder:
         )
         if interp.unresolved:
             check.problems.append("not found in the data: " + ", ".join(interp.unresolved))
+        # the interpreter's notes on what it read ("energy crisis read as 2022–2023") block only
+        # when that reading fails the checks below (seen on real data: a question naming its
+        # years was rejected as "unclear")
         unclear = [a.text for a in interp.ambiguities if a.dimension in ("who", "what", "intent")]
-        if unclear:
-            check.problems.append("unclear: " + "; ".join(unclear))
         blocked = guard.check_question(question, interp.out_of_scope)
         check.problems += [lim.message for lim in blocked if lim.severity == "block"]
         if interp.needs_custom_sql:
@@ -1009,7 +1023,9 @@ class ScenarioBuilder:
             problem = problem or mismatch(question, resolved, spec)
             if problem:
                 check.problems.append(problem)
+                check.problems += [f"unclear: {u}" for u in unclear]
             else:
+                check.notes += [f"read as: {u}" for u in unclear]
                 check.spec, check.queried = spec, describe(resolved)
                 for k, other in enumerate(others, start=1):
                     done = (
@@ -1019,7 +1035,7 @@ class ScenarioBuilder:
                     )
                     if k != n and _same_query(resolved, done):
                         check.warnings.append(f"asks the same as step {k}")
-            check.warnings += notes
+            check.notes += notes
         listed = "\n".join(
             f"{k}. {q}" + (f" (why: {w})" if w else "") + ("   <- CANDIDATE" if k == n else "")
             for k, (q, w) in enumerate(chain, start=1)
@@ -1042,7 +1058,49 @@ class ScenarioBuilder:
                 check.position = fit.position
                 check.warnings.append(f"it would read better as step {fit.position}")
         check.ok = not check.problems
+        if not check.ok:
+            self._alternatives(main_question, question, n, lang, check)
         return check
+
+    def _alternatives(
+        self, main_question: str, question: str, n: int, lang: str, check: StepCheck
+    ) -> None:
+        """Up to three answerable rewrites of a failing question, and a hint to fix it by hand.
+
+        The assistant's optimiser proposes the rewrites, told why the question failed and which
+        broad question it serves; the same code checks as the plan keep only answerable ones.
+        Its fallback presets (the hackathon's sample questions) are left out: off topic here.
+        """
+        sem = self.assistant.sem
+        reason = (
+            "; ".join(check.problems)
+            + f". It is step {n} of an investigation answering: {main_question}"
+        )
+        presets = {p.for_language(lang)[0] for p in PRESETS}
+        try:
+            found, hint, _ = optimise(
+                question,
+                reason,
+                lang=lang,
+                llm=self.assistant.llm,
+                sem=sem,
+                index=self.assistant.index,
+                context=SessionContext(session_id="check"),
+            )
+        except LLMError:
+            return
+        check.hint = hint
+        for s in found:
+            if s.question in presets:
+                continue
+            spec = prepare(s.spec, lang, main_question, s.question, [])
+            resolved = apply_defaults(spec, sem.coverage).model_dump(mode="json")
+            if mismatch(s.question, resolved, spec) is None:
+                check.alternatives.append(
+                    Alternative(
+                        question=s.question, note=s.note, spec=spec, queried=describe(resolved)
+                    )
+                )
 
     def verify(self, record: ScenarioRecord) -> dict[int, str]:
         """Re-run every step's stored SQL and compare result hashes."""

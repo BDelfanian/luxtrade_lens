@@ -341,3 +341,42 @@ def test_the_proposed_chain_can_be_reordered_extended_and_trimmed(app_env):
     at.button(key=f"scn-del-{second}").click().run()
     assert questions() == ["Export shares in 2023?", "Import shares in 2024?"]
     assert not at.exception
+
+
+def test_picking_a_rewrite_replaces_a_failing_question(app_env):
+    from luxtrade.agents.scenario import Alternative, PlanResult, PlanStep, StepCheck
+    from luxtrade.agents.spec import QuerySpec
+
+    spec = QuerySpec(
+        intent="composition",
+        breakdown="product",
+        flow="export",
+        measure="share",
+        period_start="2024",
+        period_end="2024",
+    )
+    plan = PlanResult(
+        question="Has Luxembourg spread its risk?",
+        steps=[PlanStep(question="Export shares in 2024?", purpose="a", spec=spec)],
+    )
+    st.cache_resource.clear()
+    at = _app().run()
+    at.switch_page("app_pages/scenario.py")
+    at.session_state["scn_plan"] = plan.model_dump(mode="json")
+    at.run()
+    at.button(key="scn-add").click().run()
+    row = at.session_state["scn_rows"][-1]
+    at.text_area(key=f"scn-q-{row['id']}").input("What did banks finance?").run()
+    failed = StepCheck(
+        problems=["not found in the data: banks"],
+        alternatives=[Alternative(question="Export shares in 2023?", spec=spec, queried="exports")],
+        hint="Name the flow and year.",
+    )
+    row = at.session_state["scn_rows"][-1]
+    row["check"], row["checked"] = failed.model_dump(mode="json"), "What did banks finance?"
+    at.run()
+    assert any("Or edit it yourself" in m.value for m in at.markdown)
+    at.button(key=f"scn-alt-{row['id']}-0").click().run()
+    assert at.session_state[f"scn-q-{row['id']}"] == "Export shares in 2023?"
+    assert any("your question · checked" in m.value for m in at.markdown)
+    assert not at.exception

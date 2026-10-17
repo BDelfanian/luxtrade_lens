@@ -447,3 +447,55 @@ def test_check_step_flags_a_question_the_data_cannot_answer(builder):
     check = b.check_step(QUESTION, chain, 2, "en", [EXPORTS_BY_PRODUCT, None])
     assert not check.ok and check.spec is None
     assert any("tourists" in p for p in check.problems) and "about tourism" in check.warnings
+
+
+def test_a_reading_note_does_not_block_a_question_that_passes_the_checks(builder):
+    from luxtrade.agents.scenario import FitVerdict
+    from luxtrade.agents.spec import Ambiguity
+
+    crisis = dict(
+        intent="ranking",
+        breakdown="product",
+        flow="export",
+        measure="change",
+        period_start="2022",
+        period_end="2023",
+    )
+    note = Ambiguity(dimension="what", text="energy crisis read as the period 2022-2023")
+    b = builder(
+        scenario_plan=GOOD_PLAN,
+        interpret=interp(**crisis, ambiguities=[note]),  # seen on real data
+        scenario_fit=FitVerdict(fits=True, problem="", position=2),
+    )
+    chain = [
+        ("Shares of exports in 2024?", ""),
+        ("Largest falls 2022 to 2023 (energy crisis)?", ""),
+    ]
+    check = b.check_step(QUESTION, chain, 2, "en", [EXPORTS_BY_PRODUCT, None])
+    assert check.ok and not check.warnings
+    assert check.notes == ["read as: energy crisis read as the period 2022-2023"]
+
+
+def test_a_failing_question_gets_checked_rewrites_and_a_hint(builder):
+    from luxtrade.agents.scenario import FitVerdict
+    from luxtrade.agents.spec import OptimiserOutput, Suggestion
+
+    good = Suggestion(
+        question="Main import chapters in 2024?", note="imports", spec=IMPORTS_BY_PARTNER
+    )
+    bad = Suggestion(
+        question="Main export chapters in 2019 and 2024?",  # one snapshot cannot hold both years
+        note="two years",
+        spec=EXPORTS_BY_PRODUCT,
+    )
+    b = builder(
+        scenario_plan=GOOD_PLAN,
+        interpret=interp(intent="ranking", breakdown="product", unresolved=["banks"]),
+        scenario_fit=FitVerdict(fits=False, problem="about banks", position=2),
+        optimise=OptimiserOutput(suggestions=[good, bad], missing_hint="Name the flow and year."),
+    )
+    chain = [("Shares of exports in 2024?", ""), ("What did banks finance?", "")]
+    check = b.check_step(QUESTION, chain, 2, "en", [EXPORTS_BY_PRODUCT, None])
+    assert not check.ok and check.hint == "Name the flow and year."
+    assert [a.question for a in check.alternatives] == ["Main import chapters in 2024?"]
+    assert check.alternatives[0].queried.startswith("imports · by partner")
