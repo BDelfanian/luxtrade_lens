@@ -39,6 +39,34 @@ POC_NOTE = (
 )
 
 
+# The LuxTrade Lens logo: the top bar of every page and the slides' header share it
+LOGO_TEXT = "LuxTrade <span>Lens</span>"
+
+
+def brand_css() -> str:
+    """The logo's typeface and colours (navy on a light theme, the theme's text on a dark one).
+
+    One brand for the app's top bar and the presentation slides.
+    """
+    ink = "inherit" if st.context.theme.type == "dark" else "#13213C"
+    font = "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800"
+    return f"""<style>
+@import url("{font}&display=swap");
+.lt-head {{ display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding-bottom: 0.9rem; border-bottom: 1px solid rgba(19,33,60,.14); }}
+.lt-logo {{ font-family: "Bricolage Grotesque", "Arial Black", sans-serif; font-weight: 800;
+  font-size: 2.1rem; line-height: 1; letter-spacing: -0.035em; color: {ink}; }}
+.lt-logo.lt-big {{ font-size: 6rem; margin-bottom: 1rem; }}
+.lt-logo.lt-app {{ font-size: 2.9rem; padding: 0.15rem 0 0.35rem; }}
+.lt-logo span {{ color: #0B7DB8; }}
+.lt-event {{ background: #C62F35; color: #FFFFFF; font-size: 0.95rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; padding: 0.4rem 0.95rem;
+  border-radius: 999px; white-space: nowrap; }}
+.lt-foot {{ display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.7rem;
+  border-top: 1px solid rgba(19,33,60,.14); font-size: 1rem; opacity: 0.7; }}
+</style>"""
+
+
 @st.cache_resource(show_spinner="Loading the data…")
 def get_assistant() -> Assistant:
     """One assistant per server process (read-only data, stateless graph)."""

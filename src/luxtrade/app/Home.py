@@ -9,7 +9,13 @@ UI only: every computation happens in the agents layer (GUIDELINES §1.1).
 
 import streamlit as st
 
-from luxtrade.app.components import ASK_PAGE, CONTRIBUTORS, get_assistant
+from luxtrade.app.components import (
+    ASK_PAGE,
+    CONTRIBUTORS,
+    LOGO_TEXT,
+    brand_css,
+    get_assistant,
+)
 from luxtrade.runs.sessions import new_session_id
 
 st.set_page_config(page_title="LuxTrade Lens", page_icon="📦", layout="wide")
@@ -53,7 +59,6 @@ st.html(
     [data-testid="stHeader"] { background: transparent; }
     /* tables: let cell text use the whole column (Streamlit caps it at 400 px) */
     [data-testid="stTable"] td [data-testid="stMarkdownContainer"] { max-width: none; width: 100%; }
-    .st-key-app-name h1 { padding: 0; }
     </style>"""
 )
 
@@ -78,8 +83,9 @@ if "session_id" not in ss:
 
 
 # --- top bar, shared by all pages: the app's name, the page tabs and the language -----------
-with st.container(key="app-name"):
-    st.title("LuxTrade Lens", anchor=False)
+with st.container(key="app-name"):  # the logo of the slides, as the app's name
+    st.html(brand_css())
+    st.html(f'<div class="lt-logo lt-app" role="heading" aria-level="1">{LOGO_TEXT}</div>')
 with st.container(horizontal=True, vertical_alignment="center", key="top-tabs"):
     for p in MAIN_TABS:
         st.page_link(p, label=p.title, icon=p.icon)
