@@ -72,6 +72,10 @@ st.html(
 [class*="st-key-scn-excard-"] { background: linear-gradient(135deg, rgba(98,80,214,.09),
   rgba(98,80,214,.03)); border-color: #D9D3F6 !important; }
 [class*="st-key-scn-excard-"] button { justify-content: flex-start; }
+.st-key-scn-answer { background: linear-gradient(135deg, rgba(98,80,214,.13), rgba(42,120,214,.07));
+  border: 1px solid #D9D3F6; border-left: 6px solid #5B47D1; border-radius: 14px;
+  padding: 18px 24px 12px; }
+.st-key-scn-answer h3 { color: #231A63; }
 .scn-head { display: grid; grid-template-columns: 0.55fr 5.2fr 4.2fr 0.9fr; gap: 1rem;
   background: #5B47D1; color: #fff; border-radius: 10px; padding: 9px 30px 9px 18px;
   font-weight: 600; font-size: 0.9rem; }
@@ -626,22 +630,17 @@ def step_badges(numbers: list[int]) -> str:
     return " ".join(f":blue-badge[step {n}]" for n in numbers)
 
 
-def render_result(rec: ScenarioRecord) -> None:
-    """The combined answer, its charts and caveats, the chain, and how it was built."""
-    runs = builder.records(rec)
-    with st.container(border=True, key="scn-answer"):
-        st.caption(
-            f":violet[:material/route: Scenario · {rec.title}] · {len(rec.steps)} steps · "
-            f"scenario `{rec.scenario_id}`"
-        )
+def render_answer_panel(rec: ScenarioRecord) -> None:
+    """The combined answer in its tinted panel, then what the data cannot tell."""
+    with st.container(key="scn-answer"):
         st.markdown(f"**Question:** {rec.question}")
         st.markdown(f"### {rec.headline}")
-        if rec.approach:
-            st.caption(f"Approach: {rec.approach}")
         st.markdown(
             "\n".join(f"- {p['text']} {step_badges(p.get('steps', []))}" for p in rec.points)
         )
         st.markdown(rec.conclusion)
+        if rec.approach:
+            st.caption(f"Approach: {rec.approach}")
         if rec.answer_source == "template":
             st.caption(
                 ":material/warning: The combined summary failed the number check twice, so each "
@@ -651,8 +650,8 @@ def render_result(rec: ScenarioRecord) -> None:
             st.caption(
                 ":material/verified: Every number above was found in the facts of the steps it "
                 "cites, every country in their results, and a separate check confirmed that each "
-                "claim follows from those facts. Removed claims are listed under *How this "
-                "scenario was built*."
+                "claim follows from those facts. Removed claims are listed under *How it was "
+                "built*."
             )
     if rec.out_of_scope or rec.caveats:
         with st.container(border=True):
@@ -664,49 +663,93 @@ def render_result(rec: ScenarioRecord) -> None:
             if rec.caveats:
                 st.markdown("**Data limits that apply**")
                 st.markdown("\n".join(f"- **{c['id']}**: {c['message']}" for c in rec.caveats))
-    charts = [n for n in rec.charts if n in runs]
-    if charts:
-        st.markdown("#### Supporting charts")
-        for col, n in zip(st.columns(len(charts)), charts, strict=True):
-            with col:
-                st.caption(f"**Step {n}** · {runs[n].question}")
-                render_chart(runs[n], key="scn-support")
-    st.markdown("#### The chain of questions")
-    st.dataframe(
-        pd.DataFrame(
-            [
-                {
-                    "step": s.n,
-                    "kind": KIND.get(s.kind, s.kind),
-                    "question": s.question,
-                    "queried": s.queried,
-                    "status": s.status,
-                    "run": s.run_id,
-                }
-                for s in rec.steps
-            ]
-        ),
-        hide_index=True,
-        width="stretch",
+
+
+def render_result(rec: ScenarioRecord) -> None:
+    """The scenario in tabs: the answer first, then its charts, the chain, the steps, the build.
+
+    The answer sits in a tinted panel; everything that supports it is one click away instead
+    of printed below it, so a finished scenario reads in one screen.
+    """
+    runs = builder.records(rec)
+    st.caption(
+        f":violet[:material/route: Scenario · {rec.title}] · {len(rec.steps)} steps · "
+        f"scenario `{rec.scenario_id}`" + (f" · revises `{rec.based_on}`" if rec.based_on else "")
     )
-    for s in rec.steps:
-        if s.n not in runs:
-            st.warning(f"Step {s.n}: run `{s.run_id}` was not found.")
-            continue
-        meta = KIND.get(s.kind, s.kind)
-        if s.builds_on:
-            meta += ", prompted by the answer to " + ", ".join(f"step {n}" for n in s.builds_on)
-        render_chain_step(
-            s.n,
-            runs[s.n],
-            why=s.purpose,
-            meta=meta,
-            queried=s.queried,
-            takeaway=s.note,
-            takeaway_label="What it adds",
-            key=f"scn-{rec.scenario_id}",
+    charts = [n for n in rec.charts if n in runs]
+    answer_tab, charts_tab, chain_tab, steps_tab, built_tab = st.tabs(
+        [
+            ":material/task_alt: Answer",
+            f":material/bar_chart: Supporting charts ({len(charts)})",
+            ":material/account_tree: The chain of questions",
+            f":material/format_list_numbered: Steps ({len(rec.steps)})",
+            ":material/fact_check: How it was built",
+        ],
+        key=f"scn-tabs-{rec.scenario_id}",
+    )
+    with answer_tab:
+        render_answer_panel(rec)
+    with charts_tab:
+        if not charts:
+            st.caption("No step of this scenario has a chart.")
+        for start in range(0, len(charts), 2):
+            pair = charts[start : start + 2]
+            for col, n in zip(st.columns(2), pair, strict=False):
+                with col, st.container(border=True):
+                    st.caption(f"**Step {n}** · {runs[n].question}")
+                    render_chart(runs[n], key="scn-support")
+    with chain_tab:
+        st.caption(
+            "Every step is an ordinary assistant run: open the Steps tab for its answer, chart "
+            "and trace."
         )
-    render_built(rec, runs)
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {
+                        "step": s.n,
+                        "kind": KIND.get(s.kind, s.kind)
+                        + (f" of step {', '.join(map(str, s.builds_on))}" if s.builds_on else ""),
+                        "question": s.question,
+                        "why": s.purpose,
+                        "queried": s.queried,
+                        "status": s.status,
+                        "run": s.run_id,
+                    }
+                    for s in rec.steps
+                ]
+            ),
+            hide_index=True,
+            width="stretch",
+            column_config={
+                "question": st.column_config.TextColumn(width="large"),
+                "why": st.column_config.TextColumn(width="large"),
+            },
+        )
+    with steps_tab:
+        step_tabs = st.tabs([f"Step {s.n}" for s in rec.steps], key=f"scn-steps-{rec.scenario_id}")
+        for tab, s in zip(step_tabs, rec.steps, strict=True):
+            with tab:
+                if s.n not in runs:
+                    st.warning(f"Step {s.n}: run `{s.run_id}` was not found.")
+                    continue
+                meta = KIND.get(s.kind, s.kind)
+                if s.builds_on:
+                    meta += ", prompted by the answer to " + ", ".join(
+                        f"step {n}" for n in s.builds_on
+                    )
+                render_chain_step(
+                    s.n,
+                    runs[s.n],
+                    why=s.purpose,
+                    meta=meta,
+                    queried=s.queried,
+                    takeaway=s.note,
+                    takeaway_label="What it adds",
+                    key=f"scn-{rec.scenario_id}",
+                )
+    with built_tab:
+        render_built(rec, runs)
     with st.container(horizontal=True, vertical_alignment="center"):
         st.button(
             "Edit the questions and run again",
@@ -731,54 +774,53 @@ def render_result(rec: ScenarioRecord) -> None:
 
 def render_built(rec: ScenarioRecord, runs: dict) -> None:
     """IDs, checks, LLM calls, re-verify, the assistant session and the report."""
-    with st.expander("How this scenario was built", icon=":material/fact_check:"):
-        st.markdown(
-            f"Scenario `{rec.scenario_id}` · assistant session `{rec.session_id}` · data vintage "
-            f"{rec.vintage} · code `{rec.code_version}` · created {rec.created_at} · answer: "
-            f"{'checked LLM text' if rec.answer_source == 'llm' else 'template'}"
+    st.markdown(
+        f"Scenario `{rec.scenario_id}` · assistant session `{rec.session_id}` · data vintage "
+        f"{rec.vintage} · code `{rec.code_version}` · created {rec.created_at} · answer: "
+        f"{'checked LLM text' if rec.answer_source == 'llm' else 'template'}"
+    )
+    st.markdown(
+        "**Who did what.** The language model proposed the questions, the follow-ups and "
+        "the wording of the answer. The assistant's code checked every question before it "
+        "ran, computed every number with guarded SQL, and checked the answer against the "
+        "steps' facts."
+    )
+    if rec.notes:
+        st.markdown("**Checks, in order**")
+        st.markdown("\n".join(f"- {n}" for n in rec.notes))
+    if rec.llm_usage:
+        st.markdown("**Language model calls of the scenario** (each step's run lists its own)")
+        st.dataframe(pd.DataFrame(rec.llm_usage), hide_index=True, width="stretch")
+    with st.container(horizontal=True):
+        if st.button("Re-verify every step", icon=":material/replay:", key="scn-verify"):
+            ss.scn_verified = {rec.scenario_id: builder.verify(rec)}
+        if st.button(
+            "Continue in the assistant",
+            icon=":material/forum:",
+            key="scn-session",
+            help="Opens the session holding the steps' runs: ask your own follow-up",
+        ):
+            ss.session_id = rec.session_id
+            st.switch_page(ASK_PAGE)
+        st.download_button(
+            "Download report (Markdown)",
+            to_markdown(rec, runs).encode("utf-8"),
+            file_name=f"luxtrade_scenario_{rec.scenario_id}.md",
+            mime="text/markdown",
+            icon=":material/description:",
+            key="scn-md",
         )
-        st.markdown(
-            "**Who did what.** The language model proposed the questions, the follow-ups and "
-            "the wording of the answer. The assistant's code checked every question before it "
-            "ran, computed every number with guarded SQL, and checked the answer against the "
-            "steps' facts."
+        st.download_button(
+            "Download record (JSON)",
+            json.dumps(rec.model_dump(), indent=1, ensure_ascii=False).encode("utf-8"),
+            file_name=f"luxtrade_scenario_{rec.scenario_id}.json",
+            mime="application/json",
+            icon=":material/data_object:",
+            key="scn-json",
         )
-        if rec.notes:
-            st.markdown("**Checks, in order**")
-            st.markdown("\n".join(f"- {n}" for n in rec.notes))
-        if rec.llm_usage:
-            st.markdown("**Language model calls of the scenario** (each step's run lists its own)")
-            st.dataframe(pd.DataFrame(rec.llm_usage), hide_index=True, width="stretch")
-        with st.container(horizontal=True):
-            if st.button("Re-verify every step", icon=":material/replay:", key="scn-verify"):
-                ss.scn_verified = {rec.scenario_id: builder.verify(rec)}
-            if st.button(
-                "Continue in the assistant",
-                icon=":material/forum:",
-                key="scn-session",
-                help="Opens the session holding the steps' runs: ask your own follow-up",
-            ):
-                ss.session_id = rec.session_id
-                st.switch_page(ASK_PAGE)
-            st.download_button(
-                "Download report (Markdown)",
-                to_markdown(rec, runs).encode("utf-8"),
-                file_name=f"luxtrade_scenario_{rec.scenario_id}.md",
-                mime="text/markdown",
-                icon=":material/description:",
-                key="scn-md",
-            )
-            st.download_button(
-                "Download record (JSON)",
-                json.dumps(rec.model_dump(), indent=1, ensure_ascii=False).encode("utf-8"),
-                file_name=f"luxtrade_scenario_{rec.scenario_id}.json",
-                mime="application/json",
-                icon=":material/data_object:",
-                key="scn-json",
-            )
-        verified = ss.get("scn_verified", {}).get(rec.scenario_id)
-        if verified:
-            st.markdown("\n".join(f"- Step {n}: {msg}" for n, msg in verified.items()))
+    verified = ss.get("scn_verified", {}).get(rec.scenario_id)
+    if verified:
+        st.markdown("\n".join(f"- Step {n}: {msg}" for n, msg in verified.items()))
 
 
 shown = builder.store.load(ss.scn_id) if ss.get("scn_id") else None
