@@ -3,8 +3,9 @@
 Four parts, top to bottom: the question (or an example card); the proposed chain of questions
 to review (tick, edit, reorder, delete or add questions; added and edited ones are checked for
 answerability and fit); the run, step by step; and the result: the combined answer with its
-supporting charts, every step of the chain with its own answer and trace, and how the scenario
-was built (IDs, checks, LLM calls, re-verify, report). ``?scenario=ID`` opens one.
+supporting charts, a share card for LinkedIn (PNG and caption), every step of the chain with
+its own answer and trace, and how the scenario was built (IDs, checks, LLM calls, re-verify,
+report). ``?scenario=ID`` opens one.
 UI only: the work happens in agents/scenario.py (``ScenarioBuilder``).
 """
 
@@ -33,6 +34,7 @@ from luxtrade.app.components import (
 )
 from luxtrade.runs.scenarios import ScenarioRecord
 from luxtrade.viz.charts import evidence_bars
+from luxtrade.viz.share_card import CardContent, content_from, data_note, linkedin_post, render_card
 
 builder = get_scenario_builder()
 ss = st.session_state
@@ -669,6 +671,25 @@ def evidence(scenario_id: str) -> list[dict]:
     return [f.model_dump() for f in builder.figures(rec)] if rec else []
 
 
+def card_content(rec: ScenarioRecord) -> CardContent:
+    """What the share card shows: the record's checked words, its first evidence figure."""
+    figures = [EvidenceFigure.model_validate(f) for f in evidence(rec.scenario_id)]
+    latest = builder.assistant.sem.coverage.latest_complete_period
+    return content_from(rec, figures, data_note(latest, rec.language))
+
+
+@st.cache_data(show_spinner="Drawing the card…", max_entries=16)
+def share_card(scenario_id: str, size: str) -> bytes:
+    """The scenario's share card as PNG bytes (``portrait`` 4:5 or ``square``)."""
+    rec = builder.store.load(scenario_id)
+    return render_card(card_content(rec), size) if rec else b""
+
+
+def card_name(rec: ScenarioRecord, size: str) -> str:
+    """The PNG's file name: date and scenario ID, so a weekly series sorts by date."""
+    return f"luxtrade-lens-{rec.created_at[:10]}-{rec.scenario_id}-{size}.png"
+
+
 def render_answer_panel(rec: ScenarioRecord) -> None:
     """The combined answer like an Overview card: headline, key figures, chart and points.
 
@@ -677,7 +698,22 @@ def render_answer_panel(rec: ScenarioRecord) -> None:
     """
     figures = [EvidenceFigure.model_validate(f) for f in evidence(rec.scenario_id)]
     with st.container(key="scn-answer"):
-        st.caption(f"**Question:** {rec.question}")
+        with st.container(horizontal=True, vertical_alignment="center"):
+            st.caption(f"**Question:** {rec.question}", width="stretch")
+            content = card_content(rec)
+            st.download_button(  # drawn when clicked, not on every rerun
+                "Save as PNG",
+                data=lambda: render_card(content, "portrait"),
+                file_name=card_name(rec, "portrait"),
+                mime="image/png",
+                icon=":material/download:",
+                type="tertiary",
+                on_click="ignore",
+                key=f"scn-save-{rec.scenario_id}",
+                help="Save this insight as a share card for LinkedIn (1080 × 1350, 4:5): logo, "
+                "key figures, chart, source and a QR code to the repository. More formats and "
+                "a ready caption in the Share tab.",
+            )
         st.markdown(f"### {rec.headline}")
         if figures and figures[0].tiles:
             render_tiles(figures[0].tiles[:4], f"{rec.scenario_id}-0")
@@ -753,9 +789,10 @@ def render_result(rec: ScenarioRecord) -> None:
         f"scenario `{rec.scenario_id}`" + (f" · revises `{rec.based_on}`" if rec.based_on else "")
     )
     charts = [n for n in rec.charts if n in runs]
-    answer_tab, charts_tab, chain_tab, steps_tab, built_tab = st.tabs(
+    answer_tab, share_tab, charts_tab, chain_tab, steps_tab, built_tab = st.tabs(
         [
             ":material/task_alt: Answer",
+            ":material/share: Share",
             f":material/bar_chart: Supporting charts ({len(charts)})",
             ":material/account_tree: The chain of questions",
             f":material/format_list_numbered: Steps ({len(rec.steps)})",
@@ -765,6 +802,8 @@ def render_result(rec: ScenarioRecord) -> None:
     )
     with answer_tab:
         render_answer_panel(rec)
+    with share_tab:
+        render_share(rec)
     with charts_tab:
         if not charts:
             st.caption("No step of this scenario has a chart.")
@@ -846,6 +885,46 @@ def render_result(rec: ScenarioRecord) -> None:
                 on_click=open_scenario,
                 args=(rec.based_on,),
             )
+
+
+def render_share(rec: ScenarioRecord) -> None:
+    """The insight as a LinkedIn post: the card (two formats) and a caption to paste."""
+    if rec.status == "failed" or not rec.headline:
+        st.caption("This scenario has no answer to share.")
+        return
+    preview, side = st.columns([1, 1.05], gap="large")
+    with side:
+        size = st.segmented_control(
+            "Format",
+            ["portrait", "square"],
+            format_func={"portrait": "Portrait 4:5", "square": "Square 1:1"}.get,
+            default="portrait",
+            key=f"scn-card-size-{rec.scenario_id}",
+            help="Portrait (1080 × 1350) takes the most room in the LinkedIn feed; square "
+            "(1080 × 1080) suits carousels and other networks.",
+        )
+        size = size or "portrait"
+        png = share_card(rec.scenario_id, size)
+        st.download_button(
+            "Save as PNG",
+            data=png,
+            file_name=card_name(rec, size),
+            mime="image/png",
+            icon=":material/download:",
+            type="primary",
+            on_click="ignore",
+            key=f"scn-share-save-{rec.scenario_id}",
+        )
+        st.markdown("**Caption** · copy it with the icon at its top right")
+        st.code(linkedin_post(card_content(rec), len(rec.steps)), language=None, wrap_lines=True)
+        st.caption(
+            ":material/verified: The card and the caption use only the checked answer and the "
+            "figures computed by code. Its footer names the source, the data's latest complete "
+            "month and the scenario ID, which reopens and re-verifies it here; the QR code "
+            "leads to the open-source repository."
+        )
+    with preview:
+        st.image(png, caption=f"{rec.title or rec.scenario_id} · {card_name(rec, size)}")
 
 
 def render_built(rec: ScenarioRecord, runs: dict) -> None:

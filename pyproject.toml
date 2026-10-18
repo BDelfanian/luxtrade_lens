@@ -29,7 +29,13 @@ dashboard-api = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "pandas", "plotly", "s
 where = ["src"]
 
 [tool.setuptools.package-data]
-luxtrade = ["semantic/limitations.yaml", "agents/prompts/*.md"]
+luxtrade = [
+    "semantic/limitations.yaml",
+    "agents/prompts/*.md",
+    "agents/trails.yaml",
+    "viz/assets/*.png",
+    "viz/assets/fonts/*",
+]
 
 [tool.ruff]
 line-length = 100

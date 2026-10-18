@@ -186,7 +186,9 @@ it is shown), you edit or extend it, and every step runs as an ordinary assistan
 session. The assistant then follows up on what the answers revealed and writes a combined answer
 in which every number is checked against the steps it cites. Each scenario has an ID
 (`?scenario=<id>`), can be re-verified step by step, continued in the assistant, and downloaded
-as a Markdown report. Design: [SOLUTION_DESIGN §5.10](docs/SOLUTION_DESIGN.md). Planning needs
+as a Markdown report. **Save as PNG** (or the **Share** tab) turns the answer into a share card
+for LinkedIn, in portrait 4:5 or square, with the logo, key figures, chart, source and a QR code
+to this repository, plus a caption ready to paste. Design: [SOLUTION_DESIGN §5.10](docs/SOLUTION_DESIGN.md). Planning needs
 an LLM key; the recorded examples in `demo/runs/scenarios/` open without one. Re-record them with
 `python -m luxtrade.agents.scenario --demo --lang en fr de`.
 

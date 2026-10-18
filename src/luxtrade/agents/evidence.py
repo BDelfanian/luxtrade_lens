@@ -34,7 +34,7 @@ _T = {
     "t_share": {
         "en": "Share of {flow}, {y0} and {y1}",
         "fr": "Part des {flow}, {y0} et {y1}",
-        "de": "Anteil an den {flow}, {y0} und {y1}",
+        "de": "Anteil an den {flow}n, {y0} und {y1}",  # dative: Exporten
     },
     "k_falls": {
         "en": "{focus}: periods with falling {flow}",
@@ -56,7 +56,7 @@ _T = {
     "k_share": {
         "en": "{focus}, share of {flow} {year}",
         "fr": "{focus}, part des {flow} {year}",
-        "de": "{focus}, Anteil an den {flow} {year}",
+        "de": "{focus}, Anteil an den {flow}n {year}",
     },
     "k_share_d": {
         "en": "{value} in {year}",

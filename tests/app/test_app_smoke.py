@@ -295,6 +295,14 @@ def test_a_stored_scenario_opens_from_its_link(app_env, processed_dir):
     assert any(m.value == "### A few partners supply most imports." for m in at.markdown)
     assert any("It names the suppliers." in m.value for m in at.markdown)
     assert any(b.key == "scn-verify" for b in at.button)
+    # the share card: saved from the answer panel or the Share tab, with a caption to paste
+    saves = {b.proto.id.split("-", 1)[-1] for b in at.get("download_button")}
+    assert any(f"scn-save-{rec.scenario_id}" in k for k in saves)
+    assert any(f"scn-share-save-{rec.scenario_id}" in k for k in saves)
+    caption = next(c.value for c in at.code if rec.scenario_id in c.value)
+    assert caption.startswith("A few partners supply most imports.")
+    assert "github.com/BDelfanian/luxtrade_lens" in caption
+    assert at.get("image")  # the card's preview
 
 
 def test_the_proposed_chain_can_be_reordered_extended_and_trimmed(app_env):
