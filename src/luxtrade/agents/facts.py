@@ -82,6 +82,13 @@ _T = {
         "fr": "{label} : les deux plus fortes périodes ({pa}, {pb}) font {pct} du total sur {p0}–{p1}",
         "de": "{label}: die zwei stärksten Perioden ({pa}, {pb}) machen {pct} der Summe {p0}–{p1} aus",
     },
+    "gap": {
+        "en": "Value per kg, non-EU27 ÷ EU27 ({flow})",
+        "fr": "Valeur au kg, hors UE27 ÷ UE27 ({flow})",
+        "de": "Wert je kg, Nicht-EU27 ÷ EU27 ({flow})",
+    },
+    "gap_hi": {"en": ", highest", "fr": ", maximum", "de": ", höchster"},
+    "gap_lo": {"en": ", lowest", "fr": ", minimum", "de": ", niedrigster"},
     "series": {
         "en": "Between {start} and {end}, {flow}{scope} went from {v0} to {v1} ({chg}).",
         "fr": "Entre {start} et {end}, les {flow}{scope} sont passées de {v0} à {v1} ({chg}).",
@@ -439,7 +446,39 @@ def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str): 
         sents.append(
             _t("peak", lang, when=fmt_period(_py(pk_idx), lang), value=fmt_v(pk_val, lang))
         )
+    if spec.measure == "unit_value" and spec.breakdown == "partner_group":
+        facts += _gap_facts(a.main, lang)
     return facts, sents, title
+
+
+def _gap_facts(main: pd.DataFrame, lang: str) -> list[Fact]:
+    """How many times a non-EU27 kilo is worth an EU27 one, year by year (computed by code).
+
+    Seen on real data: both values per kg rose, and the answer called the gap "stable over two
+    decades" while it went from 23 times (2005) to 29 (2015), 10 (2024) and 16 (2025).
+    """
+    out = []
+    for flow, g in main.groupby("flow", sort=True):
+        wide = g.pivot_table(index="period", columns="key", values="value")
+        if not {"EU27", "NON_EU27"} <= set(wide.columns):
+            continue
+        ratio = (wide["NON_EU27"] / wide["EU27"]).dropna()
+        if ratio.empty:
+            continue
+        label = _t("gap", lang, flow=flow_label(str(flow), lang))
+        shown = [("", ratio.index[0]), ("", ratio.index[-1])]
+        if len(ratio) >= 3:
+            shown += [("", ratio.index[-2]), (_t("gap_hi", lang), ratio.idxmax())]
+            shown += [(_t("gap_lo", lang), ratio.idxmin())]
+        for word, p in dict.fromkeys(shown):
+            out.append(
+                Fact(
+                    key=f"{flow}.gap.{word or 'year'}.{_py(p)}",
+                    text=f"{label}{word} {fmt_period(_py(p), lang)}: "
+                    f"{fmt_number(float(ratio[p]), 1, lang)} ×",
+                )
+            )
+    return out
 
 
 _HHI = {

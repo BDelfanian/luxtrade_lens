@@ -196,3 +196,26 @@ def test_one_line_series_make_panels_one_per_subject(make_assistant, semantic):
     assert all(t["value"].endswith("%") for t in fig.tiles)
     chart = evidence_bars(pd.DataFrame(fig.rows), fig.kind, "en")
     assert len(chart.data) == 2
+
+
+def test_a_split_in_value_per_kg_gives_both_sides_and_their_gap(make_assistant, semantic):
+    assistant = make_assistant(None)
+    base = {"intent": "time_series", "freq": "A", "period_start": "2018", "period_end": "2024"}
+    specs = {
+        1: QuerySpec(**base, breakdown="partner_group", flow="import", measure="unit_value"),
+        2: QuerySpec(**base, partner_group="EXTRA_EU27_2020", flow="import", measure="qty_kg"),
+    }
+    records = {
+        n: assistant.run_spec(s, question=f"q{n}", origin="preset") for n, s in specs.items()
+    }
+    texts = [f["text"] for f in records[1].facts]
+    assert any(t.startswith("Value per kg, non-EU27 ÷ EU27 (imports) 2018: ") for t in texts)
+    assert any(", lowest " in t and t.endswith(" ×") for t in texts)
+    chain = [ScenarioStep(n=n, kind="own", question=f"q{n}") for n in specs]
+    (fig,) = compose(chain, records, "headline", "text", semantic)
+    assert list(dict.fromkeys(r["series"] for r in fig.rows)) == [
+        "EU27 countries, imports: value per kg",
+        "Non-EU27 countries, imports: value per kg",
+        "Non-EU27 countries, imports: mass",  # price and mass of one subject: two panels
+    ]
+    assert fig.tiles[0]["value"].endswith("€/kg") and fig.tiles[2]["value"].endswith("kg")

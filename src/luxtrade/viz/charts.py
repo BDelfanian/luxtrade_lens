@@ -10,7 +10,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from luxtrade.analytics.rankings import CONFIDENTIAL, OTHER, UNDISCLOSED
-from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct, fmt_period, month_name
+from luxtrade.viz.format import (
+    flow_label,
+    fmt_eur,
+    fmt_measure,
+    fmt_number,
+    fmt_pct,
+    fmt_period,
+    month_name,
+)
 
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
 NEUTRAL = "#a3a29c"
@@ -1148,7 +1156,7 @@ def evidence_panels(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
         cols=cols,
         subplot_titles=panels,
         shared_yaxes=hhi,
-        shared_xaxes=True,
+        shared_xaxes=hhi,  # yearly series each span their own years
         vertical_spacing=0.16,
         horizontal_spacing=0.06 if hhi else 0.1,
     )
@@ -1161,9 +1169,7 @@ def evidence_panels(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
         unit = "hhi" if hhi else str(part["unit"].iloc[0])
 
         def show(v: float, unit: str = unit) -> str:
-            if unit == "hhi":
-                return fmt_number(v, 0, lang)
-            return fmt_pct(v, lang) if unit == "share" else fmt_eur(v, lang)
+            return fmt_number(v, 0, lang) if unit == "hhi" else fmt_measure(v, unit, lang)
 
         r, c = i // cols + 1, i % cols + 1
         fig.add_scatter(
@@ -1201,10 +1207,19 @@ def evidence_panels(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
                 col=c,
             )
     fig.update_annotations(font={"size": 13, "color": TEXT})  # the panel titles
-    years = sorted(rows["group"].unique())
-    pad = 1.5 if len(years) <= 8 else 0.8
-    ticks = years if len(years) <= 8 else [y for y in years if y % 5 == 0]
-    fig.update_xaxes(tickmode="array", tickvals=ticks, range=[years[0] - pad, years[-1] + pad])
+    for i, panel in enumerate(panels):
+        years = sorted(rows.loc[rows["series"] == panel, "group"].unique())
+        if hhi:
+            years = sorted(rows["group"].unique())
+        pad = 1.5 if len(years) <= 8 else 0.8
+        ticks = years if len(years) <= 8 else [y for y in years if y % 5 == 0]
+        fig.update_xaxes(
+            tickmode="array",
+            tickvals=ticks,
+            range=[years[0] - pad, years[-1] + pad],
+            row=i // cols + 1,
+            col=i % cols + 1,
+        )
     if hhi:
         fig.update_yaxes(range=[0, max(float(rows["value"].max()) * 1.18, 2_100)])
         high = HHI_LEVELS[1_800]

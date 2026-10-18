@@ -25,7 +25,7 @@ from pydantic import BaseModel, Field
 
 from luxtrade.runs.store import RunRecord
 from luxtrade.semantic.layer import QueryError, SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct
+from luxtrade.viz.format import flow_label, fmt_measure, fmt_number, fmt_pct
 
 MAX_FIGURES = 2
 MAX_FOCUS = {"change": 2, "share": 3}
@@ -112,6 +112,16 @@ _T = {
         "de": "{who}, Anteil an den {flow}n",
     },
     "p_value": {"en": "{who}, {flow}", "fr": "{who}, {flow}", "de": "{who}, {flow}"},
+    "p_unit": {
+        "en": "{who}, {flow}: value per kg",
+        "fr": "{who}, {flow} : valeur au kg",
+        "de": "{who}, {flow}: Wert je kg",
+    },
+    "p_mass": {
+        "en": "{who}, {flow}: mass",
+        "fr": "{who}, {flow} : masse",
+        "de": "{who}, {flow}: Masse",
+    },
     "eu27": {"en": "EU27 countries", "fr": "Pays de l'UE27", "de": "EU27-Länder"},
     "extra": {"en": "Non-EU27 countries", "fr": "Pays hors UE27", "de": "Nicht-EU27-Länder"},
     "note_series": {
@@ -272,12 +282,20 @@ def compose(
 
 
 MAX_PANELS = 4
+_PANEL = {"share": "p_share", "unit_value": "p_unit", "qty_kg": "p_mass"}
+
+
+# a subject asked as a share and as a value is one panel; a value per kg or a mass is another
+_MEASURE_GROUP = {"share": "level", "value_eur": "level", "unit_value": "price", "qty_kg": "mass"}
 
 
 def _one_series(rec: RunRecord) -> bool:
-    """A yearly series with one line: a share or a value of one flow (EU27 counts as one)."""
+    """A yearly series with one line of one flow: a share, a value, a value per kg or a mass.
+
+    A split of the total by EU27 vs non-EU27 counts as one line (the EU27 one).
+    """
     s = rec.spec or {}
-    if rec.status != "answered" or rec.custom_sql or s.get("measure") not in ("share", "value_eur"):
+    if rec.status != "answered" or rec.custom_sql or s.get("measure") not in _MEASURE_GROUP:
         return False
     if s.get("intent") != "time_series" or s.get("freq") != "A" or s.get("year_step"):
         return False
@@ -311,10 +329,19 @@ def _series(
     different things.
     """
     rows, tiles, seen = [], [], set()
+    lines = []  # (step, key of the line or None, who): a split in €/kg or kg gives both sides
     for n in sorted(steps, key=lambda n: records[n].spec["measure"] != "share"):  # stable sort
         spec = records[n].spec
+        if spec.get("breakdown") != "partner_group":
+            lines.append((n, None, _who(spec, sem, lang)))
+        elif spec["measure"] in ("share", "value_eur"):  # the non-EU27 side is the rest
+            lines.append((n, "EU27", _t("eu27", lang)))
+        else:  # a value per kg or a mass does not add up: both sides tell something
+            lines += [(n, "EU27", _t("eu27", lang)), (n, "NON_EU27", _t("extra", lang))]
+    for n, key, who in lines:
+        spec = records[n].spec
         flow, measure = spec["flow"], spec["measure"]
-        subject = (_who(spec, sem, lang), flow)
+        subject = (who, flow, _MEASURE_GROUP[measure])
         if subject in seen or len(seen) == MAX_PANELS:
             continue
         mine = sorted(
@@ -323,16 +350,15 @@ def _series(
                 for r in records[n].frames.get("main", [])
                 if r.get("flow") == flow
                 and r.get("value") is not None
-                and (spec.get("breakdown") != "partner_group" or r.get("key") == "EU27")
+                and (key is None or r.get("key") == key)
             ),
             key=lambda r: r["period"],
         )
         if len(mine) < 2:
             continue
         seen.add(subject)
-        who = subject[0]
         fl = flow_label(flow, lang)
-        panel = _t("p_share" if measure == "share" else "p_value", lang, who=who, flow=fl)
+        panel = _t(_PANEL.get(measure, "p_value"), lang, who=who, flow=fl)
         for r in mine:
             rows.append(
                 {
@@ -345,7 +371,10 @@ def _series(
                 }
             )
         first, last = float(mine[0]["value"]), float(mine[-1]["value"])
-        show = (lambda v: fmt_pct(v, lang)) if measure == "share" else (lambda v: fmt_eur(v, lang))
+
+        def show(v: float, m: str = measure) -> str:
+            return fmt_measure(v, m, lang)  # %, €, €/kg or kg
+
         tiles.append(
             {
                 "value": show(last),

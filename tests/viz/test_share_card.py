@@ -173,3 +173,12 @@ def test_series_panels_are_drawn_each_on_its_own_scale():
     c = content_from(record(), [], "data to Jun 2026")
     c.figure = {"kind": "series", "title": "Year by year, 2005–2025", "rows": rows}
     assert size_of(render_card(c, "square", scale=1)) == (1080, 1080)
+
+
+def test_long_tile_labels_keep_their_year():
+    c = content_from(record(), [FIGURE], "data to Jun 2026")
+    c.tiles = [
+        {"value": "19.71 €/kg", "label": "Non-EU27 countries, imports: value per kg, 2025"}
+    ] * 4
+    for size in ("portrait", "square"):
+        render_card(c, size, scale=1)

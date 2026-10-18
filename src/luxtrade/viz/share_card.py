@@ -20,7 +20,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from luxtrade.viz.format import fmt_eur, fmt_number, fmt_pct, month_name
+from luxtrade.viz.format import fmt_measure, fmt_number, fmt_pct, month_name
 
 ASSETS = Path(__file__).with_name("assets")
 REPO = "github.com/BDelfanian/luxtrade_lens"
@@ -285,16 +285,21 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     # the key figures
     tiles = content.tiles[:4]
     if tiles:
-        tile_h = 150 if portrait else 128
         gap = 16
         tile_w = (width - 2 * m - gap * (len(tiles) - 1)) / len(tiles)
+        label_font = c.font("sans", 16, 600)
+        rows_needed = max(
+            len(_wrap(t["label"], label_font, (tile_w - 36) * c.s, 99)) for t in tiles
+        )
+        extra = 21 * (min(rows_needed, 3) - 2) if rows_needed > 2 else 0  # a long label: 3 lines
+        tile_h = (150 if portrait else 128) + extra
         for k, tile in enumerate(tiles):
             x0 = m + k * (tile_w + gap)
             color = TONE.get(tile.get("tone") or "", VIOLET)
             c.rect((x0, y, x0 + tile_w, y + tile_h), WHITE, radius=14, outline=LINE)
             c.rect((x0, y, x0 + tile_w, y + 6), color, radius=3)
             c.text((x0 + 18, y + 20), tile["value"], c.font("display", 40, 800), color)
-            lab = _wrap(tile["label"], c.font("sans", 16, 600), (tile_w - 36) * c.s, 2)
+            lab = _wrap(tile["label"], label_font, (tile_w - 36) * c.s, 3 if extra else 2)
             ty = c.lines(x0 + 18, y + 72, lab, c.font("sans", 16, 600), INK, 21)
             if tile.get("detail") and ty < y + tile_h - 22:
                 detail = _wrap(tile["detail"], c.font("sans", 15, 400), (tile_w - 36) * c.s, 1)
@@ -489,9 +494,12 @@ def _panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
         left, right = px + 4, px + pw - 8
         ptop, pbottom = py + 34, py + ph - 24
 
-        def xpos(year: int, left: float = left, right: float = right) -> float:
-            span = (years[-1] - years[0]) or 1
-            return left + 22 + (year - years[0]) / span * (right - left - 44)
+        # HHI panels share their years; yearly series each span their own
+        own = years if hhi else sorted({int(r["group"]) for r in mine})
+
+        def xpos(year: int, left: float = left, right: float = right, own: list = own) -> float:
+            span = (own[-1] - own[0]) or 1
+            return left + 22 + (year - own[0]) / span * (right - left - 44)
 
         def ypos(v: float, ptop: float = ptop, pbottom: float = pbottom, top: float = top) -> float:
             return pbottom - v / top * (pbottom - ptop)
@@ -515,17 +523,15 @@ def _panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
                     INK,
                     anchor="ms",
                 )
-        for year in years if len(years) <= 8 else [y for y in years if y % 5 == 0]:
+        for year in own if len(own) <= 8 else [y for y in own if y % 5 == 0]:
             c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
 
 
 def _show(value: float, unit: str, lang: str) -> str:
-    """A panel's value label: an index, a share or euros."""
+    """A panel's value label: an index, a share, euros, euros per kg or kg."""
     if unit == "hhi":
         return fmt_number(value, 0, lang)
-    if unit == "share":
-        return fmt_pct(value, lang)
-    return fmt_eur(value, lang)
+    return fmt_measure(value, unit, lang)
 
 
 def _points(c: _Canvas, points: list[str], box: tuple, lang: str) -> None:
