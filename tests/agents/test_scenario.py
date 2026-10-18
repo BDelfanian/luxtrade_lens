@@ -77,7 +77,8 @@ GOOD_PLAN = plan_of(
 
 def answer_from_steps(user: str) -> ScenarioAnswer:
     """A well-behaved answer writer: each point quotes one answered step's first fact."""
-    payload = user.split("STEPS:\n", 1)[1].split("\n\nPROBLEMS", 1)[0]
+    payload = user.split("STEPS:\n", 1)[1].split("\n\nPREVIOUS DRAFT", 1)[0]
+    payload = payload.split("\n\nPROBLEMS", 1)[0]
     steps = [s for s in json.loads(payload) if s["answered"] and s["facts"]]
     return ScenarioAnswer(
         headline="Exports are spread over more products than imports over partners.",
@@ -394,6 +395,11 @@ def test_a_headline_that_does_not_follow_is_redrafted(builder):
     assert calls.count("scenario_answer") == 2 and calls.count("scenario_review") == 2
     redraft = [user for step, user in b.assistant.llm.calls if step == "scenario_answer"][1]
     assert "PROBLEMS in the previous draft" in redraft and "wrong direction" in redraft
+    # the draft itself goes back too: at temperature 0 the same prompt gives the same draft
+    previous = json.loads(redraft.split("PREVIOUS DRAFT:\n", 1)[1].split("\n\nPROBLEMS", 1)[0])
+    assert (
+        previous["headline"] == "Exports are spread over more products than imports over partners."
+    )
 
 
 def test_a_proposed_share_of_nothing_is_dropped():

@@ -7,11 +7,19 @@ fails the grounding check, and the chart's takeaway title.
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from luxtrade.agents.analyse import Analysis
+from luxtrade.agents.analyse import HHI_HIGH, HHI_MODERATE, Analysis
 from luxtrade.agents.spec import SPLIT_BREAKDOWNS, Limitation, QuerySpec
 from luxtrade.analytics import rankings, timeseries
 from luxtrade.semantic.layer import SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_eur, fmt_measure, fmt_pct, fmt_period, month_name
+from luxtrade.viz.format import (
+    flow_label,
+    fmt_eur,
+    fmt_measure,
+    fmt_number,
+    fmt_pct,
+    fmt_period,
+    month_name,
+)
 
 _T = {
     "rank": {
@@ -417,6 +425,222 @@ def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str): 
     return facts, sents, title
 
 
+_HHI = {
+    "across": {
+        "partner": {"en": "partners", "fr": "partenaires", "de": "Partner"},
+        "product": {"en": "product groups", "fr": "groupes de produits", "de": "Warengruppen"},
+        "HS2": {"en": "product chapters", "fr": "chapitres de produits", "de": "Warenkapitel"},
+    },
+    "label": {
+        "en": "Concentration (HHI) of {flow} across {across}",
+        "fr": "Concentration (HHI) des {flow} entre {across}",
+        "de": "Konzentration (HHI) der {flow} über {across}",
+    },
+    "level": {
+        "low": {
+            "en": "unconcentrated (below {a})",
+            "fr": "peu concentré (moins de {a})",
+            "de": "gering konzentriert (unter {a})",
+        },
+        "mid": {
+            "en": "moderately concentrated ({a} to {b})",
+            "fr": "modérément concentré ({a} à {b})",
+            "de": "mäßig konzentriert ({a} bis {b})",
+        },
+        "high": {
+            "en": "highly concentrated (above {b})",
+            "fr": "fortement concentré (plus de {b})",
+            "de": "hoch konzentriert (über {b})",
+        },
+    },
+    "change": {
+        "en": "{label}, change {p0}–{p1}: {chg}, {direction}",
+        "fr": "{label}, évolution {p0}–{p1} : {chg}, {direction}",
+        "de": "{label}, Veränderung {p0}–{p1}: {chg}, {direction}",
+    },
+    # what a change of the index means, so the answer never infers it the wrong way round
+    "direction": {
+        "down": {
+            "en": "less concentrated (more diversified)",
+            "fr": "moins concentré (plus diversifié)",
+            "de": "weniger konzentriert (breiter gestreut)",
+        },
+        "up": {
+            "en": "more concentrated (less diversified)",
+            "fr": "plus concentré (moins diversifié)",
+            "de": "stärker konzentriert (weniger gestreut)",
+        },
+        "flat": {
+            "en": "about as concentrated as before",
+            "fr": "concentration à peu près inchangée",
+            "de": "etwa gleich stark konzentriert",
+        },
+    },
+    "move": {
+        "en": "{label}: the largest move was between {pa} and {pb} ({va} to {vb})",
+        "fr": "{label} : la plus forte variation a eu lieu entre {pa} et {pb} ({va} à {vb})",
+        "de": "{label}: die größte Veränderung lag zwischen {pa} und {pb} ({va} auf {vb})",
+    },
+    "flat": {
+        "en": "{label}: from {pa} to {pb} it stayed between {lo} and {hi}",
+        "fr": "{label} : de {pa} à {pb}, il est resté entre {lo} et {hi}",
+        "de": "{label}: von {pa} bis {pb} blieb er zwischen {lo} und {hi}",
+    },
+    "equivalent": {
+        "en": "{label}, {year}: the same as {k} equally sized {across} ({n} traded)",
+        "fr": "{label}, {year} : équivaut à {k} {across} de même taille ({n} au total)",
+        "de": "{label}, {year}: entspricht {k} gleich großen {across} ({n} insgesamt)",
+    },
+    "top": {
+        "en": "Largest of the {n} {across} in {flow} {period}: {name}, {share} of the flow",
+        "fr": "Premier des {n} {across} pour les {flow} {period} : {name}, {share} du flux",
+        "de": "Größte(r) der {n} {across} bei den {flow} {period}: {name}, {share} des Flusses",
+    },
+    "sentence": {
+        "en": "Between {p0} and {p1}, the concentration of {flow} across {across} (HHI) went "
+        "from {v0} to {v1} ({chg}): {level}.",
+        "fr": "Entre {p0} et {p1}, la concentration des {flow} entre {across} (HHI) est passée "
+        "de {v0} à {v1} ({chg}) : {level}.",
+        "de": "Zwischen {p0} und {p1} entwickelte sich die Konzentration der {flow} über "
+        "{across} (HHI) von {v0} auf {v1} ({chg}): {level}.",
+    },
+}
+
+
+def hhi_level(value: float, lang: str) -> str:
+    """The reading of an HHI value (US Merger Guidelines 2023), with its thresholds."""
+    band = "low" if value < HHI_MODERATE else ("mid" if value <= HHI_HIGH else "high")
+    a, b = fmt_number(HHI_MODERATE, 0, lang), fmt_number(HHI_HIGH, 0, lang)
+    return _HHI["level"][band][lang].format(a=a, b=b)
+
+
+def _shape_facts(g: pd.DataFrame, label: str, flow: object, lang: str) -> list[Fact]:
+    """When the index moved: its largest step, and the range it kept after it (if narrow).
+
+    Seen on real data: imports by product, 880 → 617 → 621 → 554 → 562, written up as
+    "stable" over 2005–2025. The facts now say the fall came in 2005–2010 and the index stayed
+    between 554 and 621 after, so the answer can say both.
+    """
+    if len(g) < 3:
+        return []
+    values, years = list(g["value"].astype(float)), [int(p) for p in g["period"]]
+    i = max(range(len(values) - 1), key=lambda k: abs(values[k + 1] - values[k]))
+
+    def n(value: float) -> str:
+        return fmt_number(value, 0, lang)
+
+    out = [
+        Fact(
+            key=f"{flow}.hhi.move",
+            text=_HHI["move"][lang].format(
+                label=label, pa=years[i], pb=years[i + 1], va=n(values[i]), vb=n(values[i + 1])
+            ),
+        )
+    ]
+    after = values[i + 1 :]
+    if len(after) >= 2 and max(after) <= 1.15 * min(after):  # within about ±7 % of the middle
+        out.append(
+            Fact(
+                key=f"{flow}.hhi.flat",
+                text=_HHI["flat"][lang].format(
+                    label=label, pa=years[i + 1], pb=years[-1], lo=n(min(after)), hi=n(max(after))
+                ),
+            )
+        )
+    return out
+
+
+def _concentration_facts(spec: QuerySpec, a: Analysis, lang: str):  # noqa: ANN202
+    """Each year's index and its reading, the change, and the largest item at both ends.
+
+    With up to six years every year is a fact (an "every five years" series); longer series
+    give the first and last year, the highest and the lowest.
+    """
+    facts, sents, title = [], [], ""
+    level = spec.product_level if spec.breakdown == "product" else "partner"
+    across = _HHI["across"].get(level or "", _HHI["across"]["product"])[lang]
+    for flow, g in a.main.groupby("flow", sort=True):
+        g = g.sort_values("period").reset_index(drop=True)
+        fl = flow_label(str(flow), lang)
+        label = _HHI["label"][lang].format(flow=fl, across=across)
+        if len(g) <= 6:
+            shown = list(g.index)
+        else:
+            shown = sorted({0, len(g) - 1, int(g["value"].idxmax()), int(g["value"].idxmin())})
+        for i in shown:
+            row = g.loc[i]
+            facts.append(
+                Fact(
+                    key=f"{flow}.hhi.{int(row['period'])}",
+                    text=f"{label}, {int(row['period'])}: {fmt_number(row['value'], 0, lang)}, "
+                    f"{hhi_level(float(row['value']), lang)}",
+                )
+            )
+        first, last = g.iloc[0], g.iloc[-1]
+        p0, p1 = int(first["period"]), int(last["period"])
+        v0, v1 = float(first["value"]), float(last["value"])
+        chg = timeseries.change_pct(v0, v1)
+        chg_text = fmt_pct(chg, lang, signed=True) if chg is not None else "–"
+        if p0 != p1:
+            facts.append(
+                Fact(
+                    key=f"{flow}.hhi.change",
+                    text=_HHI["change"][lang].format(
+                        label=label,
+                        p0=p0,
+                        p1=p1,
+                        chg=chg_text,
+                        direction=_HHI["direction"][
+                            "flat" if abs(chg or 0) < 5 else ("up" if v1 > v0 else "down")
+                        ][lang],
+                    ),
+                )
+            )
+        facts += _shape_facts(g, label, flow, lang)
+        for row in (first, last) if p0 != p1 else (last,):  # 10,000 / HHI: the main items
+            facts.append(
+                Fact(
+                    key=f"{flow}.hhi.equivalent.{int(row['period'])}",
+                    text=_HHI["equivalent"][lang].format(
+                        label=label,
+                        year=int(row["period"]),
+                        k=fmt_number(10_000 / float(row["value"]), 1, lang),
+                        across=across,
+                        n=int(row["n"]),
+                    ),
+                )
+            )
+        for row in (first, last) if p0 != p1 else (last,):
+            facts.append(
+                Fact(
+                    key=f"{flow}.hhi.top.{int(row['period'])}",
+                    text=_HHI["top"][lang].format(
+                        n=int(row["n"]),
+                        across=across,
+                        flow=fl,
+                        period=int(row["period"]),
+                        name=row["top_label"],
+                        share=fmt_pct(float(row["top_share"]), lang),
+                    ),
+                )
+            )
+        sents.append(
+            _HHI["sentence"][lang].format(
+                p0=p0,
+                p1=p1,
+                flow=fl,
+                across=across,
+                v0=fmt_number(v0, 0, lang),
+                v1=fmt_number(v1, 0, lang),
+                chg=chg_text,
+                level=hhi_level(v1, lang),
+            )
+        )
+        if not title:
+            title = f"{label}: {fmt_number(v0, 0, lang)} → {fmt_number(v1, 0, lang)} ({p0}–{p1})"
+    return facts, sents, title
+
+
 def _py(value: object) -> object:
     if isinstance(value, pd.Timestamp):
         return value.date()
@@ -440,6 +664,8 @@ def build_fact_sheet(
     title = ""
     if a is None or a.main.empty:
         sents.append(_t("nodata", lang))
+    elif spec.measure == "hhi":
+        facts, sents, title = _concentration_facts(spec, a, lang)
     elif spec.intent in ("ranking", "composition") and spec.breakdown in SPLIT_BREAKDOWNS:
         facts, sents, title = _split_facts(spec, a, sem, lang)
     elif spec.intent in ("ranking", "composition", "drilldown") and spec.measure == "change":

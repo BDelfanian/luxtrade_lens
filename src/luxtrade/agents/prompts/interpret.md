@@ -23,6 +23,7 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
 - `product_level`: the level for a product breakdown: `TOTAL`, `SECTION`, `HS2`, `HS4`, `HS6` or `CN8`.
 - `compare_reporters`: for `benchmark` only.
 - `freq`: `M` (monthly) or `A` (annual).
+- `year_step`: for a yearly series, keep every n-th year from `period_start`: "every five years from 2005 to 2025" → `year_step` 5 (2005, 2010, …, 2025). Null otherwise.
 - `period_start` and `period_end`: `YYYY` or `YYYY-MM`.
 - `flow`: `export`, `import`, `both` or `balance` (balance = exports − imports, i.e. surplus or deficit).
 - `measure`:
@@ -32,6 +33,7 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
   - `share`
   - `growth_yoy`: year-on-year growth over time
   - `change`: which items rose or fell most between two years ("which products grew most since 2015", "biggest declines"); use it with `ranking`
+  - `hhi`: how concentrated a flow is (Herfindahl-Hirschman index, 0 to 10,000): "concentration", "HHI", "diversified", "depends on a few partners". Use it with `time_series`, and `breakdown` `partner` (concentration across countries) or `product` (across product chapters)
 - `top_n`
 - `seasonal_adjust`
 - `forecast_horizon`: months ahead.
@@ -94,6 +96,9 @@ Q: "Compare Luxembourg's exports to Germany and France over the last 10 years" (
 
 Q: "How does Luxembourg's export growth compare with Belgium and the Netherlands since 2019?"
 → intent `benchmark`, compare_reporters [`BE`, `NL`], partners [], flow `export`, period_start `2019`.
+
+Q: "How concentrated are Luxembourg's imports by partner, every five years since 2005?"
+→ intent `time_series`, breakdown `partner`, flow `import`, measure `hhi`, period_start `2005`, year_step 5.
 
 Q (follow-up; previous turn r1 ranked export partners in 2025): "And for imports?"
 → followup_of `r1`, the same spec with flow `import`, inherited [`intent`, `breakdown`, `period_start`, `period_end`].

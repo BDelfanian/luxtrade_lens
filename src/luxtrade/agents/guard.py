@@ -150,7 +150,7 @@ def check_spec(spec: QuerySpec, cov: Coverage) -> list[Limitation]:
     max_years = registry()["L05"]["max_years"]
     if fine and (end.year - start.year) > max_years and spec.intent != "benchmark":
         found.append(make("L05", "warn"))
-    if spec.measure in ("value_eur", "share", "growth_yoy", "change"):
+    if spec.measure in ("value_eur", "share", "growth_yoy", "change", "hhi"):
         found.append(make("L06", "warn"))
     if spec.measure in ("qty_kg", "unit_value"):
         found.append(make("L07", "warn"))

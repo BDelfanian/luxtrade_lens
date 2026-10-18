@@ -121,6 +121,9 @@ def _filters(spec: QuerySpec, shift_years: int = 0) -> list[str]:
             by_len.setdefault(len(code), []).append(code)
         parts = [_in(_PRODUCT_COL[n], codes) for n, codes in sorted(by_len.items())]
         where.append(parts[0] if len(parts) == 1 else "(" + " OR ".join(parts) + ")")
+    if spec.year_step and (spec.freq == "A" or spec.intent == "pivot"):
+        # "every five years from 2005": 2005, 2010, …, counted from the first year
+        where.append(f"(year - {start.year}) % {int(spec.year_step)} = 0")
     return where
 
 
@@ -146,6 +149,38 @@ def _render(select: list[str], view: str, where: list[str], group: list[str], or
     return sql + f"\nORDER BY {order}\nLIMIT {SQL_ROW_LIMIT}"
 
 
+def _hhi(spec: QuerySpec, view: str, where: list[str]) -> str:
+    """Concentration per year and flow: the sum of squared shares × 10,000 (Herfindahl-Hirschman).
+
+    Shares are of each year's flow across every item of the breakdown, not only the top ones:
+    product chapters (or the level asked for), or partners without the undisclosed ones (as in
+    the Overview's diversification card). Also returns how many items trade, the largest one
+    and its share, so the answer can say what drives the index.
+    """
+    if spec.breakdown == "partner":
+        key, where = "partner", [*where, "NOT partner_is_special"]
+    else:
+        key = _LEVEL_COL[spec.product_level or "HS2"]
+    filters = "\n    AND ".join(where)
+    return f"""WITH by_key AS (
+  SELECT year AS period, flow, {key} AS key, sum(value_eur) AS value_eur
+  FROM {view}
+  WHERE {filters}
+  GROUP BY year, flow, key
+), shares AS (
+  SELECT period, flow, key,
+         value_eur / sum(value_eur) OVER (PARTITION BY period, flow) AS s
+  FROM by_key
+  WHERE value_eur > 0
+)
+SELECT period, flow, 10000 * sum(s * s) AS hhi, count(*) AS n,
+       arg_max(key, s) AS top_key, 100 * max(s) AS top_share
+FROM shares
+GROUP BY period, flow
+ORDER BY period, flow
+LIMIT {SQL_ROW_LIMIT}"""
+
+
 def compile_spec(spec: QuerySpec) -> CompiledQuery:
     """Compile a resolved spec into SQL over the semantic views."""
     if spec.intent == "benchmark":
@@ -158,7 +193,9 @@ def compile_spec(spec: QuerySpec) -> CompiledQuery:
     bucket = "year" if spec.freq == "A" else "period"  # group by the column, alias it as period
     measures = _measures(detail)
 
-    if spec.intent in RANKED_INTENTS and spec.measure == "change":
+    if spec.measure == "hhi":
+        sql = _hhi(spec, view, where)
+    elif spec.intent in RANKED_INTENTS and spec.measure == "change":
         # only the two years compared: the change is computed per key in the analysis step
         years = sorted({int(spec.period_start[:4]), int(spec.period_end[:4])})
         where.append(f"year IN ({', '.join(map(str, years))})")

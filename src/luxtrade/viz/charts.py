@@ -55,6 +55,8 @@ def _y(values: pd.Series, measure: str) -> tuple[pd.Series, str, str]:
         return values, "€/kg", "€/kg"
     if measure == "index":
         return values, "index", "index"
+    if measure == "hhi":
+        return values, "HHI", "HHI"
     return values / 1e6, "M€", "M€"
 
 
@@ -63,6 +65,8 @@ def _hover(values: pd.Series, measure: str, lang: str) -> list[str]:
         return [fmt_pct(v, lang) if pd.notna(v) else "–" for v in values]
     if measure in ("value_eur",):
         return [fmt_eur(v, lang) if pd.notna(v) else "–" for v in values]
+    if measure == "hhi":
+        return [f"HHI {fmt_number(v, 0, lang)}" if pd.notna(v) else "–" for v in values]
     return [f"{v:,.1f}" if pd.notna(v) else "–" for v in values]
 
 
@@ -230,7 +234,7 @@ def lines(
                 x=part["period"],
                 y=y,
                 name=name,
-                mode="lines",
+                mode="lines+markers" if measure == "hhi" else "lines",
                 line={
                     "width": 2,
                     "color": colors.get(k, NEUTRAL),
@@ -243,6 +247,10 @@ def lines(
                 hovertemplate="%{x}<br>%{customdata}<extra>" + name + "</extra>",
             )
     fig.update_layout(hovermode="x unified", showlegend=len(fig.data) > 1)
+    if measure == "hhi":
+        _hhi_levels(fig, lang)
+        fig.update_yaxes(rangemode="tozero")
+        fig.update_xaxes(tickmode="array", tickvals=sorted(main["period"].unique()))
     if monthly:
         fig.update_xaxes(rangeslider={"visible": True, "thickness": 0.06})
     return _layout(fig, title, y_title=_y(main["value"], measure)[1])
@@ -575,6 +583,28 @@ def overview_figures(
     if key == "peers":
         return bench(main, titles[0], lang)
     return []
+
+
+HHI_LEVELS = {  # US Merger Guidelines (2023), as on the Overview card
+    1_000: {"en": "moderately concentrated", "fr": "concentration modérée", "de": "mäßig"},
+    1_800: {"en": "highly concentrated", "fr": "forte concentration", "de": "hoch"},
+}
+
+
+def _hhi_levels(fig: go.Figure, lang: str) -> None:
+    """Dashed reference lines where concentration becomes moderate and high."""
+    for level, names in HHI_LEVELS.items():
+        fig.add_hline(y=level, line={"color": NEUTRAL, "width": 1, "dash": "dash"})
+        fig.add_annotation(
+            x=0,
+            xref="paper",
+            y=level,
+            yanchor="bottom",
+            xanchor="left",
+            text=f"{names.get(lang, names['en'])} (> {fmt_number(level, 0, lang)})",
+            showarrow=False,
+            font={"size": 11, "color": TEXT_2},
+        )
 
 
 def build_figures(
@@ -1052,6 +1082,8 @@ def evidence_bars(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
     ``change``: one group of bars per period, the items the answer is about in colour and the
     whole flow in gray (like the crisis card). ``share``: one group per item, a bar per year.
     """
+    if kind == "concentration":
+        return evidence_hhi(rows, lang)
     groups = list(dict.fromkeys(rows["group"]))
     series = list(dict.fromkeys(rows["series"]))
     fig = go.Figure()
@@ -1089,3 +1121,74 @@ def evidence_bars(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
     else:
         fig.update_yaxes(ticksuffix=" %", range=[0, high * 1.25])
     return _hero_layout(fig, height=380)
+
+
+def evidence_hhi(rows: pd.DataFrame, lang: str) -> go.Figure:
+    """Concentration over time as small multiples, on one shared scale.
+
+    Exports and imports in rows, by product and by partner in columns (blue and orange, as on
+    the Overview card), with the levels where concentration becomes moderate and high.
+    """
+    panels = list(dict.fromkeys(rows["series"]))
+    cols = 2 if len(panels) > 1 else 1
+    n_rows = (len(panels) + cols - 1) // cols
+    fig = make_subplots(
+        rows=n_rows,
+        cols=cols,
+        subplot_titles=panels,
+        shared_yaxes=True,
+        shared_xaxes=True,
+        vertical_spacing=0.16,
+        horizontal_spacing=0.06,
+    )
+    top = max(float(rows["value"].max()) * 1.18, 2_100)
+    for i, panel in enumerate(panels):
+        part = rows[rows["series"] == panel].sort_values("group")
+        color = SERIES[1] if part["dim"].iloc[0] == "partner" else SERIES[0]
+        r, c = i // cols + 1, i % cols + 1
+        fig.add_scatter(
+            x=part["group"],
+            y=part["value"],
+            mode="lines+markers+text",
+            line={"width": 3, "color": color},
+            marker={"size": 7, "color": color},
+            text=[
+                fmt_number(v, 0, lang) if j in (0, len(part) - 1) else ""
+                for j, v in enumerate(part["value"])
+            ],
+            textposition="top center",
+            textfont={"size": 12, "color": TEXT},
+            hovertemplate="%{x}: HHI %{y:,.0f}<extra>" + panel + "</extra>",
+            showlegend=False,
+            row=r,
+            col=c,
+        )
+        for level in HHI_LEVELS:
+            fig.add_hline(
+                y=level,
+                line={"color": NEUTRAL, "width": 1, "dash": "dash" if level > 1_000 else "dot"},
+                row=r,
+                col=c,
+            )
+    years = sorted(rows["group"].unique())
+    fig.update_xaxes(tickmode="array", tickvals=years, range=[years[0] - 1.5, years[-1] + 1.5])
+    fig.update_yaxes(range=[0, top])
+    fig.update_annotations(font={"size": 13, "color": TEXT})
+    high = HHI_LEVELS[1_800]
+    fig.add_annotation(
+        x=0,
+        xref="paper",
+        y=0,
+        yref="paper",
+        yanchor="top",
+        yshift=-30,  # below the year labels, whatever the height
+        showarrow=False,
+        xanchor="left",
+        text=f"- - {high.get(lang, high['en'])} (> {fmt_number(1_800, 0, lang)})   "
+        f"····· {HHI_LEVELS[1_000].get(lang, 'moderately concentrated')} "
+        f"(> {fmt_number(1_000, 0, lang)})",
+        font={"size": 11, "color": TEXT_2},
+    )
+    fig = _hero_layout(fig, height=300 * n_rows + 80)
+    fig.update_layout(margin={"l": 8, "r": 8, "t": 30, "b": 52})  # panel titles, legend line
+    return fig

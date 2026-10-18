@@ -24,7 +24,8 @@ Breakdown = Literal["partner", "product", "partner_group", "confidentiality", "n
 Level = Literal["TOTAL", "SECTION", "HS2", "HS4", "HS6", "CN8"]
 Flow = Literal["import", "export", "both", "balance"]
 # change: end of period minus start of period, per key (rankings of rises and falls)
-Measure = Literal["value_eur", "qty_kg", "unit_value", "share", "growth_yoy", "change"]
+# hhi: concentration of a flow across the breakdown's items (Herfindahl-Hirschman, 0-10,000)
+Measure = Literal["value_eur", "qty_kg", "unit_value", "share", "growth_yoy", "change", "hhi"]
 View = Literal[
     "auto", "table", "bar", "line", "area", "stacked", "heatmap", "map", "treemap", "pivot", "kpi"
 ]
@@ -55,6 +56,9 @@ class QuerySpec(BaseModel):
     products: list[str] = Field(default_factory=list, description="product codes, any level")
     product_level: Level | None = None
     freq: Literal["M", "A"] | None = None
+    year_step: int | None = Field(
+        None, description="yearly series only: every n-th year from period_start (5: 2005, 2010…)"
+    )
     period_start: str | None = Field(None, description="'YYYY' or 'YYYY-MM'")
     period_end: str | None = Field(None, description="'YYYY' or 'YYYY-MM'")
     flow: Flow | None = None

@@ -9,6 +9,9 @@ chart and a few key figures. No LLM is involved:
   else the one that falls most often; it is compared with the whole flow ("All exports").
 - Every value comes from re-running each step's own stored, guarded SQL, so items outside a
   step's top 10 and the whole flow are exact too.
+- Steps that compute the concentration index (``measure`` "hhi") form one figure with a panel
+  per flow and dimension (exports and imports, by product and by partner), like the Overview's
+  diversification card, with each panel's first and last value as key figures.
 """
 
 import re
@@ -19,7 +22,7 @@ from pydantic import BaseModel, Field
 
 from luxtrade.runs.store import RunRecord
 from luxtrade.semantic.layer import QueryError, SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_pct
+from luxtrade.viz.format import flow_label, fmt_number, fmt_pct
 
 MAX_FIGURES = 2
 MAX_FOCUS = {"change": 2, "share": 3}
@@ -68,6 +71,33 @@ _T = {
         "fr": "{focus} : évolution de la part",
         "de": "{focus}: Veränderung des Anteils",
     },
+    "t_hhi": {
+        "en": "Concentration (HHI), {y0}–{y1}",
+        "fr": "Concentration (HHI), {y0}–{y1}",
+        "de": "Konzentration (HHI), {y0}–{y1}",
+    },
+    "panel": {
+        "en": {"product": "{flow} by product", "partner": "{flow} by partner"},
+        "fr": {"product": "{flow} par produit", "partner": "{flow} par partenaire"},
+        "de": {"product": "{flow} nach Waren", "partner": "{flow} nach Partnern"},
+    },
+    "k_hhi": {"en": "{panel}, {year}", "fr": "{panel}, {year}", "de": "{panel}, {year}"},
+    "k_hhi_d": {
+        "en": "{value} in {year} ({chg})",
+        "fr": "{value} en {year} ({chg})",
+        "de": "{value} im Jahr {year} ({chg})",
+    },
+    "note_hhi": {
+        "en": "Computed by code from the steps' own SQL (steps {steps}): the sum of squared "
+        "shares × 10,000 across every partner or product chapter; above 1,800 counts as highly "
+        "concentrated, below 1,000 as unconcentrated.",
+        "fr": "Calculé par le code à partir du SQL des étapes ({steps}) : somme des parts au "
+        "carré × 10 000 sur tous les partenaires ou chapitres ; au-delà de 1 800, la "
+        "concentration est forte, en dessous de 1 000, faible.",
+        "de": "Vom Code aus dem SQL der Schritte berechnet ({steps}): Summe der quadrierten "
+        "Anteile × 10.000 über alle Partner oder Warenkapitel; über 1.800 gilt als hoch, unter "
+        "1.000 als gering konzentriert.",
+    },
     "note": {
         "en": "Computed by code from the steps' own SQL (steps {steps}); the whole flow is all "
         "{flow} of each step's scope.",
@@ -86,7 +116,7 @@ def _t(key: str, lang: str, **values: object) -> str:
 class EvidenceFigure(BaseModel):
     """One chart of a scenario's answer and the key figures read from it."""
 
-    kind: Literal["change", "share"]
+    kind: Literal["change", "share", "concentration"]
     title: str
     flow: str
     steps: list[int]
@@ -178,15 +208,30 @@ def compose(
     lang: str = "en",
 ) -> list[EvidenceFigure]:
     """Charts and key figures for an answer: one per group of comparable steps (at most two)."""
+    figures = []
+    hhi_steps = [
+        s.n
+        for s in chain
+        if (rec := records.get(s.n)) is not None
+        and rec.status == "answered"
+        and rec.sql
+        and (rec.spec or {}).get("measure") == "hhi"
+    ]
+    if hhi_steps:
+        try:
+            fig = _concentration(hhi_steps, records, sem, lang)
+        except (QueryError, KeyError, ValueError):
+            fig = None
+        if fig is not None:
+            figures.append(fig)
     groups: dict[tuple, list[int]] = {}
     for step in chain:
         rec = records.get(step.n)
         shape = _shape(rec) if rec is not None else None
         if shape is not None:
             groups.setdefault(shape, []).append(step.n)
-    figures = []
     ordered = sorted((g for g in groups.items() if len(g[1]) >= 2), key=lambda g: -len(g[1]))
-    for shape, steps in ordered[:MAX_FIGURES]:
+    for shape, steps in ordered[: MAX_FIGURES - len(figures)]:
         steps = sorted(steps, key=lambda n: records[n].spec.get("period_start", ""))
         try:
             fig = _figure(shape, steps, records, headline, text, sem, lang)
@@ -195,6 +240,76 @@ def compose(
         if fig is not None:
             figures.append(fig)
     return figures
+
+
+def _concentration(
+    steps: list[int], records: dict[int, RunRecord], sem: SemanticLayer, lang: str
+) -> EvidenceFigure | None:
+    """One panel per flow and dimension, each step's index re-computed from its own SQL.
+
+    Panels are ordered exports before imports, by product before by partner, so four steps
+    make a 2 × 2 grid. A panel's tile shows its last value; it is red when concentration rose
+    (more dependence) and green when it fell (more spread), as on the Overview card.
+    """
+    rows = []
+    for n in steps:
+        spec = records[n].spec
+        dim = "partner" if spec.get("breakdown") == "partner" else "product"
+        df = sem.query(records[n].sql)
+        for r in df.itertuples():
+            panel = (
+                _T["panel"]
+                .get(lang, _T["panel"]["en"])[dim]
+                .format(flow=flow_label(str(r.flow), lang).capitalize())
+            )
+            rows.append(
+                {
+                    "group": int(r.period),
+                    "series": panel,
+                    "value": float(r.hhi),
+                    "step": n,
+                    "flow": str(r.flow),
+                    "dim": dim,
+                }
+            )
+    if not rows:
+        return None
+    order = {("export", "product"): 0, ("export", "partner"): 1}
+    order |= {("import", "product"): 2, ("import", "partner"): 3}
+    rows.sort(key=lambda r: (order.get((r["flow"], r["dim"]), 9), r["group"]))
+    tiles = []
+    for panel in dict.fromkeys(r["series"] for r in rows):
+        mine = [r for r in rows if r["series"] == panel]
+        first, last = mine[0], mine[-1]
+        chg = 100 * (last["value"] / first["value"] - 1) if first["value"] else 0.0
+        tiles.append(
+            {
+                "value": fmt_number(last["value"], 0, lang),
+                "label": _t("k_hhi", lang, panel=panel, year=last["group"]),
+                "detail": _t(
+                    "k_hhi_d",
+                    lang,
+                    value=fmt_number(first["value"], 0, lang),
+                    year=first["group"],
+                    chg=fmt_pct(chg, lang, decimals=0, signed=True),
+                )
+                if len(mine) > 1
+                else "",
+                # red: more concentrated (more dependence); green: more spread
+                "tone": "down" if last["value"] > first["value"] else "up",
+            }
+        )
+    years = sorted({r["group"] for r in rows})
+    flows = {r["flow"] for r in rows}
+    return EvidenceFigure(
+        kind="concentration",
+        title=_t("t_hhi", lang, y0=years[0], y1=years[-1]),
+        flow=flows.pop() if len(flows) == 1 else "both",
+        steps=sorted(steps),
+        rows=rows,
+        tiles=tiles[:4],
+        note=_t("note_hhi", lang, steps=", ".join(map(str, sorted(steps)))),
+    )
 
 
 def _figure(

@@ -234,6 +234,7 @@ _MEASURE = {
     "share": "share of the whole flow in %",
     "growth_yoy": "year-on-year growth",
     "change": "change between the two years",
+    "hhi": "concentration index (HHI)",
 }
 _GROUP = {"EU27_2020": "EU27 partners", "EXTRA_EU27_2020": "non-EU27 partners"}
 
@@ -253,7 +254,10 @@ def describe(spec: dict | None) -> str:
         parts.append("vs " + ", ".join(spec.get("compare_reporters") or []) + " as reporters")
     breakdown = spec.get("breakdown")
     top = f" (top {spec['top_n']})" if spec.get("top_n") else ""
-    if breakdown == "partner":
+    if spec.get("measure") == "hhi":  # an index across every item, not a ranking
+        across = "partners" if breakdown == "partner" else f"{spec.get('product_level')} products"
+        parts.append(f"across all {across}")
+    elif breakdown == "partner":
         parts.append("by partner" + top)
     elif breakdown == "product":
         parts.append(f"by {spec.get('product_level') or 'HS2'} product" + top)
@@ -265,6 +269,8 @@ def describe(spec: dict | None) -> str:
     period = start if start == end else f"{start}–{end}"
     if spec.get("intent") in ("time_series", "seasonality", "forecast"):
         period += ", monthly" if spec.get("freq") == "M" else ", yearly"
+    if spec.get("year_step"):
+        period += f", every {spec['year_step']} years"
     parts += [period, _MEASURE.get(spec.get("measure") or "value_eur", "")]
     return " · ".join(p for p in parts if p)
 
@@ -838,9 +844,13 @@ class ScenarioBuilder:
                 ]
             )
             problems: list[str] = []
+            previous: dict = {}
             for _ in range(2):
                 prompt_user = user
-                if problems:
+                if problems:  # the draft itself too: at temperature 0 it would come back unchanged
+                    prompt_user += "\n\nPREVIOUS DRAFT:\n" + json.dumps(
+                        previous, ensure_ascii=False, indent=1
+                    )
                     prompt_user += "\n\nPROBLEMS in the previous draft:\n- " + "\n- ".join(problems)
                 try:
                     out = llm.parse(
@@ -853,6 +863,11 @@ class ScenarioBuilder:
                 except LLMError as exc:
                     notes.append(f"answer LLM failed: {exc}")
                     break
+                previous = {
+                    "headline": out.headline,
+                    "points": [p.text for p in out.points],
+                    "conclusion": out.conclusion,
+                }
                 review = review_answer(out, records, question, sem, lang)
                 problems = review.problems()
                 if review.blocking:

@@ -126,3 +126,25 @@ def test_the_caption_repeats_the_checked_words_and_says_how():
 def test_the_caption_follows_the_scenario_language():
     post = linkedin_post(content(language="fr"), steps=2)
     assert "Comment : j'ai demandé à LuxTrade Lens" in post and "Open source :" in post
+
+
+def test_a_concentration_figure_is_drawn_as_small_multiples():
+    rows = [
+        {"group": y, "series": f"{flow} by {dim}", "value": v, "step": k, "flow": flow, "dim": dim}
+        for k, (flow, dim, values) in enumerate(
+            [
+                ("Exports", "product", (1374, 1028, 764, 620, 602)),
+                ("Exports", "partner", (1091, 1041, 1169, 1273, 1281)),
+                ("Imports", "product", (880, 617, 621, 554, 562)),
+                ("Imports", "partner", (1561, 1809, 1615, 2061, 1882)),
+            ],
+            start=1,
+        )
+        for y, v in zip((2005, 2010, 2015, 2020, 2025), values, strict=True)
+    ]
+    tiles = [{"value": "602", "label": f"Panel {k}, 2025", "tone": "up"} for k in range(4)]
+    figure = {"kind": "concentration", "title": "Concentration (HHI), 2005–2025", "rows": rows}
+    c = content_from(record(), [], "data to Jun 2026")
+    c.figure, c.tiles = figure, tiles  # four tiles: one per panel
+    for size, expected in (("portrait", (1080, 1350)), ("square", (1080, 1080))):
+        assert size_of(render_card(c, size, scale=1)) == expected

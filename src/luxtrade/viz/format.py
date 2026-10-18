@@ -65,6 +65,8 @@ def fmt_measure(value: float | None, measure: str, lang: str = "en") -> str:
         return fmt_eur(value, lang).replace("M€", "M €").replace("€", "kg")
     if measure in ("share", "growth_yoy"):
         return fmt_pct(value, lang)
+    if measure == "hhi":  # a concentration index, 0 to 10,000: no unit
+        return MISSING if _missing(value) else fmt_number(value, 0, lang)
     return fmt_eur(value, lang)
 
 

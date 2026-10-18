@@ -4,6 +4,7 @@ Frame shapes (``Analysis.main``) are the contract for charts, facts and stored r
 - ranking/composition/drilldown: key, label, flow, value, share, rank, kind[, iso3]
   (measure "change": also base, change, change_pct; value is the last year, base the first)
 - time_series: period, [key, label,] flow, value
+  (measure "hhi": period, flow, value = index, n, top_key, top_label, top_share)
 - pivot: key, label, period, flow, value
 - single_value: period, flow, value
 - seasonality: period, flow, observed, trend, seasonal_factor, adjusted  (+ extra "profile")
@@ -236,6 +237,28 @@ def _time_series(
     return Analysis(main=df.reset_index(drop=True), methods=methods)
 
 
+HHI_MODERATE, HHI_HIGH = 1_000, 1_800  # US Merger Guidelines (2023), as on the Overview card
+
+
+def _concentration(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
+    """The concentration index per year and flow (computed in SQL), with its largest item."""
+    kind = _key_kind(spec)
+    main = df.rename(columns={"hhi": "value"}).sort_values(["period", "flow"])
+    main["top_label"] = [sem.label(str(k), kind, spec.language) for k in main["top_key"]]
+    across = (
+        "partners (undisclosed ones left out)"
+        if kind == "partner"
+        else (f"{spec.product_level or 'HS2'} product groups")
+    )
+    method = (
+        f"concentration = Herfindahl-Hirschman index (HHI) across all {across}: the sum of "
+        "squared shares of each year's flow × 10,000 (0 = spread evenly, 10,000 = one item); "
+        f"reading guide (US Merger Guidelines 2023): below {HHI_MODERATE:,} unconcentrated, "
+        f"above {HHI_HIGH:,} highly concentrated"
+    )
+    return Analysis(main=main.reset_index(drop=True), methods=[method])
+
+
 def _series(df: pd.DataFrame, flow: str) -> pd.Series:
     part = df[df["flow"] == flow]
     return pd.Series(part["value_eur"].to_numpy(), index=pd.DatetimeIndex(part["period"]))
@@ -302,7 +325,9 @@ def analyse(
     ``totals`` (from the total query of ``compile_sql.share_base``) makes shares relative to the
     whole flow rather than to the filtered selection; ``share_of`` names the filter left out.
     """
-    if spec.intent in RANKED_INTENTS and spec.measure == "change":
+    if spec.measure == "hhi":
+        result = _concentration(df, spec, sem)
+    elif spec.intent in RANKED_INTENTS and spec.measure == "change":
         result = _change(df, spec, sem)
     elif spec.intent in RANKED_INTENTS:
         result = _ranking(df, spec, sem, totals, share_of)

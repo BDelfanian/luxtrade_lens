@@ -66,6 +66,21 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
             s.intent = "time_series"
             notes.append("compared over time as one line per " + s.breakdown)
 
+    if s.measure == "hhi":
+        # a concentration index is one number per year and flow, taken across the items of a
+        # breakdown (partners or product chapters): a yearly series, also for a single year
+        if s.intent != "time_series":
+            s.intent = "time_series"
+            notes.append("concentration computed for each year")
+        if s.breakdown not in ("partner", "product"):
+            s.breakdown = "partner" if (s.products or not s.partners) else "product"
+            across = "partners" if s.breakdown == "partner" else "product chapters"
+            notes.append(f"concentration across {across} (not stated)")
+        if s.flow == "balance":
+            s.flow = "both"
+            notes.append("concentration of exports and of imports (a balance has no shares)")
+        s.freq = "A"
+
     if s.intent in ("ranking", "composition", "pivot") and s.breakdown == "none":
         s.breakdown = "partner" if (s.products or not s.partners) else "product"
         notes.append(f"broken down by {s.breakdown} (not stated)")
@@ -140,6 +155,16 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
         else:
             s.freq = "A"
 
+    if s.year_step is not None:  # "every five years": only for yearly series
+        if s.year_step < 2 or s.intent not in ("time_series", "pivot"):
+            s.year_step = None
+        elif s.measure == "growth_yoy":
+            s.year_step = None
+            notes.append("every year kept: year-on-year growth needs consecutive years")
+        elif s.freq != "A":
+            s.freq = "A"
+            notes.append(f"yearly values, every {s.year_step} years")
+
     # An annual series spanning several years never ends in an incomplete year: Jan–Jun of the
     # current year would read as a full-year collapse. A question about that year alone is kept.
     start_year, end_year = (_month(p, end=False).year for p in (s.period_start, s.period_end))
@@ -149,7 +174,9 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
             f"{end_year} is incomplete (data until {complete}): annual series end in {s.period_end}"
         )
 
-    if s.top_n is None and s.breakdown != "none":
+    if s.measure == "hhi":
+        s.top_n = None  # the index takes every item, not the top ones
+    elif s.top_n is None and s.breakdown != "none":
         s.top_n = DEFAULT_TOP_N
     if s.intent == "forecast":
         s.forecast_horizon = min(

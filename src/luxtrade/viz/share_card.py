@@ -20,7 +20,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from luxtrade.viz.format import fmt_pct, month_name
+from luxtrade.viz.format import fmt_number, fmt_pct, month_name
 
 ASSETS = Path(__file__).with_name("assets")
 REPO = "github.com/BDelfanian/luxtrade_lens"
@@ -258,7 +258,7 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
         fits[0] if fits else sizes[-1],
     )
     t_font = c.font("display", size_px, 750)
-    t_lines = _wrap(content.title, t_font, full, 3)
+    t_lines = _wrap(content.title, t_font, full, 3 if fits else 4)  # a long headline: 4 lines
     y = c.lines(m, y, t_lines, t_font, NAVY, round(size_px * 1.1)) + 12
     if content.subtitle:
         s_px = 24 if portrait else 22
@@ -267,7 +267,7 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     y += 22
 
     # the key figures
-    tiles = content.tiles[:3]
+    tiles = content.tiles[:4]
     if tiles:
         tile_h = 150 if portrait else 128
         gap = 16
@@ -291,7 +291,9 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     _footer(c, content, foot_y, foot_h, m)
     box = (m, y, width - m, foot_y - 28)
     c.rect(box, WHITE, radius=16, outline=LINE)
-    if content.figure and content.figure.get("rows"):
+    if content.figure and content.figure.get("kind") == "concentration":
+        _hhi_panels(c, content.figure, box, lang)
+    elif content.figure and content.figure.get("rows"):
         _chart(c, content.figure, box, lang)
     else:
         _points(c, content.points, box, lang)
@@ -397,6 +399,92 @@ def _chart(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
                 MUTED,
                 anchor="ma",
             )
+
+
+HHI_LEVELS = {
+    1_000: {"en": "moderately concentrated", "fr": "concentration modérée", "de": "mäßig"},
+    1_800: {"en": "highly concentrated", "fr": "forte concentration", "de": "hoch konzentriert"},
+}
+DIM_COLOR = {"product": "#2A78D6", "partner": "#EB6834"}
+
+
+def _dashed(c: _Canvas, x0: float, x1: float, y: float, fill: str, dash: float = 7) -> None:
+    """A horizontal dashed line."""
+    x = x0
+    while x < x1:
+        c.rect((x, y, min(x + dash, x1), y + 1.2), fill)
+        x += 2 * dash
+
+
+def _hhi_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
+    """Concentration as small multiples: a panel per flow and dimension, one shared scale."""
+    x0, y0, x1, y1 = box
+    rows = fig["rows"]
+    panels = list(dict.fromkeys(r["series"] for r in rows))
+    title_font = c.font("sans", 18, 600)
+    y = c.lines(
+        x0 + 20,
+        y0 + 16,
+        _wrap(fig["title"], title_font, (x1 - x0 - 40) * c.s, 1),
+        title_font,
+        INK,
+        24,
+    )
+    legend = c.font("sans", 14, 500)
+    lx = x1 - 20  # the two reference levels, right-aligned on the title line
+    for level, dash, color in ((1_000, 3, LINE), (1_800, 5, FAINT)):
+        names = HHI_LEVELS[level]
+        text = f"{fmt_number(level, 0, lang)} = {names.get(lang, names['en'])}"
+        lx -= c.length(text, legend)
+        c.text((lx, y - 21), text, legend, MUTED)
+        _dashed(c, lx - 38, lx - 8, y - 12, color if level > 1_000 else FAINT, dash)
+        lx -= 58
+    cols = 2 if len(panels) > 1 else 1
+    n_rows = (len(panels) + cols - 1) // cols
+    top = max(max(r["value"] for r in rows) * 1.2, 2_100)
+    years = sorted({int(r["group"]) for r in rows})
+    gap_x, gap_y = 28, 18
+    pw = (x1 - x0 - 40 - gap_x * (cols - 1)) / cols
+    ph = (y1 - y - 14 - gap_y * (n_rows - 1)) / n_rows
+    label_font, value_font, axis = (
+        c.font("sans", 16, 600),
+        c.font("sans", 15, 700),
+        c.font("sans", 13, 400),
+    )
+    for i, panel in enumerate(panels):
+        px = x0 + 20 + (i % cols) * (pw + gap_x)
+        py = y + 6 + (i // cols) * (ph + gap_y)
+        mine = sorted((r for r in rows if r["series"] == panel), key=lambda r: r["group"])
+        color = DIM_COLOR.get(mine[0].get("dim", "product"), BLUE)
+        c.text((px, py), panel, label_font, INK)
+        left, right = px + 4, px + pw - 8
+        ptop, pbottom = py + 34, py + ph - 24
+
+        def xpos(year: int, left: float = left, right: float = right) -> float:
+            span = (years[-1] - years[0]) or 1
+            return left + 22 + (year - years[0]) / span * (right - left - 44)
+
+        def ypos(v: float, ptop: float = ptop, pbottom: float = pbottom) -> float:
+            return pbottom - v / top * (pbottom - ptop)
+
+        c.rect((left, pbottom, right, pbottom + 1), LINE)
+        _dashed(c, left, right, ypos(1_800), FAINT)
+        _dashed(c, left, right, ypos(1_000), LINE, 3)
+        pts = [(xpos(int(r["group"])), ypos(r["value"])) for r in mine]
+        if len(pts) > 1:
+            c.draw.line([tuple(c.p(*pt)) for pt in pts], fill=color, width=3 * c.s, joint="curve")
+        for k, (px_, py_) in enumerate(pts):
+            c.draw.ellipse(c.p(px_ - 4.5, py_ - 4.5, px_ + 4.5, py_ + 4.5), fill=color)
+            if k in (0, len(pts) - 1):
+                c.text(
+                    (px_, py_ - 10),
+                    fmt_number(mine[k]["value"], 0, lang),
+                    value_font,
+                    INK,
+                    anchor="ms",
+                )
+        for year in years:
+            c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
 
 
 def _points(c: _Canvas, points: list[str], box: tuple, lang: str) -> None:
