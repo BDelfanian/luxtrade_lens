@@ -40,7 +40,6 @@ _T = {
         "fr": "LE COMMERCE EN UNE IMAGE",
         "de": "HANDEL IM BLICK",
     },
-    "week": {"en": "Week {w} · {d}", "fr": "Semaine {w} · {d}", "de": "Woche {w} · {d}"},
     "data": {"en": "data to {m} {y}", "fr": "données jusqu'à {m} {y}", "de": "Daten bis {m} {y}"},
     "points": {"en": "Key points", "fr": "Points clés", "de": "Kernpunkte"},
     "source": {
@@ -85,7 +84,6 @@ class CardContent:
     subtitle: str  # one sentence: the question's context and the answer's evidence
     question: str  # the question as asked (in the caption, not on the card)
     data_note: str  # e.g. "data to Jun 2026"
-    when: date
     lang: str = "en"
     topic: str = ""  # a short label above the title: the scenario's title
     tiles: list[dict] = field(default_factory=list)  # {"value", "label", "detail", "tone"}
@@ -109,7 +107,6 @@ def content_from(
         question=record.question,
         topic=record.title,
         data_note=data_note,
-        when=date.fromisoformat(record.created_at[:10]),
         lang=record.language,
         tiles=list(first.tiles) if first else [],
         figure=first.model_dump() if first else None,
@@ -229,19 +226,15 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     c.rect((0, 0, width, 7), RED)
     c.rect((0, 7, width, 14), SKY)
 
-    # header: the logo on the left, the series and the date on the right
+    # header: the logo on the left, the series on the right
     logo = c.font("display", 44, 800, opsz=44)  # as in the app: ExtraBold, tracked -0.035 em
     x = c.tracked((m, 44), "LuxTrade", logo, NAVY, -0.035)
     c.tracked((x + c.length(" ", logo), 44), "Lens", logo, BLUE, -0.035)
     kicker = c.font("sans", 14, 700)
     label = _t("kicker", lang)
     pill_w = c.length(label, kicker) + 28
-    c.rect((width - m - pill_w, 44, width - m, 72), RED, radius=14)
-    c.text((width - m - pill_w / 2, 58), label, kicker, WHITE, anchor="mm")
-    iso = content.when.isocalendar()
-    day = content.when
-    stamp = _t("week", lang, w=iso.week, d=f"{day.day} {month_name(day.month, lang)} {day.year}")
-    c.text((width - m, 82), stamp, c.font("sans", 16, 400), MUTED, anchor="ra")
+    c.rect((width - m - pill_w, 52, width - m, 82), RED, radius=15)  # centred on the logo
+    c.text((width - m - pill_w / 2, 67), label, kicker, WHITE, anchor="mm")
     c.rect((m, 118, width - m, 119), LINE)
 
     # the insight: topic label, title, subtitle (the question and its answer in one)

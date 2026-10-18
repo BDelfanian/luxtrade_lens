@@ -91,7 +91,6 @@ def test_the_content_comes_from_the_record_and_its_first_figure():
     assert c.subtitle == "Iron and steel is the most exposed."
     assert c.topic == "Crisis exposure of products"
     assert c.tiles == FIGURE.tiles and c.figure["rows"] == FIGURE.rows
-    assert c.when == date(2026, 10, 16)
 
 
 def test_the_share_text_leads_the_card():
