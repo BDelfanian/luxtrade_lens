@@ -468,3 +468,39 @@ def test_a_scenario_can_be_edited_and_run_again_as_a_new_one(app_env, processed_
     assert [s.question for s in new.steps] == [old.steps[0].question]
     assert ScenarioStore().load(old.scenario_id) is not None  # the revised scenario is kept
     assert any(b.key == "scn-based-on" for b in at.button)
+
+
+def test_the_scenario_history_can_be_renamed_starred_and_cleaned(app_env):
+    from luxtrade.runs.scenarios import ScenarioRecord, ScenarioStore
+
+    store = ScenarioStore()  # the app's own and example folders (app_env)
+    for sid, minute in (("aaaaaaaaaa", "10"), ("bbbbbbbbbb", "20")):
+        store.save(
+            ScenarioRecord(
+                scenario_id=sid,
+                session_id="s",
+                created_at=f"2026-10-18T18:{minute}:00+00:00",
+                question="How concentrated is trade?",
+                title="HHI Concentration Trends",
+            )
+        )
+    st.cache_resource.clear()  # the app's scenario store must read this test's folders
+    at = _app().run()
+    at.switch_page("app_pages/scenario.py").run()
+    assert not at.exception
+    opened = at.button(key="scn-open-aaaaaaaaaa")
+    assert ":gray[· 0 steps · 2026-10-18 " in opened.label  # date and time
+
+    at.button(key="scn-fav-aaaaaaaaaa").click().run()
+    assert store.load("aaaaaaaaaa").favorite
+    keys = [b.key for b in at.button if (b.key or "").startswith("scn-open-")]
+    assert keys[0] == "scn-open-aaaaaaaaaa"  # favourites first, although older
+
+    at.text_input(key="scn-name-aaaaaaaaaa").set_value("HHI, every five years").run()
+    at.button(key="scn-rename-aaaaaaaaaa").click().run()
+    assert store.load("aaaaaaaaaa").name == "HHI, every five years"
+    assert at.button(key="scn-open-aaaaaaaaaa").label.startswith("HHI, every five years ")
+
+    at.button(key="scn-delete-bbbbbbbbbb").click().run()
+    assert store.load("bbbbbbbbbb") is None
+    assert not any(b.key == "scn-open-bbbbbbbbbb" for b in at.button)

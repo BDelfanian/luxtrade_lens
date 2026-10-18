@@ -497,7 +497,7 @@ def check_answer(
 
 def to_markdown(record: ScenarioRecord, runs: dict[int, RunRecord]) -> str:
     """The scenario as a shareable Markdown report: answer, evidence, SQL and IDs."""
-    lines = [f"# {record.title or record.question}", "", f"**Question:** {record.question}", ""]
+    lines = [f"# {record.label}", "", f"**Question:** {record.question}", ""]
     lines += ["## Answer", "", f"**{record.headline}**", ""]
     for p in record.points:
         refs = ", ".join(f"step {n}" for n in p.get("steps", []))
@@ -1042,6 +1042,13 @@ class ScenarioBuilder:
             record.llm_usage += [u.__dict__ for u in llm.usage[start:]]
             self.store.save(record)
         return share
+
+    def rename(self, scenario_id: str, name: str) -> ScenarioRecord | None:
+        """Give a scenario the user's own name; its assistant session takes the name too."""
+        rec = self.store.rename(scenario_id, name)
+        if rec is not None:
+            self.assistant.sessions.retitle(rec.session_id, f"Scenario: {rec.label}")
+        return rec
 
     def records(self, record: ScenarioRecord) -> dict[int, RunRecord]:
         """The run records of a scenario's steps, by step number (missing ones left out)."""

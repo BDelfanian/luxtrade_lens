@@ -277,6 +277,26 @@ def revise(scenario_id: str) -> None:
         add_row(step.question, step.purpose, run.spec if reusable else None)
 
 
+def toggle_favorite(scenario_id: str, favorite: bool) -> None:
+    """Callback: add a scenario to the favourites, or take it out."""
+    builder.store.set_favorite(scenario_id, favorite)
+
+
+def rename_scenario(scenario_id: str, name: str | None = None) -> None:
+    """Callback: the name typed in the rename box (``name`` "" goes back to the planned title)."""
+    builder.rename(scenario_id, ss.get(f"scn-name-{scenario_id}", "") if name is None else name)
+    ss.pop(f"scn-name-{scenario_id}", None)  # the box shows the stored name next time
+
+
+def delete_scenario(scenario_id: str) -> None:
+    """Callback: take a scenario out of the history; if it is open, back to a new question."""
+    rec = builder.store.load(scenario_id)
+    if builder.store.delete(scenario_id):
+        ss.scn_deleted = rec.label if rec else scenario_id
+    if ss.get("scn_id") == scenario_id:
+        new_scenario()
+
+
 def new_scenario() -> None:
     """Callback: back to an empty question."""
     ss.scn_id = ss.scn_plan = ss.scn_revise = None
@@ -792,7 +812,8 @@ def render_result(rec: ScenarioRecord) -> None:
         with st.spinner("Writing the insight's title for sharing…"):
             builder.share(rec, renew=renew)  # once per scenario, then kept in its record
     st.caption(
-        f":violet[:material/route: Scenario · {rec.title}] · {len(rec.steps)} steps · "
+        f":violet[:material/route: Scenario · {rec.label}] · {len(rec.steps)} steps · "
+        f"{rec.created_local} · "
         f"scenario `{rec.scenario_id}`" + (f" · revises `{rec.based_on}`" if rec.based_on else "")
     )
     charts = [n for n in rec.charts if n in runs]
@@ -884,6 +905,7 @@ def render_result(rec: ScenarioRecord) -> None:
             "this one is kept",
         )
         if rec.based_on:
+            gone = builder.store.load(rec.based_on) is None
             st.button(
                 f"Open the version it revises ({rec.based_on})",
                 icon=":material/history:",
@@ -891,6 +913,8 @@ def render_result(rec: ScenarioRecord) -> None:
                 type="tertiary",
                 on_click=open_scenario,
                 args=(rec.based_on,),
+                disabled=gone,
+                help="Deleted from the history" if gone else None,
             )
 
 
@@ -951,7 +975,7 @@ def render_share(rec: ScenarioRecord) -> None:
                 "open-source repository."
             )
     with preview:
-        st.image(png, caption=f"{rec.title or rec.scenario_id} · {card_name(rec, size)}")
+        st.image(png, caption=f"{rec.label} · {card_name(rec, size)}")
 
 
 def render_built(rec: ScenarioRecord, runs: dict) -> None:
@@ -1015,22 +1039,83 @@ if shown is not None:
 elif ss.get("scn_plan"):
     render_plan(PlanResult.model_validate(ss.scn_plan))
 
-with st.expander("Previous scenarios", icon=":material/history:", expanded=False):
-    previous = builder.store.recent(limit=30)
-    examples = {r.scenario_id for r in builder.store.recent(limit=100, demo=True)}
-    for r in previous:
-        tag = ":violet-badge[example]" if r.scenario_id in examples else ""
+
+def render_history_row(r: ScenarioRecord, example: bool) -> None:
+    """One scenario of the history: favourite star, open, rename and delete."""
+    sid = r.scenario_id
+    with st.container(horizontal=True, vertical_alignment="center", gap="small"):
         st.button(
-            f"{r.title or r.question[:60]} :gray[· {len(r.steps)} steps · {r.created_at[:10]} · "
-            f"{r.scenario_id}] {tag}",
-            key=f"scn-open-{r.scenario_id}",
+            ":orange[★]" if r.favorite else ":gray[☆]",  # the icon font has no filled star
+            key=f"scn-fav-{sid}",
+            type="tertiary",
+            help="Remove from the favourites" if r.favorite else "Add to the favourites",
+            on_click=toggle_favorite,
+            args=(sid, not r.favorite),
+        )
+        tag = " :violet-badge[example]" if example else ""
+        st.button(
+            f"{r.label} :gray[· {len(r.steps)} steps · {r.created_local} · {sid}]{tag}",
+            key=f"scn-open-{sid}",
             help=r.question,
             type="tertiary",
             icon=":material/route:",
-            disabled=r.scenario_id == ss.get("scn_id"),
+            disabled=sid == ss.get("scn_id"),
             on_click=open_scenario,
-            args=(r.scenario_id,),
+            args=(sid,),
         )
+        st.space("stretch")
+        with st.popover(
+            "", icon=":material/edit:", type="tertiary", help="Rename", key=f"scn-rename-pop-{sid}"
+        ):
+            st.text_input("Name", value=r.label, key=f"scn-name-{sid}", max_chars=120)
+            with st.container(horizontal=True):
+                st.button(
+                    "Save",
+                    key=f"scn-rename-{sid}",
+                    type="primary",
+                    on_click=rename_scenario,
+                    args=(sid,),
+                )
+                if r.name and r.title:
+                    st.button(
+                        "Use the planned title",
+                        key=f"scn-unname-{sid}",
+                        type="tertiary",
+                        on_click=rename_scenario,
+                        args=(sid, ""),
+                        help=r.title,
+                    )
+        with st.popover(
+            "",
+            icon=":material/delete:",
+            type="tertiary",
+            help="Delete",
+            key=f"scn-delete-pop-{sid}",
+        ):
+            st.markdown(f"Delete **{r.label}** from the history?")
+            st.caption(
+                "A recorded example: it is hidden from your history and stays in Examples."
+                if example
+                else "This cannot be undone. Its steps stay in the assistant's history."
+            )
+            st.button(
+                "Delete",
+                key=f"scn-delete-{sid}",
+                type="primary",
+                icon=":material/delete:",
+                on_click=delete_scenario,
+                args=(sid,),
+            )
+
+
+with st.expander("Previous scenarios", icon=":material/history:", expanded=False):
+    if ss.get("scn_deleted"):
+        st.toast(f"Deleted from the history: {ss.pop('scn_deleted')}", icon=":material/delete:")
+    previous = builder.store.recent(limit=40)
+    if any(r.favorite for r in previous) and st.toggle("Favourites only", key="scn-fav-only"):
+        previous = [r for r in previous if r.favorite]
+    for r in sorted(previous, key=lambda r: not r.favorite):  # favourites first, then newest
+        render_history_row(r, builder.store.is_example(r.scenario_id))
     if not previous:
         st.caption("No scenarios yet.")
 

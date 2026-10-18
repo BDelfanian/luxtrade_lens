@@ -105,7 +105,7 @@ def content_from(
         title=share.get("title") or record.headline,
         subtitle=share.get("subtitle", first_sentence(record.conclusion)),
         question=record.question,
-        topic=record.title,
+        topic=record.name or record.title,  # the user's name for it, if renamed
         data_note=data_note,
         lang=record.language,
         tiles=list(first.tiles) if first else [],

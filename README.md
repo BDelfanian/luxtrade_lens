@@ -189,7 +189,8 @@ in which every number is checked against the steps it cites. Each scenario has a
 as a Markdown report. **Save as PNG** (or the **Share** tab) turns the answer into a share card
 for LinkedIn, in portrait 4:5 or square: the insight as a title and subtitle (rewritten from the
 checked answer and checked again), the key figures, the chart, the source and a QR code to this
-repository, plus a caption ready to paste. Design: [SOLUTION_DESIGN §5.10](docs/SOLUTION_DESIGN.md). Planning needs
+repository, plus a caption ready to paste. Under **Previous scenarios** each scenario shows its date and
+time and can be starred as a favourite (favourites come first), renamed or deleted. Design: [SOLUTION_DESIGN §5.10](docs/SOLUTION_DESIGN.md). Planning needs
 an LLM key; the recorded examples in `demo/runs/scenarios/` open without one. Re-record them with
 `python -m luxtrade.agents.scenario --demo --lang en fr de`.
 

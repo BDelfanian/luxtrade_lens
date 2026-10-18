@@ -419,6 +419,8 @@ A concern such as *"Has Luxembourg spread its risk, across the goods it sells an
 
 **Traceability.** A scenario record (`data/runs/scenarios/<id>.json`, content-addressed ID like run IDs) keeps the plan, the dropped questions and why, every step with its run ID and what was queried in words, the answer and its check notes, the data limits flagged by the runs, and the LLM calls. The page offers **Re-verify every step** (re-runs each step's SQL and compares result hashes), **Continue in the assistant** (opens the steps' session), a **Markdown report** and the **JSON record**. `?scenario=<id>` opens one. Recorded examples live in `demo/runs/scenarios/` (`python -m luxtrade.agents.scenario --demo`), so the tab works offline.
 
+**History (added 18 Oct).** *Previous scenarios* lists each scenario with its date and local time. A star marks favourites (listed first, with a *Favourites only* filter); a scenario can be renamed (`name` in the record, shown instead of the planner's title on the result, the share card and its assistant session) and deleted after a confirmation. Own scenarios are deleted for good; a recorded example is read-only, so deleting it keeps a hidden copy that takes it out of the history. The steps' runs stay in the assistant's history, since other answers may cite them.
+
 In one sentence for the jury: *"For a broad question, the assistant plans its own chain of checked questions, follows up on what it finds, and writes an answer in which every number is traced to the step it came from."*
 
 ## 6. Traceability: "where does this answer come from?"
