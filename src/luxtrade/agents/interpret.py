@@ -99,6 +99,7 @@ def interpret(
     spec, dropped = validate_codes(interp.spec, sem, allowed)
     if spec.partner_group not in ("WORLD", "EU27_2020", "EXTRA_EU27_2020"):
         spec = spec.model_copy(update={"partner_group": "WORLD"})
+    spec = yearly_series(question, spec)
     followup = interp.followup_of if context.get(interp.followup_of) else None
     detected = followup is None and bool(context.turns) and is_elliptical(question)
     if detected:
@@ -150,6 +151,34 @@ _ELLIPTICAL_MAX_WORDS = 7
 _GROUP_CODES = {"WORLD", "EU27_2020", "EXTRA_EU27_2020"}
 _OPEN_FIELDS = ("flow", "freq", "product_level", "top_n")
 _CODE_FIELDS = ("partners", "products")
+
+
+_YEARLY_RE = re.compile(
+    r"\b(?:each|every|per)\s+year\b|\byearly\b|\bannually\b|\byear\s+by\s+year\b|"
+    r"\bchaque\s+année\b|\bpar\s+an\b|\bannée\s+par\s+année\b|"
+    r"\bjedes\s+jahr\b|\bpro\s+jahr\b|\bjährlich\b|\bjahr\s+für\s+jahr\b",
+    re.IGNORECASE,
+)
+
+
+def yearly_series(question: str, spec: QuerySpec) -> QuerySpec:
+    """A snapshot over several years, asked "each year", read as a yearly series.
+
+    Seen on real data: "What share of imports came from EU27 countries each year from 2005 to
+    2025?" read as one composition of 2005–2025 added up (which the scenario check blocks).
+    """
+    if spec.intent not in ("ranking", "composition", "single_value") or spec.measure == "change":
+        return spec
+    start, end = (spec.period_start or "")[:4], (spec.period_end or "")[:4]
+    if not start or not end or start == end or not _YEARLY_RE.search(question):
+        return spec
+    return spec.model_copy(
+        update={
+            "intent": "time_series",
+            "freq": "A",
+            "assumptions": [*spec.assumptions, "a yearly series: the question asks for each year"],
+        }
+    )
 
 
 def is_elliptical(question: str) -> bool:

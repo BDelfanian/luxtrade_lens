@@ -10,6 +10,7 @@ title is kept with the checked headline as subtitle; else the checked headline i
 """
 
 import json
+import re
 
 from pydantic import BaseModel, Field
 
@@ -30,6 +31,7 @@ from luxtrade.viz.share_card import first_sentence
 
 MAX_TITLE, MAX_SUBTITLE = 90, 220
 MAX_FIGURES = {"title": 1, "subtitle": 4}  # statistics, years not counted: a card is not a table
+_CODES = re.compile(r"\b[A-Za-z]+-?\d+\b")  # EU27, HS4, CN8, G7: part of a name
 
 
 class ShareText(BaseModel):
@@ -51,9 +53,16 @@ def answer_texts(record: ScenarioRecord, figures: list[EvidenceFigure]) -> list[
 
 
 def review_share(
-    text: ShareText, record: ScenarioRecord, figures: list[EvidenceFigure], sem: object
+    text: ShareText,
+    record: ScenarioRecord,
+    figures: list[EvidenceFigure],
+    sem: object,
+    user: bool = False,
 ) -> list[str]:
-    """Problems of a drafted title and subtitle; empty if they may go on the card."""
+    """Problems of a drafted title and subtitle; empty if they may go on the card.
+
+    ``user``: the user's own words, checked the same way, except that a question may be a hook.
+    """
     lang = record.language
     texts = answer_texts(record, figures)
     allowed = numbers_in(texts, lang)
@@ -65,11 +74,10 @@ def review_share(
     ):
         if len(part) > most:
             found.append(f"{label}: {len(part)} characters, at most {most}")
-        if "?" in part:
+        if "?" in part and not user:
             found.append(f"{label}: a question, not a statement")
-        figures_in = [
-            v for v, d in parse_numbers(plain_numbers(part), lang) if d or not 1900 <= v <= 2100
-        ]
+        bare = _CODES.sub(" ", plain_numbers(part))  # "EU27", "HS4": names, not figures
+        figures_in = [v for v, d in parse_numbers(bare, lang) if d or not 1900 <= v <= 2100]
         if len(figures_in) > MAX_FIGURES[label]:
             listed = ", ".join(f"{v:g}" for v in figures_in)
             found.append(

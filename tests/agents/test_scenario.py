@@ -505,3 +505,24 @@ def test_a_failing_question_gets_checked_rewrites_and_a_hint(builder):
     assert not check.ok and check.hint == "Name the flow and year."
     assert [a.question for a in check.alternatives] == ["Main import chapters in 2024?"]
     assert check.alternatives[0].queried.startswith("imports · by partner")
+
+
+def test_check_step_keeps_the_headings_the_user_asks_for(builder):
+    from luxtrade.agents.scenario import FitVerdict
+
+    heading_ranking = {
+        "intent": "ranking",
+        "breakdown": "product",
+        "product_level": "HS4",
+        "flow": "export",
+        "measure": "change",
+        "period_start": "2019",
+        "period_end": "2024",
+    }
+    fit = FitVerdict(fits=True, problem="", position=2)
+    b = builder(scenario_plan=GOOD_PLAN, interpret=interp(**heading_ranking), scenario_fit=fit)
+    asked = [("Baseline?", ""), ("Which product headings (HS4) changed most, 2019 to 2024?", "")]
+    assert b.check_step(QUESTION, asked, 2, "en").spec.product_level == "HS4"
+    b = builder(scenario_plan=GOOD_PLAN, interpret=interp(**heading_ranking), scenario_fit=fit)
+    vague = [("Baseline?", ""), ("Which products changed most from 2019 to 2024?", "")]
+    assert b.check_step(QUESTION, vague, 2, "en").spec.product_level == "HS2"  # one-off swings

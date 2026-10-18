@@ -53,7 +53,7 @@ from luxtrade.agents.llm import LLMError
 from luxtrade.agents.optimise import known_codes, optimise, validate_suggestion
 from luxtrade.agents.presets import PRESETS
 from luxtrade.agents.service import Assistant
-from luxtrade.agents.share import write_share
+from luxtrade.agents.share import ShareText, review_share, write_share
 from luxtrade.agents.spec import SNAPSHOT_INTENTS, Language, QuerySpec, Suggestion
 from luxtrade.runs.scenarios import ScenarioRecord, ScenarioStep, ScenarioStore
 from luxtrade.runs.sessions import new_session_id
@@ -1043,6 +1043,32 @@ class ScenarioBuilder:
             self.store.save(record)
         return share
 
+    def set_share(self, record: ScenarioRecord, title: str, subtitle: str) -> list[str]:
+        """The user's own title and subtitle for the card, if they pass the checks.
+
+        Same checks as a drafted one (every number, year and country in the checked answer or
+        its key figures; lengths; a few figures): the problems are returned and nothing is kept,
+        or the text is kept with the earlier titles.
+        """
+        text = ShareText(
+            basis="user", title=" ".join(title.split()), subtitle=" ".join(subtitle.split())
+        )
+        problems = review_share(text, record, self.figures(record), self.assistant.sem, user=True)
+        if problems:
+            return problems
+        earlier = list(record.share.get("earlier", []))
+        if record.share.get("title") and record.share["title"] != text.title:
+            earlier.append(record.share["title"])
+        record.share = {
+            "title": text.title,
+            "subtitle": text.subtitle,
+            "source": "user",
+            "notes": ["written by the user; passed the number, country and wording checks"],
+            "earlier": earlier,
+        }
+        self.store.save(record)
+        return []
+
     def rename(self, scenario_id: str, name: str) -> ScenarioRecord | None:
         """Give a scenario the user's own name; its assistant session takes the name too."""
         rec = self.store.rename(scenario_id, name)
@@ -1102,7 +1128,8 @@ class ScenarioBuilder:
             )
         elif not check.problems:
             notes: list[str] = []
-            spec = prepare(interp.spec, lang, main_question, question, notes)
+            # the user's own question: headings it asks for are kept (prepare reads its words)
+            spec = prepare(interp.spec, lang, f"{main_question} {question}", question, notes)
             problem = validate_suggestion(Suggestion(question=question, note="", spec=spec), sem)
             resolved = apply_defaults(spec, sem.coverage).model_dump(mode="json")
             problem = problem or mismatch(question, resolved, spec)

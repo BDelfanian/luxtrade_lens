@@ -1082,8 +1082,8 @@ def evidence_bars(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
     ``change``: one group of bars per period, the items the answer is about in colour and the
     whole flow in gray (like the crisis card). ``share``: one group per item, a bar per year.
     """
-    if kind == "concentration":
-        return evidence_hhi(rows, lang)
+    if kind in ("concentration", "series"):
+        return evidence_panels(rows, kind, lang)
     groups = list(dict.fromkeys(rows["group"]))
     series = list(dict.fromkeys(rows["series"]))
     fig = go.Figure()
@@ -1129,6 +1129,17 @@ def evidence_hhi(rows: pd.DataFrame, lang: str) -> go.Figure:
     Exports and imports in rows, by product and by partner in columns (blue and orange, as on
     the Overview card), with the levels where concentration becomes moderate and high.
     """
+    return evidence_panels(rows, "concentration", lang)
+
+
+def evidence_panels(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
+    """Small multiples of yearly lines: a panel per series, first and last values labelled.
+
+    ``concentration``: HHI on one shared scale with the 1,000 and 1,800 levels, coloured by
+    dimension. ``series``: shares or values, each panel on its own scale (a 4 % share next to
+    an 87 % one would be flat on a shared one).
+    """
+    hhi = kind == "concentration"
     panels = list(dict.fromkeys(rows["series"]))
     cols = 2 if len(panels) > 1 else 1
     n_rows = (len(panels) + cols - 1) // cols
@@ -1136,59 +1147,81 @@ def evidence_hhi(rows: pd.DataFrame, lang: str) -> go.Figure:
         rows=n_rows,
         cols=cols,
         subplot_titles=panels,
-        shared_yaxes=True,
+        shared_yaxes=hhi,
         shared_xaxes=True,
         vertical_spacing=0.16,
-        horizontal_spacing=0.06,
+        horizontal_spacing=0.06 if hhi else 0.1,
     )
-    top = max(float(rows["value"].max()) * 1.18, 2_100)
     for i, panel in enumerate(panels):
         part = rows[rows["series"] == panel].sort_values("group")
-        color = SERIES[1] if part["dim"].iloc[0] == "partner" else SERIES[0]
+        if hhi:
+            color = SERIES[1] if part["dim"].iloc[0] == "partner" else SERIES[0]
+        else:
+            color = SERIES[i % len(SERIES)]
+        unit = "hhi" if hhi else str(part["unit"].iloc[0])
+
+        def show(v: float, unit: str = unit) -> str:
+            if unit == "hhi":
+                return fmt_number(v, 0, lang)
+            return fmt_pct(v, lang) if unit == "share" else fmt_eur(v, lang)
+
         r, c = i // cols + 1, i % cols + 1
         fig.add_scatter(
             x=part["group"],
             y=part["value"],
-            mode="lines+markers+text",
+            mode="lines+markers+text" if len(part) <= 8 else "lines+text",
             line={"width": 3, "color": color},
             marker={"size": 7, "color": color},
-            text=[
-                fmt_number(v, 0, lang) if j in (0, len(part) - 1) else ""
-                for j, v in enumerate(part["value"])
+            text=[show(v) if j in (0, len(part) - 1) else "" for j, v in enumerate(part["value"])],
+            # the first label to the right of its point, the last to the left: inside the panel
+            textposition=[
+                "top right" if j == 0 else "top left" if j == len(part) - 1 else "top center"
+                for j in range(len(part))
             ],
-            textposition="top center",
             textfont={"size": 12, "color": TEXT},
-            hovertemplate="%{x}: HHI %{y:,.0f}<extra>" + panel + "</extra>",
+            customdata=[show(v) for v in part["value"]],
+            hovertemplate="%{x}: %{customdata}<extra>" + panel + "</extra>",
             showlegend=False,
             row=r,
             col=c,
         )
-        for level in HHI_LEVELS:
-            fig.add_hline(
-                y=level,
-                line={"color": NEUTRAL, "width": 1, "dash": "dash" if level > 1_000 else "dot"},
+        if hhi:
+            for level in HHI_LEVELS:
+                fig.add_hline(
+                    y=level,
+                    line={"color": NEUTRAL, "width": 1, "dash": "dash" if level > 1_000 else "dot"},
+                    row=r,
+                    col=c,
+                )
+        else:
+            fig.update_yaxes(
+                range=[0, float(part["value"].max()) * 1.25],
+                ticksuffix=" %" if unit == "share" else "",
                 row=r,
                 col=c,
             )
+    fig.update_annotations(font={"size": 13, "color": TEXT})  # the panel titles
     years = sorted(rows["group"].unique())
-    fig.update_xaxes(tickmode="array", tickvals=years, range=[years[0] - 1.5, years[-1] + 1.5])
-    fig.update_yaxes(range=[0, top])
-    fig.update_annotations(font={"size": 13, "color": TEXT})
-    high = HHI_LEVELS[1_800]
-    fig.add_annotation(
-        x=0,
-        xref="paper",
-        y=0,
-        yref="paper",
-        yanchor="top",
-        yshift=-30,  # below the year labels, whatever the height
-        showarrow=False,
-        xanchor="left",
-        text=f"- - {high.get(lang, high['en'])} (> {fmt_number(1_800, 0, lang)})   "
-        f"····· {HHI_LEVELS[1_000].get(lang, 'moderately concentrated')} "
-        f"(> {fmt_number(1_000, 0, lang)})",
-        font={"size": 11, "color": TEXT_2},
-    )
+    pad = 1.5 if len(years) <= 8 else 0.8
+    ticks = years if len(years) <= 8 else [y for y in years if y % 5 == 0]
+    fig.update_xaxes(tickmode="array", tickvals=ticks, range=[years[0] - pad, years[-1] + pad])
+    if hhi:
+        fig.update_yaxes(range=[0, max(float(rows["value"].max()) * 1.18, 2_100)])
+        high = HHI_LEVELS[1_800]
+        fig.add_annotation(
+            x=0,
+            xref="paper",
+            y=0,
+            yref="paper",
+            yanchor="top",
+            yshift=-30,  # below the year labels, whatever the height
+            showarrow=False,
+            xanchor="left",
+            text=f"- - {high.get(lang, high['en'])} (> {fmt_number(1_800, 0, lang)})   "
+            f"····· {HHI_LEVELS[1_000].get(lang, 'moderately concentrated')} "
+            f"(> {fmt_number(1_000, 0, lang)})",
+            font={"size": 11, "color": TEXT_2},
+        )
     fig = _hero_layout(fig, height=300 * n_rows + 80)
-    fig.update_layout(margin={"l": 8, "r": 8, "t": 30, "b": 52})  # panel titles, legend line
+    fig.update_layout(margin={"l": 8, "r": 8, "t": 30, "b": 52 if hhi else 16})
     return fig

@@ -12,6 +12,9 @@ chart and a few key figures. No LLM is involved:
 - Steps that compute the concentration index (``measure`` "hhi") form one figure with a panel
   per flow and dimension (exports and imports, by product and by partner), like the Overview's
   diversification card, with each panel's first and last value as key figures.
+- Yearly series of one line each (a share or a value: "Japan's share of imports each year")
+  form small multiples, a panel per step on its own scale, with first and last value as key
+  figures; their values are the steps' own analysed frames (computed by code in each run).
 """
 
 import re
@@ -22,7 +25,7 @@ from pydantic import BaseModel, Field
 
 from luxtrade.runs.store import RunRecord
 from luxtrade.semantic.layer import QueryError, SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_number, fmt_pct
+from luxtrade.viz.format import flow_label, fmt_eur, fmt_number, fmt_pct
 
 MAX_FIGURES = 2
 MAX_FOCUS = {"change": 2, "share": 3}
@@ -98,6 +101,27 @@ _T = {
         "Anteile × 10.000 über alle Partner oder Warenkapitel; über 1.800 gilt als hoch, unter "
         "1.000 als gering konzentriert.",
     },
+    "t_series": {
+        "en": "Year by year, {y0}–{y1}",
+        "fr": "Année par année, {y0}–{y1}",
+        "de": "Jahr für Jahr, {y0}–{y1}",
+    },
+    "p_share": {
+        "en": "{who}, share of {flow}",
+        "fr": "{who}, part des {flow}",
+        "de": "{who}, Anteil an den {flow}n",
+    },
+    "p_value": {"en": "{who}, {flow}", "fr": "{who}, {flow}", "de": "{who}, {flow}"},
+    "eu27": {"en": "EU27 countries", "fr": "Pays de l'UE27", "de": "EU27-Länder"},
+    "extra": {"en": "Non-EU27 countries", "fr": "Pays hors UE27", "de": "Nicht-EU27-Länder"},
+    "note_series": {
+        "en": "Each panel is one step's yearly series (steps {steps}), computed by code from its "
+        "own SQL; panels have their own scales.",
+        "fr": "Chaque panneau est la série annuelle d'une étape ({steps}), calculée par le code à "
+        "partir de son SQL ; chaque panneau a sa propre échelle.",
+        "de": "Jedes Feld ist die Jahresreihe eines Schritts ({steps}), vom Code aus dessen SQL "
+        "berechnet; jedes Feld hat eine eigene Skala.",
+    },
     "note": {
         "en": "Computed by code from the steps' own SQL (steps {steps}); the whole flow is all "
         "{flow} of each step's scope.",
@@ -116,7 +140,7 @@ def _t(key: str, lang: str, **values: object) -> str:
 class EvidenceFigure(BaseModel):
     """One chart of a scenario's answer and the key figures read from it."""
 
-    kind: Literal["change", "share", "concentration"]
+    kind: Literal["change", "share", "concentration", "series"]
     title: str
     flow: str
     steps: list[int]
@@ -224,6 +248,11 @@ def compose(
             fig = None
         if fig is not None:
             figures.append(fig)
+    series = [s.n for s in chain if (r := records.get(s.n)) is not None and _one_series(r)]
+    if len(series) >= 2 and len(figures) < MAX_FIGURES:
+        fig = _series(series, records, sem, lang)
+        if fig is not None:
+            figures.append(fig)
     groups: dict[tuple, list[int]] = {}
     for step in chain:
         rec = records.get(step.n)
@@ -240,6 +269,104 @@ def compose(
         if fig is not None:
             figures.append(fig)
     return figures
+
+
+MAX_PANELS = 4
+
+
+def _one_series(rec: RunRecord) -> bool:
+    """A yearly series with one line: a share or a value of one flow (EU27 counts as one)."""
+    s = rec.spec or {}
+    if rec.status != "answered" or rec.custom_sql or s.get("measure") not in ("share", "value_eur"):
+        return False
+    if s.get("intent") != "time_series" or s.get("freq") != "A" or s.get("year_step"):
+        return False
+    if s.get("flow") not in ("export", "import"):
+        return False
+    rows = rec.frames.get("main", [])
+    keys = {r.get("key") for r in rows if r.get("flow") == s.get("flow")}
+    if s.get("breakdown") == "partner_group":
+        return "EU27" in keys
+    return len(rows) >= 3 and len(keys) <= 1
+
+
+def _who(spec: dict, sem: SemanticLayer, lang: str) -> str:
+    """Whom a one-line series is about: partners, the EU27, a product, or every partner."""
+    if spec.get("breakdown") == "partner_group" or spec.get("partner_group") == "EU27_2020":
+        return _t("eu27", lang)
+    if spec.get("partner_group") == "EXTRA_EU27_2020":
+        return _t("extra", lang)
+    names = [sem.label(p, "partner", lang) for p in spec.get("partners") or []]
+    names += [sem.label(p, "product", lang)[:32] for p in spec.get("products") or []]
+    return " & ".join(names[:2]) or _t("all", lang, flow="").strip()
+
+
+def _series(
+    steps: list[int], records: dict[int, RunRecord], sem: SemanticLayer, lang: str
+) -> EvidenceFigure | None:
+    """Small multiples of one-line yearly series, first and last values as tiles.
+
+    One panel per subject and flow, at most four: "EU27, imports" asked as a share and as a value
+    is one panel (the first step asked, and a share before a value), so the panels tell four
+    different things.
+    """
+    rows, tiles, seen = [], [], set()
+    for n in sorted(steps, key=lambda n: records[n].spec["measure"] != "share"):  # stable sort
+        spec = records[n].spec
+        flow, measure = spec["flow"], spec["measure"]
+        subject = (_who(spec, sem, lang), flow)
+        if subject in seen or len(seen) == MAX_PANELS:
+            continue
+        mine = sorted(
+            (
+                r
+                for r in records[n].frames.get("main", [])
+                if r.get("flow") == flow
+                and r.get("value") is not None
+                and (spec.get("breakdown") != "partner_group" or r.get("key") == "EU27")
+            ),
+            key=lambda r: r["period"],
+        )
+        if len(mine) < 2:
+            continue
+        seen.add(subject)
+        who = subject[0]
+        fl = flow_label(flow, lang)
+        panel = _t("p_share" if measure == "share" else "p_value", lang, who=who, flow=fl)
+        for r in mine:
+            rows.append(
+                {
+                    "group": int(r["period"]),
+                    "series": panel,
+                    "value": float(r["value"]),
+                    "step": n,
+                    "flow": flow,
+                    "unit": measure,
+                }
+            )
+        first, last = float(mine[0]["value"]), float(mine[-1]["value"])
+        show = (lambda v: fmt_pct(v, lang)) if measure == "share" else (lambda v: fmt_eur(v, lang))
+        tiles.append(
+            {
+                "value": show(last),
+                "label": f"{panel}, {int(mine[-1]['period'])}",
+                "detail": _t("k_share_d", lang, value=show(first), year=int(mine[0]["period"])),
+                "tone": "up" if last > first else "down",
+            }
+        )
+    if len({r["series"] for r in rows}) < 2:
+        return None
+    years = sorted({r["group"] for r in rows})
+    used = sorted({r["step"] for r in rows})
+    return EvidenceFigure(
+        kind="series",
+        title=_t("t_series", lang, y0=years[0], y1=years[-1]),
+        flow="both" if len({r["flow"] for r in rows}) > 1 else rows[0]["flow"],
+        steps=used,
+        rows=rows,
+        tiles=tiles[:4],
+        note=_t("note_series", lang, steps=", ".join(map(str, used))),
+    )
 
 
 def _concentration(

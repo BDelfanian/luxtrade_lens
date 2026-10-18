@@ -9,7 +9,7 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
   - `ranking`: who/what are the main partners or products
   - `composition`: how a total splits into parts (shares)
   - `drilldown`: the detail inside one product group, optionally for one partner (HS2 → HS4 → HS6 → CN8)
-  - `time_series`: how something evolved over time
+  - `time_series`: how something evolved over time, also a share or a value "each year" or "every year" between two years (never a `composition` or `ranking` of several years added up)
   - `seasonality`: monthly seasonal patterns, or a seasonally adjusted series
   - `forecast`: what comes next; use it **only** when the user asks about the future
   - `single_value`: one total, e.g. "how much did we export in 2024?"
@@ -96,6 +96,9 @@ Q: "Compare Luxembourg's exports to Germany and France over the last 10 years" (
 
 Q: "How does Luxembourg's export growth compare with Belgium and the Netherlands since 2019?"
 → intent `benchmark`, compare_reporters [`BE`, `NL`], partners [], flow `export`, period_start `2019`.
+
+Q: "What share of Luxembourg's imports came from EU27 countries each year from 2005 to 2025?"
+→ intent `time_series`, breakdown `partner_group`, flow `import`, measure `share`, period 2005–2025, freq `A`.
 
 Q: "How concentrated are Luxembourg's imports by partner, every five years since 2005?"
 → intent `time_series`, breakdown `partner`, flow `import`, measure `hhi`, period_start `2005`, year_step 5.

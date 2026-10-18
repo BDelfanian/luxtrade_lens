@@ -123,3 +123,17 @@ def test_offline_the_headline_is_used_and_nothing_is_kept(make_assistant, tmp_pa
     store.save(rec)
     assert builder.share(rec)["source"] == "template"
     assert store.load(rec.scenario_id).share == {}
+
+
+def test_the_user_can_write_the_card_words_within_the_checks(make_assistant, tmp_path):
+    store = ScenarioStore(tmp_path / "scn", tmp_path / "demo")
+    builder = ScenarioBuilder(make_assistant(None), store)
+    rec = record()
+    store.save(rec)
+    bad = builder.set_share(rec, "Iron and steel lost 61.0 %", "It fell.")
+    assert any("number 61 is not in the facts" in p for p in bad)
+    assert store.load(rec.scenario_id).share == {}  # nothing kept
+    hook = "Which goods break first when a crisis hits?"  # a question may be a hook
+    assert builder.set_share(rec, hook, "Exports to Germany fell 48.4 % in 2009.") == []
+    kept = store.load(rec.scenario_id).share
+    assert (kept["title"], kept["source"]) == (hook, "user")

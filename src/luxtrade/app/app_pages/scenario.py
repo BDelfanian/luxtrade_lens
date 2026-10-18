@@ -699,10 +699,10 @@ def card_content(rec: ScenarioRecord) -> CardContent:
 
 
 @st.cache_data(show_spinner="Drawing the card…", max_entries=16)
-def share_card(scenario_id: str, size: str, title: str) -> bytes:
+def share_card(scenario_id: str, size: str, title: str, subtitle: str = "") -> bytes:
     """The scenario's share card as PNG bytes (``portrait`` 4:5 or ``square``).
 
-    ``title`` is part of the cache key: the card changes when its title is written.
+    ``title`` and ``subtitle`` are part of the cache key: the card changes with its words.
     """
     rec = builder.store.load(scenario_id)
     return render_card(card_content(rec), size) if rec else b""
@@ -918,6 +918,42 @@ def render_result(rec: ScenarioRecord) -> None:
             )
 
 
+def save_share_text(scenario_id: str) -> None:
+    """Callback: keep the title and subtitle typed in the edit box, if they pass the checks."""
+    rec = builder.store.load(scenario_id)
+    title = ss.get(f"scn-share-title-{scenario_id}", "")
+    subtitle = ss.get(f"scn-share-sub-{scenario_id}", "")
+    ss[f"scn-share-problems-{scenario_id}"] = builder.set_share(rec, title, subtitle)
+
+
+def render_share_edit(rec: ScenarioRecord, content: CardContent) -> None:
+    """Your own words for the card: the same checks as the drafted ones."""
+    sid = rec.scenario_id
+    problems = ss.get(f"scn-share-problems-{sid}") or []
+    with st.expander(
+        "Edit the title and subtitle", icon=":material/edit:", expanded=bool(problems)
+    ):
+        st.text_input("Title", value=content.title, key=f"scn-share-title-{sid}", max_chars=90)
+        st.text_area(
+            "Subtitle",
+            value=content.subtitle,
+            key=f"scn-share-sub-{sid}",
+            max_chars=220,
+            height=100,
+        )
+        st.button(
+            "Use these words",
+            key=f"scn-share-use-{sid}",
+            type="primary",
+            on_click=save_share_text,
+            args=(sid,),
+            help="Every number, year and country must be in the checked answer or its key "
+            "figures; at most one figure in the title and four in the subtitle.",
+        )
+        if problems:
+            st.error("Not used, fix these first:\n" + "\n".join(f"- {p}" for p in problems))
+
+
 def render_share(rec: ScenarioRecord) -> None:
     """The insight as a LinkedIn post: the card (two formats) and a caption to paste."""
     if rec.status == "failed" or not rec.headline:
@@ -936,7 +972,7 @@ def render_share(rec: ScenarioRecord) -> None:
         )
         size = size or "portrait"
         content = card_content(rec)
-        png = share_card(rec.scenario_id, size, content.title)
+        png = share_card(rec.scenario_id, size, content.title, content.subtitle)
         with st.container(horizontal=True):
             st.download_button(
                 "Save as PNG",
@@ -957,9 +993,19 @@ def render_share(rec: ScenarioRecord) -> None:
                 help="Ask the language model for a different title and subtitle; they are "
                 "checked again against the answer, and the earlier ones are kept in the record.",
             )
+        render_share_edit(rec, content)
         st.markdown("**Caption** · copy it with the icon at its top right")
         st.code(linkedin_post(content, len(rec.steps)), language=None, wrap_lines=True)
-        if builder.share(rec).get("source") == "llm":
+        source = builder.share(rec).get("source")
+        if source == "user":
+            st.caption(
+                ":material/edit_note: The title and subtitle are yours, checked by code against "
+                "the answer (every number, year and country is in it, at most four figures). "
+                "The key figures and the chart are computed by code; the footer names the "
+                "source and the data's latest complete month, and the QR code leads to the "
+                "open-source repository."
+            )
+        elif source == "llm":
             st.caption(
                 ":material/verified: The title and subtitle restate the checked answer as one "
                 "insight: written by the language model, then checked by code (every number, "

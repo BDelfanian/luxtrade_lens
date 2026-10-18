@@ -66,6 +66,22 @@ _T = {
         "fr": "Principaux groupes de produits",
         "de": "Wichtigste Warengruppen",
     },
+    # the shape of a series: what tells a lasting trend from a jump in the last period
+    "s_move": {
+        "en": "{label}: largest change between consecutive periods {pa}–{pb}: {va} to {vb}",
+        "fr": "{label} : plus forte variation entre deux périodes {pa}–{pb} : {va} à {vb}",
+        "de": "{label}: größte Veränderung zwischen zwei Perioden {pa}–{pb}: {va} auf {vb}",
+    },
+    "s_median": {
+        "en": "{label}: median over {p0}–{p1}: {v}",
+        "fr": "{label} : médiane sur {p0}–{p1} : {v}",
+        "de": "{label}: Median über {p0}–{p1}: {v}",
+    },
+    "s_top2": {
+        "en": "{label}: the two largest periods ({pa}, {pb}) make {pct} of the total over {p0}–{p1}",
+        "fr": "{label} : les deux plus fortes périodes ({pa}, {pb}) font {pct} du total sur {p0}–{p1}",
+        "de": "{label}: die zwei stärksten Perioden ({pa}, {pb}) machen {pct} der Summe {p0}–{p1} aus",
+    },
     "series": {
         "en": "Between {start} and {end}, {flow}{scope} went from {v0} to {v1} ({chg}).",
         "fr": "Entre {start} et {end}, les {flow}{scope} sont passées de {v0} à {v1} ({chg}).",
@@ -399,6 +415,7 @@ def _series_facts(spec: QuerySpec, a: Analysis, sem: SemanticLayer, lang: str): 
                 text=f"{label} peak {fmt_period(_py(pk_idx), lang)}: {fmt_v(pk_val, lang)}",
             )
         )
+        facts += _series_shape(g, label, spec.measure, fmt_v, lang)
         if len(sents) < 2:
             scope = f" ({name})" if name else _scope(spec, sem)
             sents.append(
@@ -639,6 +656,70 @@ def _concentration_facts(spec: QuerySpec, a: Analysis, lang: str):  # noqa: ANN2
         if not title:
             title = f"{label}: {fmt_number(v0, 0, lang)} → {fmt_number(v1, 0, lang)} ({p0}–{p1})"
     return facts, sents, title
+
+
+def _series_shape(
+    g: pd.DataFrame, label: str, measure: str, fmt_v: object, lang: str
+) -> list[Fact]:
+    """What tells a lasting trend from a jump in the last period.
+
+    The period before the last, the largest step, the median level and, for values, how much
+    the two largest periods weigh. Seen on real data: Japan's share of imports, 0.7 % (2005) → 4.5 % (2025), written up as "a
+    lasting trend" while 2024 was 0.9 % and two months made two thirds of 2025.
+    """
+    values = g["value"].astype(float).reset_index(drop=True)
+    periods = [fmt_period(_py(p), lang) for p in g["period"]]
+    if len(values) < 3 or values.isna().any():
+        return []
+    out = [Fact(key=f"{label}.prev", text=f"{label} {periods[-2]}: {fmt_v(values.iloc[-2], lang)}")]
+    steps = values.diff().abs()
+    i = int(steps.iloc[1:].idxmax())
+    out.append(
+        Fact(
+            key=f"{label}.move",
+            text=_t(
+                "s_move",
+                lang,
+                label=label,
+                pa=periods[i - 1],
+                pb=periods[i],
+                va=fmt_v(values.iloc[i - 1], lang),
+                vb=fmt_v(values.iloc[i], lang),
+            ),
+        )
+    )
+    out.append(
+        Fact(
+            key=f"{label}.median",
+            text=_t(
+                "s_median",
+                lang,
+                label=label,
+                p0=periods[0],
+                p1=periods[-1],
+                v=fmt_v(float(values.median()), lang),
+            ),
+        )
+    )
+    total = float(values.sum())
+    if measure in ("value_eur", "qty_kg") and len(values) >= 6 and total > 0:
+        a, b = sorted(values.nlargest(2).index)
+        out.append(
+            Fact(
+                key=f"{label}.top2",
+                text=_t(
+                    "s_top2",
+                    lang,
+                    label=label,
+                    pa=periods[a],
+                    pb=periods[b],
+                    pct=fmt_pct(100 * (values[a] + values[b]) / total, lang),
+                    p0=periods[0],
+                    p1=periods[-1],
+                ),
+            )
+        )
+    return out
 
 
 def _py(value: object) -> object:

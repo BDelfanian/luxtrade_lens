@@ -148,3 +148,28 @@ def test_a_concentration_figure_is_drawn_as_small_multiples():
     c.figure, c.tiles = figure, tiles  # four tiles: one per panel
     for size, expected in (("portrait", (1080, 1350)), ("square", (1080, 1080))):
         assert size_of(render_card(c, size, scale=1)) == expected
+
+
+def test_a_question_cut_short_is_not_a_topic():
+    asked = (
+        "Is Luxembourg's trade shifting from extra-EU to intra-EU partners between 2005 and 2025?"
+    )
+    own_chain = record(question=asked, title=asked[:60])  # no planner title: the question's start
+    assert content_from(own_chain, [], "x").topic == ""
+    assert content_from(
+        own_chain.model_copy(update={"name": "Intra vs extra EU"}), [], "x"
+    ).topic == ("Intra vs extra EU")
+    assert content_from(record(), [], "x").topic == "Crisis exposure of products"
+
+
+def test_series_panels_are_drawn_each_on_its_own_scale():
+    rows = [
+        {"group": y, "series": name, "value": v, "step": k, "flow": "import", "unit": "share"}
+        for k, (name, values) in enumerate(
+            [("EU27 countries, share of imports", (70.3, 75.0, 86.6)), ("Japan", (0.7, 0.9, 4.5))]
+        )
+        for y, v in zip((2005, 2015, 2025), values, strict=True)
+    ]
+    c = content_from(record(), [], "data to Jun 2026")
+    c.figure = {"kind": "series", "title": "Year by year, 2005–2025", "rows": rows}
+    assert size_of(render_card(c, "square", scale=1)) == (1080, 1080)

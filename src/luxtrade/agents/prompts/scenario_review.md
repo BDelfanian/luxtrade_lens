@@ -19,5 +19,6 @@ A claim is **not supported** when:
 4. **It contradicts another part of the answer** or a fact in the cited steps.
 5. It states a cause, motive or consequence that no fact shows (a plain reading such as "more concentrated" or "more European" is fine when the shares show it).
 6. **It misreads a concentration index (HHI).** A falling index means less concentrated, i.e. more diversified; a rising index means more concentrated, i.e. less diversified: check every "diversified", "concentrated" and "spread" against the direction the facts state. "Slightly" or "a little" is wrong for a change of more than a tenth. "Fewer partners" or "fewer products" is right only for the equivalent number of equally sized ones given in the facts, not for the number traded when that grew; it must be clear which one is meant. "Stable" is wrong when the index moved by more than a tenth between the first and the last year, unless the claim says over which years it was stable.
+7. **It calls a jump a trend.** "Lasting trend", "steady rise", "spread over the year" or "sustained" is not supported when the cited facts show the largest change in the last period, the period before the last near the median, or the two largest periods making most of the total.
 
 Judge generously on wording and strictly on comparisons, directions and superlatives. Write `problem` in LANGUAGE.

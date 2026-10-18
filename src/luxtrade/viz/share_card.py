@@ -20,7 +20,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from luxtrade.viz.format import fmt_number, fmt_pct, month_name
+from luxtrade.viz.format import fmt_eur, fmt_number, fmt_pct, month_name
 
 ASSETS = Path(__file__).with_name("assets")
 REPO = "github.com/BDelfanian/luxtrade_lens"
@@ -105,13 +105,25 @@ def content_from(
         title=share.get("title") or record.headline,
         subtitle=share.get("subtitle", first_sentence(record.conclusion)),
         question=record.question,
-        topic=record.name or record.title,  # the user's name for it, if renamed
+        topic=_topic(record),
         data_note=data_note,
         lang=record.language,
         tiles=list(first.tiles) if first else [],
         figure=first.model_dump() if first else None,
         points=[p["text"] for p in record.points],
     )
+
+
+def _topic(record: object) -> str:
+    """The label above the title: the user's name, else the planner's title.
+
+    A chain the user built has no planner title (its title is the start of the question):
+    no label then, rather than a question cut in the middle of a word.
+    """
+    if record.name:
+        return record.name
+    title = record.title or ""
+    return "" if record.question.startswith(title.rstrip(".?")) and len(title) >= 50 else title
 
 
 def data_note(latest: date, lang: str = "en") -> str:
@@ -242,7 +254,11 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     y = 140
     if content.topic:
         topic = c.font("sans", 15, 700)
-        c.tracked((m, y), content.topic.upper(), topic, BLUE, 0.08)
+        words, label = content.topic.upper().split(), content.topic.upper()
+        while len(words) > 1 and c.length(label, topic) * 1.1 > width - 2 * m:  # one line
+            words = words[:-1]
+            label = " ".join(words).rstrip(",;:") + " …"
+        c.tracked((m, y), label, topic, BLUE, 0.08)  # tracking adds about a tenth
         y += 32
     # the largest size at which the whole title fits three lines (never cut its meaning),
     # preferably without a lone word on its last line
@@ -291,8 +307,8 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     _footer(c, content, foot_y, foot_h, m)
     box = (m, y, width - m, foot_y - 28)
     c.rect(box, WHITE, radius=16, outline=LINE)
-    if content.figure and content.figure.get("kind") == "concentration":
-        _hhi_panels(c, content.figure, box, lang)
+    if content.figure and content.figure.get("kind") in ("concentration", "series"):
+        _panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("rows"):
         _chart(c, content.figure, box, lang)
     else:
@@ -416,10 +432,18 @@ def _dashed(c: _Canvas, x0: float, x1: float, y: float, fill: str, dash: float =
         x += 2 * dash
 
 
-def _hhi_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
-    """Concentration as small multiples: a panel per flow and dimension, one shared scale."""
+PANEL_COLORS = ["#2A78D6", "#EB6834", "#1BAF7A", "#6250D6"]
+
+
+def _panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
+    """Small multiples of yearly lines, a panel per series, first and last values labelled.
+
+    Concentration (HHI): one shared scale with the 1,000 and 1,800 levels, coloured by
+    dimension. Yearly series: each panel on its own scale, values as % or €.
+    """
     x0, y0, x1, y1 = box
     rows = fig["rows"]
+    hhi = fig.get("kind") == "concentration"
     panels = list(dict.fromkeys(r["series"] for r in rows))
     title_font = c.font("sans", 18, 600)
     y = c.lines(
@@ -432,7 +456,7 @@ def _hhi_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
     )
     legend = c.font("sans", 14, 500)
     lx = x1 - 20  # the two reference levels, right-aligned on the title line
-    for level, dash, color in ((1_000, 3, LINE), (1_800, 5, FAINT)):
+    for level, dash, color in ((1_000, 3, LINE), (1_800, 5, FAINT)) if hhi else ():
         names = HHI_LEVELS[level]
         text = f"{fmt_number(level, 0, lang)} = {names.get(lang, names['en'])}"
         lx -= c.length(text, legend)
@@ -455,7 +479,12 @@ def _hhi_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
         px = x0 + 20 + (i % cols) * (pw + gap_x)
         py = y + 6 + (i // cols) * (ph + gap_y)
         mine = sorted((r for r in rows if r["series"] == panel), key=lambda r: r["group"])
-        color = DIM_COLOR.get(mine[0].get("dim", "product"), BLUE)
+        if hhi:
+            color = DIM_COLOR.get(mine[0].get("dim", "product"), BLUE)
+        else:
+            color = PANEL_COLORS[i % len(PANEL_COLORS)]
+            top = max(r["value"] for r in mine) * 1.3 or 1.0  # each panel on its own scale
+        unit = "hhi" if hhi else mine[0].get("unit", "value_eur")
         c.text((px, py), panel, label_font, INK)
         left, right = px + 4, px + pw - 8
         ptop, pbottom = py + 34, py + ph - 24
@@ -464,27 +493,39 @@ def _hhi_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
             span = (years[-1] - years[0]) or 1
             return left + 22 + (year - years[0]) / span * (right - left - 44)
 
-        def ypos(v: float, ptop: float = ptop, pbottom: float = pbottom) -> float:
+        def ypos(v: float, ptop: float = ptop, pbottom: float = pbottom, top: float = top) -> float:
             return pbottom - v / top * (pbottom - ptop)
 
         c.rect((left, pbottom, right, pbottom + 1), LINE)
-        _dashed(c, left, right, ypos(1_800), FAINT)
-        _dashed(c, left, right, ypos(1_000), LINE, 3)
+        if hhi:
+            _dashed(c, left, right, ypos(1_800), FAINT)
+            _dashed(c, left, right, ypos(1_000), LINE, 3)
         pts = [(xpos(int(r["group"])), ypos(r["value"])) for r in mine]
         if len(pts) > 1:
             c.draw.line([tuple(c.p(*pt)) for pt in pts], fill=color, width=3 * c.s, joint="curve")
+        dots = len(pts) <= 8  # markers for a few years, a plain line for a long series
         for k, (px_, py_) in enumerate(pts):
-            c.draw.ellipse(c.p(px_ - 4.5, py_ - 4.5, px_ + 4.5, py_ + 4.5), fill=color)
+            if dots or k in (0, len(pts) - 1):
+                c.draw.ellipse(c.p(px_ - 4.5, py_ - 4.5, px_ + 4.5, py_ + 4.5), fill=color)
             if k in (0, len(pts) - 1):
                 c.text(
                     (px_, py_ - 10),
-                    fmt_number(mine[k]["value"], 0, lang),
+                    _show(mine[k]["value"], unit, lang),
                     value_font,
                     INK,
                     anchor="ms",
                 )
-        for year in years:
+        for year in years if len(years) <= 8 else [y for y in years if y % 5 == 0]:
             c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
+
+
+def _show(value: float, unit: str, lang: str) -> str:
+    """A panel's value label: an index, a share or euros."""
+    if unit == "hhi":
+        return fmt_number(value, 0, lang)
+    if unit == "share":
+        return fmt_pct(value, lang)
+    return fmt_eur(value, lang)
 
 
 def _points(c: _Canvas, points: list[str], box: tuple, lang: str) -> None:
@@ -521,7 +562,7 @@ def linkedin_post(content: CardContent, steps: int, url: str = f"https://{REPO}"
     lines = [content.title, ""]
     if content.subtitle:
         lines += [content.subtitle, ""]
-    for tile in content.tiles[:3]:
+    for tile in content.tiles[:4]:
         detail = f" ({tile['detail']})" if tile.get("detail") else ""
         lines.append(f"▪ {tile['value']}: {tile['label']}{detail}")
     if content.tiles:

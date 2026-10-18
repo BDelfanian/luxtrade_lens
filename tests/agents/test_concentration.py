@@ -137,3 +137,62 @@ def test_the_step_says_what_it_queried():
         "imports · across all partners · 2005–2025, yearly, every 5 years · "
         "concentration index (HHI)"
     )
+
+
+def test_a_share_asked_each_year_is_a_yearly_series():
+    from luxtrade.agents.interpret import yearly_series
+
+    snapshot = QuerySpec(
+        intent="composition",
+        breakdown="partner_group",
+        flow="import",
+        measure="share",
+        period_start="2005",
+        period_end="2025",
+    )
+    q = "What share of imports came from EU27 countries each year from 2005 to 2025?"
+    series = yearly_series(q, snapshot)
+    assert (series.intent, series.freq) == ("time_series", "A")
+    assert yearly_series(
+        "Part des importations chaque année de 2005 à 2025 ?", snapshot
+    ).intent == ("time_series")
+    assert yearly_series("Shares from 2005 to 2025?", snapshot) == snapshot  # not asked yearly
+    one_year = snapshot.model_copy(update={"period_start": "2025"})
+    assert yearly_series(q, one_year) == one_year
+    change = snapshot.model_copy(update={"intent": "ranking", "measure": "change"})
+    assert yearly_series(q, change) == change
+
+
+def test_a_series_says_whether_it_jumped_in_the_last_period(make_assistant):
+    spec = QuerySpec(
+        intent="time_series", flow="export", freq="M", period_start="2024-01", period_end="2024-12"
+    )
+    rec = make_assistant(None).run_spec(spec, question="q", origin="preset")
+    texts = [f["text"] for f in rec.facts]
+    assert any(t.startswith("exports Nov 2024: ") for t in texts)  # the period before the last
+    assert any("largest change between consecutive periods" in t for t in texts)
+    assert any("median over Jan 2024–Dec 2024" in t for t in texts)
+    assert any("the two largest periods" in t and "of the total" in t for t in texts)
+
+
+def test_one_line_series_make_panels_one_per_subject(make_assistant, semantic):
+    assistant = make_assistant(None)
+    base = {"intent": "time_series", "freq": "A", "period_start": "2018", "period_end": "2024"}
+    specs = {
+        1: QuerySpec(**base, breakdown="partner_group", flow="import", measure="share"),
+        2: QuerySpec(**base, breakdown="partner_group", flow="import"),  # the same subject, values
+        3: QuerySpec(**base, breakdown="partner", partners=["US"], flow="export", measure="share"),
+    }
+    records = {
+        n: assistant.run_spec(s, question=f"q{n}", origin="preset") for n, s in specs.items()
+    }
+    chain = [ScenarioStep(n=n, kind="own", question=f"q{n}") for n in specs]
+    (fig,) = compose(chain, records, "headline", "text", semantic)
+    assert fig.kind == "series" and fig.steps == [1, 3]
+    assert list(dict.fromkeys(r["series"] for r in fig.rows)) == [
+        "EU27 countries, share of imports",
+        "United States, share of exports",
+    ]
+    assert all(t["value"].endswith("%") for t in fig.tiles)
+    chart = evidence_bars(pd.DataFrame(fig.rows), fig.kind, "en")
+    assert len(chart.data) == 2
