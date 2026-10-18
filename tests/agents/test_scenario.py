@@ -542,3 +542,33 @@ def test_step_references_are_taken_out_of_the_answer_text():
     assert clean.headline == "Imports turned to the EU."
     assert clean.points[0].text == "China fell to 3.0 %." and clean.points[0].steps == [13, 17]
     assert clean.conclusion == "Goods only." and clean.step_notes[0].text == "It sets the scene."
+
+
+def test_a_point_may_not_call_a_last_period_jump_lasting():
+    from luxtrade.agents.scenario import calls_jump_lasting
+
+    jumps = {8: "lifting"}
+    bad = "Lifting machinery imports surged to 3.1 % in 2025, indicating a lasting shift."
+    assert calls_jump_lasting(bad, {8}, jumps)
+    assert calls_jump_lasting(bad, {5}, jumps) == []  # not about the step that jumped
+    for fine in (
+        "Lifting machinery rose to 3.1 % in 2025, a one-off rather than a lasting shift.",
+        "Computers fell lastingly, while the lifting machinery jump is not yet confirmed as a "
+        "lasting trend.",
+    ):
+        assert calls_jump_lasting(fine, {8}, jumps) == []
+
+
+def test_product_codes_are_taken_out_of_the_answer_text():
+    from luxtrade.agents.scenario import strip_step_refs
+
+    answer = ScenarioAnswer(
+        headline="Computers (HS 8471) fell.",
+        points=[AnswerPoint(text="In 2008 HS 8471 came mainly from China.", steps=[10])],
+        conclusion="Telephone sets (HS8517) rose.",
+        step_notes=[],
+        charts=[],
+    )
+    clean = strip_step_refs(answer)
+    assert (clean.headline, clean.conclusion) == ("Computers fell.", "Telephone sets rose.")
+    assert clean.points[0].text == "In 2008 came mainly from China."

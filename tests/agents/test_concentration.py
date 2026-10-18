@@ -219,3 +219,36 @@ def test_a_split_in_value_per_kg_gives_both_sides_and_their_gap(make_assistant, 
         "Non-EU27 countries, imports: mass",  # price and mass of one subject: two panels
     ]
     assert fig.tiles[0]["value"].endswith("€/kg") and fig.tiles[2]["value"].endswith("kg")
+
+
+def test_an_eu_split_the_question_never_asked_for_is_taken_out():
+    from luxtrade.agents.interpret import unasked_split
+
+    split = QuerySpec(
+        intent="time_series",
+        breakdown="partner_group",
+        products=["8471"],
+        flow="import",
+        measure="share",
+    )
+    plain = unasked_split("What share of imports were computers (HS 8471) each year?", split)
+    assert plain.breakdown == "product"
+    for asked in ("Computers from EU27 and non-EU27 partners?", "Part intra-UE des ordinateurs ?"):
+        assert unasked_split(asked, split).breakdown == "partner_group"
+
+
+def test_a_jump_in_the_last_period_is_said_in_words():
+    import pandas as pd
+
+    from luxtrade.agents.facts import _series_shape
+
+    def fmt(v: float, _lang: str) -> str:
+        return f"{v:.1f} %"
+
+    jump = pd.DataFrame(
+        {"period": [2021, 2022, 2023, 2024, 2025], "value": [0.1, 0.2, 0.1, 0.2, 3.1]}
+    )
+    texts = [f.text for f in _series_shape(jump, "Lifting", "share", fmt, "en")]
+    assert any("a jump in the last period, not yet a trend" in t for t in texts)
+    steady = jump.assign(value=[1.0, 1.5, 2.0, 2.5, 3.0])
+    assert not any("jump" in f.text for f in _series_shape(steady, "X", "share", fmt, "en"))

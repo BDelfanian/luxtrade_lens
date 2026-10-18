@@ -99,7 +99,7 @@ def interpret(
     spec, dropped = validate_codes(interp.spec, sem, allowed)
     if spec.partner_group not in ("WORLD", "EU27_2020", "EXTRA_EU27_2020"):
         spec = spec.model_copy(update={"partner_group": "WORLD"})
-    spec = yearly_series(question, spec)
+    spec = unasked_split(question, yearly_series(question, spec))
     followup = interp.followup_of if context.get(interp.followup_of) else None
     detected = followup is None and bool(context.turns) and is_elliptical(question)
     if detected:
@@ -177,6 +177,28 @@ def yearly_series(question: str, spec: QuerySpec) -> QuerySpec:
             "intent": "time_series",
             "freq": "A",
             "assumptions": [*spec.assumptions, "a yearly series: the question asks for each year"],
+        }
+    )
+
+
+_EU_RE = re.compile(
+    r"\b(?:eu|eu27|ue|ue27|e\.u\.|europ\w*|intra\W?\w*|extra\W?\w*|union\w*|binnen\w*)\b",
+    re.IGNORECASE,
+)
+
+
+def unasked_split(question: str, spec: QuerySpec) -> QuerySpec:
+    """An EU27 vs non-EU27 split the question never asked for, taken out.
+
+    Seen on real data: "What share of imports were computers (HS 8471) each year?" read as
+    computers split by EU27 and non-EU27 partners (after a prompt example about the EU27 share).
+    """
+    if spec.breakdown != "partner_group" or _EU_RE.search(question):
+        return spec
+    return spec.model_copy(
+        update={
+            "breakdown": "product" if spec.products else "none",
+            "assumptions": [*spec.assumptions, "no EU27 split: the question does not ask for one"],
         }
     )
 

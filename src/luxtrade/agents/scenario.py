@@ -128,15 +128,20 @@ _STEP_REF = re.compile(
 )
 
 
-def strip_step_refs(answer: ScenarioAnswer) -> ScenarioAnswer:
-    """The answer without "(steps 1, 3)" in its text: the ``steps`` lists already cite them.
+_CODE_REF = re.compile(r"\s*\((?:HS|SH|CN|NC|KN)\s?\d{2,8}\)|\b(?:HS|SH|CN|NC|KN)\s?\d{2,8}\s*")
 
-    Seen on real data: "(steps 13, 17)" in two points, which the number check then removed
-    (13 and 17 are not in the facts), taking the points about China and the US with them.
+
+def strip_step_refs(answer: ScenarioAnswer) -> ScenarioAnswer:
+    """The answer without "(steps 1, 3)" or "(HS 8471)" in its text, which the prompt forbids.
+
+    The ``steps`` lists already cite the steps, and the labels name the products. Seen on real
+    data: "(steps 13, 17)" and "computers (HS 8471)" in points, which the number check then
+    removed (13, 17 and 8471 are not in the facts), taking the points about China, the US
+    and where computers came from with them.
     """
 
     def clean(text: str) -> str:
-        return _STEP_REF.sub("", text)
+        return _CODE_REF.sub("", _STEP_REF.sub("", text))
 
     return answer.model_copy(
         update={
@@ -302,6 +307,78 @@ def describe(spec: dict | None) -> str:
 
 
 _YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
+_LASTING = re.compile(
+    r"\b(?:lasting|structural|steady|steadily|sustained|permanent|long-term|durable|"
+    r"structurel\w*|régulier\w*|soutenu\w*|permanent\w*|"
+    r"dauerhaft\w*|strukturell\w*|stetig\w*|anhaltend\w*|nachhaltig\w*)\b",
+    re.IGNORECASE,
+)
+_NEGATION = re.compile(
+    r"\b(?:rather\s+than|instead\s+of|not|no|never|than|plutôt\s+que|pas|non|nicht|kein\w*|"
+    r"statt|anstatt)\b(?:\W+\w+){0,5}\W*$",
+    re.IGNORECASE,
+)
+# a claim ends at a sentence mark or a contrast: "computers fell lastingly, while X jumped"
+_CLAUSES = re.compile(
+    r"[.;:!?](?=\s|$)|\b(?:while|whereas|but|unlike|although|however|yet|tandis\s+que|alors\s+que|"
+    r"mais|contrairement|während|aber|jedoch|wohingegen)\b",
+    re.IGNORECASE,
+)
+
+
+def jump_steps(records: dict[int, RunRecord], sem: object, lang: str) -> dict[int, str]:
+    """Steps whose series jumped in its last period, with a word that names what jumped.
+
+    A jump: the largest change between consecutive periods is the last one, and at least twice
+    any earlier change (lifting machinery, 0.1 % for years, then 3.1 % in 2025).
+    """
+    found = {}
+    for n, rec in records.items():
+        spec = rec.spec or {}
+        if rec.status != "answered" or spec.get("intent") != "time_series":
+            continue
+        frame = rec.frame("main")
+        if frame.empty or not {"period", "value"} <= set(frame.columns):
+            continue
+        group = [c for c in ("key", "flow") if c in frame.columns]
+        for _, g in frame.groupby(group) if group else [((), frame)]:
+            moves = g.sort_values("period")["value"].astype(float).diff().dropna().abs()
+            if len(moves) >= 3 and moves.iloc[-1] >= 2 * moves.iloc[:-1].max():
+                codes = list(spec.get("products") or []) + list(spec.get("partners") or [])
+                kind = "product" if spec.get("products") else "partner"
+                if codes:
+                    name = sem.label(codes[0], kind, lang)
+                else:
+                    name = str(g["label"].iloc[0]) if "label" in g.columns else ""
+                cue = next((w for w in re.findall(r"\w+", name) if len(w) >= 4), "")
+                if cue:
+                    found[n] = cue.lower()
+                break
+    return found
+
+
+def calls_jump_lasting(text: str, steps: set[int], jumps: dict[int, str]) -> list[str]:
+    """Clauses that call a series that jumped in its last period lasting, steady or structural.
+
+    Seen on real data: lifting machinery, 0.1 % of imports for years and 3.1 % in 2025 (96.6 %
+    from Japan), written up as "lasting shifts rather than temporary spikes"; the reasoning
+    check let it through. "Rather than a lasting trend" is not a claim of one.
+    """
+    found = []
+    for clause in _CLAUSES.split(text):
+        lasting = [
+            m for m in _LASTING.finditer(clause) if not _NEGATION.search(clause[: m.start()])
+        ]
+        if not lasting:
+            continue
+        low = clause.lower()
+        for n in sorted(steps & set(jumps)):
+            if jumps[n] in low:
+                found.append(
+                    f"calls {jumps[n]} lasting or steady, but its series jumped only in its last "
+                    f"period (step {n}): say it is a jump not yet confirmed"
+                )
+    return found
 
 
 def mismatch(question: str, spec: dict, proposed: QuerySpec | None = None) -> str | None:
@@ -491,6 +568,7 @@ def review_answer(
             found.append("observed data described as projected or expected")
         return found
 
+    jumps = jump_steps({n: records[n] for n in answered}, sem, lang)
     review = AnswerReview()
     if not answer.headline.strip():
         review.blocking.append("the headline is empty")
@@ -499,6 +577,7 @@ def review_answer(
     for i, point in enumerate(answer.points):
         cited = set(point.steps) & answered
         found = problems(point.text, cited) if cited else ["cites no answered step"]
+        found += calls_jump_lasting(point.text, cited, jumps)  # a point is about its steps
         if found:
             review.points[i] = found
     for note in answer.step_notes:

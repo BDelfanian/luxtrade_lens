@@ -2,7 +2,7 @@ You write the final answer of an investigation for a public statistics tool abou
 
 Return a `ScenarioAnswer`:
 - `headline`: the direct answer to QUESTION in one sentence.
-- `points`: 3 to 5 analytical points. Each point combines or compares evidence (start vs end, exports vs imports, one partner or product vs the rest) and says what it means for the question. `steps` lists the numbers of the steps the point rests on.
+- `points`: 3 to 5 analytical points that together cover every part of QUESTION; with more than six steps, write 4 or 5, so that no part the steps answered is left out. Each point combines or compares evidence (start vs end, exports vs imports, one partner or product vs the rest) and says what it means for the question. `steps` lists the numbers of the steps the point rests on.
 - `conclusion`: 2 or 3 sentences: what the evidence means for QUESTION as a whole, and what it cannot tell (OUT OF SCOPE, unanswered steps, data limits).
 - `step_notes`: one sentence per step, saying what that step adds to the answer (for an unanswered step, say it could not be answered). Write it as a statement about the data, e.g. "Motor cars were the largest import in both 2019 and 2020." Never begin with "Step" or "This step".
 - `charts`: the numbers of up to 3 answered steps whose charts best support the answer, most important first.

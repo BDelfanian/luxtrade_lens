@@ -77,6 +77,11 @@ _T = {
         "fr": "{label} : médiane sur {p0}–{p1} : {v}",
         "de": "{label}: Median über {p0}–{p1}: {v}",
     },
+    "s_jump": {
+        "en": "{label}: the last change ({pa}–{pb}) is more than twice any earlier one: a jump in the last period, not yet a trend",
+        "fr": "{label} : la dernière variation ({pa}–{pb}) dépasse le double de toutes les précédentes : un saut sur la dernière période, pas encore une tendance",
+        "de": "{label}: die letzte Veränderung ({pa}–{pb}) ist mehr als doppelt so groß wie jede frühere: ein Sprung in der letzten Periode, noch kein Trend",
+    },
     "s_top2": {
         "en": "{label}: the two largest periods ({pa}, {pb}) make {pct} of the total over {p0}–{p1}",
         "fr": "{label} : les deux plus fortes périodes ({pa}, {pb}) font {pct} du total sur {p0}–{p1}",
@@ -740,6 +745,14 @@ def _series_shape(
             ),
         )
     )
+    moves = steps.iloc[1:]
+    if len(moves) >= 3 and moves.iloc[-1] >= 2 * moves.iloc[:-1].max():  # as jump_steps
+        out.append(
+            Fact(
+                key=f"{label}.jump",
+                text=_t("s_jump", lang, label=label, pa=periods[-2], pb=periods[-1]),
+            )
+        )
     total = float(values.sum())
     if measure in ("value_eur", "qty_kg") and len(values) >= 6 and total > 0:
         a, b = sorted(values.nlargest(2).index)
