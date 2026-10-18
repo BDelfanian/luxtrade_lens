@@ -672,15 +672,18 @@ def evidence(scenario_id: str) -> list[dict]:
 
 
 def card_content(rec: ScenarioRecord) -> CardContent:
-    """What the share card shows: the record's checked words, its first evidence figure."""
+    """What the share card shows: the insight (title and subtitle), the first evidence figure."""
     figures = [EvidenceFigure.model_validate(f) for f in evidence(rec.scenario_id)]
     latest = builder.assistant.sem.coverage.latest_complete_period
-    return content_from(rec, figures, data_note(latest, rec.language))
+    return content_from(rec, figures, data_note(latest, rec.language), builder.share(rec))
 
 
 @st.cache_data(show_spinner="Drawing the card…", max_entries=16)
-def share_card(scenario_id: str, size: str) -> bytes:
-    """The scenario's share card as PNG bytes (``portrait`` 4:5 or ``square``)."""
+def share_card(scenario_id: str, size: str, title: str) -> bytes:
+    """The scenario's share card as PNG bytes (``portrait`` 4:5 or ``square``).
+
+    ``title`` is part of the cache key: the card changes when its title is written.
+    """
     rec = builder.store.load(scenario_id)
     return render_card(card_content(rec), size) if rec else b""
 
@@ -784,6 +787,10 @@ def render_result(rec: ScenarioRecord) -> None:
     of printed below it, so a finished scenario reads in one screen.
     """
     runs = builder.records(rec)
+    renew = ss.pop("scn_new_title", None) == rec.scenario_id
+    if (renew or not rec.share) and builder.assistant.llm is not None and rec.headline:
+        with st.spinner("Writing the insight's title for sharing…"):
+            builder.share(rec, renew=renew)  # once per scenario, then kept in its record
     st.caption(
         f":violet[:material/route: Scenario · {rec.title}] · {len(rec.steps)} steps · "
         f"scenario `{rec.scenario_id}`" + (f" · revises `{rec.based_on}`" if rec.based_on else "")
@@ -904,25 +911,45 @@ def render_share(rec: ScenarioRecord) -> None:
             "(1080 × 1080) suits carousels and other networks.",
         )
         size = size or "portrait"
-        png = share_card(rec.scenario_id, size)
-        st.download_button(
-            "Save as PNG",
-            data=png,
-            file_name=card_name(rec, size),
-            mime="image/png",
-            icon=":material/download:",
-            type="primary",
-            on_click="ignore",
-            key=f"scn-share-save-{rec.scenario_id}",
-        )
+        content = card_content(rec)
+        png = share_card(rec.scenario_id, size, content.title)
+        with st.container(horizontal=True):
+            st.download_button(
+                "Save as PNG",
+                data=png,
+                file_name=card_name(rec, size),
+                mime="image/png",
+                icon=":material/download:",
+                type="primary",
+                on_click="ignore",
+                key=f"scn-share-save-{rec.scenario_id}",
+            )
+            st.button(
+                "Write a new title",
+                icon=":material/refresh:",
+                key=f"scn-new-title-{rec.scenario_id}",
+                disabled=builder.assistant.llm is None,
+                on_click=lambda: ss.update(scn_new_title=rec.scenario_id),
+                help="Ask the language model for a different title and subtitle; they are "
+                "checked again against the answer, and the earlier ones are kept in the record.",
+            )
         st.markdown("**Caption** · copy it with the icon at its top right")
-        st.code(linkedin_post(card_content(rec), len(rec.steps)), language=None, wrap_lines=True)
-        st.caption(
-            ":material/verified: The card and the caption use only the checked answer and the "
-            "figures computed by code. Its footer names the source, the data's latest complete "
-            "month and the scenario ID, which reopens and re-verifies it here; the QR code "
-            "leads to the open-source repository."
-        )
+        st.code(linkedin_post(content, len(rec.steps)), language=None, wrap_lines=True)
+        if builder.share(rec).get("source") == "llm":
+            st.caption(
+                ":material/verified: The title and subtitle restate the checked answer as one "
+                "insight: written by the language model, then checked by code (every number, "
+                "year and country is in the answer, at most four figures). The key figures and "
+                "the chart are computed by code; the footer names the source and the data's "
+                "latest complete month, and the QR code leads to the open-source repository."
+            )
+        else:
+            st.caption(
+                ":material/info: Without a language model the card's title is the checked "
+                "headline. The key figures and the chart are computed by code; the footer names "
+                "the source and the data's latest complete month, and the QR code leads to the "
+                "open-source repository."
+            )
     with preview:
         st.image(png, caption=f"{rec.title or rec.scenario_id} · {card_name(rec, size)}")
 

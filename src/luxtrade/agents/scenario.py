@@ -53,6 +53,7 @@ from luxtrade.agents.llm import LLMError
 from luxtrade.agents.optimise import known_codes, optimise, validate_suggestion
 from luxtrade.agents.presets import PRESETS
 from luxtrade.agents.service import Assistant
+from luxtrade.agents.share import write_share
 from luxtrade.agents.spec import SNAPSHOT_INTENTS, Language, QuerySpec, Suggestion
 from luxtrade.runs.scenarios import ScenarioRecord, ScenarioStep, ScenarioStore
 from luxtrade.runs.sessions import new_session_id
@@ -995,6 +996,37 @@ class ScenarioBuilder:
             charts=[],
         )
         return self._evidence_figures(record.steps, self.records(record), answer, record.language)
+
+    def share(self, record: ScenarioRecord, renew: bool = False) -> dict:
+        """The share card's title and subtitle: written once from the checked answer, then kept.
+
+        Kept in the record with the check notes and the LLM call, so a weekly post is stable
+        and traceable. Without a language model the checked headline is used and nothing kept.
+        ``renew`` writes a new title, different from the ones written before.
+        """
+        if record.share and not renew:
+            return record.share
+        llm = self.assistant.llm
+        start = len(llm.usage) if llm is not None else 0
+        earlier = list(record.share.get("earlier", []))
+        if record.share.get("source") == "llm":
+            earlier.append(record.share["title"])
+        text, source, notes = write_share(
+            llm, record, self.figures(record), self.assistant.sem, avoid=earlier if renew else None
+        )
+        share = {
+            "title": text.title,
+            "subtitle": text.subtitle,
+            "source": source,
+            "notes": notes,
+            "earlier": earlier,
+        }
+        if llm is not None:
+            record.share = share
+            record.notes = [*record.notes, *notes]
+            record.llm_usage += [u.__dict__ for u in llm.usage[start:]]
+            self.store.save(record)
+        return share
 
     def records(self, record: ScenarioRecord) -> dict[int, RunRecord]:
         """The run records of a scenario's steps, by step number (missing ones left out)."""

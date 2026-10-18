@@ -299,9 +299,10 @@ def test_a_stored_scenario_opens_from_its_link(app_env, processed_dir):
     saves = {b.proto.id.split("-", 1)[-1] for b in at.get("download_button")}
     assert any(f"scn-save-{rec.scenario_id}" in k for k in saves)
     assert any(f"scn-share-save-{rec.scenario_id}" in k for k in saves)
-    caption = next(c.value for c in at.code if rec.scenario_id in c.value)
-    assert caption.startswith("A few partners supply most imports.")
-    assert "github.com/BDelfanian/luxtrade_lens" in caption
+    caption = next(c.value for c in at.code if "github.com/BDelfanian/luxtrade_lens" in c.value)
+    assert caption.startswith("A few partners supply most imports.")  # offline: the headline
+    assert rec.scenario_id not in caption
+    assert any(b.key == f"scn-new-title-{rec.scenario_id}" and b.disabled for b in at.button)
     assert at.get("image")  # the card's preview
 
 

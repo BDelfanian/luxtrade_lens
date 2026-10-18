@@ -1,11 +1,11 @@
 """A scenario's insight as a share card: a PNG laid out for a LinkedIn post, and its caption.
 
-The card carries what makes a shared chart trustworthy: the LuxTrade Lens logo, the question,
-the checked headline, the key figures and the evidence chart (both computed by code, see
-agents/evidence.py), a one-line takeaway, and a footer with the source, the data vintage, how
-the numbers were made, the scenario ID (it reopens and re-verifies in the app) and a QR code to
-the open-source repository. Drawn with Pillow and the bundled open fonts (Bricolage Grotesque,
-IBM Plex Sans), so it looks the same on every machine. No LLM: the words are the record's.
+The card leads with the insight: a short title and a subtitle that join the question and its
+answer (written from the checked answer, see agents/share.py; the checked headline without a
+language model). Below them the key figures and the evidence chart (both computed by code, see
+agents/evidence.py), and a footer with the source, how recent the data is, how the numbers were
+made and a QR code to the open-source repository. Drawn with Pillow and the bundled open fonts
+(Bricolage Grotesque, IBM Plex Sans), so it looks the same on every machine. No LLM here.
 
 Sizes: ``portrait`` 1080 × 1350 (4:5, the largest image in the LinkedIn feed) and ``square``
 1080 × 1080, rendered at ``scale`` × for sharp text.
@@ -41,9 +41,7 @@ _T = {
         "de": "HANDEL IM BLICK",
     },
     "week": {"en": "Week {w} · {d}", "fr": "Semaine {w} · {d}", "de": "Woche {w} · {d}"},
-    "q": {"en": "Q.", "fr": "Q.", "de": "F."},
     "data": {"en": "data to {m} {y}", "fr": "données jusqu'à {m} {y}", "de": "Daten bis {m} {y}"},
-    "short": {"en": "In short.", "fr": "En bref.", "de": "Kurz gesagt."},
     "points": {"en": "Key points", "fr": "Points clés", "de": "Kernpunkte"},
     "source": {
         "en": "Source: Eurostat Comext DS-045409, Luxembourg's trade in goods, {data}.",
@@ -62,25 +60,16 @@ _T = {
         "en": "How: I asked LuxTrade Lens “{q}” It broke the question into {n} precise "
         "questions, answered each one from Eurostat's official trade data (Comext DS-045409) "
         "with guarded SQL, and checked every number in the answer against the step it came "
-        "from (scenario {sid}, {data}).",
+        "from ({data}).",
         "fr": "Comment : j'ai demandé à LuxTrade Lens « {q} » L'outil a décomposé la question "
         "en {n} questions précises, a répondu à chacune à partir des données officielles "
         "d'Eurostat (Comext DS-045409) avec du SQL contrôlé, et a vérifié chaque chiffre de la "
-        "réponse (scénario {sid}, {data}).",
+        "réponse ({data}).",
         "de": "So entstand es: Ich habe LuxTrade Lens gefragt: „{q}“ Das Tool hat die Frage in "
         "{n} präzise Fragen zerlegt, jede aus den amtlichen Eurostat-Daten (Comext DS-045409) "
-        "mit geprüftem SQL beantwortet und jede Zahl der Antwort geprüft (Szenario {sid}, "
-        "{data}).",
+        "mit geprüftem SQL beantwortet und jede Zahl der Antwort geprüft ({data}).",
     },
     "open": {"en": "Open source: {url}", "fr": "Open source : {url}", "de": "Open Source: {url}"},
-    "ids": {
-        "en": "Scenario {sid} · LuxTrade Lens, open source (EUPL-1.2) · not an official "
-        "STATEC or Eurostat product",
-        "fr": "Scénario {sid} · LuxTrade Lens, open source (EUPL-1.2) · produit non officiel "
-        "de STATEC ou d'Eurostat",
-        "de": "Szenario {sid} · LuxTrade Lens, Open Source (EUPL-1.2) · kein offizielles "
-        "Produkt von STATEC oder Eurostat",
-    },
 }
 
 
@@ -92,29 +81,33 @@ def _t(key: str, lang: str, **values: object) -> str:
 class CardContent:
     """What a card shows; ``content_from`` builds it from a scenario record."""
 
-    question: str
-    headline: str
-    takeaway: str
-    scenario_id: str
+    title: str  # the insight, the card's large text
+    subtitle: str  # one sentence: the question's context and the answer's evidence
+    question: str  # the question as asked (in the caption, not on the card)
     data_note: str  # e.g. "data to Jun 2026"
     when: date
     lang: str = "en"
+    topic: str = ""  # a short label above the title: the scenario's title
     tiles: list[dict] = field(default_factory=list)  # {"value", "label", "detail", "tone"}
     figure: dict | None = None  # an EvidenceFigure dump: kind, title, rows
     points: list[str] = field(default_factory=list)  # shown when there is no figure
 
 
-def content_from(record: object, figures: list, data_note: str) -> CardContent:
-    """A card for a scenario record and its evidence figures (the first one and its tiles).
+def content_from(
+    record: object, figures: list, data_note: str, share: dict | None = None
+) -> CardContent:
+    """A card for a scenario record, its first evidence figure and its share text.
 
+    The share text comes from ``ScenarioBuilder.share``; without it, the checked headline.
     ``record`` is a ``runs.scenarios.ScenarioRecord``, ``figures`` ``EvidenceFigure``s.
     """
     first = figures[0] if figures else None
+    share = share or {}
     return CardContent(
+        title=share.get("title") or record.headline,
+        subtitle=share.get("subtitle", first_sentence(record.conclusion)),
         question=record.question,
-        headline=record.headline,
-        takeaway=first_sentence(record.conclusion),
-        scenario_id=record.scenario_id,
+        topic=record.title,
         data_note=data_note,
         when=date.fromisoformat(record.created_at[:10]),
         lang=record.language,
@@ -130,7 +123,7 @@ def data_note(latest: date, lang: str = "en") -> str:
 
 
 def first_sentence(text: str) -> str:
-    """The first sentence of a paragraph (the card's takeaway)."""
+    """The first sentence of a paragraph."""
     found = re.split(r"(?<=[.!?])\s+(?=[A-ZÀ-ÖØ-Þ])", text.strip(), maxsplit=1)
     return found[0] if found else ""
 
@@ -251,20 +244,34 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     c.text((width - m, 82), stamp, c.font("sans", 16, 400), MUTED, anchor="ra")
     c.rect((m, 118, width - m, 119), LINE)
 
-    # the question and the headline
-    y = 138
-    q_font = c.font("italic", 20, 400)
-    q_lines = _wrap(f"{_t('q', lang)} {content.question}", q_font, (width - 2 * m) * c.s, 2)
-    y = c.lines(m, y, q_lines, q_font, MUTED, 28) + 10
-    # the largest size at which the whole headline fits three lines (never cut its meaning)
-    sizes = (48, 44, 40, 36, 33, 30) if portrait else (40, 36, 33, 30, 28)
-    for size_px in sizes:
-        h_font = c.font("display", size_px, 700)
-        h_lines = _wrap(content.headline, h_font, (width - 2 * m) * c.s, 99)
-        if len(h_lines) <= 3:
-            break
-    h_lines = _wrap(content.headline, h_font, (width - 2 * m) * c.s, 3)
-    y = c.lines(m, y, h_lines, h_font, NAVY, size_px * 1.18) + 18
+    # the insight: topic label, title, subtitle (the question and its answer in one)
+    full = (width - 2 * m) * c.s
+    y = 140
+    if content.topic:
+        topic = c.font("sans", 15, 700)
+        c.tracked((m, y), content.topic.upper(), topic, BLUE, 0.08)
+        y += 32
+    # the largest size at which the whole title fits three lines (never cut its meaning),
+    # preferably without a lone word on its last line
+    sizes = (64, 58, 54, 50, 46, 42, 38, 34) if portrait else (56, 52, 48, 44, 40, 36, 32)
+    fits = [s for s in sizes if len(_wrap(content.title, c.font("display", s, 750), full, 99)) <= 3]
+    size_px = next(
+        (
+            s
+            for s in fits
+            if len(lines := _wrap(content.title, c.font("display", s, 750), full, 99)) == 1
+            or " " in lines[-1]
+        ),
+        fits[0] if fits else sizes[-1],
+    )
+    t_font = c.font("display", size_px, 750)
+    t_lines = _wrap(content.title, t_font, full, 3)
+    y = c.lines(m, y, t_lines, t_font, NAVY, round(size_px * 1.1)) + 12
+    if content.subtitle:
+        s_px = 24 if portrait else 22
+        s_lines = _wrap(content.subtitle, c.font("sans", s_px, 400), full, 3)
+        y = c.lines(m, y, s_lines, c.font("sans", s_px, 400), "#3A4458", round(s_px * 1.38))
+    y += 22
 
     # the key figures
     tiles = content.tiles[:3]
@@ -285,22 +292,11 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
                 c.lines(x0 + 18, ty + 2, detail, c.font("sans", 15, 400), MUTED, 20)
         y += tile_h + 18
 
-    # the footer and the takeaway are laid out from the bottom; the chart takes what is left
-    foot_h = 168 if portrait else 150
+    # the footer at the bottom; the chart takes what is left
+    foot_h = 160 if portrait else 148
     foot_y = height - foot_h
     _footer(c, content, foot_y, foot_h, m)
-    t_font = c.font("sans", 20, 400)
-    b_font = c.font("sans", 20, 700)
-    lead = _t("short", lang)
-    lead_w = c.length(lead + " ", b_font)
-    full = (width - 2 * m) * c.s
-    t_lines = _wrap(content.takeaway, t_font, full, 3, first=full - lead_w * c.s)
-    take_y = foot_y - 24 - len(t_lines) * 28
-    if t_lines:  # the lead-in in bold, the text after it; later lines from the margin
-        c.text((m, take_y), lead, b_font, NAVY)
-        c.text((m + lead_w, take_y), t_lines[0], t_font, INK)
-        c.lines(m, take_y + 28, t_lines[1:], t_font, INK, 28)
-    box = (m, y, width - m, take_y - 20)
+    box = (m, y, width - m, foot_y - 28)
     c.rect(box, WHITE, radius=16, outline=LINE)
     if content.figure and content.figure.get("rows"):
         _chart(c, content.figure, box, lang)
@@ -313,7 +309,7 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
 
 
 def _footer(c: _Canvas, content: CardContent, y: float, h: float, m: float) -> None:
-    """Navy band: source and vintage, how the numbers were made, IDs, repository and QR."""
+    """Navy band: source and data month, how the numbers were made, repository and its QR."""
     lang = content.lang
     c.rect((0, y, c.w, c.h), NAVY)
     qr_size = h - 44
@@ -328,14 +324,10 @@ def _footer(c: _Canvas, content: CardContent, y: float, h: float, m: float) -> N
     text_w = (qx - 24 - m) * c.s
     small = c.font("sans", 14, 400)
     bold = c.font("sans", 15, 700)
-    ty = y + 18
-    for key, font, color in (
-        ("source", bold, WHITE),
-        ("method", small, "#C9D3E3"),
-        ("ids", small, "#C9D3E3"),
-    ):
-        text = _t(key, lang, data=content.data_note, sid=content.scenario_id)
-        ty = c.lines(m, ty, _wrap(text, font, text_w, 2), font, color, 20) + 4
+    ty = y + 20
+    for key, font, color in (("source", bold, WHITE), ("method", small, "#C9D3E3")):
+        text = _t(key, lang, data=content.data_note)
+        ty = c.lines(m, ty, _wrap(text, font, text_w, 2), font, color, 21) + 6
     c.text((m, y + h - 30), REPO, c.font("sans", 16, 700), "#7FD3F5")
 
 
@@ -445,18 +437,16 @@ def _points(c: _Canvas, points: list[str], box: tuple, lang: str) -> None:
 
 def linkedin_post(content: CardContent, steps: int, url: str = f"https://{REPO}") -> str:
     """A ready-to-paste LinkedIn caption for the card (the same checked words and figures)."""
-    lines = [content.headline, ""]
+    lines = [content.title, ""]
+    if content.subtitle:
+        lines += [content.subtitle, ""]
     for tile in content.tiles[:3]:
         detail = f" ({tile['detail']})" if tile.get("detail") else ""
         lines.append(f"▪ {tile['value']}: {tile['label']}{detail}")
     if content.tiles:
         lines.append("")
-    if content.takeaway:
-        lines += [content.takeaway, ""]
     lang = content.lang
-    how = _t(
-        "how", lang, q=content.question, n=steps, sid=content.scenario_id, data=content.data_note
-    )
+    how = _t("how", lang, q=content.question, n=steps, data=content.data_note)
     lines += [
         how,
         "",

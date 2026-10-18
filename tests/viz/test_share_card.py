@@ -42,6 +42,7 @@ def record(**changes: object) -> ScenarioRecord:
         "session_id": "s1",
         "created_at": "2026-10-16T22:25:40+00:00",
         "question": "Which products break first in a crisis?",
+        "title": "Crisis exposure of products",
         "headline": "Iron and steel exports fall first and furthest in every crisis.",
         "points": [{"text": "Iron and steel fell 48.4 % in 2009.", "steps": [1]}],
         "conclusion": "Iron and steel is the most exposed. Goods only, not services.",
@@ -85,10 +86,19 @@ def test_long_words_and_texts_do_not_break_the_layout():
 
 def test_the_content_comes_from_the_record_and_its_first_figure():
     c = content()
-    assert c.headline.startswith("Iron and steel exports fall first")
-    assert c.takeaway == "Iron and steel is the most exposed."  # the first sentence only
+    # without share text: the checked headline, and the conclusion's first sentence below it
+    assert c.title.startswith("Iron and steel exports fall first")
+    assert c.subtitle == "Iron and steel is the most exposed."
+    assert c.topic == "Crisis exposure of products"
     assert c.tiles == FIGURE.tiles and c.figure["rows"] == FIGURE.rows
-    assert c.when == date(2026, 10, 16) and c.scenario_id == "abc1234567"
+    assert c.when == date(2026, 10, 16)
+
+
+def test_the_share_text_leads_the_card():
+    share = {"title": "Iron and steel takes the hardest hit", "subtitle": "In 2009 it fell 48.4 %."}
+    c = content_from(record(), [FIGURE], "data to Jun 2026", share)
+    assert (c.title, c.subtitle) == (share["title"], share["subtitle"])
+    assert c.question == "Which products break first in a crisis?"  # for the caption only
 
 
 def test_first_sentence():
@@ -103,13 +113,14 @@ def test_the_data_note_is_localised():
 
 
 def test_the_caption_repeats_the_checked_words_and_says_how():
-    post = linkedin_post(content(), steps=2)
-    assert post.startswith("Iron and steel exports fall first")
+    share = {"title": "Iron and steel takes the hardest hit", "subtitle": "In 2009 it fell 48.4 %."}
+    post = linkedin_post(content_from(record(), [FIGURE], "data to Jun 2026", share), steps=2)
+    assert post.startswith("Iron and steel takes the hardest hit\n\nIn 2009 it fell 48.4 %.")
     assert "▪ 2 / 2: Iron and steel: periods with falling exports" in post
     assert "▪ −48.4 %: Iron and steel, 2008 → 2009 (all: −12.4 %)" in post
     assert "Which products break first in a crisis?" in post
     assert "2 precise questions" in post and "Comext DS-045409" in post
-    assert "scenario abc1234567, data to Jun 2026" in post
+    assert "(data to Jun 2026)" in post and "abc1234567" not in post  # no scenario ID
     assert f"https://{REPO}" in post and "#OpenData" in post
 
 
