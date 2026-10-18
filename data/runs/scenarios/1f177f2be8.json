@@ -1,0 +1,161 @@
+{
+ "scenario_id": "1f177f2be8",
+ "session_id": "tpjkwt",
+ "created_at": "2026-10-17T23:53:05+00:00",
+ "question": "When a financial crisis happens, which product category is the most vulnerable one compared to the other products?",
+ "language": "en",
+ "title": "Product Vulnerability in Financial Crises",
+ "based_on": "76eb17fe96",
+ "approach": "This chain identifies the most vulnerable product categories during financial crises by analyzing changes in Luxembourg's exports and imports for crisis years compared to the previous years, ranking product chapters by their decline.",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "Which HS2 product chapters had the largest percentage decline in Luxembourg's exports between 2008 and 2009 financial crisis?",
+   "purpose": "Identify the most vulnerable export product categories during the 2008 financial crisis by ranking the largest declines.",
+   "builds_on": [],
+   "run_id": "b31922f4e5",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2008–2009 · change between the two years",
+   "note": "Iron and steel exports fell by 48.4% between 2008 and 2009, the largest decline among top products."
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "Which HS2 product chapters had the largest percentage decline in Luxembourg's exports between 2019 and 2020 COVID19 crisis?",
+   "purpose": "Identify the most vulnerable export product categories during the 2019 and 2020 COVID19 crisis by ranking the largest declines.",
+   "builds_on": [],
+   "run_id": "63d6ef7f29",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2019–2020 · change between the two years",
+   "note": "Iron and steel exports fell by 26.0% between 2019 and 2020, among the largest declines."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "Which HS2 product chapters had the largest percentage decline in Luxembourg's exports between 2022 and 2023 energy crisis?",
+   "purpose": "Identify the most vulnerable export product categories during the 2022 energy crisis by ranking the largest declines.",
+   "builds_on": [],
+   "run_id": "19780da3bf",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2022–2023 · change between the two years",
+   "note": "Iron and steel exports fell by 27.1% between 2022 and 2023, among the largest declines."
+  },
+  {
+   "n": 4,
+   "kind": "follow-up",
+   "question": "Which HS2 product chapters had the largest percentage decline in Luxembourg's imports between the 2008 and 2009 financial crisis?",
+   "purpose": "Steps 1 to 3 show the most vulnerable export product categories during three financial crises, but imports vulnerability is not yet analyzed; this question aims to identify the most vulnerable import product categories during the 2008 financial crisis for a complete view.",
+   "builds_on": [
+    1,
+    2,
+    3
+   ],
+   "run_id": "946efc6ff1",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2008–2009 · change between the two years",
+   "note": "Iron and steel imports fell by 50.2% between 2008 and 2009, the largest decline among top products."
+  },
+  {
+   "n": 5,
+   "kind": "follow-up",
+   "question": "Which HS2 product chapters had the largest percentage decline in Luxembourg's imports between 2019 and 2020 COVID19 crisis?",
+   "purpose": "Steps 1 and 2 identify the most vulnerable export product categories during the 2019 and 2020 COVID19 crisis, but imports vulnerability during this period is not yet analyzed; this question aims to identify the most vulnerable import product categories during the COVID19 crisis for a complete comparison.",
+   "builds_on": [
+    1,
+    2
+   ],
+   "run_id": "e6f3e3fd29",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2019–2020 · change between the two years",
+   "note": "Iron and steel imports fell by 19.9% between 2019 and 2020, among the largest declines."
+  }
+ ],
+ "headline": "During financial crises, Luxembourg's exports and imports of Iron and steel are the most vulnerable product category compared to others.",
+ "points": [
+  {
+   "text": "Iron and steel exports experienced among the largest percentage declines during all three crises: a 48.4% drop in 2009, a 26.0% drop in 2020, and a 27.1% drop in 2023, indicating consistent vulnerability across different crises.",
+   "steps": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "text": "Iron and steel imports also showed the largest or among the largest percentage declines during the 2008–09 financial crisis and the 2019–20 COVID-19 crisis, with a 50.2% drop in 2009 and a 19.9% drop in 2020, confirming its vulnerability on the import side as well.",
+   "steps": [
+    4,
+    5
+   ]
+  },
+  {
+   "text": "Electrical machinery and equipment exports and imports showed mixed patterns: exports increased sharply in 2009 but fell drastically by 70.0% in 2020, while imports rose in 2009 but fell by 53.4% in 2020, indicating vulnerability mainly during the COVID-19 crisis rather than the financial crisis.",
+   "steps": [
+    1,
+    2,
+    4,
+    5
+   ]
+  },
+  {
+   "text": "Other product categories such as Articles of iron or steel and Vehicles and parts showed declines in some crises but were less consistently vulnerable than Iron and steel across all crises and trade directions.",
+   "steps": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  }
+ ],
+ "conclusion": "The evidence shows that Iron and steel is the most vulnerable product category in Luxembourg's trade during financial crises, with the largest percentage declines in both exports and imports across multiple crises. Electrical machinery and equipment also showed vulnerability but mainly during the COVID-19 crisis. This analysis cannot determine the causes of vulnerability or the impact on Luxembourg's overall economy, nor does it cover all product categories or other types of crises beyond those analyzed.",
+ "charts": [
+  1,
+  2,
+  4
+ ],
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "1.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "combined answer passed the number, country, wording and reasoning checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_follow_up",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 8288,
+   "output_tokens": 369,
+   "cache_read_tokens": 0,
+   "ms": 2454
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4233,
+   "output_tokens": 572,
+   "cache_read_tokens": 0,
+   "ms": 3414
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4496,
+   "output_tokens": 933,
+   "cache_read_tokens": 0,
+   "ms": 4997
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "46e6f34",
+ "status": "answered"
+}

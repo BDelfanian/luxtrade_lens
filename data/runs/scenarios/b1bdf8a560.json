@@ -1,0 +1,164 @@
+{
+ "scenario_id": "b1bdf8a560",
+ "session_id": "8f3s6y",
+ "created_at": "2026-10-17T23:28:46+00:00",
+ "question": "When a financial crisis happens, which product category is the most vulnerable one compared to the other products?",
+ "language": "en",
+ "title": "Product Vulnerability in Financial Crises",
+ "approach": "This chain identifies the most vulnerable product categories during financial crises by analyzing changes in Luxembourg's exports and imports for crisis years compared to the previous years, ranking product chapters by their decline.",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "Which HS2 product chapters had the largest decline in Luxembourg's exports between 2007 and 2008 financial crisis?",
+   "purpose": "Identify the most vulnerable export product categories during the 2008 financial crisis by ranking the largest declines.",
+   "builds_on": [],
+   "run_id": "73bcaef333",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2007–2008 · change between the two years",
+   "note": "Electrical machinery and equipment exports fell by 2.4% in 2008 while some other products increased."
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "Which HS2 product chapters had the largest decline in Luxembourg's exports between 2019 and 2020 COVID19 crisis?",
+   "purpose": "Identify the most vulnerable export product categories during the 2019 and 2020 COVID19 crisis by ranking the largest declines.",
+   "builds_on": [],
+   "run_id": "8efd4ec688",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2019–2020 · change between the two years",
+   "note": "Electrical machinery and equipment exports fell by 70.0% in 2020, the largest decline among top export products."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "Which HS2 product chapters had the largest decline in Luxembourg's exports from 2022 to 2023 energy crisis?",
+   "purpose": "Identify the most vulnerable export product categories during the 2022 energy crisis by ranking the largest declines.",
+   "builds_on": [],
+   "run_id": "7a6993565a",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2022–2023 · change between the two years",
+   "note": "Electrical machinery and equipment exports data for 2022-2023 energy crisis is not provided."
+  },
+  {
+   "n": 4,
+   "kind": "follow-up",
+   "question": "Which HS2 product chapters had the largest decline in Luxembourg's imports between 2007 and 2008 financial crisis?",
+   "purpose": "Steps 1 to 3 show the most vulnerable export product categories during different crises, but imports vulnerability is not yet analyzed; this question aims to identify the most vulnerable import product categories during the 2008 financial crisis for a complete view.",
+   "builds_on": [
+    1,
+    2,
+    3
+   ],
+   "run_id": "ce025002d1",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2007–2008 · change between the two years",
+   "note": "Electrical machinery and equipment imports fell by 17.6% in 2008, the largest decline among top import products."
+  },
+  {
+   "n": 5,
+   "kind": "follow-up",
+   "question": "Which HS2 product chapters had the largest decline in Luxembourg's imports between 2019 and 2020 COVID19 crisis?",
+   "purpose": "Step 2 identifies the most vulnerable export product categories during the 2019-2020 COVID19 crisis, but import declines are not yet examined; this question aims to identify the most vulnerable import product categories during the same period for a balanced analysis.",
+   "builds_on": [
+    2
+   ],
+   "run_id": "901cc0bbdb",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2019–2020 · change between the two years",
+   "note": "Electrical machinery and equipment imports fell by 53.4% in 2020, the largest decline among top import products."
+  }
+ ],
+ "headline": "Electrical machinery and equipment is the most vulnerable product category during financial crises in Luxembourg compared to other products.",
+ "points": [
+  {
+   "text": "During the 2008 financial crisis, exports of electrical machinery and equipment fell by 2.4%, while other major products like machinery and mechanical appliances increased, indicating relative vulnerability in this category.",
+   "steps": [
+    1
+   ]
+  },
+  {
+   "text": "In the 2019-2020 COVID-19 crisis, exports of electrical machinery and equipment declined sharply by 70.0%, the largest fall among top export products, showing high vulnerability during this crisis.",
+   "steps": [
+    2
+   ]
+  },
+  {
+   "text": "Imports of electrical machinery and equipment also showed the largest decline during both the 2008 financial crisis (−17.6%) and the 2019-2020 COVID-19 crisis (−53.4%), reinforcing its vulnerability on the import side as well.",
+   "steps": [
+    4,
+    5
+   ]
+  },
+  {
+   "text": "Other product categories such as iron and steel and vehicles and parts also experienced declines during crises but not as consistently or as steep as electrical machinery and equipment.",
+   "steps": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  }
+ ],
+ "conclusion": "The evidence consistently shows that electrical machinery and equipment is the most vulnerable product category during financial crises in Luxembourg, with the largest declines in both exports and imports during the 2008 financial crisis and the 2019-2020 COVID-19 crisis. Other products experienced declines but less consistently or severely. This analysis does not cover all product categories or crises beyond those examined, and it does not adjust for price changes or consider underlying causes of vulnerability.",
+ "charts": [
+  2,
+  5,
+  1
+ ],
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "2.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "dropped 'What was the total value of Luxembourg's exports of goods in the year before the 2008 financial crisis (2007)?': the question names 2008 but the query covers 2007–2007",
+  "dropped 'What was the total value of Luxembourg's imports of goods in the year before the 2008 financial crisis (2007)?': the question names 2008 but the query covers 2007–2007",
+  "combined answer passed the number, country, wording and reasoning checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_plan",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 7183,
+   "output_tokens": 890,
+   "cache_read_tokens": 7040,
+   "ms": 5684
+  },
+  {
+   "step": "scenario_follow_up",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 8338,
+   "output_tokens": 355,
+   "cache_read_tokens": 0,
+   "ms": 2626
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4294,
+   "output_tokens": 484,
+   "cache_read_tokens": 0,
+   "ms": 3302
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4472,
+   "output_tokens": 923,
+   "cache_read_tokens": 0,
+   "ms": 5153
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "2b193f4",
+ "status": "answered"
+}

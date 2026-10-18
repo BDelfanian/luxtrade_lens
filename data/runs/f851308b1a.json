@@ -1,0 +1,327 @@
+{
+ "run_id": "f851308b1a",
+ "session_id": "bu6a68",
+ "turn": 4,
+ "created_at": "2026-10-17T23:48:24+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which HS2 product chapters had the largest decline in Luxembourg's imports between 2008 and 2009 financial crisis?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2008",
+  "period_end": "2009",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "5.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 4.95694954925384
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2008-01-01' AS DATE)\n  AND period < CAST('2010-01-01' AS DATE)\n  AND flow = 'import'\n  AND year IN (2008, 2009)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "cffe30a732b5c0917bb687f5da98205cd11a680e45a61ad8a7ace125bf0afbbf",
+ "row_count": 194,
+ "view_kind": "change",
+ "title": "Largest changes by product group — imports 2008–2009",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "85",
+    "base": 1198194090.0,
+    "value": 1725609457.0,
+    "change": 527415367.0,
+    "change_pct": 44.0175236551,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "90",
+    "base": 194804200.0,
+    "value": 479330374.0,
+    "change": 284526174.0,
+    "change_pct": 146.057515187,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Optical, measuring and medical instruments",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "71",
+    "base": 131468996.0,
+    "value": 329871457.0,
+    "change": 198402461.0,
+    "change_pct": 150.9119769957,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "30",
+    "base": 317581754.0,
+    "value": 354081517.0,
+    "change": 36499763.0,
+    "change_pct": 11.4930289729,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Pharmaceutical products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "64",
+    "base": 70218617.0,
+    "value": 92156240.0,
+    "change": 21937623.0,
+    "change_pct": 31.2418898823,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Footwear",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "88",
+    "base": 594966436.0,
+    "value": 261536618.0,
+    "change": -333429818.0,
+    "change_pct": -56.0417861958,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "87",
+    "base": 2139784460.0,
+    "value": 1749255447.0,
+    "change": -390529013.0,
+    "change_pct": -18.2508575186,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "27",
+    "base": 2623680441.0,
+    "value": 1636905741.0,
+    "change": -986774700.0,
+    "change_pct": -37.6103234441,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "72",
+    "base": 2016752671.0,
+    "value": 1004251124.0,
+    "change": -1012501547.0,
+    "change_pct": -50.2045472189,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "84",
+    "base": 5585480075.0,
+    "value": 4435977559.0,
+    "change": -1149502516.0,
+    "change_pct": -20.5801918647,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "85",
+   "90",
+   "71",
+   "30",
+   "64",
+   "88",
+   "87",
+   "27",
+   "72",
+   "84"
+  ]
+ },
+ "insight": [
+  "The HS2 product chapters with the largest decline in Luxembourg's imports between 2008 and 2009 were Iron and steel, Mineral fuels and oils, and Machinery and mechanical appliances.",
+  "Iron and steel imports fell by 1.01 billion euros, Mineral fuels and oils by 986.8 million euros, and Machinery and mechanical appliances by 1.15 billion euros.",
+  "This decline contrasts with increases in imports of Electrical machinery and equipment, Optical, measuring and medical instruments, and Natural or cultured pearls and precious metals.",
+  "Imports of Aircraft, spacecraft, and parts also dropped significantly by 333.4 million euros, a 56.0% decrease.",
+  "The data are in current euros and do not account for price changes, and 5.0% of the import values are confidential and not detailed."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.85",
+   "text": "imports Electrical machinery and equipment: 1.20 bn € 2008 → 1.73 bn € 2009 (527.4 M€, +44.0 %)"
+  },
+  {
+   "key": "import.90",
+   "text": "imports Optical, measuring and medical instruments: 194.8 M€ 2008 → 479.3 M€ 2009 (284.5 M€, +146.1 %)"
+  },
+  {
+   "key": "import.71",
+   "text": "imports Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin: 131.5 M€ 2008 → 329.9 M€ 2009 (198.4 M€, +150.9 %)"
+  },
+  {
+   "key": "import.30",
+   "text": "imports Pharmaceutical products: 317.6 M€ 2008 → 354.1 M€ 2009 (36.5 M€, +11.5 %)"
+  },
+  {
+   "key": "import.64",
+   "text": "imports Footwear: 70.2 M€ 2008 → 92.2 M€ 2009 (21.9 M€, +31.2 %)"
+  },
+  {
+   "key": "import.88",
+   "text": "imports Aircraft, spacecraft, and parts thereof: 595.0 M€ 2008 → 261.5 M€ 2009 (-333.4 M€, −56.0 %)"
+  },
+  {
+   "key": "import.87",
+   "text": "imports Vehicles and parts: 2.14 bn € 2008 → 1.75 bn € 2009 (-390.5 M€, −18.3 %)"
+  },
+  {
+   "key": "import.27",
+   "text": "imports Mineral fuels and oils: 2.62 bn € 2008 → 1.64 bn € 2009 (-986.8 M€, −37.6 %)"
+  },
+  {
+   "key": "import.72",
+   "text": "imports Iron and steel: 2.02 bn € 2008 → 1.00 bn € 2009 (-1.01 bn €, −50.2 %)"
+  },
+  {
+   "key": "import.84",
+   "text": "imports Machinery and mechanical appliances: 5.59 bn € 2008 → 4.44 bn € 2009 (-1.15 bn €, −20.6 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2009 − value 2008 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 182,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 19,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2009 − value 2008 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1648,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1207,
+   "output_tokens": 167,
+   "cache_read_tokens": 0,
+   "ms": 1595
+  }
+ ],
+ "code_version": "46e6f34",
+ "error": null
+}

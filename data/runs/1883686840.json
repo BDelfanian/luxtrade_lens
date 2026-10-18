@@ -1,0 +1,331 @@
+{
+ "run_id": "1883686840",
+ "session_id": "bu6a68",
+ "turn": 3,
+ "created_at": "2026-10-17T23:48:15+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which HS2 product chapters had the largest decline in Luxembourg's exports from 2022 to 2023 energy crisis?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2022",
+  "period_end": "2023",
+  "flow": "export",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'energy crisis' interpreted as the year 2023"
+  ]
+ },
+ "assumptions": [
+  "'energy crisis' interpreted as the year 2023"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.1 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.138220506446704
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2022-01-01' AS DATE)\n  AND period < CAST('2024-01-01' AS DATE)\n  AND flow = 'export'\n  AND year IN (2022, 2023)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "b73e14c982356d3616cf6f2bbe4f64fee9ecaca9c26864a790ccf16241fe33d7",
+ "row_count": 194,
+ "view_kind": "change",
+ "title": "Largest changes by product group — exports 2022–2023",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "87",
+    "base": 1320328950.0,
+    "value": 1523341350.0,
+    "change": 203012400.0,
+    "change_pct": 15.3758955297,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "40",
+    "base": 702754679.0,
+    "value": 857710924.0,
+    "change": 154956245.0,
+    "change_pct": 22.0498346906,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "71",
+    "base": 216533745.0,
+    "value": 321635498.0,
+    "change": 105101753.0,
+    "change_pct": 48.538278872,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "64",
+    "base": 258508341.0,
+    "value": 345400759.0,
+    "change": 86892418.0,
+    "change_pct": 33.6130036129,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Footwear",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "21",
+    "base": 84407785.0,
+    "value": 144357047.0,
+    "change": 59949262.0,
+    "change_pct": 71.0233801302,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Miscellaneous edible preparations",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "73",
+    "base": 992399287.0,
+    "value": 904936876.0,
+    "change": -87462411.0,
+    "change_pct": -8.813227916,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "48",
+    "base": 526759817.0,
+    "value": 396601221.0,
+    "change": -130158596.0,
+    "change_pct": -24.709287193,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Paper and paperboard",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "76",
+    "base": 694656289.0,
+    "value": 528892312.0,
+    "change": -165763977.0,
+    "change_pct": -23.8627332142,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Aluminium and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "39",
+    "base": 1781303678.0,
+    "value": 1489169516.0,
+    "change": -292134162.0,
+    "change_pct": -16.400020143,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "72",
+    "base": 1900042798.0,
+    "value": 1385123207.0,
+    "change": -514919591.0,
+    "change_pct": -27.1004206612,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "87",
+   "40",
+   "71",
+   "64",
+   "21",
+   "73",
+   "48",
+   "76",
+   "39",
+   "72"
+  ]
+ },
+ "insight": [
+  "The HS2 product chapters with the largest decline in Luxembourg's exports from 2022 to 2023 were Iron and steel, which fell by 514.9 million euros, and Plastics and articles thereof, which decreased by 292.1 million euros.",
+  "Iron and steel exports dropped from 1.90 billion euros in 2022 to 1.39 billion euros in 2023, showing the biggest decline in value.",
+  "Aluminium and articles thereof also saw a notable decrease of 165.8 million euros, while Paper and paperboard exports fell by 130.2 million euros.",
+  "In contrast, some products like Vehicles and parts and Rubber and articles thereof experienced export increases during the same period.",
+  "These values are nominal and not adjusted for price changes, and 2.1% of the export value is confidential and not detailed in the data."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.87",
+   "text": "exports Vehicles and parts: 1.32 bn € 2022 → 1.52 bn € 2023 (203.0 M€, +15.4 %)"
+  },
+  {
+   "key": "export.40",
+   "text": "exports Rubber and articles thereof: 702.8 M€ 2022 → 857.7 M€ 2023 (155.0 M€, +22.0 %)"
+  },
+  {
+   "key": "export.71",
+   "text": "exports Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin: 216.5 M€ 2022 → 321.6 M€ 2023 (105.1 M€, +48.5 %)"
+  },
+  {
+   "key": "export.64",
+   "text": "exports Footwear: 258.5 M€ 2022 → 345.4 M€ 2023 (86.9 M€, +33.6 %)"
+  },
+  {
+   "key": "export.21",
+   "text": "exports Miscellaneous edible preparations: 84.4 M€ 2022 → 144.4 M€ 2023 (59.9 M€, +71.0 %)"
+  },
+  {
+   "key": "export.73",
+   "text": "exports Articles of iron or steel: 992.4 M€ 2022 → 904.9 M€ 2023 (-87.5 M€, −8.8 %)"
+  },
+  {
+   "key": "export.48",
+   "text": "exports Paper and paperboard: 526.8 M€ 2022 → 396.6 M€ 2023 (-130.2 M€, −24.7 %)"
+  },
+  {
+   "key": "export.76",
+   "text": "exports Aluminium and articles thereof: 694.7 M€ 2022 → 528.9 M€ 2023 (-165.8 M€, −23.9 %)"
+  },
+  {
+   "key": "export.39",
+   "text": "exports Plastics and articles thereof: 1.78 bn € 2022 → 1.49 bn € 2023 (-292.1 M€, −16.4 %)"
+  },
+  {
+   "key": "export.72",
+   "text": "exports Iron and steel: 1.90 bn € 2022 → 1.39 bn € 2023 (-514.9 M€, −27.1 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2023 − value 2022 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 171,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 38,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2023 − value 2022 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1427,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1206,
+   "output_tokens": 179,
+   "cache_read_tokens": 0,
+   "ms": 1378
+  }
+ ],
+ "code_version": "46e6f34",
+ "error": null
+}

@@ -1,0 +1,15 @@
+{
+ "session_id": "phfrsm",
+ "created_at": "2026-10-17T22:28:14+00:00",
+ "updated_at": "2026-10-17T22:28:32+00:00",
+ "language": "en",
+ "title": "Scenario: Luxembourg Trade Crisis Impact on Goods",
+ "runs": [
+  "223177327e",
+  "c50e26bf1f",
+  "53f69d7338",
+  "8d2f851875",
+  "b68ead100b",
+  "ba6b6fd718"
+ ]
+}

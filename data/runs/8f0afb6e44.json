@@ -1,0 +1,184 @@
+{
+ "run_id": "8f0afb6e44",
+ "session_id": "qud3tw",
+ "turn": 2,
+ "created_at": "2026-10-17T22:38:22+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the yearly trend of Luxembourg's total fuel imports unit value (EUR per kg) from 2018 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2018",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "unit_value",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2018-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "3041db378ef3087f39d42b9df092986eb81bd7ef209f16d2618f4cb517e58a2f",
+ "row_count": 8,
+ "view_kind": "line",
+ "title": "imports: +34.5 % (2018–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 0.5901860872
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 0.5768990292
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 0.4751993618
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 0.5965442258
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 0.8661968305
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 0.9305846071
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 0.8863365044
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 0.7935207441
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's total fuel imports unit value increased from 0.59 euros per kilogram in 2018 to 0.79 euros per kilogram in 2025.",
+  "This represents a rise of 34.5% over the period.",
+  "The highest unit value was recorded in 2023, reaching 0.93 euros per kilogram.",
+  "The unit value trend shows a peak in 2023 before declining to 0.79 euros per kilogram in 2025.",
+  "The data only includes trade rows where quantities are known, so some volumes and unit values are missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2018: 0.59 €/kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 0.79 €/kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2018–2025: +34.5 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2023: 0.93 €/kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 255,
+   "outcome": "ok",
+   "detail": "8 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 7,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1398,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 730,
+   "output_tokens": 121,
+   "cache_read_tokens": 0,
+   "ms": 1318
+  }
+ ],
+ "code_version": "bf9664c",
+ "error": null
+}

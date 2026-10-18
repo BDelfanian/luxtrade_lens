@@ -1,0 +1,327 @@
+{
+ "run_id": "be3383eec7",
+ "session_id": "tmgubb",
+ "turn": 1,
+ "created_at": "2026-10-17T22:06:47+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which export goods experienced the largest declines in value between 2008 and 2009 in Luxembourg?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2008",
+  "period_end": "2009",
+  "flow": "export",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.7665964234779836
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2008-01-01' AS DATE)\n  AND period < CAST('2010-01-01' AS DATE)\n  AND flow = 'export'\n  AND year IN (2008, 2009)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "6d124295fd6d1d4788fd44158b2733af1e01de8d1eb89aeef59093605c535d98",
+ "row_count": 194,
+ "view_kind": "change",
+ "title": "Largest changes by product group — exports 2008–2009",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "85",
+    "base": 1392419674.0,
+    "value": 2511944076.0,
+    "change": 1119524402.0,
+    "change_pct": 80.4013633895,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "90",
+    "base": 154743321.0,
+    "value": 450581490.0,
+    "change": 295838169.0,
+    "change_pct": 191.1799275653,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Optical, measuring and medical instruments",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "88",
+    "base": 71414517.0,
+    "value": 240212271.0,
+    "change": 168797754.0,
+    "change_pct": 236.363362928,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "30",
+    "base": 65474399.0,
+    "value": 110756751.0,
+    "change": 45282352.0,
+    "change_pct": 69.160393515,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Pharmaceutical products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "64",
+    "base": 12839717.0,
+    "value": 48474687.0,
+    "change": 35634970.0,
+    "change_pct": 277.5370360577,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Footwear",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "76",
+    "base": 477581254.0,
+    "value": 321178846.0,
+    "change": -156402408.0,
+    "change_pct": -32.7488582707,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Aluminium and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "87",
+    "base": 813015660.0,
+    "value": 637014061.0,
+    "change": -176001599.0,
+    "change_pct": -21.6479961776,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "73",
+    "base": 976799218.0,
+    "value": 639146736.0,
+    "change": -337652482.0,
+    "change_pct": -34.5672350856,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "72",
+    "base": 2667333282.0,
+    "value": 1376979447.0,
+    "change": -1290353835.0,
+    "change_pct": -48.3761756998,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "84",
+    "base": 6089835949.0,
+    "value": 4791170099.0,
+    "change": -1298665850.0,
+    "change_pct": -21.3251368489,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "85",
+   "90",
+   "88",
+   "30",
+   "64",
+   "76",
+   "87",
+   "73",
+   "72",
+   "84"
+  ]
+ },
+ "insight": [
+  "The export goods that experienced the largest declines in value between 2008 and 2009 in Luxembourg were Iron and steel, which fell by 1.29 billion euros, and Machinery and mechanical appliances, which decreased by 1.30 billion euros.",
+  "The total value of Iron and steel exports dropped from 2.67 billion euros in 2008 to 1.38 billion euros in 2009.",
+  "Articles of iron or steel also saw a notable decline, decreasing by 337.7 million euros.",
+  "These figures are nominal values in current euros and do not account for price changes over time.",
+  "Additionally, 1.8% of the export values are confidential and not detailed in the data."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.85",
+   "text": "exports Electrical machinery and equipment: 1.39 bn € 2008 → 2.51 bn € 2009 (1.12 bn €, +80.4 %)"
+  },
+  {
+   "key": "export.90",
+   "text": "exports Optical, measuring and medical instruments: 154.7 M€ 2008 → 450.6 M€ 2009 (295.8 M€, +191.2 %)"
+  },
+  {
+   "key": "export.88",
+   "text": "exports Aircraft, spacecraft, and parts thereof: 71.4 M€ 2008 → 240.2 M€ 2009 (168.8 M€, +236.4 %)"
+  },
+  {
+   "key": "export.30",
+   "text": "exports Pharmaceutical products: 65.5 M€ 2008 → 110.8 M€ 2009 (45.3 M€, +69.2 %)"
+  },
+  {
+   "key": "export.64",
+   "text": "exports Footwear: 12.8 M€ 2008 → 48.5 M€ 2009 (35.6 M€, +277.5 %)"
+  },
+  {
+   "key": "export.76",
+   "text": "exports Aluminium and articles thereof: 477.6 M€ 2008 → 321.2 M€ 2009 (-156.4 M€, −32.7 %)"
+  },
+  {
+   "key": "export.87",
+   "text": "exports Vehicles and parts: 813.0 M€ 2008 → 637.0 M€ 2009 (-176.0 M€, −21.6 %)"
+  },
+  {
+   "key": "export.73",
+   "text": "exports Articles of iron or steel: 976.8 M€ 2008 → 639.1 M€ 2009 (-337.7 M€, −34.6 %)"
+  },
+  {
+   "key": "export.72",
+   "text": "exports Iron and steel: 2.67 bn € 2008 → 1.38 bn € 2009 (-1.29 bn €, −48.4 %)"
+  },
+  {
+   "key": "export.84",
+   "text": "exports Machinery and mechanical appliances: 6.09 bn € 2008 → 4.79 bn € 2009 (-1.30 bn €, −21.3 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2009 − value 2008 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 241,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 27,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2009 − value 2008 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1747,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1178,
+   "output_tokens": 147,
+   "cache_read_tokens": 0,
+   "ms": 1679
+  }
+ ],
+ "code_version": "db2f160",
+ "error": null
+}

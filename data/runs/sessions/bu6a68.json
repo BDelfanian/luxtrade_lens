@@ -1,0 +1,14 @@
+{
+ "session_id": "bu6a68",
+ "created_at": "2026-10-17T23:48:11+00:00",
+ "updated_at": "2026-10-17T23:48:26+00:00",
+ "language": "en",
+ "title": "Scenario: Product Vulnerability in Financial Crises",
+ "runs": [
+  "acd4f2fee3",
+  "1eaa8a541a",
+  "1883686840",
+  "f851308b1a",
+  "8a150e5a2b"
+ ]
+}

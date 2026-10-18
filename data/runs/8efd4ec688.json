@@ -1,0 +1,331 @@
+{
+ "run_id": "8efd4ec688",
+ "session_id": "8f3s6y",
+ "turn": 2,
+ "created_at": "2026-10-17T23:28:23+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which HS2 product chapters had the largest decline in Luxembourg's exports between 2019 and 2020 COVID19 crisis?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2019",
+  "period_end": "2020",
+  "flow": "export",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'largest decline' interpreted as biggest negative change in export value between 2019 and 2020"
+  ]
+ },
+ "assumptions": [
+  "'largest decline' interpreted as biggest negative change in export value between 2019 and 2020"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.6 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.6493798400269806
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2019-01-01' AS DATE)\n  AND period < CAST('2021-01-01' AS DATE)\n  AND flow = 'export'\n  AND year IN (2019, 2020)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "6b3534a5bdba8fe618b4b7d88ba6a8d90739455345821a456bd18b93e09c08ff",
+ "row_count": 194,
+ "view_kind": "change",
+ "title": "Largest changes by product group — exports 2019–2020",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "64",
+    "base": 77416089.0,
+    "value": 131223459.0,
+    "change": 53807370.0,
+    "change_pct": 69.5041181943,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Footwear",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "38",
+    "base": 161596178.0,
+    "value": 208346830.0,
+    "change": 46750652.0,
+    "change_pct": 28.9305431469,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Miscellaneous chemical products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "63",
+    "base": 12245055.0,
+    "value": 51333872.0,
+    "change": 39088817.0,
+    "change_pct": 319.2212448209,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Other made-up textile articles; sets; worn clothing and worn textile articles; rags",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "44",
+    "base": 175746715.0,
+    "value": 211399904.0,
+    "change": 35653189.0,
+    "change_pct": 20.2866887156,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Wood and articles of wood; wood charcoal",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "20",
+    "base": 148225866.0,
+    "value": 167207826.0,
+    "change": 18981960.0,
+    "change_pct": 12.806104975,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Preparations of vegetables, fruit, nuts or other parts of plants",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "73",
+    "base": 760086470.0,
+    "value": 681914587.0,
+    "change": -78171883.0,
+    "change_pct": -10.2846039346,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "70",
+    "base": 298214474.0,
+    "value": 218015496.0,
+    "change": -80198978.0,
+    "change_pct": -26.8930534874,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Glass and glassware",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "84",
+    "base": 1857551617.0,
+    "value": 1625352500.0,
+    "change": -232199117.0,
+    "change_pct": -12.5002780475,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "72",
+    "base": 1557546988.0,
+    "value": 1152874669.0,
+    "change": -404672319.0,
+    "change_pct": -25.9813875355,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "export",
+    "key": "85",
+    "base": 2123461468.0,
+    "value": 637402641.0,
+    "change": -1486058827.0,
+    "change_pct": -69.9828487305,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "64",
+   "38",
+   "63",
+   "44",
+   "20",
+   "73",
+   "70",
+   "84",
+   "72",
+   "85"
+  ]
+ },
+ "insight": [
+  "The HS2 product chapter with the largest decline in Luxembourg's exports between 2019 and 2020 was Electrical machinery and equipment, which fell by 1.49 billion euros to 637.4 million euros.",
+  "Other significant declines were in Iron and steel, down by 404.7 million euros to 1.15 billion euros, and Machinery and mechanical appliances, down by 232.2 million euros to 1.63 billion euros.",
+  "Glass and glassware exports also decreased by 80.2 million euros to 218.0 million euros, and Articles of iron or steel fell by 78.2 million euros to 681.9 million euros.",
+  "These changes coincide with the COVID-19 crisis in 2020, which affected trade patterns.",
+  "The data are in current euros and not adjusted for price changes, and 2.6% of the export values are confidential and not detailed."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.64",
+   "text": "exports Footwear: 77.4 M€ 2019 → 131.2 M€ 2020 (53.8 M€, +69.5 %)"
+  },
+  {
+   "key": "export.38",
+   "text": "exports Miscellaneous chemical products: 161.6 M€ 2019 → 208.3 M€ 2020 (46.8 M€, +28.9 %)"
+  },
+  {
+   "key": "export.63",
+   "text": "exports Other made-up textile articles; sets; worn clothing and worn textile articles; rags: 12.2 M€ 2019 → 51.3 M€ 2020 (39.1 M€, +319.2 %)"
+  },
+  {
+   "key": "export.44",
+   "text": "exports Wood and articles of wood; wood charcoal: 175.7 M€ 2019 → 211.4 M€ 2020 (35.7 M€, +20.3 %)"
+  },
+  {
+   "key": "export.20",
+   "text": "exports Preparations of vegetables, fruit, nuts or other parts of plants: 148.2 M€ 2019 → 167.2 M€ 2020 (19.0 M€, +12.8 %)"
+  },
+  {
+   "key": "export.73",
+   "text": "exports Articles of iron or steel: 760.1 M€ 2019 → 681.9 M€ 2020 (-78.2 M€, −10.3 %)"
+  },
+  {
+   "key": "export.70",
+   "text": "exports Glass and glassware: 298.2 M€ 2019 → 218.0 M€ 2020 (-80.2 M€, −26.9 %)"
+  },
+  {
+   "key": "export.84",
+   "text": "exports Machinery and mechanical appliances: 1.86 bn € 2019 → 1.63 bn € 2020 (-232.2 M€, −12.5 %)"
+  },
+  {
+   "key": "export.72",
+   "text": "exports Iron and steel: 1.56 bn € 2019 → 1.15 bn € 2020 (-404.7 M€, −26.0 %)"
+  },
+  {
+   "key": "export.85",
+   "text": "exports Electrical machinery and equipment: 2.12 bn € 2019 → 637.4 M€ 2020 (-1.49 bn €, −70.0 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2020 − value 2019 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 253,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 51,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2020 − value 2019 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1414,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1207,
+   "output_tokens": 189,
+   "cache_read_tokens": 0,
+   "ms": 1356
+  }
+ ],
+ "code_version": "2b193f4",
+ "error": null
+}

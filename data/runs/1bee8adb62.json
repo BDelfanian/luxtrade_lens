@@ -1,0 +1,173 @@
+{
+ "run_id": "1bee8adb62",
+ "session_id": "tmgubb",
+ "turn": 6,
+ "created_at": "2026-10-17T22:07:04+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the yearly import values of Vehicles and parts in Luxembourg from 2020 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "87"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2020",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2020-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('87')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "e750ac338acb4f02ef8112a67493d9497ffc633a7bae57b39a6dd8b203854cf2",
+ "row_count": 6,
+ "view_kind": "line",
+ "title": "imports: +18.3 % (2020–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 2805838736.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 2749078966.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 3046655769.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 3572526619.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 3641879046.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 3318048160.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The yearly import values of Vehicles and parts in Luxembourg increased from 2.81 billion euros in 2020 to 3.32 billion euros in 2025.",
+  "This represents an overall growth of 18.3% over the five-year period.",
+  "The highest import value was recorded in 2024, reaching 3.64 billion euros.",
+  "Values are given in current euros and are not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2020: 2.81 bn €"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 3.32 bn €"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2020–2025: +18.3 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2024: 3.64 bn €"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 186,
+   "outcome": "ok",
+   "detail": "6 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 2,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1275,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 716,
+   "output_tokens": 97,
+   "cache_read_tokens": 0,
+   "ms": 1255
+  }
+ ],
+ "code_version": "db2f160",
+ "error": null
+}

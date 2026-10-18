@@ -1,0 +1,327 @@
+{
+ "run_id": "ba6b6fd718",
+ "session_id": "phfrsm",
+ "turn": 6,
+ "created_at": "2026-10-17T22:28:32+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which import goods had the largest declines in value between 2018 and 2019 during the COVID-19 crisis in Luxembourg?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2018",
+  "period_end": "2019",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.7898534796297416
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2018-01-01' AS DATE)\n  AND period < CAST('2020-01-01' AS DATE)\n  AND flow = 'import'\n  AND year IN (2018, 2019)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "6dd81aa29effc6958c8030d4f7f349388dc33f7dfeb410c6b3c52855209f60a3",
+ "row_count": 194,
+ "view_kind": "change",
+ "title": "Largest changes by product group — imports 2018–2019",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "85",
+    "base": 1483263702.0,
+    "value": 2579275828.0,
+    "change": 1096012126.0,
+    "change_pct": 73.8919266023,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "87",
+    "base": 2796988744.0,
+    "value": 3145944827.0,
+    "change": 348956083.0,
+    "change_pct": 12.4761346912,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "84",
+    "base": 1906952736.0,
+    "value": 2077661687.0,
+    "change": 170708951.0,
+    "change_pct": 8.9519235468,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "88",
+    "base": 312157829.0,
+    "value": 393835645.0,
+    "change": 81677816.0,
+    "change_pct": 26.1655510168,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "71",
+    "base": 98431344.0,
+    "value": 137966872.0,
+    "change": 39535528.0,
+    "change_pct": 40.1655879046,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "97",
+    "base": 86353768.0,
+    "value": 57676761.0,
+    "change": -28677007.0,
+    "change_pct": -33.2087500803,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Works of art, collectors' pieces and antiques",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "76",
+    "base": 490260881.0,
+    "value": 426269290.0,
+    "change": -63991591.0,
+    "change_pct": -13.0525590517,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Aluminium and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "28",
+    "base": 226236973.0,
+    "value": 161194549.0,
+    "change": -65042424.0,
+    "change_pct": -28.7496880539,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Inorganic chemicals; organic or inorganic compounds of precious metals, of rare-earth metals, of radioactive elements or of isotopes",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "72",
+    "base": 1348672383.0,
+    "value": 1158877451.0,
+    "change": -189794932.0,
+    "change_pct": -14.0727232493,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "90",
+    "base": 655078250.0,
+    "value": 339136936.0,
+    "change": -315941314.0,
+    "change_pct": -48.2295533396,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Optical, measuring and medical instruments",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "85",
+   "87",
+   "84",
+   "88",
+   "71",
+   "97",
+   "76",
+   "28",
+   "72",
+   "90"
+  ]
+ },
+ "insight": [
+  "The import goods with the largest declines in value between 2018 and 2019 in Luxembourg were Optical, measuring and medical instruments, which fell by 315.9 million euros to 339.1 million euros.",
+  "Overall, imports of Optical, measuring and medical instruments decreased by 48.2 percent, the largest percentage drop among the listed goods.",
+  "Other notable declines were in Iron and steel, down by 189.8 million euros to 1.16 billion euros, and Inorganic chemicals and related compounds, down by 65.0 million euros to 161.2 million euros.",
+  "In contrast, imports of Electrical machinery and equipment increased by 1.10 billion euros to 2.58 billion euros during the same period.",
+  "The data are in current euros and do not account for price changes, and 3.8 percent of the import values are confidential and not detailed."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.85",
+   "text": "imports Electrical machinery and equipment: 1.48 bn € 2018 → 2.58 bn € 2019 (1.10 bn €, +73.9 %)"
+  },
+  {
+   "key": "import.87",
+   "text": "imports Vehicles and parts: 2.80 bn € 2018 → 3.15 bn € 2019 (349.0 M€, +12.5 %)"
+  },
+  {
+   "key": "import.84",
+   "text": "imports Machinery and mechanical appliances: 1.91 bn € 2018 → 2.08 bn € 2019 (170.7 M€, +9.0 %)"
+  },
+  {
+   "key": "import.88",
+   "text": "imports Aircraft, spacecraft, and parts thereof: 312.2 M€ 2018 → 393.8 M€ 2019 (81.7 M€, +26.2 %)"
+  },
+  {
+   "key": "import.71",
+   "text": "imports Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin: 98.4 M€ 2018 → 138.0 M€ 2019 (39.5 M€, +40.2 %)"
+  },
+  {
+   "key": "import.97",
+   "text": "imports Works of art, collectors' pieces and antiques: 86.4 M€ 2018 → 57.7 M€ 2019 (-28.7 M€, −33.2 %)"
+  },
+  {
+   "key": "import.76",
+   "text": "imports Aluminium and articles thereof: 490.3 M€ 2018 → 426.3 M€ 2019 (-64.0 M€, −13.1 %)"
+  },
+  {
+   "key": "import.28",
+   "text": "imports Inorganic chemicals; organic or inorganic compounds of precious metals, of rare-earth metals, of radioactive elements or of isotopes: 226.2 M€ 2018 → 161.2 M€ 2019 (-65.0 M€, −28.7 %)"
+  },
+  {
+   "key": "import.72",
+   "text": "imports Iron and steel: 1.35 bn € 2018 → 1.16 bn € 2019 (-189.8 M€, −14.1 %)"
+  },
+  {
+   "key": "import.90",
+   "text": "imports Optical, measuring and medical instruments: 655.1 M€ 2018 → 339.1 M€ 2019 (-315.9 M€, −48.2 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2019 − value 2018 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 291,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 61,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2019 − value 2018 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1798,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1238,
+   "output_tokens": 185,
+   "cache_read_tokens": 0,
+   "ms": 1737
+  }
+ ],
+ "code_version": "bf9664c",
+ "error": null
+}

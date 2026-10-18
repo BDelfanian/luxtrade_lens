@@ -1,0 +1,14 @@
+{
+ "session_id": "qud3tw",
+ "created_at": "2026-10-17T22:38:20+00:00",
+ "updated_at": "2026-10-17T22:38:35+00:00",
+ "language": "en",
+ "title": "Scenario: Impact of 2022 Energy Price Shock on Fuel Imports",
+ "runs": [
+  "09e2759c18",
+  "8f0afb6e44",
+  "a1cf35ed0c",
+  "c42ec753dd",
+  "0e88e53a1a"
+ ]
+}

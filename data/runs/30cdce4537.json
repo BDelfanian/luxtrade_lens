@@ -1,0 +1,324 @@
+{
+ "run_id": "30cdce4537",
+ "session_id": "9xpkr9",
+ "turn": 5,
+ "created_at": "2026-10-17T22:33:35+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which non-EU partners changed their ranking positions most in Luxembourg's exports between 2005 and 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L08",
+   "key": "fixed_eu27",
+   "severity": "warn",
+   "message": "Intra/extra-EU uses the fixed EU27 (2020) composition; the United Kingdom counts as extra-EU throughout.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "1.4 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 1.4102048599707213
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\n  AND year IN (2005, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "bbe8d33eef7c25c33569cdf320a8fb54a336bbf8a503ac2d50f4a1f17108df12",
+ "row_count": 346,
+ "view_kind": "change",
+ "title": "Largest changes by partner — exports 2005–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "CH",
+    "base": 161457941.0,
+    "value": 283265429.0,
+    "change": 121807488.0,
+    "change_pct": 75.4422404036,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Switzerland",
+    "iso3": "CHE"
+   },
+   {
+    "flow": "export",
+    "key": "US",
+    "base": 323575777.0,
+    "value": 421010107.0,
+    "change": 97434330.0,
+    "change_pct": 30.1117502995,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "flow": "export",
+    "key": "CN",
+    "base": 134630998.0,
+    "value": 231829904.0,
+    "change": 97198906.0,
+    "change_pct": 72.1965278754,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "flow": "export",
+    "key": "BR",
+    "base": 39161540.0,
+    "value": 111303070.0,
+    "change": 72141530.0,
+    "change_pct": 184.2152530263,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "flow": "export",
+    "key": "CA",
+    "base": 54611859.0,
+    "value": 122239635.0,
+    "change": 67627776.0,
+    "change_pct": 123.8334992405,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "flow": "export",
+    "key": "BH",
+    "base": 16268522.0,
+    "value": 1192213.0,
+    "change": -15076309.0,
+    "change_pct": -92.6716575728,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Bahrain",
+    "iso3": "BHR"
+   },
+   {
+    "flow": "export",
+    "key": "UA",
+    "base": 27033564.0,
+    "value": 6670664.0,
+    "change": -20362900.0,
+    "change_pct": -75.3245114111,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Ukraine",
+    "iso3": "UKR"
+   },
+   {
+    "flow": "export",
+    "key": "HK",
+    "base": 34537043.0,
+    "value": 13686203.0,
+    "change": -20850840.0,
+    "change_pct": -60.3723949384,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Hong Kong",
+    "iso3": "HKG"
+   },
+   {
+    "flow": "export",
+    "key": "RU",
+    "base": 60990061.0,
+    "value": 2787726.0,
+    "change": -58202335.0,
+    "change_pct": -95.4292126384,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Russian Federation",
+    "iso3": "RUS"
+   },
+   {
+    "flow": "export",
+    "key": "GB",
+    "base": 1318511832.0,
+    "value": 359563457.0,
+    "change": -958948375.0,
+    "change_pct": -72.7295995172,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "CH",
+   "US",
+   "CN",
+   "BR",
+   "CA",
+   "BH",
+   "UA",
+   "HK",
+   "RU",
+   "GB"
+  ]
+ },
+ "insight": [
+  "The non-EU partners that changed their ranking positions most in Luxembourg's exports between 2005 and 2025 include Brazil, Canada, and Bahrain.",
+  "Brazil's exports increased from 39.2 million euros in 2005 to 111.3 million euros in 2025, a rise of 184.2%.",
+  "Canada also saw a significant increase from 54.6 million euros to 122.2 million euros, up 123.8%, while Bahrain's exports dropped sharply from 16.3 million euros to 1.2 million euros, a decrease of 92.7%.",
+  "The United Kingdom experienced the largest decline in export value, falling from 1.32 billion euros in 2005 to 359.6 million euros in 2025, a 72.7% decrease.",
+  "These values are nominal and not adjusted for price changes, and the United Kingdom is counted as extra-EU throughout the period."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.CH",
+   "text": "exports Switzerland: 161.5 M€ 2005 → 283.3 M€ 2025 (121.8 M€, +75.4 %)"
+  },
+  {
+   "key": "export.US",
+   "text": "exports United States: 323.6 M€ 2005 → 421.0 M€ 2025 (97.4 M€, +30.1 %)"
+  },
+  {
+   "key": "export.CN",
+   "text": "exports China: 134.6 M€ 2005 → 231.8 M€ 2025 (97.2 M€, +72.2 %)"
+  },
+  {
+   "key": "export.BR",
+   "text": "exports Brazil: 39.2 M€ 2005 → 111.3 M€ 2025 (72.1 M€, +184.2 %)"
+  },
+  {
+   "key": "export.CA",
+   "text": "exports Canada: 54.6 M€ 2005 → 122.2 M€ 2025 (67.6 M€, +123.8 %)"
+  },
+  {
+   "key": "export.BH",
+   "text": "exports Bahrain: 16.3 M€ 2005 → 1.2 M€ 2025 (-15.1 M€, −92.7 %)"
+  },
+  {
+   "key": "export.UA",
+   "text": "exports Ukraine: 27.0 M€ 2005 → 6.7 M€ 2025 (-20.4 M€, −75.3 %)"
+  },
+  {
+   "key": "export.HK",
+   "text": "exports Hong Kong: 34.5 M€ 2005 → 13.7 M€ 2025 (-20.9 M€, −60.4 %)"
+  },
+  {
+   "key": "export.RU",
+   "text": "exports Russian Federation: 61.0 M€ 2005 → 2.8 M€ 2025 (-58.2 M€, −95.4 %)"
+  },
+  {
+   "key": "export.GB",
+   "text": "exports United Kingdom: 1.32 bn € 2005 → 359.6 M€ 2025 (-958.9 M€, −72.7 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn, L08:warn"
+  },
+  {
+   "node": "query",
+   "ms": 157,
+   "outcome": "ok",
+   "detail": "346 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L08, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 38,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1746,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1226,
+   "output_tokens": 196,
+   "cache_read_tokens": 0,
+   "ms": 1670
+  }
+ ],
+ "code_version": "bf9664c",
+ "error": null
+}

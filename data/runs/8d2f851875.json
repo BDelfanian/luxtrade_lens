@@ -1,0 +1,327 @@
+{
+ "run_id": "8d2f851875",
+ "session_id": "phfrsm",
+ "turn": 4,
+ "created_at": "2026-10-17T22:28:20+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which import goods had the largest declines in value between 2019 and 2020 during the COVID-19 crisis in Luxembourg?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2019",
+  "period_end": "2020",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.5 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.5444956213847125
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2019-01-01' AS DATE)\n  AND period < CAST('2021-01-01' AS DATE)\n  AND flow = 'import'\n  AND year IN (2019, 2020)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "693beec4b34fc61012840e275e8e067a165aa9391d152aedca9d19c90607eb3f",
+ "row_count": 194,
+ "view_kind": "change",
+ "title": "Largest changes by product group — imports 2019–2020",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "63",
+    "base": 44300102.0,
+    "value": 149622352.0,
+    "change": 105322250.0,
+    "change_pct": 237.7471952548,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Other made-up textile articles; sets; worn clothing and worn textile articles; rags",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "88",
+    "base": 393835645.0,
+    "value": 479417105.0,
+    "change": 85581460.0,
+    "change_pct": 21.730247398,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "86",
+    "base": 51271878.0,
+    "value": 91302690.0,
+    "change": 40030812.0,
+    "change_pct": 78.0755719539,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Railway or tramway locomotives, rolling stock and parts thereof; railway or tramway track fixtures and fittings and parts thereof; mechanical (including electromechanical) traffic signalling equipment of all kinds",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "71",
+    "base": 137966872.0,
+    "value": 169055293.0,
+    "change": 31088421.0,
+    "change_pct": 22.5332505908,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "38",
+    "base": 264977819.0,
+    "value": 293152621.0,
+    "change": 28174802.0,
+    "change_pct": 10.6328907477,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Miscellaneous chemical products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "84",
+    "base": 2077661687.0,
+    "value": 1901639470.0,
+    "change": -176022217.0,
+    "change_pct": -8.4721308624,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "72",
+    "base": 1158877451.0,
+    "value": 928252133.0,
+    "change": -230625318.0,
+    "change_pct": -19.9007511796,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "87",
+    "base": 3145944827.0,
+    "value": 2805838736.0,
+    "change": -340106091.0,
+    "change_pct": -10.8109362911,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "27",
+    "base": 2035703654.0,
+    "value": 1278148938.0,
+    "change": -757554716.0,
+    "change_pct": -37.2134084699,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "flow": "import",
+    "key": "85",
+    "base": 2579275828.0,
+    "value": 1200797570.0,
+    "change": -1378478258.0,
+    "change_pct": -53.4443909812,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "63",
+   "88",
+   "86",
+   "71",
+   "38",
+   "84",
+   "72",
+   "87",
+   "27",
+   "85"
+  ]
+ },
+ "insight": [
+  "The import goods with the largest declines in value between 2019 and 2020 in Luxembourg were Electrical machinery and equipment, which fell by 1.38 billion euros, and Mineral fuels and oils, which decreased by 757.6 million euros.",
+  "The total value of imports for Electrical machinery and equipment dropped from 2.58 billion euros in 2019 to 1.20 billion euros in 2020.",
+  "This decline was more significant than the 37.2% decrease seen in Mineral fuels and oils imports.",
+  "These changes occurred during the COVID-19 crisis in 2020.",
+  "The data are in current euros and do not account for price changes, and 3.5% of the import values are confidential and not detailed."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.63",
+   "text": "imports Other made-up textile articles; sets; worn clothing and worn textile articles; rags: 44.3 M€ 2019 → 149.6 M€ 2020 (105.3 M€, +237.7 %)"
+  },
+  {
+   "key": "import.88",
+   "text": "imports Aircraft, spacecraft, and parts thereof: 393.8 M€ 2019 → 479.4 M€ 2020 (85.6 M€, +21.7 %)"
+  },
+  {
+   "key": "import.86",
+   "text": "imports Railway or tramway locomotives, rolling stock and parts thereof; railway or tramway track fixtures and fittings and parts thereof; mechanical (including electromechanical) traffic signalling equipment of all kinds: 51.3 M€ 2019 → 91.3 M€ 2020 (40.0 M€, +78.1 %)"
+  },
+  {
+   "key": "import.71",
+   "text": "imports Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin: 138.0 M€ 2019 → 169.1 M€ 2020 (31.1 M€, +22.5 %)"
+  },
+  {
+   "key": "import.38",
+   "text": "imports Miscellaneous chemical products: 265.0 M€ 2019 → 293.2 M€ 2020 (28.2 M€, +10.6 %)"
+  },
+  {
+   "key": "import.84",
+   "text": "imports Machinery and mechanical appliances: 2.08 bn € 2019 → 1.90 bn € 2020 (-176.0 M€, −8.5 %)"
+  },
+  {
+   "key": "import.72",
+   "text": "imports Iron and steel: 1.16 bn € 2019 → 928.3 M€ 2020 (-230.6 M€, −19.9 %)"
+  },
+  {
+   "key": "import.87",
+   "text": "imports Vehicles and parts: 3.15 bn € 2019 → 2.81 bn € 2020 (-340.1 M€, −10.8 %)"
+  },
+  {
+   "key": "import.27",
+   "text": "imports Mineral fuels and oils: 2.04 bn € 2019 → 1.28 bn € 2020 (-757.6 M€, −37.2 %)"
+  },
+  {
+   "key": "import.85",
+   "text": "imports Electrical machinery and equipment: 2.58 bn € 2019 → 1.20 bn € 2020 (-1.38 bn €, −53.4 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2020 − value 2019 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 161,
+   "outcome": "ok",
+   "detail": "194 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 20,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2020 − value 2019 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 2109,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1259,
+   "output_tokens": 156,
+   "cache_read_tokens": 0,
+   "ms": 2059
+  }
+ ],
+ "code_version": "bf9664c",
+ "error": null
+}

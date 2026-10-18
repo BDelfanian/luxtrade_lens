@@ -1,0 +1,163 @@
+{
+ "run_id": "414808b8f0",
+ "session_id": "tmgubb",
+ "turn": 5,
+ "created_at": "2026-10-17T22:07:03+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the yearly export values of Iron and steel in Luxembourg from 2007 to 2010?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "72"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2007",
+  "period_end": "2010",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2007-01-01' AS DATE)\n  AND period < CAST('2011-01-01' AS DATE)\n  AND flow = 'export'\n  AND hs2 IN ('72')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "4576b6a5d32df094f216bd4d31a08f4379aa3891849fdf8f291d288cfad24fa8",
+ "row_count": 4,
+ "view_kind": "line",
+ "title": "exports: −24.5 % (2007–2010)",
+ "frames": {
+  "main": [
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 2378768753.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 2667333282.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 1376979447.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 1796016424.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The yearly export values of Iron and steel in Luxembourg decreased from 2.38 billion euros in 2007 to 1.80 billion euros in 2010.",
+  "The exports peaked at 2.67 billion euros in 2008 before declining.",
+  "Overall, exports fell by 24.5% between 2007 and 2010.",
+  "The data are given in current euros and are not adjusted for price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "exports.start",
+   "text": "exports 2007: 2.38 bn €"
+  },
+  {
+   "key": "exports.end",
+   "text": "exports 2010: 1.80 bn €"
+  },
+  {
+   "key": "exports.change",
+   "text": "exports change 2007–2010: −24.5 %"
+  },
+  {
+   "key": "exports.peak",
+   "text": "exports peak 2008: 2.67 bn €"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 153,
+   "outcome": "ok",
+   "detail": "4 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 3,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1406,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 716,
+   "output_tokens": 91,
+   "cache_read_tokens": 0,
+   "ms": 1356
+  }
+ ],
+ "code_version": "db2f160",
+ "error": null
+}
