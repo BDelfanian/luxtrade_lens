@@ -122,6 +122,32 @@ class ScenarioAnswer(BaseModel):
     charts: list[int]
 
 
+_STEP_REF = re.compile(
+    r"\s*\((?:steps?|étapes?|schritte?)\s+\d+(?:\s*(?:,|–|-|and|et|und)\s*\d+)*\)",
+    re.IGNORECASE,
+)
+
+
+def strip_step_refs(answer: ScenarioAnswer) -> ScenarioAnswer:
+    """The answer without "(steps 1, 3)" in its text: the ``steps`` lists already cite them.
+
+    Seen on real data: "(steps 13, 17)" in two points, which the number check then removed
+    (13 and 17 are not in the facts), taking the points about China and the US with them.
+    """
+
+    def clean(text: str) -> str:
+        return _STEP_REF.sub("", text)
+
+    return answer.model_copy(
+        update={
+            "headline": clean(answer.headline),
+            "points": [p.model_copy(update={"text": clean(p.text)}) for p in answer.points],
+            "conclusion": clean(answer.conclusion),
+            "step_notes": [n.model_copy(update={"text": clean(n.text)}) for n in answer.step_notes],
+        }
+    )
+
+
 class Verdict(BaseModel):
     """Whether one claim follows from its facts, and if not, why.
 
@@ -863,6 +889,7 @@ class ScenarioBuilder:
                 except LLMError as exc:
                     notes.append(f"answer LLM failed: {exc}")
                     break
+                out = strip_step_refs(out)
                 previous = {
                     "headline": out.headline,
                     "points": [p.text for p in out.points],

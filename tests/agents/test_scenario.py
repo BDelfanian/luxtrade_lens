@@ -526,3 +526,19 @@ def test_check_step_keeps_the_headings_the_user_asks_for(builder):
     b = builder(scenario_plan=GOOD_PLAN, interpret=interp(**heading_ranking), scenario_fit=fit)
     vague = [("Baseline?", ""), ("Which products changed most from 2019 to 2024?", "")]
     assert b.check_step(QUESTION, vague, 2, "en").spec.product_level == "HS2"  # one-off swings
+
+
+def test_step_references_are_taken_out_of_the_answer_text():
+    from luxtrade.agents.scenario import StepNote, strip_step_refs
+
+    answer = ScenarioAnswer(
+        headline="Imports turned to the EU (step 1).",
+        points=[AnswerPoint(text="China fell to 3.0 % (steps 13 and 17).", steps=[13, 17])],
+        conclusion="Goods only (étapes 1–4).",
+        step_notes=[StepNote(step=1, text="It sets the scene (steps 1, 3).")],
+        charts=[],
+    )
+    clean = strip_step_refs(answer)
+    assert clean.headline == "Imports turned to the EU."
+    assert clean.points[0].text == "China fell to 3.0 %." and clean.points[0].steps == [13, 17]
+    assert clean.conclusion == "Goods only." and clean.step_notes[0].text == "It sets the scene."
