@@ -9,10 +9,12 @@ UI only: the work happens in agents/scenario.py (``ScenarioBuilder``).
 """
 
 import json
+import re
 
 import pandas as pd
 import streamlit as st
 
+from luxtrade.agents.evidence import EvidenceFigure
 from luxtrade.agents.llm import LLMError
 from luxtrade.agents.scenario import (
     MAX_FOLLOW_UPS,
@@ -30,6 +32,7 @@ from luxtrade.app.components import (
     render_chart,
 )
 from luxtrade.runs.scenarios import ScenarioRecord
+from luxtrade.viz.charts import evidence_bars
 
 builder = get_scenario_builder()
 ss = st.session_state
@@ -76,6 +79,13 @@ st.html(
   border: 1px solid #D9D3F6; border-left: 6px solid #5B47D1; border-radius: 14px;
   padding: 18px 24px 12px; }
 .st-key-scn-answer h3 { color: #231A63; }
+[class*="st-key-scn-tile-"] { background: #FFFFFF; border-color: #DDD8F5 !important;
+  border-top: 4px solid #8F84DE !important; border-radius: 12px; }
+[class*="st-key-scn-tile-down"] { border-top-color: #D33A36 !important; }
+[class*="st-key-scn-tile-down"] [data-testid="stMetricValue"] { color: #D33A36; }
+[class*="st-key-scn-tile-up"] { border-top-color: #0E8A45 !important; }
+[class*="st-key-scn-tile-up"] [data-testid="stMetricValue"] { color: #0E8A45; }
+[class*="st-key-scn-tile-"] [data-testid="stMetricLabel"] * { white-space: normal !important; }
 .scn-head { display: grid; grid-template-columns: 0.55fr 5.2fr 4.2fr 0.9fr; gap: 1rem;
   background: #5B47D1; color: #fff; border-radius: 10px; padding: 9px 30px 9px 18px;
   font-weight: 600; font-size: 0.9rem; }
@@ -630,15 +640,81 @@ def step_badges(numbers: list[int]) -> str:
     return " ".join(f":blue-badge[step {n}]" for n in numbers)
 
 
+# a figure with a unit (or decimals): bolded in the answer; years and plain counts are not
+_FIGURE = re.compile(
+    r"(?<![\w.])([−+-]?\d[\d,]*(?:\.\d+)?\s?(?:%|pp|bn €|M€|k €|€/kg|×|percent|billion euros"
+    r"|million euros)|[−+-]?\d[\d,]*\.\d+)(?![\w])"
+)
+
+
+def emphasise(text: str) -> str:
+    """The text with its figures in bold, so the key numbers stand out."""
+    return _FIGURE.sub(lambda m: f"**{m[1]}**", text)
+
+
+def render_tiles(tiles: list[dict], prefix: str) -> None:
+    """The key figures as metric tiles, coloured by direction like the Overview's."""
+    for k, (col, tile) in enumerate(zip(st.columns(len(tiles)), tiles, strict=True)):
+        tone = tile.get("tone") or "flat"
+        with col, st.container(border=True, key=f"scn-tile-{tone}-{prefix}-{k}", height="stretch"):
+            st.metric(tile["label"], tile["value"])
+            if tile.get("detail"):
+                st.caption(tile["detail"])
+
+
+@st.cache_data(show_spinner="Building the charts…", max_entries=32)
+def evidence(scenario_id: str) -> list[dict]:
+    """The scenario's evidence figures (stored, or computed now for older scenarios)."""
+    rec = builder.store.load(scenario_id)
+    return [f.model_dump() for f in builder.figures(rec)] if rec else []
+
+
 def render_answer_panel(rec: ScenarioRecord) -> None:
-    """The combined answer in its tinted panel, then what the data cannot tell."""
+    """The combined answer like an Overview card: headline, key figures, chart and points.
+
+    The chart and the figures are computed by code from the steps' SQL; the words are the
+    checked answer, with their numbers in bold.
+    """
+    figures = [EvidenceFigure.model_validate(f) for f in evidence(rec.scenario_id)]
     with st.container(key="scn-answer"):
-        st.markdown(f"**Question:** {rec.question}")
+        st.caption(f"**Question:** {rec.question}")
         st.markdown(f"### {rec.headline}")
-        st.markdown(
-            "\n".join(f"- {p['text']} {step_badges(p.get('steps', []))}" for p in rec.points)
+        if figures and figures[0].tiles:
+            render_tiles(figures[0].tiles[:4], f"{rec.scenario_id}-0")
+        points = "\n".join(
+            f"- {emphasise(p['text'])} {step_badges(p.get('steps', []))}" for p in rec.points
         )
-        st.markdown(rec.conclusion)
+        if figures:
+            chart, words = st.columns([1.1, 1], gap="large")
+            with chart:
+                fig = figures[0]
+                st.markdown(f"**{fig.title}**")
+                st.plotly_chart(
+                    evidence_bars(pd.DataFrame(fig.rows), fig.kind, rec.language),
+                    key=f"scn-evidence-{rec.scenario_id}-0",
+                    config={"displayModeBar": False},
+                )
+                st.caption(f":material/calculate: {fig.note}")
+            with words:
+                st.markdown("**Key points**")
+                st.markdown(points)
+        else:
+            st.markdown(points)
+        st.markdown(f"**In short.** {emphasise(rec.conclusion)}")
+        for k, fig in enumerate(figures[1:], start=1):
+            with st.container(border=True):
+                left, right = st.columns([1.1, 1], gap="large")
+                with left:
+                    st.markdown(f"**{fig.title}**")
+                    st.plotly_chart(
+                        evidence_bars(pd.DataFrame(fig.rows), fig.kind, rec.language),
+                        key=f"scn-evidence-{rec.scenario_id}-{k}",
+                        config={"displayModeBar": False},
+                    )
+                with right:
+                    if fig.tiles:
+                        render_tiles(fig.tiles[:2], f"{rec.scenario_id}-{k}")
+                    st.caption(f":material/calculate: {fig.note}")
         if rec.approach:
             st.caption(f"Approach: {rec.approach}")
         if rec.answer_source == "template":

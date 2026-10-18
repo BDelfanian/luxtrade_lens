@@ -1044,3 +1044,48 @@ def hero_figure(key: str, frames: dict[str, pd.DataFrame], lang: str = "en") -> 
     if key == "composition" and not main.empty:
         return composition_bars(main, lang, height=430)
     return None
+
+
+def evidence_bars(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
+    """A scenario's evidence chart (agents/evidence.py), in the style of the Overview cards.
+
+    ``change``: one group of bars per period, the items the answer is about in colour and the
+    whole flow in gray (like the crisis card). ``share``: one group per item, a bar per year.
+    """
+    groups = list(dict.fromkeys(rows["group"]))
+    series = list(dict.fromkeys(rows["series"]))
+    fig = go.Figure()
+    if kind == "change":
+        colors = [SERIES[7], SERIES[0], SERIES[6]][: len(series) - 1] + [NEUTRAL]
+    else:  # older years lighter, the latest year darkest
+        colors = [SEQUENTIAL[min(2 + 3 * i, 6)] for i in range(len(series))]
+    for name, color in zip(series, colors, strict=False):
+        part = rows[rows["series"] == name].set_index("group").reindex(groups)
+        labels = [
+            fmt_pct(v, lang, decimals=0 if kind == "change" else 1, signed=kind == "change")
+            if pd.notna(v)
+            else ""
+            for v in part["value"]
+        ]
+        fig.add_bar(
+            x=[_short(g, 28) for g in groups],
+            y=part["value"],
+            name=name,
+            marker={"color": color, "cornerradius": 4},
+            text=labels,
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="%{x}<br>%{text}<extra>" + name + "</extra>",
+        )
+    low, high = float(rows["value"].min()), float(rows["value"].max())
+    fig.update_layout(barmode="group", bargap=0.3, bargroupgap=0.08)
+    if kind == "change":
+        fig.update_yaxes(
+            ticksuffix=" %",
+            range=[min(low * 1.3, -10), max(high * 1.3, 8)],
+            zeroline=True,
+            zerolinecolor=TEXT_2,
+        )
+    else:
+        fig.update_yaxes(ticksuffix=" %", range=[0, high * 1.25])
+    return _hero_layout(fig, height=380)

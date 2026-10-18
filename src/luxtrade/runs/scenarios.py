@@ -44,6 +44,7 @@ class ScenarioRecord(BaseModel):
     points: list[dict] = Field(default_factory=list)  # {"text": …, "steps": [n, …]}
     conclusion: str = ""
     charts: list[int] = Field(default_factory=list)  # steps whose charts support the answer
+    figures: list[dict] = Field(default_factory=list)  # evidence charts and key figures (code)
     answer_source: str = ""  # "llm" (passed the checks) or "template"
     caveats: list[dict] = Field(default_factory=list)  # {"id": …, "message": …} from the runs
     notes: list[str] = Field(default_factory=list)  # validation and check notes, in order

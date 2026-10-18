@@ -36,6 +36,7 @@ from pydantic import BaseModel, Field
 from luxtrade.agents import guard
 from luxtrade.agents.context import SessionContext
 from luxtrade.agents.defaults import apply_defaults, share_of_nothing
+from luxtrade.agents.evidence import EvidenceFigure, compose
 from luxtrade.agents.grounding import (
     ALWAYS_ALLOWED,
     describes_future,
@@ -698,6 +699,7 @@ class ScenarioBuilder:
             points=[p.model_dump() for p in answer.points],
             conclusion=answer.conclusion,
             charts=self._charts(answer.charts, records),
+            figures=[f.model_dump() for f in self._evidence_figures(chain, records, answer, lang)],
             answer_source=source,
             caveats=self._caveats(records),
             notes=notes,
@@ -966,6 +968,33 @@ class ScenarioBuilder:
                 if lim["severity"] == "warn":
                     found.setdefault(lim["id"], lim["message"])
         return [{"id": k, "message": found[k]} for k in sorted(found)]
+
+    def _evidence_figures(
+        self,
+        chain: list[ScenarioStep],
+        records: dict[int, RunRecord],
+        answer: ScenarioAnswer,
+        lang: str,
+    ) -> list[EvidenceFigure]:
+        """The answer's charts and key figures, computed by code from the steps' SQL."""
+        text = " ".join([p.text for p in answer.points] + [answer.conclusion])
+        try:
+            return compose(chain, records, answer.headline, text, self.assistant.sem, lang)
+        except Exception:  # noqa: BLE001 - a chart must never cost the answer
+            return []
+
+    def figures(self, record: ScenarioRecord) -> list[EvidenceFigure]:
+        """The record's evidence figures; for older records, computed now from their runs."""
+        if record.figures:
+            return [EvidenceFigure.model_validate(f) for f in record.figures]
+        answer = ScenarioAnswer(
+            headline=record.headline,
+            points=[AnswerPoint(**p) for p in record.points],
+            conclusion=record.conclusion,
+            step_notes=[],
+            charts=[],
+        )
+        return self._evidence_figures(record.steps, self.records(record), answer, record.language)
 
     def records(self, record: ScenarioRecord) -> dict[int, RunRecord]:
         """The run records of a scenario's steps, by step number (missing ones left out)."""
