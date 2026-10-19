@@ -107,3 +107,32 @@ def test_the_fitted_parameters_or_the_fallback_are_said():
     assert naive["short"].startswith("Imports: same month last year")
     assert "(8.0 % vs 7.3 %)" in naive["long"]
     assert "σ of the yearly log change 0.134" in naive["long"]
+
+
+def test_a_benchmark_is_one_figure_of_index_lines_and_intra_eu_shares(make_assistant, semantic):
+    import pandas as pd
+
+    from luxtrade.viz.charts import evidence_bars
+
+    assistant = make_assistant()
+    total = QuerySpec(intent="benchmark", flow="both", period_start="2018", period_end="2025")
+    imports = total.model_copy(update={"flow": "import"})
+    chain, records = runs(assistant, [total, imports])
+    facts = {f["key"]: f["text"] for f in records[1].facts}
+    assert facts["LU.index"].startswith("Luxembourg, trade index 2025 (2018 = 100): ")
+    assert "percentage points" in facts["LU.intra"] and "of 6" in facts["LU.rank"]
+    assert facts["intra.moved"].startswith("Intra-EU share of trade, 2018 to 2025: rose in ")
+    [fig] = compose(chain, records, "", "", semantic)
+    assert fig.kind == "benchmark" and fig.steps == [1]  # the total-trade step
+    index = [r for r in fig.rows if r["panel"] == "index"]
+    intra = [r for r in fig.rows if r["panel"] == "intra"]
+    assert {r["reporter"] for r in index} == {"LU", "BE", "NL", "DE", "FR", "AT"}  # the peers
+    assert all(r["value"] == 100 for r in index if r["group"] == 2018)
+    shares = [r["value"] for r in intra if r["series"] == "2025"]
+    assert shares == sorted(shares, reverse=True)  # the highest share on top
+    labels = [t["label"] for t in fig.tiles]
+    assert labels[0] == "Luxembourg, trade index 2025 (2018 = 100)"
+    assert labels[-1] == "Luxembourg, intra-EU share of imports 2025"  # from the imports step
+    assert fig.panels == ["Index, 2018 = 100", "Intra-EU share, 2018 → 2025"]
+    chart = evidence_bars(pd.DataFrame(fig.rows), fig.kind, "en", fig.panels)
+    assert len(chart.data) == 12  # a line and a dumbbell per country

@@ -149,6 +149,36 @@ _T = {
         "fr": "En {end}, {share} des échanges du Luxembourg se faisaient avec des pays de l'UE.",
         "de": "{end} entfielen {share} des Handels Luxemburgs auf EU-Länder.",
     },
+    "b_index": {
+        "en": "{name}, {what} index {end} ({start} = 100): {value}; lowest {low} in {low_year}, highest {high} in {high_year}",
+        "fr": "{name}, indice {what} {end} ({start} = 100) : {value} ; plus bas {low} en {low_year}, plus haut {high} en {high_year}",
+        "de": "{name}, Index {what} {end} ({start} = 100): {value}; Tiefstwert {low} {low_year}, Höchstwert {high} {high_year}",
+    },
+    "b_intra": {
+        "en": "{name}, intra-EU share of {what}: {a} in {start}, {b} in {end} ({chg} percentage points)",
+        "fr": "{name}, part intra-UE {what} : {a} en {start}, {b} en {end} ({chg} points de pourcentage)",
+        "de": "{name}, Intra-EU-Anteil {what}: {a} {start}, {b} {end} ({chg} Prozentpunkte)",
+    },
+    "b_value": {
+        "en": "{name}, {what} {end}: {value}",
+        "fr": "{name}, {what} {end} : {value}",
+        "de": "{name}, {what} {end}: {value}",
+    },
+    "b_rank": {
+        "en": "Luxembourg ranks {r} of {n} on the {what} index {end} ({start} = 100) and {ri} of {n} on the intra-EU share",
+        "fr": "Le Luxembourg est {r}e sur {n} pour l'indice {what} {end} ({start} = 100) et {ri}e sur {n} pour la part intra-UE",
+        "de": "Luxemburg liegt beim Index {what} {end} ({start} = 100) auf Rang {r} von {n} und beim Intra-EU-Anteil auf Rang {ri} von {n}",
+    },
+    "b_moved": {
+        "en": "Intra-EU share of {what}, {start} to {end}: rose in {k} of {n} countries ({rose}); fell in {m} ({fell})",
+        "fr": "Part intra-UE {what}, {start} à {end} : en hausse dans {k} pays sur {n} ({rose}) ; en baisse dans {m} ({fell})",
+        "de": "Intra-EU-Anteil {what}, {start} bis {end}: gestiegen in {k} von {n} Ländern ({rose}); gesunken in {m} ({fell})",
+    },
+    "b_avg": {
+        "en": "Average intra-EU share of {what} of the other {n} countries: {a} in {start}, {b} in {end}",
+        "fr": "Part intra-UE moyenne {what} des {n} autres pays : {a} en {start}, {b} en {end}",
+        "de": "Durchschnittlicher Intra-EU-Anteil {what} der anderen {n} Länder: {a} {start}, {b} {end}",
+    },
     "pivot": {
         "en": "Over {start}–{end}, the largest value is {name} in {period} with {value}.",
         "fr": "Sur {start}–{end}, la valeur la plus élevée est {name} en {period} avec {value}.",
@@ -857,6 +887,149 @@ def _yearly_projection_facts(
     return out
 
 
+_BENCH_WHAT = {
+    "both": {"en": "trade", "fr": "des échanges", "de": "des Handels"},
+    "export": {"en": "exports", "fr": "des exportations", "de": "der Ausfuhren"},
+    "import": {"en": "imports", "fr": "des importations", "de": "der Einfuhren"},
+}
+_BENCH_VALUE = {
+    "both": {
+        "en": "trade (exports + imports)",
+        "fr": "échanges (exportations + importations)",
+        "de": "Handel (Aus- + Einfuhren)",
+    },
+    "export": {"en": "exports", "fr": "exportations", "de": "Ausfuhren"},
+    "import": {"en": "imports", "fr": "importations", "de": "Einfuhren"},
+}
+
+
+def _signed(value: float, lang: str) -> str:
+    """A change in points with its sign: '+8.0', '−5.7'."""
+    return ("+" if value >= 0 else "−") + fmt_number(abs(value), 1, lang)
+
+
+def _benchmark_facts(main: pd.DataFrame, flow: str, lang: str) -> list[Fact]:
+    """Per country the index path, intra-EU share and value; Luxembourg's rank; who moved.
+
+    Seen on real data: with only the last year's index and share, an answer could not say that
+    Luxembourg's intra-EU share rose from 77.2 % to 85.2 % while six of seven peers fell.
+    """
+    what = _BENCH_WHAT.get(flow, _BENCH_WHAT["both"])
+    what = what.get(lang, what["en"])
+    value_what = _BENCH_VALUE.get(flow, _BENCH_VALUE["both"])
+    value_what = value_what.get(lang, value_what["en"])
+    start, end = int(main["period"].min()), int(main["period"].max())
+    out: list[Fact] = []
+    moves = {}
+    for r, g in main.groupby("reporter", sort=False):
+        g = g.sort_values("period").set_index("period")
+        name = str(g["label"].iloc[0])
+        index = g["index"].dropna()  # empty when the base year is not in the data
+        if end in index.index:
+            low, high = index.idxmin(), index.idxmax()
+            out.append(
+                Fact(
+                    key=f"{r}.index",
+                    text=_t(
+                        "b_index",
+                        lang,
+                        name=name,
+                        what=what,
+                        start=start,
+                        end=end,
+                        value=fmt_number(index[end], 0, lang),
+                        low=fmt_number(index[low], 0, lang),
+                        low_year=int(low),
+                        high=fmt_number(index[high], 0, lang),
+                        high_year=int(high),
+                    ),
+                )
+            )
+        if start not in g.index or end not in g.index:
+            continue
+        a, b = float(g.loc[start, "intra_share"]), float(g.loc[end, "intra_share"])
+        moves[name] = round(b, 1) - round(a, 1)  # the change of the shares as written
+        out.append(
+            Fact(
+                key=f"{r}.intra",
+                text=_t(
+                    "b_intra",
+                    lang,
+                    name=name,
+                    what=what,
+                    start=start,
+                    end=end,
+                    a=fmt_pct(a, lang),
+                    b=fmt_pct(b, lang),
+                    chg=_signed(moves[name], lang),
+                ),
+            )
+        )
+        out.append(
+            Fact(
+                key=f"{r}.value",
+                text=_t(
+                    "b_value",
+                    lang,
+                    name=name,
+                    what=value_what,
+                    end=end,
+                    value=fmt_eur(g.loc[end, "value"], lang),
+                ),
+            )
+        )
+    latest = main[main["period"] == end].set_index("reporter")
+    first = main[main["period"] == start].set_index("reporter")
+    n = len(latest)
+    if "LU" in latest.index and n > 1 and latest["index"].notna().all():
+        r = int((latest["index"] > latest.loc["LU", "index"]).sum()) + 1
+        ri = int((latest["intra_share"] > latest.loc["LU", "intra_share"]).sum()) + 1
+        out.append(
+            Fact(
+                key="LU.rank",
+                text=_t("b_rank", lang, r=r, ri=ri, n=n, what=what, start=start, end=end),
+            )
+        )
+        rest = [k for k in latest.index if k != "LU"]
+        out.append(
+            Fact(
+                key="others.intra",
+                text=_t(
+                    "b_avg",
+                    lang,
+                    what=what,
+                    n=len(rest),
+                    start=start,
+                    end=end,
+                    a=fmt_pct(first.loc[rest, "intra_share"].mean(), lang),
+                    b=fmt_pct(latest.loc[rest, "intra_share"].mean(), lang),
+                ),
+            )
+        )
+    if n > 1:
+        order = sorted(moves.items(), key=lambda kv: -kv[1])
+        rose = [f"{k} {_signed(v, lang)}" for k, v in order if v > 0]
+        fell = [f"{k} {_signed(v, lang)}" for k, v in order if v <= 0]
+        out.append(
+            Fact(
+                key="intra.moved",
+                text=_t(
+                    "b_moved",
+                    lang,
+                    what=what,
+                    start=start,
+                    end=end,
+                    k=len(rose),
+                    n=n,
+                    m=len(fell),
+                    rose=", ".join(rose) or "–",
+                    fell=", ".join(fell) or "–",
+                ),
+            )
+        )
+    return out
+
+
 def _py(value: object) -> object:
     if isinstance(value, pd.Timestamp):
         return value.date()
@@ -995,16 +1168,7 @@ def build_fact_sheet(
     elif spec.intent == "benchmark":
         last_p, first_p = int(a.main["period"].max()), int(a.main["period"].min())
         latest = a.main[a.main["period"] == last_p].set_index("reporter")
-        for r, row in latest.iterrows():
-            facts.append(
-                Fact(key=f"{r}.index", text=f"{row['label']} index {last_p}: {row['index']:.0f}")
-            )
-            facts.append(
-                Fact(
-                    key=f"{r}.intra",
-                    text=f"{row['label']} intra-EU share {last_p}: {fmt_pct(row['intra_share'], lang)}",
-                )
-            )
+        facts += _benchmark_facts(a.main, spec.flow, lang)
         others = latest.drop(index="LU", errors="ignore").sort_values("index")
         if "LU" in latest.index and len(others):
             best, worst = others.iloc[-1], others.iloc[0]

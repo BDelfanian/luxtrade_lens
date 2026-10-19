@@ -229,3 +229,13 @@ def test_pivot_over_a_few_named_partners_becomes_a_time_series(semantic):
     assert apply_defaults(spec, semantic.coverage).intent == "time_series"
     table = spec.model_copy(update={"view": "table"})
     assert apply_defaults(table, semantic.coverage).intent == "pivot"  # asked for a table
+
+
+def test_a_benchmark_without_countries_compares_the_default_peers(semantic):
+    from luxtrade.config import BENCHMARK_PEERS, BENCHMARK_REPORTERS
+
+    spec = apply_defaults(QuerySpec(intent="benchmark"), semantic.coverage)
+    assert spec.compare_reporters == list(BENCHMARK_PEERS)
+    assert {"ES", "IT"} <= set(BENCHMARK_REPORTERS) - set(BENCHMARK_PEERS)  # asked by name only
+    named = apply_defaults(QuerySpec(intent="benchmark", partners=["ES", "IT"]), semantic.coverage)
+    assert named.compare_reporters == ["ES", "IT"] and named.partners == []

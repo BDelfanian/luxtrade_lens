@@ -1084,16 +1084,21 @@ def hero_figure(key: str, frames: dict[str, pd.DataFrame], lang: str = "en") -> 
     return None
 
 
-def evidence_bars(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
+def evidence_bars(
+    rows: pd.DataFrame, kind: str, lang: str, titles: list[str] | None = None
+) -> go.Figure:
     """A scenario's evidence chart (agents/evidence.py), in the style of the Overview cards.
 
     ``change``: one group of bars per period, the items the answer is about in colour and the
     whole flow in gray (like the crisis card). ``share``: one group per item, a bar per year.
+    ``titles``: the figure's panel titles, where it has panels.
     """
     if kind in ("concentration", "series"):
         return evidence_panels(rows, kind, lang)
     if kind == "projection":
         return evidence_projection(rows, lang)
+    if kind == "benchmark":
+        return evidence_benchmark(rows, lang, titles)
     groups = list(dict.fromkeys(rows["group"]))
     series = list(dict.fromkeys(rows["series"]))
     fig = go.Figure()
@@ -1300,4 +1305,68 @@ def evidence_projection(rows: pd.DataFrame, lang: str) -> go.Figure:
     fig.update_annotations(font={"size": 13, "color": TEXT})
     fig = _hero_layout(fig, height=380)
     fig.update_layout(margin={"l": 8, "r": 8, "t": 30, "b": 16})
+    return fig
+
+
+_PEERS = [*SERIES[1:7], NEUTRAL]  # no red: in the share panel red means "fell"
+
+
+def evidence_benchmark(rows: pd.DataFrame, lang: str, titles: list[str] | None = None) -> go.Figure:
+    """Each country's index (Luxembourg in bold) and its intra-EU share at both ends."""
+    index, intra = rows[rows["panel"] == "index"], rows[rows["panel"] == "intra"]
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=titles or ["", ""],
+        column_widths=[0.56, 0.44],
+        horizontal_spacing=0.14,
+    )
+    countries = list(dict.fromkeys(index.sort_values("reporter")["series"]))
+    lu = next(iter(index.loc[index["reporter"] == "LU", "series"]), None)
+    for k, name in enumerate([c for c in countries if c != lu] + ([lu] if lu else [])):
+        part = index[index["series"] == name].sort_values("group")
+        own = name == lu
+        fig.add_scatter(
+            x=part["group"],
+            y=part["value"],
+            mode="lines+markers" if own else "lines",
+            name=name,
+            line={"width": 3.2 if own else 1.6, "color": SERIES[0] if own else _PEERS[k % 7]},
+            marker={"size": 6},
+            hovertemplate="%{y:.0f}<extra>" + name + "</extra>",
+            row=1,
+            col=1,
+        )
+    fig.add_hline(y=100, line={"color": NEUTRAL, "width": 1, "dash": "dot"}, row=1, col=1)
+    years = sorted(intra["series"].unique())
+    order = list(dict.fromkeys(intra["group"]))[::-1]  # the highest share on top
+    for name in order:
+        pair = intra[intra["group"] == name].set_index("series")["value"]
+        a, b = float(pair.get(years[0])), float(pair.get(years[-1]))
+        own = intra.loc[intra["group"] == name, "reporter"].iloc[0] == "LU"
+        color = SERIES[0] if own else ("#1baf7a" if b > a else "#e34948")
+        fig.add_scatter(
+            x=[a, b],
+            y=[name, name],
+            mode="lines+markers",
+            line={"color": color, "width": 3 if own else 2},
+            marker={
+                "size": [8, 11],
+                "color": ["white", color],
+                "line": {"color": color, "width": 2},
+            },
+            customdata=[fmt_pct(a, lang), fmt_pct(b, lang)],
+            hovertemplate="%{customdata}<extra>" + name + "</extra>",
+            showlegend=False,
+            row=1,
+            col=2,
+        )
+    fig.update_yaxes(title="index", row=1, col=1)
+    fig.update_xaxes(ticksuffix=" %", row=1, col=2)
+    fig.update_annotations(font={"size": 13, "color": TEXT})
+    fig = _hero_layout(fig, height=460)
+    fig.update_layout(  # the legend under the panels, clear of their titles
+        margin={"l": 8, "r": 8, "t": 30, "b": 70},
+        legend={"orientation": "h", "x": 0, "y": -0.12, "yanchor": "top"},
+    )
     return fig

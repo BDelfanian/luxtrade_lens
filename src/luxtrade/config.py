@@ -47,7 +47,10 @@ EU27_2020 = frozenset(
 )
 # Explicit list of special partner codes, never a pattern (DATA_CARD §4.2b)
 SPECIAL_PARTNERS = frozenset(["QP", "QQ", "QR", "QS", "QU", "QV", "QW", "QX", "QY", "QZ"])
-BENCHMARK_REPORTERS = ("LU", "BE", "NL", "DE", "FR", "AT")
+# Reporters kept for benchmarking (HS2 totals over all partners, from the same DS-045409 files)
+BENCHMARK_REPORTERS = ("LU", "BE", "NL", "DE", "FR", "AT", "ES", "IT")
+# Compared when a benchmark names no country: the neighbours and Austria (the Overview's card)
+BENCHMARK_PEERS = ("BE", "NL", "DE", "FR", "AT")
 
 ATTRIBUTION = "Source: Eurostat, Comext DS-045409, extracted {date}; calculations by The Outliers."
 

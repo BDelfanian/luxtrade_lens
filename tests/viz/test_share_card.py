@@ -212,3 +212,38 @@ def test_a_projection_is_drawn_with_its_band_and_method_line():
     }
     for size, expected in (("portrait", (1080, 1350)), ("square", (1080, 1080))):
         assert size_of(render_card(c, size, scale=1)) == expected
+
+
+def test_a_benchmark_is_drawn_as_index_lines_beside_intra_eu_shares():
+    names = {"LU": "Luxembourg", "NL": "Netherlands", "ES": "Spain", "IT": "Italy"}
+    shares = {"LU": (80.2, 85.2), "NL": (65.2, 56.5), "ES": (67.0, 58.7), "IT": (58.5, 53.9)}
+    rows = [
+        {"panel": "index", "group": y, "series": name, "reporter": code, "value": v, "step": 2}
+        for code, name in names.items()
+        for y, v in zip(
+            (2005, 2015, 2025), (100, 100 + len(name), 120 + 10 * len(name)), strict=True
+        )
+    ]
+    rows += [
+        {"panel": "intra", "group": names[code], "series": str(y), "reporter": code, "value": v}
+        for code, pair in sorted(shares.items(), key=lambda kv: -kv[1][1])
+        for y, v in zip((2005, 2025), pair, strict=True)
+    ]
+    c = content_from(record(), [], "data to Jun 2026")
+    c.figure = {
+        "kind": "benchmark",
+        "title": "Trade index (2005 = 100) and intra-EU share, 2005 and 2025",
+        "rows": rows,
+        "caption": "Each country as a reporter in Comext DS-045409",
+        "panels": ["Index, 2005 = 100", "Intra-EU share, 2005 → 2025"],
+    }
+    for size, expected in (("portrait", (1080, 1350)), ("square", (1080, 1080))):
+        assert size_of(render_card(c, size, scale=1)) == expected
+
+
+def test_line_end_labels_keep_their_distance():
+    from luxtrade.viz.share_card import _spread
+
+    placed = _spread([100, 104, 106, 200], 16, 90, 210)
+    assert all(b - a >= 16 for a, b in zip(placed, placed[1:], strict=False))
+    assert _spread([195, 200, 205], 16, 90, 210)[-1] <= 210  # pushed back up, not off the panel

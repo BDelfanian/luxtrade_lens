@@ -403,6 +403,134 @@ _HALF = re.compile(
 )
 
 
+_ALL_OTHERS = re.compile(
+    r"\b(?:all\s+(?:the\s+)?(?:others?|remaining|seven|six)|every\s+other|each\s+of\s+the\s+others?|"
+    r"tous\s+les\s+autres|les\s+(?:sept|six)\s+autres|alle\s+anderen)\b",
+    re.IGNORECASE,
+)
+_FELL = re.compile(
+    r"\b(?:declin|fell|fall|drop|decreas|reduc|lower|shr[ai]nk|baiss|recul|diminu|sank|gesunken|"
+    r"fiel|gefallen|rückläufig)\w*",
+    re.IGNORECASE,
+)
+_ONLY = re.compile(
+    r"\b(?:the\s+only|alone\s+among|uniquely|unique\w*|le\s+seul|la\s+seule|seul\w*|"
+    r"als\s+einzige\w*|das\s+einzige|einzig\w*)\b",
+    re.IGNORECASE,
+)
+_ROSE = re.compile(
+    r"\b(?:rose|rise|risen|increas|grew|grow|gain|hausse|augment|progress|stieg|gestiegen|wuchs)\w*",
+    re.IGNORECASE,
+)
+_MORE = re.compile(
+    r"\b(?:larger|bigger|steeper|sharper|greater|deeper|more\s+(?:steeply|sharply)|"
+    r"plus\s+(?:fortes?|importantes?|marquée?s?)|stärker\w*|größer\w*)\b",
+    re.IGNORECASE,
+)
+_FLOW_WORDS = {
+    "export": re.compile(r"\b(?:export\w*|ausfuhr\w*)", re.IGNORECASE),
+    "import": re.compile(r"\b(?:import\w*|einfuhr\w*)", re.IGNORECASE),
+}
+_SENTENCE = re.compile(r"(?<=[.!?])\s+")
+_MOVE = re.compile(r"([^,();:]+?)\s+([+−-])(\d+(?:[.,]\d+)?)")
+
+
+def _moves(rec: RunRecord) -> dict[str, float]:
+    """Each country's change of its intra-EU share in a benchmark step, from its facts."""
+    fact = next((f["text"] for f in rec.facts if f["key"] == "intra.moved"), "")
+    lists = fact.split(":", 1)[-1]
+    return {
+        m[1].strip().lstrip("(").strip(): (-1 if m[2] in "−-" else 1)
+        * float(m[3].replace(",", "."))
+        for m in _MOVE.finditer(lists)
+    }
+
+
+def all_others_fell(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
+    """'All the others fell', 'the only one that rose' or 'all the others fell more', untrue.
+
+    Seen on real data: "all other countries experienced declines in their intra-EU trade
+    shares" over 2015–2025, while Austria's share rose 0.4 points; Luxembourg "uniquely
+    increased" its share; "all other countries experienced larger declines" in exports, while
+    Austria's fell 0.4 points against Luxembourg's 6.2. Each cited benchmark step states every
+    country's change; a sentence is held to the steps of the flow it names (exports, imports,
+    else total trade) and of the years it names. A country the sentence names is its exception.
+    """
+    found = []
+    reporter = {"luxembourg", "luxemburg"}
+    cited = [
+        n
+        for n in sorted(steps)
+        if (rec := records.get(n)) is not None and (rec.spec or {}).get("intent") == "benchmark"
+    ]
+    for sentence in _SENTENCE.split(text):
+        fell = _ALL_OTHERS.search(sentence) and _FELL.search(sentence)
+        only = _ONLY.search(sentence) and _ROSE.search(sentence)
+        more = fell and _MORE.search(sentence)
+        if not (fell or only):
+            continue
+        named = {int(y) for y in _YEAR.findall(sentence)}
+        flows = {f for f, word in _FLOW_WORDS.items() if word.search(sentence)}
+        if len(flows) != 1:  # both or neither named: total trade, if a step has it
+            total = [n for n in cited if (records[n].spec or {}).get("flow", "both") == "both"]
+            flows = {"both"} if total else {"both", "export", "import"}
+        for n in cited:
+            spec = records[n].spec or {}
+            if spec.get("flow", "both") not in flows:
+                continue
+            y0 = int((spec.get("period_start") or "0")[:4])
+            y1 = int((spec.get("period_end") or "0")[:4])
+            if named and y0 not in named and not named <= {y0, y1}:
+                continue  # the sentence is about another period
+            moves = _moves(records[n])
+            lu = next((v for k, v in moves.items() if k.lower() in reporter), None)
+            others = {
+                k: v
+                for k, v in moves.items()
+                if k.lower() not in reporter and k.lower() not in sentence.lower()
+            }
+            if more and lu is not None:
+                less = [f"{k} {v:+.1f}" for k, v in others.items() if v >= lu]
+                if less:
+                    found.append(
+                        f"says the others all fell more than Luxembourg ({lu:+.1f}), but in step "
+                        f"{n} ({y0}–{y1}) {', '.join(less)} did not: name the exception"
+                    )
+                continue
+            rose = [k for k, v in others.items() if v > 0]
+            if rose:
+                found.append(
+                    f"says the others all fell (or Luxembourg alone rose), but in step {n} "
+                    f"({y0}–{y1}) the intra-EU share rose for {', '.join(rose)} too: name "
+                    "the exception or say 'six of the seven'"
+                )
+    return found
+
+
+_VOLUME = re.compile(r"\b(?:volumes?|Volumen|Mengen?)\b", re.IGNORECASE)
+
+
+def value_as_volume(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
+    """A value in euros called a volume.
+
+    Seen on real data: the Netherlands and Spain "more than doubled their trade volumes", read
+    from an index of values in current euros. Only when every cited step measures euros (a step
+    in kilograms has volumes).
+    """
+    cited = [records[n] for n in steps if n in records]
+    if not cited or any(
+        (r.spec or {}).get("measure", "value_eur") not in ("value_eur", "share", "change")
+        for r in cited
+    ):
+        return []
+    return [
+        "calls a value in euros a volume: the figures are values in current euros (prices "
+        "move them too); say 'value' or 'trade', not 'volume'"
+        for sentence in _SENTENCE.split(text)
+        if _VOLUME.search(sentence)
+    ][:1]
+
+
 def always_over_half(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
     """A claim of "over half throughout" where a cited share series fell below half.
 
@@ -727,6 +855,8 @@ def review_answer(
             found.append("observed data described as projected or expected")
         found += hidden_as_spread(text)
         found += always_over_half(text, steps, records)
+        found += all_others_fell(text, steps, records)
+        found += value_as_volume(text, steps, records)
         found += projection_without_range(text, steps, records, lang)
         return found
 

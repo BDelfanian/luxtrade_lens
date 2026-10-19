@@ -674,3 +674,58 @@ def test_a_projected_number_needs_its_80_percent_range():
         facts=[{"key": "export.adjusted_last", "text": "exports adjusted Jun 2026: 17.58 bn €"}],
     )
     assert projection_without_range(bare, {1, 3}, {1: seen, 3: rec}, "en") == []
+
+
+def _bench(start: str, flow: str, moved: str):
+    from luxtrade.runs.store import RunRecord
+
+    return RunRecord.model_construct(
+        spec={"intent": "benchmark", "flow": flow, "period_start": start, "period_end": "2025"},
+        facts=[{"key": "intra.moved", "text": moved}],
+        status="answered",
+    )
+
+
+def test_all_the_others_must_hold_in_every_cited_period_and_flow():
+    from luxtrade.agents.scenario import all_others_fell
+
+    records = {
+        1: _bench(
+            "2015",
+            "both",
+            "Intra-EU share of trade, 2015 to 2025: rose in 2 of 8 countries (Luxembourg +8.0, "
+            "Austria +0.4); fell in 6 (Germany −1.0, Spain −4.1)",
+        ),
+        2: _bench(
+            "2005",
+            "both",
+            "Intra-EU share of trade, 2005 to 2025: rose in 1 of 8 countries (Luxembourg +5.0); "
+            "fell in 7 (Austria −0.3, Spain −8.3)",
+        ),
+        3: _bench(
+            "2005",
+            "export",
+            "Intra-EU share of exports, 2005 to 2025: rose in 0 of 8 countries (–); fell in 8 "
+            "(Austria −0.4, Luxembourg −6.2, Spain −10.1)",
+        ),
+    }
+    (problem,) = all_others_fell("All other countries saw their EU share fall.", {1, 2}, records)
+    assert "step 1 (2015–2025)" in problem and "Austria" in problem
+    assert all_others_fell("From 2005 to 2025 all the others fell.", {1, 2}, records) == []
+    assert all_others_fell("All other countries fell, except Austria.", {1}, records) == []
+    (alone,) = all_others_fell("Luxembourg uniquely increased its EU share.", {1, 2, 3}, records)
+    assert "step 1" in alone  # total trade: held to the total-trade steps, not to exports
+    more = "Its export share fell 6.2 points, while all other countries saw larger declines."
+    (problem,) = all_others_fell(more, {3}, records)
+    assert "Austria -0.4 did not" in problem
+
+
+def test_a_value_is_not_a_volume():
+    from luxtrade.agents.scenario import value_as_volume
+    from luxtrade.runs.store import RunRecord
+
+    values = {2: _bench("2005", "both", "")}
+    assert value_as_volume("The Netherlands doubled its trade volumes.", {2}, values)
+    assert value_as_volume("The Netherlands doubled its trade value.", {2}, values) == []
+    kilos = RunRecord.model_construct(spec={"intent": "time_series", "measure": "qty_kg"})
+    assert value_as_volume("Volumes fell.", {2, 5}, values | {5: kilos}) == []

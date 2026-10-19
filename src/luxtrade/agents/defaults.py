@@ -12,6 +12,7 @@ from luxtrade.agents.spec import (
     QuerySpec,
 )
 from luxtrade.config import (
+    BENCHMARK_PEERS,
     BENCHMARK_REPORTERS,
     DEFAULT_TOP_N,
     FORECAST_DEFAULT_HORIZON,
@@ -197,7 +198,7 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
             s.forecast_horizon or FORECAST_DEFAULT_HORIZON, FORECAST_MAX_HORIZON
         )
     if s.intent == "benchmark" and not s.compare_reporters:
-        s.compare_reporters = [r for r in BENCHMARK_REPORTERS if r != REPORTER]
+        s.compare_reporters = [r for r in BENCHMARK_PEERS if r != REPORTER]
         notes.append("compared with " + ", ".join(s.compare_reporters))
 
     s.partners = [p.upper() for p in s.partners]

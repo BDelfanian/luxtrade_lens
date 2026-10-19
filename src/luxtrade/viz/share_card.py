@@ -314,6 +314,8 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     c.rect(box, WHITE, radius=16, outline=LINE)
     if content.figure and content.figure.get("kind") == "projection":
         _projection_panels(c, content.figure, box, lang)
+    elif content.figure and content.figure.get("kind") == "benchmark":
+        _benchmark_panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("kind") in ("concentration", "series"):
         _panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("rows"):
@@ -626,6 +628,155 @@ def _projection_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
         for year in sorted({int(r["group"]) for r in mine}):
             if year % 2 == 0:
                 c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
+
+
+PEER_COLORS = ["#EB6834", "#1BAF7A", "#EDA100", "#E87BA4", "#008300", "#6250D6", "#8A93A3"]
+
+
+def _spread(wanted: list[float], gap: float, low: float, high: float) -> list[float]:
+    """Label positions near ``wanted`` (sorted top to bottom), at least ``gap`` apart."""
+    out: list[float] = []
+    for y in wanted:
+        out.append(max(y, out[-1] + gap) if out else max(y, low))
+    overflow = (out[-1] - high) if out else 0
+    if overflow > 0:  # pushed past the bottom: shift the stack up, keeping the gaps
+        out = [y - overflow for y in out]
+        for k in range(len(out) - 2, -1, -1):
+            out[k] = min(out[k], out[k + 1] - gap)
+    return out
+
+
+def _benchmark_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
+    """Each country's index beside its intra-EU share at both ends of the period.
+
+    Index: Luxembourg in bold, every line named at its end. Shares: a row per country, the
+    hollow dot the first year and the full dot the last, green where the share rose.
+    """
+    x0, y0, x1, y1 = box
+    rows = fig["rows"]
+    titles = fig.get("panels") or ["", ""]
+    title_font = c.font("sans", 18, 600)
+    y = c.lines(
+        x0 + 20,
+        y0 + 16,
+        _wrap(fig["title"], title_font, (x1 - x0 - 40) * c.s, 1),
+        title_font,
+        INK,
+        24,
+    )
+    if fig.get("caption"):
+        cap = c.font("sans", 13, 400)
+        c.text(
+            (x0 + 20, y1 - 22), _wrap(fig["caption"], cap, (x1 - x0 - 40) * c.s, 1)[0], cap, MUTED
+        )
+        y1 -= 24
+    label_font, axis = c.font("sans", 16, 600), c.font("sans", 13, 400)
+    name_font, bold = c.font("sans", 13, 500), c.font("sans", 13, 700)
+    split = x0 + 20 + (x1 - x0 - 40) * 0.55
+
+    # left: the index lines
+    index = [r for r in rows if r["panel"] == "index"]
+    countries = list(dict.fromkeys(r["series"] for r in index))
+    lu = next((r["series"] for r in index if r.get("reporter") == "LU"), None)
+    years = sorted({int(r["group"]) for r in index})
+    c.text((x0 + 20, y + 6), titles[0], label_font, INK)
+    left, right = x0 + 52, split - 118  # room for the names at the line ends
+    ptop, pbottom = y + 44, y1 - 30
+    values = [r["value"] for r in index]
+    lo, hi = min(values + [100.0]), max(values)
+    lo, hi = lo - 0.06 * (hi - lo), hi + 0.06 * (hi - lo)
+
+    def xpos(year: int) -> float:
+        return left + (year - years[0]) / ((years[-1] - years[0]) or 1) * (right - left)
+
+    def ypos(v: float) -> float:
+        return pbottom - (v - lo) / ((hi - lo) or 1.0) * (pbottom - ptop)
+
+    for t in _ticks(lo, hi):
+        c.rect((left, ypos(t), right, ypos(t) + 0.6), LINE)
+        c.text((left - 8, ypos(t)), fmt_number(t, 0, lang), axis, FAINT, anchor="rm")
+    _dashed(c, left, right, ypos(100), FAINT, 4)
+    step = 5 if years[-1] - years[0] > 12 else 2
+    for year in years:
+        if year % step == 0:
+            c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
+    color = {
+        name: (BLUE if name == lu else PEER_COLORS[k % len(PEER_COLORS)])
+        for k, name in enumerate(n for n in countries if n != lu)
+    }
+    if lu:
+        color[lu] = PANEL_COLORS[0]
+    ends = []
+    for name in [n for n in countries if n != lu] + ([lu] if lu else []):
+        mine = sorted((r for r in index if r["series"] == name), key=lambda r: r["group"])
+        pts = [(xpos(int(r["group"])), ypos(r["value"])) for r in mine]
+        width = 4 if name == lu else 2
+        if len(pts) > 1:
+            c.draw.line(
+                [tuple(c.p(*pt)) for pt in pts], fill=color[name], width=width * c.s, joint="curve"
+            )
+        ex, ey = pts[-1]
+        r_ = 4.5 if name == lu else 3
+        c.draw.ellipse(c.p(ex - r_, ey - r_, ex + r_, ey + r_), fill=color[name])
+        ends.append((ey, name, mine[-1]["value"]))
+    ends.sort()
+    placed = _spread([e[0] for e in ends], 16, ptop, pbottom)
+    for (_, name, value), ly in zip(ends, placed, strict=True):
+        text = f"{name} {fmt_number(value, 0, lang)}"
+        c.text((right + 10, ly), text, bold if name == lu else name_font, color[name], anchor="lm")
+
+    # right: the intra-EU share at both ends, a row per country (highest share on top)
+    intra = [r for r in rows if r["panel"] == "intra"]
+    names = list(dict.fromkeys(r["group"] for r in intra))
+    pair = sorted({r["series"] for r in intra})
+    if not names or len(pair) < 2:
+        return
+    first, last = pair[0], pair[-1]
+    rx0, rx1 = split + 28, x1 - 20
+    c.text((rx0, y + 6), titles[1], label_font, INK)
+    legend = c.font("sans", 13, 500)
+    lx = rx1
+    for text, full in ((last, True), (first, False)):
+        lx -= c.length(text, legend)
+        c.text((lx, y + 10), text, legend, MUTED)
+        cx, cy = lx - 12, y + 17
+        c.draw.ellipse(
+            c.p(cx - 5, cy - 5, cx + 5, cy + 5),
+            fill=MUTED if full else WHITE,
+            outline=MUTED,
+            width=2 * c.s,
+        )
+        lx -= 30
+    shares = [r["value"] for r in intra]
+    lo_s, hi_s = 10 * int(min(shares) // 10), 10 * (int(max(shares) // 10) + 1)
+    left_s, right_s = rx0 + 96, rx1 - 46
+    top_s, bottom_s = y + 48, y1 - 30
+    row_h = (bottom_s - top_s) / len(names)
+
+    def sx(v: float) -> float:
+        return left_s + (v - lo_s) / ((hi_s - lo_s) or 1) * (right_s - left_s)
+
+    for t in range(lo_s, hi_s + 1, 10):
+        c.rect((sx(t), top_s, sx(t) + 0.6, bottom_s), LINE)
+        c.text((sx(t), bottom_s + 6), f"{t} %", axis, FAINT, anchor="ma")
+    for k, name in enumerate(names):
+        mine = {r["series"]: r for r in intra if r["group"] == name}
+        a, b = mine[first]["value"], mine[last]["value"]
+        own = mine[last].get("reporter") == "LU"
+        tone = PANEL_COLORS[0] if own else (TONE["up"] if b > a else TONE["down"])
+        cy = top_s + (k + 0.5) * row_h
+        c.text((rx0, cy), name, bold if own else name_font, INK if own else MUTED, anchor="lm")
+        c.draw.line(
+            [tuple(c.p(sx(a), cy)), tuple(c.p(sx(b), cy))], fill=_rgb(tone, 0.55), width=3 * c.s
+        )
+        c.draw.ellipse(
+            c.p(sx(a) - 4.5, cy - 4.5, sx(a) + 4.5, cy + 4.5),
+            fill=WHITE,
+            outline=tone,
+            width=2 * c.s,
+        )
+        c.draw.ellipse(c.p(sx(b) - 5.5, cy - 5.5, sx(b) + 5.5, cy + 5.5), fill=tone)
+        c.text((rx1, cy), fmt_pct(b, lang), bold if own else name_font, tone, anchor="rm")
 
 
 _PROJ_LEGEND = {

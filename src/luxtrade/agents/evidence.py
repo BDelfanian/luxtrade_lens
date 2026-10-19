@@ -15,6 +15,10 @@ chart and a few key figures. No LLM is involved:
 - Projections (intent "forecast") form one figure: a panel per flow with the last eight years
   observed, the projection and its 80 % band; key figures are each flow's projected total for
   the last full year projected and, from seasonality steps, its strongest and weakest month.
+- Benchmarks (intent "benchmark", Luxembourg against other EU reporters) form one figure: the
+  trade index of each country and its intra-EU share at both ends of the period, from the
+  total-trade step with the longest period; key figures are Luxembourg's index and rank, its
+  intra-EU share and how many countries moved towards the EU.
 - Yearly series of one line each (a share or a value: "Japan's share of imports each year")
   form small multiples, a panel per step on its own scale, with first and last value as key
   figures; their values are the steps' own analysed frames (computed by code in each run).
@@ -199,6 +203,68 @@ _T = {
         "de": "ETS auf Logarithmen, gedämpfter Trend, Monatssaison: {fits} · Band: 80 % von 500 "
         "simulierten Pfaden",
     },
+    "t_bench": {
+        "en": "{what} index ({y0} = 100) and intra-EU share, {y0} and {y1}",
+        "fr": "Indice {what} ({y0} = 100) et part intra-UE, {y0} et {y1}",
+        "de": "Index {what} ({y0} = 100) und Intra-EU-Anteil, {y0} und {y1}",
+    },
+    "p_index": {"en": "Index, {y0} = 100", "fr": "Indice, {y0} = 100", "de": "Index, {y0} = 100"},
+    "p_intra": {
+        "en": "Intra-EU share, {y0} → {y1}",
+        "fr": "Part intra-UE, {y0} → {y1}",
+        "de": "Intra-EU-Anteil, {y0} → {y1}",
+    },
+    "k_bidx": {
+        "en": "Luxembourg, {what} index {y1} ({y0} = 100)",
+        "fr": "Luxembourg, indice {what} {y1} ({y0} = 100)",
+        "de": "Luxemburg, Index {what} {y1} ({y0} = 100)",
+    },
+    "k_bidx_d": {
+        "en": "{r} of {n}; {best} {top}",
+        "fr": "{r}e sur {n} ; {best} {top}",
+        "de": "Rang {r} von {n}; {best} {top}",
+    },
+    "k_bintra": {
+        "en": "Luxembourg, intra-EU share of {what} {y1}",
+        "fr": "Luxembourg, part intra-UE {what} {y1}",
+        "de": "Luxemburg, Intra-EU-Anteil {what} {y1}",
+    },
+    "k_bintra_d": {
+        "en": "{y0}: {a} ({chg} points)",
+        "fr": "{y0} : {a} ({chg} points)",
+        "de": "{y0}: {a} ({chg} Punkte)",
+    },
+    "k_bmoved": {
+        "en": "countries whose intra-EU share of {what} rose, {y0}–{y1}",
+        "fr": "pays dont la part intra-UE {what} a augmenté, {y0}–{y1}",
+        "de": "Länder mit steigendem Intra-EU-Anteil {what}, {y0}–{y1}",
+    },
+    "k_bmoved_d": {
+        "en": "{m} fell: {least} to {most} points",
+        "fr": "{m} en baisse : {least} à {most} points",
+        "de": "{m} gesunken: {least} bis {most} Punkte",
+    },
+    "cap_bench": {
+        "en": "Each country as a reporter in Comext DS-045409 (HS2 totals over all partners), "
+        "values in current euros",
+        "fr": "Chaque pays comme déclarant dans Comext DS-045409 (totaux SH2 sur tous les "
+        "partenaires), valeurs en euros courants",
+        "de": "Jedes Land als Melder in Comext DS-045409 (HS2-Summen über alle Partner), Werte in "
+        "laufenden Euro",
+    },
+    "note_bench": {
+        "en": "Computed by code from step {step}: the yearly total of each country as a reporter "
+        "in Comext DS-045409 (HS2 totals over all partners), indexed to {y0} = 100, and the "
+        "intra-EU share of that total. Values are in current euros, so prices move the index too.",
+        "fr": "Calculé par le code à partir de l'étape {step} : le total annuel de chaque pays "
+        "déclarant dans Comext DS-045409 (totaux SH2 sur tous les partenaires), en indice "
+        "{y0} = 100, et la part intra-UE de ce total. Les valeurs sont en euros courants : les "
+        "prix font aussi bouger l'indice.",
+        "de": "Vom Code aus Schritt {step} berechnet: die Jahressumme jedes Landes als Melder in "
+        "Comext DS-045409 (HS2-Summen über alle Partner), als Index {y0} = 100, und der "
+        "Intra-EU-Anteil daran. Die Werte sind in laufenden Euro, also bewegen auch Preise den "
+        "Index.",
+    },
     "note_series": {
         "en": "Each panel is one step's yearly series (steps {steps}), computed by code from its "
         "own SQL; panels have their own scales.",
@@ -225,7 +291,7 @@ def _t(key: str, lang: str, **values: object) -> str:
 class EvidenceFigure(BaseModel):
     """One chart of a scenario's answer and the key figures read from it."""
 
-    kind: Literal["change", "share", "concentration", "series", "projection"]
+    kind: Literal["change", "share", "concentration", "series", "projection", "benchmark"]
     title: str
     flow: str
     steps: list[int]
@@ -233,6 +299,7 @@ class EvidenceFigure(BaseModel):
     tiles: list[dict] = Field(default_factory=list)  # {"value", "label", "detail", "tone"}
     note: str = ""
     caption: str = ""  # one line under the chart on the share card (projections: the method)
+    panels: list[str] = Field(default_factory=list)  # panel titles, in order (benchmark)
 
 
 def _shape(rec: RunRecord) -> tuple | None:
@@ -327,6 +394,14 @@ def compose(
     if ahead:
         try:
             fig = _projection(ahead, season, records, lang)
+        except (KeyError, ValueError, TypeError):
+            fig = None
+        if fig is not None:
+            figures.append(fig)
+    bench = [n for n in answered if (records[n].spec or {}).get("intent") == "benchmark"]
+    if bench and len(figures) < MAX_FIGURES:
+        try:
+            fig = _benchmark(bench, records, lang)
         except (KeyError, ValueError, TypeError):
             fig = None
         if fig is not None:
@@ -469,6 +544,154 @@ def _projection(
         note=_t("note_proj", lang, steps=", ".join(map(str, used)))
         + "".join(f" {line['long']}" for line in fitted),
         caption=_t("cap_proj", lang, fits=" · ".join(line["short"] for line in fitted)),
+    )
+
+
+_BENCH_WHAT = {
+    "both": {"en": "trade", "fr": "des échanges", "de": "des Handels"},
+    "export": {"en": "exports", "fr": "des exportations", "de": "der Ausfuhren"},
+    "import": {"en": "imports", "fr": "des importations", "de": "der Einfuhren"},
+}
+
+
+def _signed_points(value: float, lang: str) -> str:
+    return ("+" if value >= 0 else "−") + fmt_number(abs(value), 1, lang)
+
+
+def _benchmark(steps: list[int], records: dict[int, RunRecord], lang: str) -> EvidenceFigure | None:
+    """Each country's index and its intra-EU share at both ends; Luxembourg's place as tiles.
+
+    The chart comes from the total-trade step with the longest period (else the first step);
+    a step on imports or exports adds Luxembourg's intra-EU share of that flow as a tile.
+    """
+
+    def frame(n: int) -> pd.DataFrame:
+        main = records[n].frame("main")
+        need = {"reporter", "label", "period", "index", "intra_share"}
+        if main.empty or not need <= set(main.columns) or main["index"].isna().any():
+            return pd.DataFrame()  # no base year in the data: no index to draw
+        return main
+
+    usable = [n for n in steps if not frame(n).empty]
+    if not usable:
+        return None
+
+    def span(n: int) -> int:
+        f = frame(n)
+        return int(f["period"].max()) - int(f["period"].min())
+
+    total = [n for n in usable if (records[n].spec or {}).get("flow", "both") == "both"]
+    n = max(total or usable, key=span)
+    main = frame(n).sort_values(["reporter", "period"])
+    flow = (records[n].spec or {}).get("flow", "both")
+    what = _BENCH_WHAT.get(flow, _BENCH_WHAT["both"])
+    what = what.get(lang, what["en"])
+    y0, y1 = int(main["period"].min()), int(main["period"].max())
+    first = main[main["period"] == y0].set_index("reporter")
+    last = main[main["period"] == y1].set_index("reporter")
+    rows = [
+        {
+            "panel": "index",
+            "group": int(r.period),
+            "series": str(r.label),
+            "reporter": str(r.reporter),
+            "value": float(r.index),
+            "step": n,
+        }
+        for r in main.itertuples()
+    ]
+    for code in last.sort_values("intra_share", ascending=False).index:
+        for year, part in ((y0, first), (y1, last)):
+            rows.append(
+                {
+                    "panel": "intra",
+                    "group": str(last.loc[code, "label"]),
+                    "series": str(year),
+                    "reporter": str(code),
+                    "value": float(part.loc[code, "intra_share"]),
+                    "step": n,
+                }
+            )
+    tiles = []
+    if "LU" in last.index and len(last) > 1:
+        rank = int((last["index"] > last.loc["LU", "index"]).sum()) + 1
+        best = last.loc[last["index"].idxmax()]
+        tiles.append(
+            {
+                "value": fmt_number(last.loc["LU", "index"], 0, lang),
+                "label": _t("k_bidx", lang, what=what, y0=y0, y1=y1),
+                "detail": _t(
+                    "k_bidx_d",
+                    lang,
+                    r=rank,
+                    n=len(last),
+                    best=best["label"],
+                    top=fmt_number(best["index"], 0, lang),
+                ),
+                "tone": "down" if rank > len(last) / 2 else "up",
+            }
+        )
+
+        def intra_tile(f0: pd.DataFrame, f1: pd.DataFrame, what: str, a: int) -> dict:
+            v0, v1 = float(f0.loc["LU", "intra_share"]), float(f1.loc["LU", "intra_share"])
+            return {
+                "value": fmt_pct(v1, lang),
+                "label": _t("k_bintra", lang, what=what, y1=y1),
+                "detail": _t(
+                    "k_bintra_d",
+                    lang,
+                    y0=a,
+                    a=fmt_pct(v0, lang),
+                    chg=_signed_points(round(v1, 1) - round(v0, 1), lang),
+                ),
+                "tone": "",
+            }
+
+        tiles.append(intra_tile(first, last, what, y0))
+        moves = (last["intra_share"].round(1) - first["intra_share"].round(1)).round(1)
+        rose, fell = moves[moves > 0], moves[moves <= 0]
+        tiles.append(
+            {
+                "value": f"{len(rose)} / {len(moves)}",
+                "label": _t("k_bmoved", lang, what=what, y0=y0, y1=y1),
+                "detail": _t(
+                    "k_bmoved_d",
+                    lang,
+                    m=len(fell),
+                    least=_signed_points(fell.max(), lang),
+                    most=_signed_points(fell.min(), lang),
+                )
+                if len(fell)
+                else "",
+                "tone": "",
+            }
+        )
+        flows = []  # a flow's own step: Luxembourg's intra-EU share of imports or exports
+        for m in usable:
+            f = frame(m)
+            fl = (records[m].spec or {}).get("flow", "both")
+            if fl == "both" or "LU" not in set(f["reporter"]):
+                continue
+            a, b = int(f["period"].min()), int(f["period"].max())
+            f0 = f[f["period"] == a].set_index("reporter")
+            f1 = f[f["period"] == b].set_index("reporter")
+            w = _BENCH_WHAT[fl].get(lang, _BENCH_WHAT[fl]["en"])
+            tile = intra_tile(f0, f1, w, a)
+            tile["label"] = _t("k_bintra", lang, what=w, y1=b)
+            moved = abs(float(f1.loc["LU", "intra_share"]) - float(f0.loc["LU", "intra_share"]))
+            flows.append((moved, tile))
+        # the flow whose share moved most explains the total's move (imports +14 points)
+        tiles += [tile for _, tile in sorted(flows, key=lambda t: -t[0])]
+    return EvidenceFigure(
+        kind="benchmark",
+        title=_cap(_t("t_bench", lang, what=what, y0=y0, y1=y1)),
+        flow=flow,
+        steps=[n],
+        rows=rows,
+        tiles=tiles[:4],
+        note=_t("note_bench", lang, step=n, y0=y0),
+        caption=_t("cap_bench", lang),
+        panels=[_t("p_index", lang, y0=y0), _t("p_intra", lang, y0=y0, y1=y1)],
     )
 
 

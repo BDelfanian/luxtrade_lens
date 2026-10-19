@@ -749,7 +749,7 @@ def render_answer_panel(rec: ScenarioRecord) -> None:
                 fig = figures[0]
                 st.markdown(f"**{fig.title}**")
                 st.plotly_chart(
-                    evidence_bars(pd.DataFrame(fig.rows), fig.kind, rec.language),
+                    evidence_bars(pd.DataFrame(fig.rows), fig.kind, rec.language, fig.panels),
                     key=f"scn-evidence-{rec.scenario_id}-0",
                     config={"displayModeBar": False},
                 )
@@ -766,7 +766,7 @@ def render_answer_panel(rec: ScenarioRecord) -> None:
                 with left:
                     st.markdown(f"**{fig.title}**")
                     st.plotly_chart(
-                        evidence_bars(pd.DataFrame(fig.rows), fig.kind, rec.language),
+                        evidence_bars(pd.DataFrame(fig.rows), fig.kind, rec.language, fig.panels),
                         key=f"scn-evidence-{rec.scenario_id}-{k}",
                         config={"displayModeBar": False},
                     )

@@ -34,7 +34,7 @@ Figures marked *(measured)* were verified on the bulk files of **Dec 2025** and 
 
 | Column | Meaning | Notes |
 |---|---|---|
-| `REPORTER` | Declaring country (ISO-2) | We keep `LU`, plus per-country summaries for benchmarking |
+| `REPORTER` | Declaring country (ISO-2) | We keep `LU`, plus HS2 totals over all partners for benchmarking: BE, NL, DE, FR, AT, ES and IT (`BENCHMARK_REPORTERS`; the Overview compares the first five, Spain and Italy are compared when named) |
 | `PARTNER` | Partner country (ISO-2) | No aggregates such as WORLD or EU27 in the file. Derive them (see §4.6) |
 | `TRADE_TYPE` | `I` = intra-EU, `E` = extra-EU | |
 | `PRODUCT_NC` | CN8 code, `TOTAL`, or a **masked confidential code** | Read as **text** (leading zeros!) |
