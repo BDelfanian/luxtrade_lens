@@ -1092,6 +1092,8 @@ def evidence_bars(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
     """
     if kind in ("concentration", "series"):
         return evidence_panels(rows, kind, lang)
+    if kind == "projection":
+        return evidence_projection(rows, lang)
     groups = list(dict.fromkeys(rows["group"]))
     series = list(dict.fromkeys(rows["series"]))
     fig = go.Figure()
@@ -1239,4 +1241,63 @@ def evidence_panels(rows: pd.DataFrame, kind: str, lang: str) -> go.Figure:
         )
     fig = _hero_layout(fig, height=300 * n_rows + 80)
     fig.update_layout(margin={"l": 8, "r": 8, "t": 30, "b": 52 if hhi else 16})
+    return fig
+
+
+def evidence_projection(rows: pd.DataFrame, lang: str) -> go.Figure:
+    """Observed months, then the projection (dashed) in its 80 % band, a panel per flow (M€)."""
+    panels = list(dict.fromkeys(rows["series"]))
+    fig = make_subplots(rows=1, cols=len(panels), subplot_titles=panels, horizontal_spacing=0.08)
+    for i, panel in enumerate(panels, start=1):
+        part = rows[rows["series"] == panel].sort_values("group")
+        seen, ahead = part[part["kind"] == "actual"], part[part["kind"] == "projection"]
+        color = SERIES[i - 1]
+        joined = pd.concat([seen.tail(1), ahead])  # the dashed line starts at the last month seen
+        fig.add_scatter(
+            x=ahead["group"],
+            y=ahead["hi80"] / 1e6,
+            mode="lines",
+            line={"width": 0},
+            hoverinfo="skip",
+            showlegend=False,
+            row=1,
+            col=i,
+        )
+        fig.add_scatter(
+            x=ahead["group"],
+            y=ahead["lo80"] / 1e6,
+            mode="lines",
+            line={"width": 0},
+            fill="tonexty",
+            fillcolor=_rgba(color, 0.18),
+            hoverinfo="skip",
+            showlegend=False,
+            row=1,
+            col=i,
+        )
+        for frame, dash, name in ((seen, "solid", "observed"), (joined, "dash", "projected")):
+            fig.add_scatter(
+                x=frame["group"],
+                y=frame["value"] / 1e6,
+                mode="lines",
+                line={"width": 2.2, "color": color, "dash": dash},
+                customdata=[fmt_eur(v, lang) for v in frame["value"]],
+                hovertemplate="%{customdata}<extra>" + f"{panel}, {name}" + "</extra>",
+                showlegend=False,
+                row=1,
+                col=i,
+            )
+        if not seen.empty:
+            fig.add_vline(
+                x=float(seen["group"].max()),
+                line={"color": NEUTRAL, "width": 1, "dash": "dot"},
+                row=1,
+                col=i,
+            )
+        years = sorted({int(g) for g in part["group"]})
+        fig.update_xaxes(tickmode="array", tickvals=[y for y in years if y % 2 == 0], row=1, col=i)
+        fig.update_yaxes(title="M€" if i == 1 else None, row=1, col=i)  # spans the data
+    fig.update_annotations(font={"size": 13, "color": TEXT})
+    fig = _hero_layout(fig, height=380)
+    fig.update_layout(margin={"l": 8, "r": 8, "t": 30, "b": 16})
     return fig

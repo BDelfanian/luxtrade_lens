@@ -619,3 +619,58 @@ def test_a_point_removed_by_a_check_is_redrafted(builder):
     assert not any("400 million" in p["text"] for p in rec.points)
     redraft = [user for step, user in b.assistant.llm.calls if step == "scenario_answer"][1]
     assert "400 million" in redraft and "PROBLEMS in the previous draft" in redraft
+
+
+def test_a_projection_covers_the_years_it_projects():
+    spec = {
+        "intent": "forecast",
+        "period_start": "2002-01",
+        "period_end": "2026-06",
+        "forecast_horizon": 30,
+    }
+    question = "Project exports and imports to the end of 2028."
+    assert mismatch(question, spec) is None
+    assert "names 2028" in mismatch(question, spec | {"forecast_horizon": 6})
+
+
+def test_a_projected_number_needs_its_80_percent_range():
+    from luxtrade.agents.scenario import projection_without_range
+    from luxtrade.runs.store import RunRecord
+
+    facts = [
+        {"key": "export.total_2025", "text": "exports total 2025 (observed): 16.25 bn €"},
+        {
+            "key": "export.projected_2027",
+            "text": "exports projected total 2027: 17.58 bn € (80 %: 14.38 bn € to 21.48 bn €), "
+            "+8.2 % on 2025",
+        },
+        {
+            "key": "export.projected_2028",
+            "text": "exports projected total 2028: 17.58 bn € (80 %: 13.67 bn € to 22.74 bn €), "
+            "+8.2 % on 2025",
+        },
+    ]
+    rec = RunRecord.model_construct(spec={"intent": "forecast"}, facts=facts, status="answered")
+    bare = "Exports would reach 17.58 bn € in 2028, from 16.25 bn € in 2025."
+    (problem,) = projection_without_range(bare, {3}, {3: rec}, "en")
+    assert "projected 17.58 without its 80 % range" in problem and "step 3" in problem
+    ranged = "Exports would reach 17.58 bn € in 2028 (80 %: 13.67 to 22.74 bn €)."
+    assert projection_without_range(ranged, {3}, {3: rec}, "en") == []
+    assert projection_without_range(bare, {2}, {3: rec}, "en") == []  # not a cited step
+    observed = rec.model_copy(update={"spec": {"intent": "time_series"}})
+    assert projection_without_range(bare, {3}, {3: observed}, "en") == []
+    # a range belongs to its year: 2027's range does not cover 2028
+    both = "Exports would reach 17.58 bn € in 2027 and 2028 (80 %: 14.38 to 21.48)."
+    (problem,) = projection_without_range(both, {3}, {3: rec}, "en")
+    assert "give 2028 its own 80 % range (13.67 to 22.74, step 3)" in problem
+    each = (
+        "Exports would reach 17.58 bn € in 2027 (80 %: 14.38 to 21.48) and 17.58 bn € in 2028 "
+        "(80 %: 13.67 to 22.74)."
+    )
+    assert projection_without_range(each, {3}, {3: rec}, "en") == []
+    # the same number stated by an observed step is not only a projection
+    seen = RunRecord.model_construct(
+        spec={"intent": "seasonality"},
+        facts=[{"key": "export.adjusted_last", "text": "exports adjusted Jun 2026: 17.58 bn €"}],
+    )
+    assert projection_without_range(bare, {1, 3}, {1: seen, 3: rec}, "en") == []

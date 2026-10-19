@@ -179,6 +179,20 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
     elif s.top_n is None and s.breakdown != "none":
         s.top_n = DEFAULT_TOP_N
     if s.intent == "forecast":
+        # "project to December 2028": an end after the data is the horizon, not the period
+        last = cov.latest_complete_period
+        target = _month(s.period_end, end=True) if s.period_end else None
+        if target is not None and target > last:
+            months = (target.year - last.year) * 12 + target.month - last.month
+            s.forecast_horizon = months
+            s.period_end = complete
+            notes.append(f"projected {months} months ahead, to {_fmt(target)}")
+        if s.period_start and _month(s.period_start, end=False) > last:
+            # "from July 2026 to December 2028" is the window projected, not the one fitted
+            s.period_start = f"{SERIES_FIRST_YEAR}-01"
+            notes.append(f"fitted on the full series from {SERIES_FIRST_YEAR}")
+        if s.forecast_horizon and s.forecast_horizon > FORECAST_MAX_HORIZON:
+            notes.append(f"projection limited to {FORECAST_MAX_HORIZON} months")
         s.forecast_horizon = min(
             s.forecast_horizon or FORECAST_DEFAULT_HORIZON, FORECAST_MAX_HORIZON
         )

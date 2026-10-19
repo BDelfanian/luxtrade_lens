@@ -278,7 +278,7 @@ def _seasonality(df: pd.DataFrame, spec: QuerySpec) -> Analysis:
 
 
 def _forecast(df: pd.DataFrame, spec: QuerySpec) -> Analysis:
-    frames, methods, flags = [], [], []
+    frames, methods, flags, annual = [], [], [], []
     for flow in sorted(df["flow"].unique()):
         y = _series(df, flow)
         reason = forecast.eligibility(y)
@@ -296,8 +296,12 @@ def _forecast(df: pd.DataFrame, spec: QuerySpec) -> Analysis:
             continue
         res = forecast.project(y, spec.forecast_horizon or 12)
         frames.append(res.frame.assign(flow=flow))
+        annual.append(res.annual.assign(flow=flow))
         methods.append(f"{flow}: {res.method_note()}")
-    return Analysis(main=pd.concat(frames, ignore_index=True), methods=methods, flags=flags)
+    extra = {"annual": pd.concat(annual, ignore_index=True)} if annual else {}
+    return Analysis(
+        main=pd.concat(frames, ignore_index=True), extra=extra, methods=methods, flags=flags
+    )
 
 
 def _benchmark(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:

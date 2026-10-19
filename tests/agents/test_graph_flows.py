@@ -465,3 +465,14 @@ def test_observed_year_called_projected_fails_grounding(make_assistant, fake_llm
 
     assert _FUTURE.search("Imports are projected to reach 25.10 bn € in 2025.")
     assert not _FUTURE.search("Imports reached 25.10 bn € in 2025.")
+
+
+def test_luxembourg_is_the_reporter_not_an_unresolved_partner(make_assistant, fake_llm):
+    llm = fake_llm(
+        interpret=interp(
+            intent="ranking", breakdown="partner", flow="export", unresolved=["Luxembourg", "LU"]
+        )
+    )
+    rec = make_assistant(llm).ask("Who buys Luxembourg's exports?")
+    assert rec.status == "answered"
+    assert [t["node"] for t in rec.trace].count("interpret") == 1  # nothing to look up again

@@ -31,6 +31,11 @@ from luxtrade.viz.share_card import first_sentence
 
 MAX_TITLE, MAX_SUBTITLE = 90, 220
 MAX_FIGURES = {"title": 1, "subtitle": 4}  # statistics, years not counted: a card is not a table
+_RANGE = re.compile(
+    r"(?:\b80\s?%\s*(?:range|intervalle|bereich)?\s*:?\s*)?"
+    r"\d[\d.,]*\s?(?:bn|M|k)?\s?€?\s*(?:to|–|-|à|bis)\s*\d[\d.,]*",
+    re.IGNORECASE,
+)
 _CODES = re.compile(r"\b[A-Za-z]+-?\d+\b")  # EU27, HS4, CN8, G7: part of a name
 
 
@@ -42,9 +47,16 @@ class ShareText(BaseModel):
     subtitle: str = Field(description="One sentence: the question's context and the evidence.")
 
 
-def answer_texts(record: ScenarioRecord, figures: list[EvidenceFigure]) -> list[str]:
-    """Everything the share text may draw on: the checked answer and the figures of the card."""
+def answer_texts(
+    record: ScenarioRecord, figures: list[EvidenceFigure], runs: dict | None = None
+) -> list[str]:
+    """Everything the share text may draw on.
+
+    The checked answer, the figures of the card and the facts of the scenario's steps
+    (``runs``), which the answer was checked against.
+    """
     texts = [record.question, record.headline, record.conclusion]
+    texts += [f["text"] for rec in (runs or {}).values() for f in rec.facts]
     texts += [p["text"] for p in record.points]
     for fig in figures[:1]:
         texts += [fig.title] + [str(r["group"]) for r in fig.rows]
@@ -58,13 +70,18 @@ def review_share(
     figures: list[EvidenceFigure],
     sem: object,
     user: bool = False,
+    runs: dict | None = None,
 ) -> list[str]:
     """Problems of a drafted title and subtitle; empty if they may go on the card.
 
     ``user``: the user's own words, checked the same way, except that a question may be a hook.
+    ``runs``: the steps' run records; their facts may be quoted, and a projection must come
+    with its 80 % range.
     """
+    from luxtrade.agents.scenario import projection_without_range  # noqa: PLC0415 (cycle)
+
     lang = record.language
-    texts = answer_texts(record, figures)
+    texts = answer_texts(record, figures, runs)
     allowed = numbers_in(texts, lang)
     named = set(partners_named(" ".join(texts), sem, lang))
     found = [] if text.title.strip() else ["the title is empty"]
@@ -77,6 +94,7 @@ def review_share(
         if "?" in part and not user:
             found.append(f"{label}: a question, not a statement")
         bare = _CODES.sub(" ", plain_numbers(part))  # "EU27", "HS4": names, not figures
+        bare = _RANGE.sub(" R ", bare)  # "80 %: 13.67 to 22.74" is one figure, a range
         figures_in = [v for v, d in parse_numbers(bare, lang) if d or not 1900 <= v <= 2100]
         if len(figures_in) > MAX_FIGURES[label]:
             listed = ", ".join(f"{v:g}" for v in figures_in)
@@ -89,6 +107,9 @@ def review_share(
         found += [f"{label}: {p}" for p in unknown_partners(part, named, sem, lang)]
         if describes_future(part) and not describes_future(" ".join(texts)):
             found.append(f"{label}: observed data described as projected or expected")
+        if runs:
+            steps = set(runs)
+            found += [f"{label}: {p}" for p in projection_without_range(part, steps, runs, lang)]
     return found
 
 
@@ -98,6 +119,7 @@ def write_share(
     figures: list[EvidenceFigure],
     sem: object,
     avoid: list[str] | None = None,
+    runs: dict | None = None,
 ) -> tuple[ShareText, str, list[str]]:
     """The title and subtitle, their source ("llm" or "template") and the check notes.
 
@@ -130,6 +152,17 @@ def write_share(
             ),
         ]
     )
+    projected = [
+        f["text"]
+        for rec in (runs or {}).values()
+        if (rec.spec or {}).get("intent") == "forecast"
+        for f in rec.facts
+        if "projected" in f["key"]
+    ]
+    if projected:  # a projection quoted on the card comes with its 80 % range
+        user += "\n\nPROJECTIONS (quote a range with any number you use):\n- " + "\n- ".join(
+            projected
+        )
     if avoid:
         user += "\n\nTITLES ALREADY WRITTEN (write a different one):\n- " + "\n- ".join(avoid)
     notes: list[str] = []
@@ -151,7 +184,7 @@ def write_share(
         except LLMError as exc:
             notes.append(f"share text LLM failed: {exc}")
             break
-        problems = review_share(out, record, figures, sem)
+        problems = review_share(out, record, figures, sem, runs=runs)
         if not problems:
             notes.append("share title and subtitle passed the number, country and wording checks")
             return out, "llm", notes

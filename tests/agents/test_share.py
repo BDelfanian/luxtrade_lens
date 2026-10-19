@@ -137,3 +137,31 @@ def test_the_user_can_write_the_card_words_within_the_checks(make_assistant, tmp
     assert builder.set_share(rec, hook, "Exports to Germany fell 48.4 % in 2009.") == []
     kept = store.load(rec.scenario_id).share
     assert (kept["title"], kept["source"]) == (hook, "user")
+
+
+def test_a_projection_on_the_card_carries_its_range(semantic):
+    from luxtrade.runs.store import RunRecord
+
+    fact = {
+        "key": "export.projected_2028",
+        "text": "exports projected total 2028: 17.58 bn € (80 %: 13.67 bn € to 22.74 bn €), "
+        "+8.2 % on 2025",
+    }
+    runs = {
+        2: RunRecord.model_construct(spec={"intent": "forecast"}, facts=[fact], status="answered")
+    }
+    rec = record(headline="Exports keep their seasonal rhythm.", points=[], conclusion="")
+    bare = share_text(subtitle="If past patterns continue, exports would reach 17.58 bn € in 2028.")
+    found = review_share(bare, rec, [FIGURE], semantic, runs=runs)
+    assert any("17.58 without its 80 % range" in p for p in found), found
+    ranged = share_text(
+        subtitle="If past patterns continue, exports would reach 17.58 bn € in 2028 "
+        "(80 %: 13.67 to 22.74), 8.2 % above 2025."
+    )
+    assert review_share(ranged, rec, [FIGURE], semantic, runs=runs) == []  # a range: one figure
+    llm = FakeLLM(responses={"scenario_share": [ranged]})
+    write_share(llm, rec, [FIGURE], semantic, runs=runs)
+    assert (
+        "PROJECTIONS (quote a range with any number you use):\n- exports projected total"
+        in llm.calls[0][1]
+    )

@@ -182,3 +182,33 @@ def test_long_tile_labels_keep_their_year():
     ] * 4
     for size in ("portrait", "square"):
         render_card(c, size, scale=1)
+
+
+def test_a_projection_is_drawn_with_its_band_and_method_line():
+    rows = []
+    for flow, base in (("export", 1.3e9), ("import", 2.0e9)):
+        for i in range(48):
+            ahead = i >= 30
+            value = base * (1 + 0.1 * (i % 12 == 2) - 0.12 * (i % 12 == 7))
+            rows.append(
+                {
+                    "group": 2024 + i / 12,
+                    "series": flow.title() + "s",
+                    "value": value,
+                    "lo80": value * 0.8 if ahead else None,
+                    "hi80": value * 1.25 if ahead else None,
+                    "kind": "projection" if ahead else "actual",
+                    "flow": flow,
+                    "step": 1,
+                    "unit": "value_eur",
+                }
+            )
+    c = content_from(record(), [], "data to Jun 2026")
+    c.figure = {
+        "kind": "projection",
+        "title": "Observed and projected, monthly, 2024–2027",
+        "rows": rows,
+        "caption": "ETS on log values, damped trend, monthly season: Exports α 0.50, φ 0.98",
+    }
+    for size, expected in (("portrait", (1080, 1350)), ("square", (1080, 1080))):
+        assert size_of(render_card(c, size, scale=1)) == expected

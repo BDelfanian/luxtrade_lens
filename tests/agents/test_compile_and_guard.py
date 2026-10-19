@@ -154,6 +154,21 @@ def test_annual_series_never_end_in_an_incomplete_year(semantic):
     assert any("2026 is incomplete" in a for a in resolved.assumptions)
 
 
+def test_a_projection_end_after_the_data_is_the_horizon(semantic):
+    from datetime import date
+
+    cov = _coverage_until(semantic, date(2026, 6, 1))
+    spec = apply_defaults(
+        QuerySpec(intent="forecast", flow="both", period_start="2026-07", period_end="2028-12"),
+        cov,
+    )
+    assert spec.forecast_horizon == 30 and spec.period_end == "2026-06"
+    assert spec.period_start.endswith("-01") and spec.period_start < "2026"  # fitted on history
+    assert any("projected 30 months ahead, to 2028-12" in a for a in spec.assumptions)
+    far = apply_defaults(QuerySpec(intent="forecast", period_end="2035-12"), cov)
+    assert far.forecast_horizon == 36 and any("limited to 36 months" in a for a in far.assumptions)
+
+
 def test_incomplete_year_is_kept_when_asked_alone_or_monthly(semantic):
     from datetime import date
 

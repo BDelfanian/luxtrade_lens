@@ -94,6 +94,13 @@ def flow_label(flow: str, lang: str = "en") -> str:
     return FLOW_LABELS.get(flow, {}).get(lang, flow)
 
 
-def month_name(month: int, lang: str = "en") -> str:
-    """Localised short month name."""
-    return MONTHS[lang][month - 1]
+MONTHS_FULL = {
+    "en": "January February March April May June July August September October November December".split(),  # noqa: E501, SIM905
+    "fr": "janvier février mars avril mai juin juillet août septembre octobre novembre décembre".split(),  # noqa: E501, SIM905
+    "de": "Januar Februar März April Mai Juni Juli August September Oktober November Dezember".split(),  # noqa: E501, SIM905
+}
+
+
+def month_name(month: int, lang: str = "en", full: bool = False) -> str:
+    """Localised month name, short ('Mar') or full ('March')."""
+    return (MONTHS_FULL if full else MONTHS)[lang][month - 1]

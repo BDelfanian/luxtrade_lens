@@ -8,6 +8,7 @@ from pathlib import Path
 from luxtrade.agents.context import SessionContext, TurnContext
 from luxtrade.agents.llm import StructuredLLM
 from luxtrade.agents.spec import RANKED_INTENTS, Interpretation, QuerySpec
+from luxtrade.config import REPORTER
 from luxtrade.semantic.layer import SemanticLayer
 from luxtrade.semantic.lookup import Candidate, EntityIndex
 
@@ -132,9 +133,13 @@ def interpret(
             "followup_of": followup,
             "inherited": inherited,
             "view_only": view_only,
-            # a partner group ("non-EU") is a spec field, not a code to look up
+            # a partner group ("non-EU") is a spec field, not a code to look up; Luxembourg is
+            # the reporter of every question, not a partner (seen on real data: "LU" put in
+            # partners, dropped as a code, then reported as "not found in the data")
             "unresolved": [
-                u for u in dict.fromkeys(interp.unresolved + dropped) if u not in _GROUP_CODES
+                u
+                for u in dict.fromkeys(interp.unresolved + dropped)
+                if u not in _GROUP_CODES and u.strip().lower() not in _REPORTER_NAMES
             ],
         }
     )
@@ -149,6 +154,7 @@ _ELLIPTICAL_RE = re.compile(
 _ELLIPTICAL_MAX_WORDS = 7
 # Spec fields a follow-up takes from the previous turn when the new question leaves them open
 _GROUP_CODES = {"WORLD", "EU27_2020", "EXTRA_EU27_2020"}
+_REPORTER_NAMES = {REPORTER.lower(), "luxembourg", "luxemburg", "lëtzebuerg", "grand duchy"}
 _OPEN_FIELDS = ("flow", "freq", "product_level", "top_n")
 _CODE_FIELDS = ("partners", "products")
 

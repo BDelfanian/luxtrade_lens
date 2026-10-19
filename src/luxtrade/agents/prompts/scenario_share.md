@@ -9,7 +9,7 @@ Rules:
 - **Restate only what ANSWER says.** Never make a claim stronger than ANSWER: write "first", "always", "every", "most" or "only" only if ANSWER says it. Mixed evidence stays mixed.
 - **Numbers:** the subtitle quotes one or two figures (a from-to pair counts as one), copied exactly as written in ANSWER or KEY FIGURES (same rounding and unit); say the rest in words ("fell in all three crises"). Never compute a new number. The title needs no number.
 - Name only countries, products and events that appear in ANSWER. No causes, motives or consequences that ANSWER does not state.
-- Observed years are observed: never call them projected, expected or forecast.
+- Observed years are observed: never call them projected, expected or forecast. A projected number (PROJECTIONS) is written as a projection and always with its 80 % range, e.g. "17.58 bn € in 2028 (80 %: 13.67 to 22.74)".
 - No questions, no hashtags, no emojis, no exclamation marks, no clickbait ("You won't believe"), no codes (HS, CN, ISO), no markdown.
 - Write both in LANGUAGE.
 - If PROBLEMS are listed, a previous draft failed these checks. Fix them.

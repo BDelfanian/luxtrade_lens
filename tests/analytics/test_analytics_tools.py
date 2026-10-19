@@ -63,6 +63,22 @@ def test_projection_has_ordered_intervals_and_a_baseline():
     assert res.mape_naive > 0 and "back-test" in res.method_note()
 
 
+def test_projection_keeps_its_parameters_and_yearly_totals():
+    res = forecast.project(_seasonal_series(), horizon=30)  # Jan 2024 to Jun 2026
+    assert set(res.params) == {"alpha", "beta", "gamma", "phi"}
+    assert 0 <= res.params["alpha"] <= 1 and 0 < res.params["phi"] <= 1
+    assert res.fitted == ("Jan 2016", "Dec 2023", 96)
+    note = res.method_note()
+    assert "α (level)" in note and "damping φ" in note and "fitted on 96 months" in note
+    annual = res.annual
+    assert annual["year"].tolist() == [2024, 2025, 2026]
+    assert annual["months"].tolist() == [12, 12, 6]  # the last year is a part year
+    assert (annual["lo80"] <= annual["value"]).all() and (annual["value"] <= annual["hi80"]).all()
+    proj = res.frame[res.frame["kind"] == "projection"]
+    by_year = proj.groupby(proj["period"].dt.year)["value"].sum()
+    assert annual.set_index("year")["value"].to_dict() == pytest.approx(by_year.to_dict())
+
+
 def test_short_series_are_not_projected():
     assert forecast.eligibility(_seasonal_series(years=3)) is not None
     assert forecast.eligibility(_seasonal_series(years=6)) is None

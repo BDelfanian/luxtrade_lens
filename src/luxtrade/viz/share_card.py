@@ -312,7 +312,9 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
     _footer(c, content, foot_y, foot_h, m)
     box = (m, y, width - m, foot_y - 28)
     c.rect(box, WHITE, radius=16, outline=LINE)
-    if content.figure and content.figure.get("kind") in ("concentration", "series"):
+    if content.figure and content.figure.get("kind") == "projection":
+        _projection_panels(c, content.figure, box, lang)
+    elif content.figure and content.figure.get("kind") in ("concentration", "series"):
         _panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("rows"):
         _chart(c, content.figure, box, lang)
@@ -525,6 +527,112 @@ def _panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
                 )
         for year in own if len(own) <= 8 else [y for y in own if y % 5 == 0]:
             c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
+
+
+def _rgb(hex_color: str, alpha: float) -> tuple[int, int, int]:
+    """A colour blended on white (Pillow draws without transparency here)."""
+    r, g, b = (int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
+    return tuple(round(255 - alpha * (255 - v)) for v in (r, g, b))
+
+
+def _projection_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
+    """Observed months, then the projection (dashed) in its 80 % band, a panel per flow."""
+    x0, y0, x1, y1 = box
+    rows = fig["rows"]
+    panels = list(dict.fromkeys(r["series"] for r in rows))
+    title_font = c.font("sans", 18, 600)
+    y = c.lines(
+        x0 + 20,
+        y0 + 16,
+        _wrap(fig["title"], title_font, (x1 - x0 - 40) * c.s, 1),
+        title_font,
+        INK,
+        24,
+    )
+    legend = c.font("sans", 14, 500)
+    lx = x1 - 20
+    for text, dashed in (
+        (_PROJ_LEGEND["band"].get(lang, "80 % range"), None),
+        (_PROJ_LEGEND["proj"].get(lang, "projected"), True),
+        (_PROJ_LEGEND["seen"].get(lang, "observed"), False),
+    ):
+        lx -= c.length(text, legend)
+        c.text((lx, y - 21), text, legend, MUTED)
+        if dashed is None:
+            c.rect((lx - 34, y - 19, lx - 8, y - 7), _rgb(PANEL_COLORS[0], 0.22))
+        elif dashed:
+            c.rect((lx - 36, y - 14, lx - 8, y - 12), _rgb(MUTED, 0.5))
+        else:
+            c.rect((lx - 36, y - 14, lx - 8, y - 12), MUTED)
+        lx -= 54
+    if fig.get("caption"):  # the method and its fitted parameters, under the panels
+        cap = c.font("sans", 13, 400)
+        c.text(
+            (x0 + 20, y1 - 22), _wrap(fig["caption"], cap, (x1 - x0 - 40) * c.s, 1)[0], cap, MUTED
+        )
+        y1 -= 24
+    cols = len(panels)
+    gap = 28
+    pw = (x1 - x0 - 40 - gap * (cols - 1)) / cols
+    label_font, axis = c.font("sans", 16, 600), c.font("sans", 13, 400)
+    for i, panel in enumerate(panels):
+        px, py = x0 + 20 + i * (pw + gap), y + 6
+        mine = sorted((r for r in rows if r["series"] == panel), key=lambda r: r["group"])
+        seen = [r for r in mine if r["kind"] == "actual"]
+        ahead = [r for r in mine if r["kind"] == "projection"]
+        color = PANEL_COLORS[i % len(PANEL_COLORS)]
+        c.text((px, py), panel, label_font, INK)
+        left, right = px + 4, px + pw - 8
+        ptop, pbottom = py + 40, y1 - 40
+        lo_x, hi_x = mine[0]["group"], mine[-1]["group"]
+        # a line chart: the scale spans the data (and the band), not from zero
+        top = max([r["value"] for r in seen] + [r["hi80"] for r in ahead])
+        low = min([r["value"] for r in seen] + [r["lo80"] for r in ahead])
+        top, low = top + 0.06 * (top - low), max(low - 0.06 * (top - low), 0.0)
+
+        def xpos(
+            g: float, left: float = left, right: float = right, a: float = lo_x, b: float = hi_x
+        ) -> float:
+            return left + 6 + (g - a) / ((b - a) or 1) * (right - left - 12)
+
+        def ypos(
+            v: float,
+            ptop: float = ptop,
+            pbottom: float = pbottom,
+            top: float = top,
+            low: float = low,
+        ) -> float:
+            return pbottom - (v - low) / ((top - low) or 1.0) * (pbottom - ptop)
+
+        c.rect((left, pbottom, right, pbottom + 1), LINE)
+        if ahead:
+            band = [(xpos(r["group"]), ypos(r["hi80"])) for r in ahead]
+            band += [(xpos(r["group"]), ypos(r["lo80"])) for r in reversed(ahead)]
+            c.draw.polygon([tuple(c.p(*pt)) for pt in band], fill=_rgb(color, 0.2))
+        pts = [(xpos(r["group"]), ypos(r["value"])) for r in seen]
+        if len(pts) > 1:
+            c.draw.line([tuple(c.p(*pt)) for pt in pts], fill=color, width=2 * c.s, joint="curve")
+        if seen and ahead:
+            path = [pts[-1]] + [(xpos(r["group"]), ypos(r["value"])) for r in ahead]
+            c.draw.line(  # lighter: a projection, inside its band
+                [tuple(c.p(*pt)) for pt in path],
+                fill=_rgb(color, 0.6),
+                width=2 * c.s,
+                joint="curve",
+            )
+            bx = xpos(seen[-1]["group"])
+            for yy in range(int(ptop), int(pbottom), 8):
+                c.rect((bx, yy, bx + 1, yy + 4), FAINT)
+        for year in sorted({int(r["group"]) for r in mine}):
+            if year % 2 == 0:
+                c.text((xpos(year), pbottom + 6), str(year), axis, FAINT, anchor="ma")
+
+
+_PROJ_LEGEND = {
+    "seen": {"en": "observed", "fr": "observé", "de": "beobachtet"},
+    "proj": {"en": "projected", "fr": "projeté", "de": "projiziert"},
+    "band": {"en": "80 % range", "fr": "intervalle 80 %", "de": "80-%-Bereich"},
+}
 
 
 def _show(value: float, unit: str, lang: str) -> str:

@@ -35,4 +35,7 @@ def seasonal_profile(decomposed: pd.DataFrame) -> pd.DataFrame:
 
 def method_note() -> str:
     """One-line method description for the trace."""
-    return "STL on log values (period 12, robust, seasonal window 13); adjusted = observed / factor"
+    return (
+        "STL on log values (period 12, robust, seasonal window 13); adjusted = observed / factor; "
+        "the month profile averages the seasonal factors of the last 5 years"
+    )

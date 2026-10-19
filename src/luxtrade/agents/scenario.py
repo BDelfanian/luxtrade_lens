@@ -303,6 +303,8 @@ def describe(spec: dict | None) -> str:
         period += ", monthly" if spec.get("freq") == "M" else ", yearly"
     if spec.get("year_step"):
         period += f", every {spec['year_step']} years"
+    if spec.get("intent") == "forecast" and spec.get("forecast_horizon"):
+        period += f", projected {spec['forecast_horizon']} months ahead"
     parts += [period, _MEASURE.get(spec.get("measure") or "value_eur", "")]
     return " · ".join(p for p in parts if p)
 
@@ -431,6 +433,79 @@ def always_over_half(text: str, steps: set[int], records: dict[int, RunRecord]) 
     return found
 
 
+def projection_without_range(
+    text: str, steps: set[int], records: dict[int, RunRecord], lang: str
+) -> list[str]:
+    """A projected number quoted without its 80 % range, or with another year's range.
+
+    Seen on real data: projected totals for 2027 and 2028 written "within specified 80 %
+    confidence intervals" without the intervals; and "17.58 bn € in 2027 and 2028 (80 %: 14.68
+    to 20.73)", the range of 2027 only (2028: 13.67 to 22.74). A projection is only as good as
+    its range.
+    """
+    plain = plain_numbers(text)
+    quoted = numbers_in([plain], lang)
+
+    def near(v: float, among: list[float]) -> bool:
+        return any(abs(q - v) < 0.006 for q in among)
+
+    # a value: its ranges, by step and by the year it projects (None: a month)
+    ranges: dict[float, list[tuple[float, float, int, int | None]]] = {}
+    observed = numbers_in(  # a value an observed step states too is not only a projection
+        [
+            plain_numbers(f["text"])
+            for n in steps
+            if (rec := records.get(n)) is not None and (rec.spec or {}).get("intent") != "forecast"
+            for f in rec.facts
+        ],
+        lang,
+    )
+    for n in sorted(steps):
+        rec = records.get(n)
+        if rec is None or (rec.spec or {}).get("intent") != "forecast":
+            continue
+        for fact in rec.facts:
+            if "projected" not in fact["key"] and "projection" not in fact["key"]:
+                continue
+            values = [
+                v
+                for v, d in parse_numbers(plain_numbers(fact["text"]), lang)
+                if (d or not 1900 <= v <= 2100) and v != 80
+            ]
+            year = re.search(r"projected_(\d{4})$", fact["key"])
+            if len(values) >= 3 and not near(values[0], observed):
+                ranges.setdefault(values[0], []).append(
+                    (values[1], values[2], n, int(year[1]) if year else None)
+                )
+    # the same projected value can recur (17.58 bn € in 2027 and 2028): one range quoted is
+    # enough, unless the years are named with it (below)
+    found = [
+        f"projected {value:g} without its 80 % range ({lo:g} to {hi:g}, step {n})"
+        for value, options in ranges.items()
+        if near(value, quoted)
+        and not any(near(a, quoted) or near(b, quoted) for a, b, *_ in options)
+        for lo, hi, n, _ in options[:1]
+    ]
+    # "17.58 bn € in 2027 and 2028 (80 %: …)": each year named before a range needs its own
+    start = 0
+    for m in re.finditer(r"\(([^()]*)\)", plain):
+        lead = re.split(r"[.!?;](?=\s)", plain[start : m.start()])[-1]
+        start = m.end()
+        named = parse_numbers(lead, lang)
+        years = {int(v) for v, d in named if not d and 1900 <= v <= 2100}
+        inside = [v for v, _ in parse_numbers(m[1], lang)]
+        for value, options in ranges.items():
+            if not near(value, [v for v, _ in named]):
+                continue
+            found += [
+                f"projected {value:g} for {year} comes with another year's range; give {year} "
+                f"its own 80 % range ({lo:g} to {hi:g}, step {n})"
+                for lo, hi, n, year in options
+                if year in years and not (near(lo, inside) or near(hi, inside))
+            ]
+    return found
+
+
 def calls_jump_lasting(text: str, steps: set[int], jumps: dict[int, str]) -> list[str]:
     """Clauses that call a series that jumped in its last period lasting, steady or structural.
 
@@ -470,6 +545,11 @@ def mismatch(question: str, spec: dict, proposed: QuerySpec | None = None) -> st
             "filter; of the whole flow it is 100 %"
         )
     start, end = int(spec["period_start"][:4]), int(spec["period_end"][:4])
+    if spec.get("intent") == "forecast" and spec.get("forecast_horizon"):
+        # "project to December 2028": the years projected count as covered
+        last = spec["period_end"][:7] if len(spec["period_end"]) >= 7 else f"{end}-12"
+        months = int(last[:4]) * 12 + int(last[5:7]) - 1 + int(spec["forecast_horizon"])
+        end = months // 12
     named = {int(y) for y in _YEAR.findall(question)}
     outside = sorted(named - set(range(start, end + 1)))
     if outside:
@@ -602,6 +682,11 @@ def review_answer(
     def period(n: int) -> range:
         spec = records[n].spec or {}
         start, end = (spec.get("period_start") or "0")[:4], (spec.get("period_end") or "0")[:4]
+        if spec.get("intent") == "forecast" and spec.get("forecast_horizon"):
+            # a projection covers the years it projects, not only those it was fitted on
+            last = (spec.get("period_end") or f"{end}-12") + "-12"
+            months = int(last[:4]) * 12 + int(last[5:7]) - 1 + int(spec["forecast_horizon"])
+            end = str(months // 12)
         return range(int(start), int(end) + 1)
 
     # a year is not a statistic: any year of the question or of a step's period may be named
@@ -642,6 +727,7 @@ def review_answer(
             found.append("observed data described as projected or expected")
         found += hidden_as_spread(text)
         found += always_over_half(text, steps, records)
+        found += projection_without_range(text, steps, records, lang)
         return found
 
     jumps = jump_steps({n: records[n] for n in answered}, sem, lang)
@@ -1224,7 +1310,12 @@ class ScenarioBuilder:
         if record.share.get("source") == "llm":
             earlier.append(record.share["title"])
         text, source, notes = write_share(
-            llm, record, self.figures(record), self.assistant.sem, avoid=earlier if renew else None
+            llm,
+            record,
+            self.figures(record),
+            self.assistant.sem,
+            avoid=earlier if renew else None,
+            runs=self.records(record),
         )
         share = {
             "title": text.title,
@@ -1250,7 +1341,14 @@ class ScenarioBuilder:
         text = ShareText(
             basis="user", title=" ".join(title.split()), subtitle=" ".join(subtitle.split())
         )
-        problems = review_share(text, record, self.figures(record), self.assistant.sem, user=True)
+        problems = review_share(
+            text,
+            record,
+            self.figures(record),
+            self.assistant.sem,
+            user=True,
+            runs=self.records(record),
+        )
         if problems:
             return problems
         earlier = list(record.share.get("earlier", []))

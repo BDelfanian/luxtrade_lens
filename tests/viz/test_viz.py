@@ -145,6 +145,13 @@ def test_missing_values_format_as_a_dash():
     assert fmt_pct(12.345, "fr") == "12,3 %"
 
 
+def test_month_names_short_and_full():
+    from luxtrade.viz.format import month_name
+
+    assert month_name(3, "en") == "Mar" and month_name(3, "en", full=True) == "March"
+    assert month_name(8, "fr", full=True) == "août" and month_name(3, "de", full=True) == "März"
+
+
 def test_a_trade_balance_ranking_draws_in_every_view():
     """Balance rows have no share (a share of a balance means nothing): no view may crash."""
     from luxtrade.viz.charts import build_figures

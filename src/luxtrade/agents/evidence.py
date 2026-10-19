@@ -12,6 +12,9 @@ chart and a few key figures. No LLM is involved:
 - Steps that compute the concentration index (``measure`` "hhi") form one figure with a panel
   per flow and dimension (exports and imports, by product and by partner), like the Overview's
   diversification card, with each panel's first and last value as key figures.
+- Projections (intent "forecast") form one figure: a panel per flow with the last eight years
+  observed, the projection and its 80 % band; key figures are each flow's projected total for
+  the last full year projected and, from seasonality steps, its strongest and weakest month.
 - Yearly series of one line each (a share or a value: "Japan's share of imports each year")
   form small multiples, a panel per step on its own scale, with first and last value as key
   figures; their values are the steps' own analysed frames (computed by code in each run).
@@ -25,7 +28,7 @@ from pydantic import BaseModel, Field
 
 from luxtrade.runs.store import RunRecord
 from luxtrade.semantic.layer import QueryError, SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_measure, fmt_number, fmt_pct
+from luxtrade.viz.format import flow_label, fmt_measure, fmt_number, fmt_pct, month_name
 
 MAX_FIGURES = 2
 MAX_FOCUS = {"change": 2, "share": 3}
@@ -124,6 +127,78 @@ _T = {
     },
     "eu27": {"en": "EU27 countries", "fr": "Pays de l'UE27", "de": "EU27-Länder"},
     "extra": {"en": "Non-EU27 countries", "fr": "Pays hors UE27", "de": "Nicht-EU27-Länder"},
+    "t_proj": {
+        "en": "Observed and projected, monthly, {y0}–{y1}",
+        "fr": "Observé et projeté, par mois, {y0}–{y1}",
+        "de": "Beobachtet und projiziert, monatlich, {y0}–{y1}",
+    },
+    "k_proj": {
+        "en": "{flow}, projected total {year}",
+        "fr": "{flow}, total projeté {year}",
+        "de": "{flow}, projizierte Summe {year}",
+    },
+    "k_proj_d": {
+        "en": "{year} observed: {value}",
+        "fr": "{year} observé : {value}",
+        "de": "{year} beobachtet: {value}",
+    },
+    "k_season": {
+        "en": "{flow} in {month}, vs a typical month",
+        "fr": "{flow} en {month}, par rapport à un mois type",
+        "de": "{flow} im {month}, gegenüber einem typischen Monat",
+    },
+    "k_season_d": {"en": "{month}: {value}", "fr": "{month} : {value}", "de": "{month}: {value}"},
+    "note_proj": {
+        "en": "Projection computed by code (steps {steps}): ETS on log values with a damped trend "
+        "and a monthly season, fitted on the full monthly series, unless the same month of the "
+        "previous year did better in the back-test; the band is the 80 % range of 500 simulated "
+        "paths. A projection extends past patterns, it does not forecast events.",
+        "fr": "Projection calculée par le code (étapes {steps}) : ETS sur les logarithmes, "
+        "tendance amortie et saison mensuelle, ajusté sur toute la série mensuelle, sauf si le "
+        "même mois de l'année précédente fait mieux au test ; la bande est l'intervalle à 80 % "
+        "de 500 trajectoires simulées. Une projection prolonge les tendances passées, elle ne "
+        "prévoit pas les événements.",
+        "de": "Projektion vom Code berechnet (Schritte {steps}): ETS auf Logarithmen mit "
+        "gedämpftem Trend und Monatssaison, auf der ganzen Monatsreihe geschätzt, außer der "
+        "gleiche Monat des Vorjahres schneidet im Rücktest besser ab; das Band ist der "
+        "80-%-Bereich von 500 simulierten Pfaden. Eine Projektion schreibt Muster fort, sie "
+        "sagt keine Ereignisse voraus.",
+    },
+    "fit_proj": {
+        "en": "{flow}: α (level) {a}, β (trend) {b}, γ (season) {g}, damping φ {p}, fitted on "
+        "{first} to {last}; back-test error on the last 12 months {mape} % (same month last "
+        "year: {naive} %).",
+        "fr": "{flow} : α (niveau) {a}, β (tendance) {b}, γ (saison) {g}, amortissement φ {p}, "
+        "ajusté sur {first} à {last} ; erreur du test sur les 12 derniers mois {mape} % (même "
+        "mois l'an passé : {naive} %).",
+        "de": "{flow}: α (Niveau) {a}, β (Trend) {b}, γ (Saison) {g}, Dämpfung φ {p}, geschätzt "
+        "auf {first} bis {last}; Fehler im Rücktest der letzten 12 Monate {mape} % (gleicher "
+        "Monat im Vorjahr: {naive} %).",
+    },
+    "fit_naive": {
+        "en": "{flow}: the same month of the previous year, because ETS did not beat it in the "
+        "back-test ({mape} % vs {naive} %); σ of the yearly log change {sigma}, fitted on "
+        "{first} to {last}.",
+        "fr": "{flow} : le même mois de l'année précédente, car ETS ne fait pas mieux au test "
+        "({mape} % contre {naive} %) ; σ de la variation annuelle des logarithmes {sigma}, "
+        "ajusté sur {first} à {last}.",
+        "de": "{flow}: der gleiche Monat des Vorjahres, da ETS im Rücktest nicht besser war "
+        "({mape} % gegenüber {naive} %); σ der jährlichen Log-Änderung {sigma}, geschätzt auf "
+        "{first} bis {last}.",
+    },
+    "cap_naive": {
+        "en": "{flow}: same month last year (beat ETS in the back-test)",
+        "fr": "{flow} : même mois l'an passé (meilleur qu'ETS au test)",
+        "de": "{flow}: gleicher Monat im Vorjahr (besser als ETS im Rücktest)",
+    },
+    "cap_proj": {
+        "en": "ETS on log values, damped trend, monthly season: {fits} · band: 80 % of 500 "
+        "simulated paths",
+        "fr": "ETS sur les logarithmes, tendance amortie, saison mensuelle : {fits} · bande : "
+        "80 % de 500 trajectoires simulées",
+        "de": "ETS auf Logarithmen, gedämpfter Trend, Monatssaison: {fits} · Band: 80 % von 500 "
+        "simulierten Pfaden",
+    },
     "note_series": {
         "en": "Each panel is one step's yearly series (steps {steps}), computed by code from its "
         "own SQL; panels have their own scales.",
@@ -150,13 +225,14 @@ def _t(key: str, lang: str, **values: object) -> str:
 class EvidenceFigure(BaseModel):
     """One chart of a scenario's answer and the key figures read from it."""
 
-    kind: Literal["change", "share", "concentration", "series"]
+    kind: Literal["change", "share", "concentration", "series", "projection"]
     title: str
     flow: str
     steps: list[int]
     rows: list[dict] = Field(default_factory=list)  # {"group", "series", "value", "step"}
     tiles: list[dict] = Field(default_factory=list)  # {"value", "label", "detail", "tone"}
     note: str = ""
+    caption: str = ""  # one line under the chart on the share card (projections: the method)
 
 
 def _shape(rec: RunRecord) -> tuple | None:
@@ -243,6 +319,18 @@ def compose(
 ) -> list[EvidenceFigure]:
     """Charts and key figures for an answer: one per group of comparable steps (at most two)."""
     figures = []
+    answered = [
+        s.n for s in chain if (r := records.get(s.n)) is not None and r.status == "answered"
+    ]
+    ahead = [n for n in answered if (records[n].spec or {}).get("intent") == "forecast"]
+    season = [n for n in answered if (records[n].spec or {}).get("intent") == "seasonality"]
+    if ahead:
+        try:
+            fig = _projection(ahead, season, records, lang)
+        except (KeyError, ValueError, TypeError):
+            fig = None
+        if fig is not None:
+            figures.append(fig)
     hhi_steps = [
         s.n
         for s in chain
@@ -251,7 +339,7 @@ def compose(
         and rec.sql
         and (rec.spec or {}).get("measure") == "hhi"
     ]
-    if hhi_steps:
+    if hhi_steps and len(figures) < MAX_FIGURES:
         try:
             fig = _concentration(hhi_steps, records, sem, lang)
         except (QueryError, KeyError, ValueError):
@@ -282,6 +370,169 @@ def compose(
 
 
 MAX_PANELS = 4
+HISTORY_YEARS = 8  # observed years shown before a projection
+
+
+def _cap(text: str) -> str:
+    return text[:1].upper() + text[1:]
+
+
+def _projection(
+    steps: list[int], season: list[int], records: dict[int, RunRecord], lang: str
+) -> EvidenceFigure | None:
+    """Observed and projected months, a panel per flow; projected totals and seasons as tiles."""
+    rows, tiles, seasons = [], [], []
+    for n in steps:
+        main = records[n].frame("main")
+        annual = records[n].frame("annual")
+        if main.empty or "kind" not in main.columns:
+            continue
+        for flow, g in main.groupby("flow", sort=False):
+            g = g.assign(period=pd.to_datetime(g["period"])).sort_values("period")
+            seen = g[g["kind"] == "actual"]
+            if seen.empty or g[g["kind"] == "projection"].empty:
+                continue
+            first = seen["period"].max().year - HISTORY_YEARS + 1
+            fl = _cap(flow_label(str(flow), lang))
+            for r in g[g["period"].dt.year >= first].itertuples():
+                ahead = r.kind == "projection"
+                rows.append(
+                    {
+                        "group": round(r.period.year + (r.period.month - 1) / 12, 4),
+                        "series": fl,
+                        "value": float(r.value),
+                        "lo80": float(r.lo80) if ahead else None,
+                        "hi80": float(r.hi80) if ahead else None,
+                        "kind": r.kind,
+                        "flow": str(flow),
+                        "step": n,
+                        "unit": "value_eur",
+                    }
+                )
+            years = seen["period"].dt.year
+            full = sorted(y for y, k in years.value_counts().items() if k == 12)
+            mine = annual[annual["flow"] == flow] if not annual.empty else annual
+            mine = mine[mine["months"] == 12] if not mine.empty else mine
+            if full and not mine.empty:
+                base = float(seen.loc[years == full[-1], "value"].sum())
+                last = mine.sort_values("year").iloc[-1]
+                tiles.append(
+                    {
+                        "value": fmt_measure(float(last["value"]), "value_eur", lang),
+                        "label": _t("k_proj", lang, flow=fl, year=int(last["year"])),
+                        "detail": _t(
+                            "k_proj_d",
+                            lang,
+                            year=full[-1],
+                            value=fmt_measure(base, "value_eur", lang),
+                        ),
+                        "tone": "up" if float(last["value"]) >= base else "down",
+                    }
+                )
+    for n in season:
+        prof = records[n].frame("profile")
+        if prof.empty:
+            continue
+        for flow, g in prof.groupby("flow", sort=False):
+            hi, lo = g.loc[g["factor"].idxmax()], g.loc[g["factor"].idxmin()]
+            fl = _cap(flow_label(str(flow), lang))
+            seasons.append(
+                {
+                    "value": fmt_pct(100 * (float(hi["factor"]) - 1), lang, signed=True),
+                    "label": _t(
+                        "k_season",
+                        lang,
+                        flow=fl,
+                        month=month_name(int(hi["month"]), lang, full=True),
+                    ),
+                    "detail": _t(
+                        "k_season_d",
+                        lang,
+                        month=month_name(int(lo["month"]), lang, full=True),
+                        value=fmt_pct(100 * (float(lo["factor"]) - 1), lang, signed=True),
+                    ),
+                    "tone": "",
+                }
+            )
+    if not rows:
+        return None
+    years = sorted({int(r["group"]) for r in rows})
+    used = sorted({r["step"] for r in rows})
+    fitted = _fitted(used, records, lang)  # the parameters, read from each step's method note
+    return EvidenceFigure(
+        kind="projection",
+        title=_t("t_proj", lang, y0=years[0], y1=years[-1]),
+        flow="both" if len({r["flow"] for r in rows}) > 1 else rows[0]["flow"],
+        steps=used,
+        rows=rows,
+        tiles=(tiles + seasons)[:4],
+        note=_t("note_proj", lang, steps=", ".join(map(str, used)))
+        + "".join(f" {line['long']}" for line in fitted),
+        caption=_t("cap_proj", lang, fits=" · ".join(line["short"] for line in fitted)),
+    )
+
+
+_FIT = re.compile(
+    r"^(?P<flow>\w+): ETS.*?α \(level\) (?P<a>[\d.]+), β \(trend\) (?P<b>[\d.]+), "
+    r"γ \(season\) (?P<g>[\d.]+), damping φ (?P<p>[\d.]+); fitted on \d+ months "
+    r"\((?P<first>[^)]*?) to (?P<last>[^)]*?)\).*?MAPE (?P<m>[\d.]+) % \(seasonal-naive "
+    r"(?P<n>[\d.]+) %\)"
+)
+_NAIVE = re.compile(
+    r"^(?P<flow>\w+): Seasonal-naive.*?σ of the yearly log change (?P<s>[\d.]+); fitted on "
+    r"\d+ months \((?P<first>[^)]*?) to (?P<last>[^)]*?)\).*?MAPE (?P<m>[\d.]+) % "
+    r"\(seasonal-naive (?P<n>[\d.]+) %\)"
+)
+
+
+def _fitted(steps: list[int], records: dict[int, RunRecord], lang: str) -> list[dict]:
+    """Each projected flow's fitted parameters and back-test, as written by the code."""
+    out = []
+    for n in steps:
+        for method in records[n].methods:
+            m = _FIT.match(method)
+            if m is None and (m := _NAIVE.match(method)) is not None:  # the fallback, said so
+                fl = _cap(flow_label(m["flow"], lang))
+                out.append(
+                    {
+                        "short": _t("cap_naive", lang, flow=fl),
+                        "long": _t(
+                            "fit_naive",
+                            lang,
+                            flow=fl,
+                            sigma=m["s"],
+                            first=m["first"],
+                            last=m["last"],
+                            mape=m["m"],
+                            naive=m["n"],
+                        ),
+                    }
+                )
+                continue
+            if m is None:
+                continue
+            fl = _cap(flow_label(m["flow"], lang))
+            out.append(
+                {
+                    "short": f"{fl} α {m['a']}, φ {m['p']}",
+                    "long": _t(
+                        "fit_proj",
+                        lang,
+                        flow=fl,
+                        a=m["a"],
+                        b=m["b"],
+                        g=m["g"],
+                        p=m["p"],
+                        first=m["first"],
+                        last=m["last"],
+                        mape=m["m"],
+                        naive=m["n"],
+                    ),
+                }
+            )
+    return out
+
+
 _PANEL = {"share": "p_share", "unit_value": "p_unit", "qty_kg": "p_mass"}
 
 

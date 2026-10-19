@@ -67,6 +67,21 @@ _T = {
         "de": "Wichtigste Warengruppen",
     },
     # the shape of a series: what tells a lasting trend from a jump in the last period
+    "y_obs": {
+        "en": "{flow} total {year} (observed): {value}",
+        "fr": "{flow}, total {year} (observé) : {value}",
+        "de": "{flow}, Summe {year} (beobachtet): {value}",
+    },
+    "y_proj": {
+        "en": "{flow} projected total {year}: {value} (80 %: {lo} to {hi}), {chg} on {base}",
+        "fr": "{flow}, total projeté {year} : {value} (80 % : {lo} à {hi}), {chg} par rapport à {base}",
+        "de": "{flow}, projizierte Summe {year}: {value} (80 %: {lo} bis {hi}), {chg} gegenüber {base}",
+    },
+    "y_part": {
+        "en": "{flow} projected for the last {months} months of {year}: {value} (80 %: {lo} to {hi})",
+        "fr": "{flow}, projeté pour les {months} derniers mois de {year} : {value} (80 % : {lo} à {hi})",
+        "de": "{flow}, projiziert für die letzten {months} Monate {year}: {value} (80 %: {lo} bis {hi})",
+    },
     "s_move": {
         "en": "{label}: largest change between consecutive periods {pa}–{pb}: {va} to {vb}",
         "fr": "{label} : plus forte variation entre deux périodes {pa}–{pb} : {va} à {vb}",
@@ -793,6 +808,55 @@ def _series_shape(
     return out
 
 
+def _yearly_projection_facts(
+    hist: pd.DataFrame, annual: pd.DataFrame | None, flow: str, fl: str, lang: str
+) -> list[Fact]:
+    """The last full observed year, each projected year (80 % range) and the change between."""
+    out = []
+    years = pd.to_datetime(hist["period"]).dt.year
+    full = [y for y, n in years.value_counts().items() if n == 12]
+    if not full:
+        return out
+    base_year = max(full)
+    base = float(hist.loc[years == base_year, "value"].sum())
+    out.append(
+        Fact(
+            key=f"{flow}.total_{base_year}",
+            text=_t("y_obs", lang, flow=fl, year=base_year, value=fmt_eur(base, lang)),
+        )
+    )
+    if annual is None or annual.empty:
+        return out
+    for _, r in annual[annual["flow"] == flow].iterrows():
+        year, months = int(r["year"]), int(r["months"])
+        if months == 12:
+            chg = fmt_pct(100 * (r["value"] / base - 1), lang, signed=True) if base else "–"
+            text = _t(
+                "y_proj",
+                lang,
+                flow=fl,
+                year=year,
+                value=fmt_eur(r["value"], lang),
+                lo=fmt_eur(r["lo80"], lang),
+                hi=fmt_eur(r["hi80"], lang),
+                chg=chg,
+                base=base_year,
+            )
+        else:
+            text = _t(
+                "y_part",
+                lang,
+                flow=fl,
+                year=year,
+                months=months,
+                value=fmt_eur(r["value"], lang),
+                lo=fmt_eur(r["lo80"], lang),
+                hi=fmt_eur(r["hi80"], lang),
+            )
+        out.append(Fact(key=f"{flow}.projected_{year}", text=text))
+    return out
+
+
 def _py(value: object) -> object:
     if isinstance(value, pd.Timestamp):
         return value.date()
@@ -891,6 +955,7 @@ def build_fact_sheet(
                 _t("adjusted", lang, flow=fl, value=fmt_eur(last["adjusted"], lang), when=when)
             )
             title = title or f"{fl}: {mmax} +{fmax}, {mmin} −{fmin}"
+        facts += [Fact(key=f"method{i}", text=m) for i, m in enumerate(a.methods)]  # STL
     elif spec.intent == "forecast":
         for flow, g in a.main.groupby("flow"):
             fl = flow_label(flow, lang)
@@ -925,6 +990,7 @@ def build_fact_sheet(
                 )
             )
             title = title or f"{fl}: {fmt_eur(end['value'], lang)} {when}"
+            facts += _yearly_projection_facts(hist, a.extra.get("annual"), str(flow), fl, lang)
         facts += [Fact(key=f"method{i}", text=m) for i, m in enumerate(a.methods)]
     elif spec.intent == "benchmark":
         last_p, first_p = int(a.main["period"].max()), int(a.main["period"].min())
