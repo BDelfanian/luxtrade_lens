@@ -778,8 +778,9 @@ def render_answer_panel(rec: ScenarioRecord) -> None:
             st.caption(f"Approach: {rec.approach}")
         if rec.answer_source == "template":
             st.caption(
-                ":material/warning: The combined summary failed the number check twice, so each "
-                "step's own checked headline is shown instead."
+                ":material/warning: No draft of the combined summary passed the checks (numbers, "
+                "countries, wording, reasoning), so each step's own checked headline is shown "
+                "instead; the failed checks are listed under *How it was built*."
             )
         else:
             st.caption(

@@ -206,6 +206,17 @@ class FactSheet(BaseModel):
     template: list[str] = Field(default_factory=list)  # deterministic fallback sentences
 
 
+# what an undisclosed partner is: seen on real data, a growing undisclosed share of fuel imports
+# was written up as "diversification beyond the Belgian route"
+_HIDDEN = {
+    "en": " (partner withheld for confidentiality: it may be any country, the main ones included)",
+    "fr": " (partenaire masqué pour confidentialité : ce peut être n'importe quel pays, y compris "
+    "les principaux)",
+    "de": " (Partner aus Vertraulichkeitsgründen verborgen: es kann jedes Land sein, auch die "
+    "wichtigsten)",
+}
+
+
 def _t(template: str, lang: str, **values: object) -> str:
     return _T[template][lang].format(**values)
 
@@ -273,10 +284,12 @@ def _ranking_facts(spec: QuerySpec, a: Analysis, lang: str) -> tuple[list[Fact],
                 )
             )
         for _, row in part[part["kind"] != "item"].iterrows():
+            hidden = _HIDDEN[lang] if row["key"] == rankings.UNDISCLOSED else ""
             facts.append(
                 Fact(
                     key=f"{flow}.{row['key'].lower()}",
-                    text=f"{row['label']}: {fmt_eur(row['value'], lang)}, {fmt_pct(row['share'], lang)}",
+                    text=f"{row['label']}{hidden}: {fmt_eur(row['value'], lang)}, "
+                    f"{fmt_pct(row['share'], lang)}",
                 )
             )
         if flow == "balance":
@@ -716,6 +729,12 @@ def _series_shape(
     if len(values) < 3 or values.isna().any():
         return []
     out = [Fact(key=f"{label}.prev", text=f"{label} {periods[-2]}: {fmt_v(values.iloc[-2], lang)}")]
+    low = int(values.idxmin())  # tests "each year", "throughout", "always above …"
+    out.append(
+        Fact(
+            key=f"{label}.low", text=f"{label} low {periods[low]}: {fmt_v(values.iloc[low], lang)}"
+        )
+    )
     steps = values.diff().abs()
     i = int(steps.iloc[1:].idxmax())
     out.append(

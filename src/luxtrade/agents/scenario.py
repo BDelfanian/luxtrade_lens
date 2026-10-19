@@ -60,6 +60,7 @@ from luxtrade.runs.sessions import new_session_id
 from luxtrade.runs.store import RunRecord, code_version, now_iso
 
 MIN_STEPS, MAX_STEPS = 2, 5  # questions in a plan (the prompt asks for 3–5)
+ANSWER_DRAFTS = 3  # a draft and two redrafts, each shown its draft and problems
 MAX_FOLLOW_UPS = 2
 MAX_CHARTS = 3
 Progress = Callable[[str], None]
@@ -236,11 +237,11 @@ _TEMPLATE = {
         "Überschriften stehen unten.",
     },
     "conclusion": {
-        "en": "The combined summary did not pass the number check, so only each step's own "
+        "en": "The combined summary did not pass the checks, so only each step's own "
         "checked headline is shown. Open the steps for their full answers.",
-        "fr": "La synthèse n'a pas passé la vérification des chiffres : seuls les titres "
+        "fr": "La synthèse n'a pas passé les vérifications : seuls les titres "
         "vérifiés de chaque étape sont affichés. Ouvrez les étapes pour leurs réponses.",
-        "de": "Die Zusammenfassung hat die Zahlenprüfung nicht bestanden; daher stehen nur die "
+        "de": "Die Zusammenfassung hat die Prüfungen nicht bestanden; daher stehen nur die "
         "geprüften Überschriften der Schritte hier. Öffnen Sie die Schritte für die Antworten.",
     },
 }
@@ -354,6 +355,79 @@ def jump_steps(records: dict[int, RunRecord], sem: object, lang: str) -> dict[in
                 if cue:
                     found[n] = cue.lower()
                 break
+    return found
+
+
+_HIDDEN_WORDS = re.compile(
+    r"\b(?:undisclosed|not\s+disclosed|withheld|confidential|not\s+specified|non\s+divulgu\w*|"
+    r"masqu\w*|confidentiel\w*|vertraulich\w*|nicht\s+angegeben\w*|geheim\w*)\b",
+    re.IGNORECASE,
+)
+_SPREAD_WORDS = re.compile(
+    r"\b(?:diversif\w*|new\s+routes?|other\s+routes?|alternative\s+(?:sources?|routes?|suppliers?)|"
+    r"less\s+dependen\w*|nouvelles?\s+routes?|diversifi\w*|streuung|neue\s+wege)\b",
+    re.IGNORECASE,
+)
+
+
+def hidden_as_spread(text: str) -> list[str]:
+    """A clause that reads trade with undisclosed partners as diversification or new routes.
+
+    Seen on real data: undisclosed partners growing from 24.5 % to 39.3 % of fuel imports,
+    written up as "diversification beyond the Belgian route", although the hidden part may
+    come from any country, Belgium included.
+    """
+    for clause in _CLAUSES.split(text):
+        if not _HIDDEN_WORDS.search(clause):
+            continue
+        for m in _SPREAD_WORDS.finditer(clause):
+            if not _NEGATION.search(clause[: m.start()]):
+                return [
+                    "reads undisclosed partners as diversification or other routes: their "
+                    "countries are not known, the main ones included"
+                ]
+    return []
+
+
+_ALWAYS = re.compile(
+    r"\b(?:throughout|each\s+year|every\s+year|always|consistently|in\s+all\s+years|"
+    r"chaque\s+année|tout\s+au\s+long|toujours|jedes\s+jahr|durchgehend|immer|stets)\b",
+    re.IGNORECASE,
+)
+_HALF = re.compile(
+    r"\b(?:over\s+half|more\s+than\s+half|the\s+majority|a\s+majority|majority|"
+    r"plus\s+de\s+la\s+moitié|majorit\w*|mehr\s+als\s+die\s+hälfte|über\s+die\s+hälfte|mehrheit)\b",
+    re.IGNORECASE,
+)
+
+
+def always_over_half(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
+    """A claim of "over half throughout" where a cited share series fell below half.
+
+    Seen on real data, twice: Belgium "supplied over half of fuel imports throughout the
+    period" while its share was 46.2 % in 2021, 43.8 % in 2022 and 49.8 % in 2024; the
+    reasoning check let it through once.
+    """
+    if not any(_ALWAYS.search(c) and _HALF.search(c) for c in _CLAUSES.split(text)):
+        return []
+    found = []
+    for n in sorted(steps):
+        rec = records.get(n)
+        if rec is None or (rec.spec or {}).get("measure") != "share":
+            continue
+        frame = rec.frame("main")
+        if frame.empty or "period" not in frame.columns or "value" not in frame.columns:
+            continue
+        group = [c for c in ("key", "flow") if c in frame.columns]
+        for _, g in frame.groupby(group) if group else [((), frame)]:
+            if len(g) < 3:
+                continue
+            low = g.loc[g["value"].astype(float).idxmin()]
+            if float(low["value"]) < 50 < float(g["value"].max()):
+                found.append(
+                    f"says over half throughout, but step {n} fell to "
+                    f"{float(low['value']):.1f} % in {low['period']}"
+                )
     return found
 
 
@@ -566,6 +640,8 @@ def review_answer(
         found += unknown_partners(text, partners(steps), sem, lang)
         if describes_future(text) and not forecast:
             found.append("observed data described as projected or expected")
+        found += hidden_as_spread(text)
+        found += always_over_half(text, steps, records)
         return found
 
     jumps = jump_steps({n: records[n] for n in answered}, sem, lang)
@@ -936,8 +1012,12 @@ class ScenarioBuilder:
         records: dict[int, RunRecord],
         notes: list[str],
     ) -> tuple[ScenarioAnswer, str]:
-        """The combined answer, checked; the template after two failed drafts."""
+        """The combined answer, checked, from up to three drafts.
+
+        Failing that, the last draft that passed once points were removed; else the template.
+        """
         llm, sem = self.assistant.llm, self.assistant.sem
+        fallback: ScenarioAnswer | None = None  # a draft that passed once points were removed
         if llm is not None and any(r.status == "answered" for r in records.values()):
             user = "\n\n".join(
                 [
@@ -950,7 +1030,7 @@ class ScenarioBuilder:
             )
             problems: list[str] = []
             previous: dict = {}
-            for _ in range(2):
+            for attempt in range(ANSWER_DRAFTS):
                 prompt_user = user
                 if problems:  # the draft itself too: at temperature 0 it would come back unchanged
                     prompt_user += "\n\nPREVIOUS DRAFT:\n" + json.dumps(
@@ -981,6 +1061,7 @@ class ScenarioBuilder:
                     continue
                 if problems:  # a failing point or note is removed, never shown
                     notes.append("removed from the answer: " + "; ".join(problems))
+                removed = problems
                 kept = review.kept(out)
                 judged = self._reasoning(question, lang, chain, records, kept, notes)
                 problems = judged.problems()
@@ -989,10 +1070,20 @@ class ScenarioBuilder:
                     continue
                 if problems:
                     notes.append("removed by the reasoning check: " + "; ".join(problems))
+                lost = [p for p in removed + problems if p.startswith("point")]
+                if lost and attempt < ANSWER_DRAFTS - 1:
+                    # a point lost to a fixable problem: redraft it, keep this draft meanwhile
+                    # (seen on real data: the point on Belgium and undisclosed fuel partners)
+                    fallback, problems = judged.kept(kept), lost
+                    notes.append("redrafting the removed points")
+                    continue
                 notes.append(
                     "combined answer passed the number, country, wording and reasoning checks"
                 )
                 return judged.kept(kept), "llm"
+        if fallback is not None:
+            notes.append("kept the last draft that passed, without its removed points")
+            return fallback, "llm"
         notes.append("fell back to the template answer")
         return self._template(lang, chain, records), "template"
 

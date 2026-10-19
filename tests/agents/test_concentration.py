@@ -252,3 +252,39 @@ def test_a_jump_in_the_last_period_is_said_in_words():
     assert any("a jump in the last period, not yet a trend" in t for t in texts)
     steady = jump.assign(value=[1.0, 1.5, 2.0, 2.5, 3.0])
     assert not any("jump" in f.text for f in _series_shape(steady, "X", "share", fmt, "en"))
+
+
+def test_panel_labels_name_three_partners_and_the_product_of_a_share(semantic):
+    from luxtrade.agents.evidence import _and, _scope
+
+    assert _and(["Belgium", "Germany", "France"], "en") == "Belgium, Germany & France"
+    assert _and(["A", "B", "C", "D"], "en") == "A, B & others"
+    fuel = {"partners": ["DE"], "products": ["27"]}
+    assert _scope(fuel, "import", semantic, "en").endswith(" imports")
+    assert _scope(fuel, "import", semantic, "en") != "imports"  # names the product
+    assert _scope({"partners": ["DE"]}, "import", semantic, "en") == "imports"
+
+
+def test_facts_give_a_series_low_and_say_what_undisclosed_means(make_assistant):
+    assistant = make_assistant(None)
+    series = assistant.run_spec(
+        QuerySpec(
+            intent="time_series", flow="import", freq="A", period_start="2018", period_end="2024"
+        ),
+        question="q",
+        origin="preset",
+    )
+    assert any(" low " in f["text"] for f in series.facts)
+    ranking = assistant.run_spec(
+        QuerySpec(
+            intent="ranking",
+            breakdown="partner",
+            flow="import",
+            period_start="2024",
+            period_end="2024",
+        ),
+        question="q",
+        origin="preset",
+    )
+    hidden = [f["text"] for f in ranking.facts if "withheld for confidentiality" in f["text"]]
+    assert hidden and "any country" in hidden[0]

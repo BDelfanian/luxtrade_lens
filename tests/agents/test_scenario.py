@@ -572,3 +572,50 @@ def test_product_codes_are_taken_out_of_the_answer_text():
     clean = strip_step_refs(answer)
     assert (clean.headline, clean.conclusion) == ("Computers fell.", "Telephone sets rose.")
     assert clean.points[0].text == "In 2008 came mainly from China."
+
+
+def test_undisclosed_partners_are_not_diversification():
+    from luxtrade.agents.scenario import hidden_as_spread
+
+    assert hidden_as_spread("Undisclosed partners grew to 39.3 %, showing some diversification.")
+    for fine in (
+        "Undisclosed partners grew to 39.3 %: the origin of that part is unknown.",
+        "The undisclosed share grew, which is not diversification.",
+        "Exports diversified across more products.",
+        "Les importations de divers partenaires non divulgués ont augmenté.",
+    ):
+        assert hidden_as_spread(fine) == []
+
+
+def test_over_half_throughout_must_hold_in_every_year():
+    from luxtrade.agents.scenario import always_over_half
+    from luxtrade.runs.store import RunRecord
+
+    years = [2019, 2020, 2021, 2022, 2023]
+    rows = [
+        {"period": y, "flow": "import", "value": v}
+        for y, v in zip(years, [59, 52, 46, 44, 50], strict=True)
+    ]
+    rec = RunRecord.model_construct(
+        spec={"measure": "share"}, frames={"main": rows}, status="answered"
+    )
+    claim = "Belgium supplied over half of fuel imports throughout the period."
+    (problem,) = always_over_half(claim, {4}, {4: rec})
+    assert "fell to 44.0 % in 2022" in problem
+    assert always_over_half("Belgium supplied over half in 2019 and in 2023.", {4}, {4: rec}) == []
+
+
+def test_a_point_removed_by_a_check_is_redrafted(builder):
+    def one_bad_point(user: str) -> ScenarioAnswer:
+        good = answer_from_steps(user)
+        bad = AnswerPoint(text="Imports reached 400 million euros.", steps=[1])
+        return good.model_copy(update={"points": [*good.points, bad]})
+
+    b = builder(scenario_plan=GOOD_PLAN, scenario_answer=[one_bad_point, answer_from_steps])
+    plan = b.plan(QUESTION, "en")
+    steps = [StepInput(question=s.question, spec=s.spec) for s in plan.steps]
+    rec = b.run(QUESTION, steps, plan=plan, follow_ups=False)
+    assert rec.answer_source == "llm" and "redrafting the removed points" in rec.notes
+    assert not any("400 million" in p["text"] for p in rec.points)
+    redraft = [user for step, user in b.assistant.llm.calls if step == "scenario_answer"][1]
+    assert "400 million" in redraft and "PROBLEMS in the previous draft" in redraft

@@ -314,9 +314,34 @@ def _who(spec: dict, sem: SemanticLayer, lang: str) -> str:
         return _t("eu27", lang)
     if spec.get("partner_group") == "EXTRA_EU27_2020":
         return _t("extra", lang)
-    names = [sem.label(p, "partner", lang) for p in spec.get("partners") or []]
-    names += [sem.label(p, "product", lang)[:32] for p in spec.get("products") or []]
-    return " & ".join(names[:2]) or _t("all", lang, flow="").strip()
+    partners = [sem.label(p, "partner", lang) for p in spec.get("partners") or []]
+    if partners:  # a product filter on top is named with the flow (see _scope)
+        return _and(partners, lang)
+    products = [sem.label(p, "product", lang)[:32] for p in spec.get("products") or []]
+    return _and(products, lang) or _t("all", lang, flow="").strip()
+
+
+def _and(names: list[str], lang: str) -> str:
+    """'Belgium, Germany & France'; more than three: the first two and 'others'."""
+    if len(names) > 3:
+        names = [*names[:2], {"en": "others", "fr": "autres", "de": "weitere"}.get(lang, "others")]
+    return ", ".join(names[:-1]) + " & " + names[-1] if len(names) > 1 else "".join(names)
+
+
+def _scope(spec: dict, flow: str, sem: SemanticLayer, lang: str) -> str:
+    """The flow a panel is about: 'imports', or 'mineral fuels and oils imports'.
+
+    A series of partners filtered on products is a share of that product's flow.
+    """
+    fl = flow_label(flow, lang)
+    if spec.get("products") and (spec.get("partners") or spec.get("breakdown") == "partner"):
+        product = sem.label(spec["products"][0], "product", lang)[:32]
+        if lang == "de":  # "Anteil an den {flow}n": a compound keeps the dative ending
+            return f"{product}-{fl}"
+        if lang == "fr":
+            return f"{fl} de {product[:1].lower()}{product[1:]}"
+        return f"{product[:1].lower()}{product[1:]} {fl}"
+    return fl
 
 
 def _series(
@@ -357,7 +382,7 @@ def _series(
         if len(mine) < 2:
             continue
         seen.add(subject)
-        fl = flow_label(flow, lang)
+        fl = _scope(spec, flow, sem, lang)
         panel = _t(_PANEL.get(measure, "p_value"), lang, who=who, flow=fl)
         for r in mine:
             rows.append(
@@ -495,7 +520,7 @@ def _figure(
             focus = sorted(labels, key=lambda lab: -last.get(labels[lab], 0.0))[:3]
     if not focus:
         return None
-    fl = flow_label(flow, lang)
+    fl = _scope(records[steps[0]].spec, flow, sem, lang)  # a product filter is named
     whole_name = _t("all", lang, flow=fl)
     rows = []
     if kind == "change":
