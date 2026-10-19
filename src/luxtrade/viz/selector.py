@@ -29,6 +29,8 @@ def _compatible(view: str, spec: QuerySpec, main: pd.DataFrame) -> bool:
     has_time = "period" in main.columns
     is_change = "change" in main.columns  # rises and falls: only diverging bars read right
     has_key = "key" in main.columns and not is_change
+    # lines and heatmaps draw one series per key, or per flow: a benchmark frame has neither
+    has_series = "key" in main.columns or "flow" in main.columns
     return {
         "table": True,
         "kpi": spec.intent == "single_value",
@@ -36,10 +38,10 @@ def _compatible(view: str, spec: QuerySpec, main: pd.DataFrame) -> bool:
         "change": is_change,
         "treemap": has_key and spec.breakdown == "product",
         "map": has_key and spec.breakdown == "partner",
-        "line": has_time,
-        "area": has_time,
+        "line": has_time and has_series,
+        "area": has_time and has_series,
         "stacked": has_key and has_time,
-        "heatmap": has_time and (has_key or spec.freq == "M"),
+        "heatmap": has_time and has_series and (has_key or spec.freq == "M"),
         "pivot": has_key and has_time,
     }.get(view, False)
 
@@ -48,6 +50,9 @@ def choose_view(
     spec: QuerySpec, main: pd.DataFrame, iso3_count: int = 0, undisclosed_pct: float = 0.0
 ) -> str:
     """Return the chart kind for this answer; a compatible user-requested view always wins."""
+    if spec.intent == "benchmark" and spec.view in ("line", "area"):
+        # seen on real data: "index 2015 = 100" read as a line chart; the benchmark chart is one
+        return "bench"
     if spec.view != "auto" and _compatible(spec.view, spec, main):
         return spec.view
     if spec.intent == "single_value":

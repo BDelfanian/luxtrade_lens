@@ -187,3 +187,13 @@ def test_a_refined_question_describes_the_new_request():
         top_n=5,
     )
     assert refined_question(spec) == "Refined: trade balance by partner, 2014–2018, top 5"
+
+
+def test_a_benchmark_asked_as_a_line_chart_draws_the_benchmark_chart(semantic):
+    """Seen on real data: 'index 2015 = 100' read as view 'line', drawn per flow: KeyError."""
+    spec = apply_defaults(_spec(intent="benchmark", view="line"), semantic.coverage)
+    a = analyse(spec, semantic.query(compile_spec(spec).sql), semantic)
+    assert "flow" not in a.main.columns
+    assert choose_view(spec, a.main) == "bench"
+    figs = build_figures("line", a.main, "title", "en")  # a run stored before the fix
+    assert len(figs) == 2 and all(len(f.data) > 0 for f in figs)

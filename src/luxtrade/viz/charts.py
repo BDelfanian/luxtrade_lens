@@ -626,6 +626,8 @@ def build_figures(
     """Dispatch to the builder for ``kind``; table, pivot and KPI are rendered by the app."""
     if main.empty or kind in ("table", "pivot", "kpi"):
         return []
+    if kind in ("line", "area") and "reporter" in main.columns:
+        kind = "bench"  # a benchmark run stored as a line chart before the selector knew better
     if kind == "bar":
         return [bar(main, title, lang, measure)]
     if kind == "change":
