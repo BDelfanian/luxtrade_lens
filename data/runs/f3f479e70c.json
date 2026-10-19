@@ -1,0 +1,306 @@
+{
+ "run_id": "f3f479e70c",
+ "session_id": "zyhbpm",
+ "turn": 11,
+ "created_at": "2026-10-18T22:10:55+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which countries did Luxembourg's exports of computers (HS 8471) go to in 2008?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "8471"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2008",
+  "period_end": "2008",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "1.6 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 1.6109350281873778
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2008-01-01' AS DATE)\n  AND period < CAST('2009-01-01' AS DATE)\n  AND flow = 'export'\n  AND hs4 IN ('8471')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "1ee31d735c7ecd3e2290a3c410a4935e648d36faec547979651afbefd66a2b85",
+ "row_count": 74,
+ "view_kind": "map",
+ "title": "Main trading partners — exports 2008",
+ "frames": {
+  "main": [
+   {
+    "key": "FR",
+    "value": 858542915.0,
+    "share": 17.5207107377,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "IT",
+    "value": 570137641.0,
+    "share": 11.6350813851,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "key": "ES",
+    "value": 540587042.0,
+    "share": 11.0320276668,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "key": "GB",
+    "value": 515513106.0,
+    "share": 10.5203314289,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "key": "DE",
+    "value": 452283805.0,
+    "share": 9.2299797486,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "key": "SE",
+    "value": 399277555.0,
+    "share": 8.1482549363,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Sweden",
+    "iso3": "SWE"
+   },
+   {
+    "key": "NL",
+    "value": 303270975.0,
+    "share": 6.1890010799,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "key": "BE",
+    "value": 191748746.0,
+    "share": 3.9131116853,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "key": "PL",
+    "value": 184043875.0,
+    "share": 3.7558745644,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Poland",
+    "iso3": "POL"
+   },
+   {
+    "key": "TR",
+    "value": 122204784.0,
+    "share": 2.4938935886,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Türkiye",
+    "iso3": "TUR"
+   },
+   {
+    "key": "OTHER",
+    "value": 683602981.0,
+    "share": 13.9506248089,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 78946893.0,
+    "share": 1.6111083695,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "FR",
+   "IT",
+   "ES",
+   "GB",
+   "DE",
+   "SE",
+   "NL",
+   "BE",
+   "PL",
+   "TR"
+  ]
+ },
+ "insight": [
+  "Luxembourg's exports of computers in 2008 totaled 4.90 billion euros.",
+  "The largest export destination was France, receiving 858.5 million euros or 17.5% of the total exports.",
+  "Italy and Spain followed as the second and third largest destinations with 570.1 million euros and 540.6 million euros respectively.",
+  "The top three export countries together accounted for 40.2% of the total computer exports.",
+  "Note that 1.6% of the export value was to undisclosed partners and values are in current euros, not adjusted for price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2008: 4.90 bn €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 France: 858.5 M€, 17.5 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Italy: 570.1 M€, 11.6 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Spain: 540.6 M€, 11.0 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 United Kingdom: 515.5 M€, 10.5 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Germany: 452.3 M€, 9.2 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 683.6 M€, 14.0 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 78.9 M€, 1.6 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 40.2 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 69,
+   "outcome": "ok",
+   "detail": "74 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 11,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1215,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 972,
+   "output_tokens": 125,
+   "cache_read_tokens": 0,
+   "ms": 1191
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

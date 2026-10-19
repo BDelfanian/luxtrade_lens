@@ -1,0 +1,17 @@
+{
+ "session_id": "6pns9p",
+ "created_at": "2026-10-18T22:38:51+00:00",
+ "updated_at": "2026-10-18T22:39:06+00:00",
+ "language": "en",
+ "title": "Scenario: 6 · Neighbour routes and fuel",
+ "runs": [
+  "f9d462cf02",
+  "abf75796a4",
+  "42ecb5a868",
+  "51f3672e5c",
+  "ec13324312",
+  "e0413114c8",
+  "50695d4ee8",
+  "0690fa0546"
+ ]
+}

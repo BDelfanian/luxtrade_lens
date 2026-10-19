@@ -1,0 +1,201 @@
+{
+ "scenario_id": "7f38f30acf",
+ "session_id": "jaw7m4",
+ "created_at": "2026-10-16T22:38:33+00:00",
+ "question": "Has Luxembourg spread its risk, across the goods it sells and the countries it buys from?",
+ "language": "en",
+ "title": "Luxembourg's Trade Risk Diversification",
+ "name": "",
+ "favorite": false,
+ "hidden": false,
+ "based_on": "",
+ "approach": "This chain investigates whether Luxembourg has diversified its trade risk by analyzing the concentration of its exports by product and its imports by partner countries over time. It compares the shares of main products and partners in 2005 and 2025 to assess changes in concentration and risk spreading.",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "plan",
+   "question": "What was the composition by product chapter of Luxembourg's exports in 2005?",
+   "purpose": "To understand the baseline concentration of exported goods by product in 2005.",
+   "builds_on": [],
+   "run_id": "231388d833",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2005 · share of the whole flow in %",
+   "note": "In 2005, Luxembourg's exports were concentrated with the top three products making up 59.0% of exports."
+  },
+  {
+   "n": 2,
+   "kind": "plan",
+   "question": "What was the composition by product chapter of Luxembourg's exports in 2025?",
+   "purpose": "To assess how the concentration of exported goods by product changed by 2025 compared to 2005.",
+   "builds_on": [],
+   "run_id": "a0ae25c591",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2025 · share of the whole flow in %",
+   "note": "By 2025, the top three export products' share had fallen to 31.8%, with a larger share in other products."
+  },
+  {
+   "n": 3,
+   "kind": "plan",
+   "question": "What was the composition by partner country of Luxembourg's imports in 2005?",
+   "purpose": "To understand the baseline concentration of import partners in 2005, indicating risk exposure by country.",
+   "builds_on": [],
+   "run_id": "d392926bad",
+   "status": "answered",
+   "queried": "imports · by partner (top 10) · 2005 · share of the whole flow in %",
+   "note": "In 2005, Luxembourg's imports were concentrated with the top three partners accounting for 59.6% of imports, led by Belgium and Germany."
+  },
+  {
+   "n": 4,
+   "kind": "plan",
+   "question": "What was the composition by partner country of Luxembourg's imports in 2025?",
+   "purpose": "To assess how the concentration of import partners changed by 2025 compared to 2005, indicating if risk has been spread across more countries.",
+   "builds_on": [],
+   "run_id": "20734213d3",
+   "status": "answered",
+   "queried": "imports · by partner (top 10) · 2025 · share of the whole flow in %",
+   "note": "By 2025, the top three import partners' share increased to 65.8%, with Belgium and Germany increasing their shares."
+  },
+  {
+   "n": 5,
+   "kind": "follow-up",
+   "question": "What was the year-on-year change in the share of the top 3 export products of Luxembourg from 2005 to 2025?",
+   "purpose": "Steps 1 and 2 show a significant decrease in the concentration of the top 3 export products' share from 59.0% in 2005 to 31.8% in 2025, indicating diversification; this question aims to understand the annual trend of this change.",
+   "builds_on": [
+    1,
+    2
+   ],
+   "run_id": "d23937e485",
+   "status": "answered",
+   "queried": "exports · products 84, 85, 72 · by HS2 product (top 3) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "From 2005 to 2025, the shares of the top three export products declined significantly, indicating diversification in exports."
+  },
+  {
+   "n": 6,
+   "kind": "follow-up",
+   "question": "What was the year-on-year change in the share of the top 3 import partners of Luxembourg from 2005 to 2025?",
+   "purpose": "Steps 3 and 4 show an increase in the concentration of the top 3 import partners' share from 59.6% in 2005 to 65.8% in 2025, suggesting less diversification; this question aims to understand the annual trend of this change.",
+   "builds_on": [
+    3,
+    4
+   ],
+   "run_id": "48a73b1cb4",
+   "status": "answered",
+   "queried": "imports · partners BE, DE, CN · by partner (top 3) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "From 2005 to 2025, the shares of the top three import partners increased, showing greater concentration in imports."
+  }
+ ],
+ "headline": "Luxembourg has diversified its export products significantly but has become more concentrated in its import partners from 2005 to 2025.",
+ "points": [
+  {
+   "text": "The share of Luxembourg's top three export products fell from 59.0% in 2005 to 31.8% in 2025, showing a clear spread of risk across more products; machinery and mechanical appliances, electrical machinery, and iron and steel all saw large declines in their export shares.",
+   "steps": [
+    1,
+    2,
+    5
+   ]
+  },
+  {
+   "text": "In contrast, the top three import partners increased their share from 59.6% in 2005 to 65.8% in 2025, indicating that Luxembourg's imports have become more concentrated in fewer countries, mainly Belgium and Germany, while China's share dropped sharply.",
+   "steps": [
+    3,
+    4,
+    6
+   ]
+  },
+  {
+   "text": "The largest import partners in both years were Belgium and Germany, whose combined share grew, suggesting that Luxembourg relies more heavily on these neighbors for imports over time.",
+   "steps": [
+    3,
+    4
+   ]
+  },
+  {
+   "text": "The export product composition shifted notably, with machinery and mechanical appliances dropping from 26.8% to 12.5%, and other products outside the top five increasing their share from 19.0% to 31.1%, reflecting diversification in export goods.",
+   "steps": [
+    1,
+    2
+   ]
+  }
+ ],
+ "conclusion": "Overall, Luxembourg has spread its risk across a wider range of export products between 2005 and 2025, reducing dependence on a few key goods. However, its import sources have become more concentrated, relying increasingly on Belgium and Germany, which may increase risk exposure on the import side. This analysis does not cover services trade or the impact of trade policies, and it is limited to nominal values without adjusting for price changes.",
+ "charts": [
+  5,
+  6,
+  2
+ ],
+ "figures": [],
+ "share": {
+  "title": "Luxembourg diversifies exports but concentrates imports on Belgium and Germany",
+  "subtitle": "From 2005 to 2025, Luxembourg's top three export products dropped from 59.0% to 31.8%, while its top three import partners rose from 59.6% to 65.8%, focusing more on Belgium and Germany.",
+  "source": "llm",
+  "notes": [
+   "share title and subtitle passed the number, country and wording checks"
+  ],
+  "earlier": []
+ },
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "2.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L03",
+   "message": "4.0 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "combined answer passed the number, country, wording and reasoning checks",
+  "share title and subtitle passed the number, country and wording checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_plan",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 6825,
+   "output_tokens": 607,
+   "cache_read_tokens": 0,
+   "ms": 5557
+  },
+  {
+   "step": "scenario_follow_up",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 7487,
+   "output_tokens": 393,
+   "cache_read_tokens": 0,
+   "ms": 3203
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3226,
+   "output_tokens": 579,
+   "cache_read_tokens": 0,
+   "ms": 4353
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 3431,
+   "output_tokens": 693,
+   "cache_read_tokens": 0,
+   "ms": 4100
+  },
+  {
+   "step": "scenario_share",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1087,
+   "output_tokens": 144,
+   "cache_read_tokens": 0,
+   "ms": 1952
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "88aa27d",
+ "status": "answered"
+}

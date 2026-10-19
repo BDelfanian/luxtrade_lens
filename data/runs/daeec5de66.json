@@ -1,0 +1,482 @@
+{
+ "run_id": "daeec5de66",
+ "session_id": "8erw88",
+ "turn": 3,
+ "created_at": "2026-10-18T21:37:05+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did the value per kg of Luxembourg's imports from non-EU27 partners evolve each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "unit_value",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "EU27 and non-EU27 partners both kept, to split the total"
+  ]
+ },
+ "assumptions": [
+  "EU27 and non-EU27 partners both kept, to split the total"
+ ],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "e4d795a106de5ee08debe5d37d65b45c3aca2869227e51ee40ad1e5b9236843b",
+ "row_count": 42,
+ "view_kind": "line",
+ "title": "EU27 countries · imports: +138.7 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.5137161459,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2005,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 11.8616390803,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2006,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.5196417167,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2006,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 10.7754926871,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2007,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.5497457539,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2007,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 11.2701915215,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2008,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.6449867269,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2008,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 15.7489571851,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2009,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.5597267647,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2009,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 24.0971501226,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2010,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.798411127,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2010,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 18.6285066895,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2011,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.8360782122,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2011,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 17.0837959133,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2012,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.8901515016,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2012,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 23.5886778466,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2013,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.8970740279,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2013,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 20.1182679054,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2014,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.8824223335,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2014,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 18.1382966089,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2015,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.7604975064,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2015,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 22.0203775141,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2016,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.7801248789,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2016,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 18.8989796329,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2017,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.8334424845,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2017,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 14.1357886894,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2018,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.8666816455,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2018,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 10.6630776933,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2019,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.9052467273,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2019,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 14.3400241076,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2020,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.9100868032,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2020,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 9.142270658,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2021,
+    "key": "EU27",
+    "flow": "import",
+    "value": 0.9251426258,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2021,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 10.5600672456,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2022,
+    "key": "EU27",
+    "flow": "import",
+    "value": 1.0194926105,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2022,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 11.9441810768,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2023,
+    "key": "EU27",
+    "flow": "import",
+    "value": 1.1328321429,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2023,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 11.8712626909,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2024,
+    "key": "EU27",
+    "flow": "import",
+    "value": 1.2587473474,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2024,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 12.3312467418,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "EU27",
+    "flow": "import",
+    "value": 1.2261520431,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "NON_EU27",
+    "flow": "import",
+    "value": 19.7050467258,
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The value per kilogram of Luxembourg's imports from non-EU27 partners increased from 11.86 euros in 2005 to 19.71 euros in 2025.",
+  "This represents a change of +66.1% over the period 2005 to 2025.",
+  "The highest value per kilogram was recorded in 2009 at 24.10 euros, which is notably higher than the 2024 value of 12.33 euros.",
+  "The largest year-to-year increase occurred between 2008 and 2009, when the value rose from 15.75 euros to 24.10 euros per kilogram.",
+  "However, these values only cover trade rows where the quantity is known, as quantities are missing for part of the trade."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "EU27 countries · imports.start",
+   "text": "EU27 countries · imports 2005: 0.51 €/kg"
+  },
+  {
+   "key": "EU27 countries · imports.end",
+   "text": "EU27 countries · imports 2025: 1.23 €/kg"
+  },
+  {
+   "key": "EU27 countries · imports.change",
+   "text": "EU27 countries · imports change 2005–2025: +138.7 %"
+  },
+  {
+   "key": "EU27 countries · imports.peak",
+   "text": "EU27 countries · imports peak 2024: 1.26 €/kg"
+  },
+  {
+   "key": "EU27 countries · imports.prev",
+   "text": "EU27 countries · imports 2024: 1.26 €/kg"
+  },
+  {
+   "key": "EU27 countries · imports.move",
+   "text": "EU27 countries · imports: largest change between consecutive periods 2009–2010: 0.56 €/kg to 0.80 €/kg"
+  },
+  {
+   "key": "EU27 countries · imports.median",
+   "text": "EU27 countries · imports: median over 2005–2025: 0.87 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · imports.start",
+   "text": "Non-EU27 countries · imports 2005: 11.86 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · imports.end",
+   "text": "Non-EU27 countries · imports 2025: 19.71 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · imports.change",
+   "text": "Non-EU27 countries · imports change 2005–2025: +66.1 %"
+  },
+  {
+   "key": "Non-EU27 countries · imports.peak",
+   "text": "Non-EU27 countries · imports peak 2009: 24.10 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · imports.prev",
+   "text": "Non-EU27 countries · imports 2024: 12.33 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · imports.move",
+   "text": "Non-EU27 countries · imports: largest change between consecutive periods 2008–2009: 15.75 €/kg to 24.10 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · imports.median",
+   "text": "Non-EU27 countries · imports: median over 2005–2025: 14.34 €/kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 351,
+   "outcome": "ok",
+   "detail": "42 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 8,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1383,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1212,
+   "output_tokens": 157,
+   "cache_read_tokens": 0,
+   "ms": 1334
+  }
+ ],
+ "code_version": "311676c",
+ "error": null
+}

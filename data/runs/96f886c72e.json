@@ -1,0 +1,332 @@
+{
+ "run_id": "96f886c72e",
+ "session_id": "kb4tqt",
+ "turn": 6,
+ "created_at": "2026-10-18T21:41:15+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which product headings (HS4) imported from non-EU27 partners changed most in value between 2024 and 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2024",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'non-EU27 partners' read as EXTRA_EU27_2020"
+  ]
+ },
+ "assumptions": [
+  "'non-EU27 partners' read as EXTRA_EU27_2020"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.4 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.431634651421912
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2024-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\n  AND year IN (2024, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "aae4a046c3354ed4e62ee90e47e175dc0216f81339493eea9c7d58652b839802",
+ "row_count": 1912,
+ "view_kind": "change",
+ "title": "Largest changes by product group — imports 2024–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "8428",
+    "base": 54168307.0,
+    "value": 747871000.0,
+    "change": 693702693.0,
+    "change_pct": 1280.6431129553,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Lifting and handling machinery",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8517",
+    "base": 44966351.0,
+    "value": 656818361.0,
+    "change": 611852010.0,
+    "change_pct": 1360.6885957902,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "flow": "import",
+    "key": "8411",
+    "base": 20925917.0,
+    "value": 152779702.0,
+    "change": 131853785.0,
+    "change_pct": 630.0980023958,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Turbojets, turbopropellers and other gas turbines",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8479",
+    "base": 36845104.0,
+    "value": 134300052.0,
+    "change": 97454948.0,
+    "change_pct": 264.4990444321,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Machines and mechanical appliances having individual functions, not specified or included elsewhere in this chapter; parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8457",
+    "base": 2934687.0,
+    "value": 46250544.0,
+    "change": 43315857.0,
+    "change_pct": 1475.9958046633,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Machining centres, unit construction machines \"single station\" and multi-station transfer machines for working metal",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8703",
+    "base": 16914538.0,
+    "value": 6778396.0,
+    "change": -10136142.0,
+    "change_pct": -59.9256213797,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Motor cars",
+    "parent": "87",
+    "parent_label": "Vehicles and parts"
+   },
+   {
+    "flow": "import",
+    "key": "4416",
+    "base": 12271971.0,
+    "value": 0.0,
+    "change": -12271971.0,
+    "change_pct": -100.0,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Casks, barrels, vats, tubs and other coopers' products parts thereof, of wood, incl. staves",
+    "parent": "44",
+    "parent_label": "Wood and articles of wood; wood charcoal"
+   },
+   {
+    "flow": "import",
+    "key": "9701",
+    "base": 17712965.0,
+    "value": 3247087.0,
+    "change": -14465878.0,
+    "change_pct": -81.668303415,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Paintings, e.g. oil paintings, watercolours and pastels, and drawings executed entirely by hand (excl. technical drawings and the like of heading 4906, and hand-painted or hand-decorated manufactured articles); collages and similar decorative plaques",
+    "parent": "97",
+    "parent_label": "Works of art, collectors' pieces and antiques"
+   },
+   {
+    "flow": "import",
+    "key": "6404",
+    "base": 39085897.0,
+    "value": 7350605.0,
+    "change": -31735292.0,
+    "change_pct": -81.1937154724,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Footwear with outer soles of rubber, plastics, leather or composition leather and uppers of textile materials (excl. toy footwear)",
+    "parent": "64",
+    "parent_label": "Footwear"
+   },
+   {
+    "flow": "import",
+    "key": "8802",
+    "base": 537592755.0,
+    "value": 236612381.0,
+    "change": -300980374.0,
+    "change_pct": -55.9866871718,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Powered aircraft \"e.g. helicopters and aeroplanes\"; spacecraft, incl. satellites, and suborbital and spacecraft launch vehicles",
+    "parent": "88",
+    "parent_label": "Aircraft, spacecraft, and parts thereof"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "8428",
+   "8517",
+   "8411",
+   "8479",
+   "8457",
+   "8703",
+   "4416",
+   "9701",
+   "6404",
+   "8802"
+  ]
+ },
+ "insight": [
+  "The product headings imported from non-EU27 partners that changed most in value between 2024 and 2025 include lifting and handling machinery, telephone sets, and machining centres.",
+  "Lifting and handling machinery imports increased from 54.2 million euros in 2024 to 747.9 million euros in 2025, a rise of 1,280.6%.",
+  "Telephone sets imports rose from 45.0 million euros to 656.8 million euros, an increase of 1,360.7%.",
+  "Meanwhile, imports of motor cars decreased by 59.9%, from 16.9 million euros in 2024 to 6.8 million euros in 2025.",
+  "These values are nominal and not adjusted for price changes, and 2.4% of the value is confidential at full product detail."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.8428",
+   "text": "imports Lifting and handling machinery: 54.2 M€ 2024 → 747.9 M€ 2025 (693.7 M€, +1,280.6 %)"
+  },
+  {
+   "key": "import.8517",
+   "text": "imports Telephone sets: 45.0 M€ 2024 → 656.8 M€ 2025 (611.9 M€, +1,360.7 %)"
+  },
+  {
+   "key": "import.8411",
+   "text": "imports Turbojets, turbopropellers and other gas turbines: 20.9 M€ 2024 → 152.8 M€ 2025 (131.9 M€, +630.1 %)"
+  },
+  {
+   "key": "import.8479",
+   "text": "imports Machines and mechanical appliances having individual functions, not specified or included elsewhere in this chapter; parts thereof: 36.8 M€ 2024 → 134.3 M€ 2025 (97.5 M€, +264.5 %)"
+  },
+  {
+   "key": "import.8457",
+   "text": "imports Machining centres, unit construction machines \"single station\" and multi-station transfer machines for working metal: 2.9 M€ 2024 → 46.3 M€ 2025 (43.3 M€, +1,476.0 %)"
+  },
+  {
+   "key": "import.8703",
+   "text": "imports Motor cars: 16.9 M€ 2024 → 6.8 M€ 2025 (-10.1 M€, −59.9 %)"
+  },
+  {
+   "key": "import.4416",
+   "text": "imports Casks, barrels, vats, tubs and other coopers' products parts thereof, of wood, incl. staves: 12.3 M€ 2024 → 0 k € 2025 (-12.3 M€, −100.0 %)"
+  },
+  {
+   "key": "import.9701",
+   "text": "imports Paintings, e.g. oil paintings, watercolours and pastels, and drawings executed entirely by hand (excl. technical drawings and the like of heading 4906, and hand-painted or hand-decorated manufactured articles); collages and similar decorative plaques: 17.7 M€ 2024 → 3.2 M€ 2025 (-14.5 M€, −81.7 %)"
+  },
+  {
+   "key": "import.6404",
+   "text": "imports Footwear with outer soles of rubber, plastics, leather or composition leather and uppers of textile materials (excl. toy footwear): 39.1 M€ 2024 → 7.4 M€ 2025 (-31.7 M€, −81.2 %)"
+  },
+  {
+   "key": "import.8802",
+   "text": "imports Powered aircraft \"e.g. helicopters and aeroplanes\"; spacecraft, incl. satellites, and suborbital and spacecraft launch vehicles: 537.6 M€ 2024 → 236.6 M€ 2025 (-301.0 M€, −56.0 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2024 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 202,
+   "outcome": "ok",
+   "detail": "1912 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 25,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2024 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1440,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1349,
+   "output_tokens": 174,
+   "cache_read_tokens": 1152,
+   "ms": 1385
+  }
+ ],
+ "code_version": "311676c",
+ "error": null
+}

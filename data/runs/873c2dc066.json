@@ -1,0 +1,473 @@
+{
+ "run_id": "873c2dc066",
+ "session_id": "e6ytca",
+ "turn": 12,
+ "created_at": "2026-10-18T22:07:14+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What share of Luxembourg's imports were telephone sets (HS 8517) each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "8517"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "no EU27 split: the question does not ask for one"
+  ]
+ },
+ "assumptions": [
+  "no EU27 split: the question does not ask for one"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('8517')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "d89d80d75563d0ffdbe9cdad0452b8c024148db38d01151e4aceddc00511c370",
+ "row_count": 21,
+ "view_kind": "area",
+ "title": "Telephone sets · imports: +1,310.4 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "8517",
+    "flow": "import",
+    "value": 0.2542375139,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2006,
+    "key": "8517",
+    "flow": "import",
+    "value": 0.2271421547,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2007,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.8070023197,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2008,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.2098484895,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2009,
+    "key": "8517",
+    "flow": "import",
+    "value": 4.9467912745,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2010,
+    "key": "8517",
+    "flow": "import",
+    "value": 6.7661789431,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2011,
+    "key": "8517",
+    "flow": "import",
+    "value": 6.7293380414,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2012,
+    "key": "8517",
+    "flow": "import",
+    "value": 7.4246805766,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2013,
+    "key": "8517",
+    "flow": "import",
+    "value": 6.4384850999,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2014,
+    "key": "8517",
+    "flow": "import",
+    "value": 6.0768765941,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2015,
+    "key": "8517",
+    "flow": "import",
+    "value": 11.3599225211,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2016,
+    "key": "8517",
+    "flow": "import",
+    "value": 5.8476603907,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2017,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.7940896097,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2018,
+    "key": "8517",
+    "flow": "import",
+    "value": 2.4006939675,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2019,
+    "key": "8517",
+    "flow": "import",
+    "value": 7.1646288787,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2020,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.3993612719,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2021,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.2387465026,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2022,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.18199274,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2023,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.2548808627,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2024,
+    "key": "8517",
+    "flow": "import",
+    "value": 1.25667988,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2025,
+    "key": "8517",
+    "flow": "import",
+    "value": 3.5858096454,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 18154619782.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 21610814188.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 20451620342.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 21863560875.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 18160433767.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 18713336015.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 20732587803.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 21228221332.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 20077758043.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 20098125346.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 21016138777.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 19761934890.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 20274152140.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 20463000768.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 21657598157.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 18504346533.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 22146665635.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 25660352026.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 24322124998.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 24087714129.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 25097944481.0
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "8517"
+  ]
+ },
+ "insight": [
+  "The share of telephone sets in Luxembourg's imports was 0.3% in 2005 and increased to 3.6% in 2025.",
+  "Over the period from 2005 to 2025, the median share was 2.4%.",
+  "The largest share was recorded in 2015 at 11.4%.",
+  "Between 2019 and 2020, the share dropped sharply from 7.2% to 1.4%.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Telephone sets · imports.start",
+   "text": "Telephone sets · imports 2005: 0.3 %"
+  },
+  {
+   "key": "Telephone sets · imports.end",
+   "text": "Telephone sets · imports 2025: 3.6 %"
+  },
+  {
+   "key": "Telephone sets · imports.change",
+   "text": "Telephone sets · imports change 2005–2025: +1,310.4 %"
+  },
+  {
+   "key": "Telephone sets · imports.peak",
+   "text": "Telephone sets · imports peak 2015: 11.4 %"
+  },
+  {
+   "key": "Telephone sets · imports.prev",
+   "text": "Telephone sets · imports 2024: 1.3 %"
+  },
+  {
+   "key": "Telephone sets · imports.move",
+   "text": "Telephone sets · imports: largest change between consecutive periods 2019–2020: 7.2 % to 1.4 %"
+  },
+  {
+   "key": "Telephone sets · imports.median",
+   "text": "Telephone sets · imports: median over 2005–2025: 2.4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all products), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 319,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 15,
+   "outcome": "ok",
+   "detail": "view=area; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all products), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 2348,
+   "outcome": "ok",
+   "detail": "grounding failed: observed data described as projected or expected"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 868,
+   "output_tokens": 126,
+   "cache_read_tokens": 0,
+   "ms": 1129
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 884,
+   "output_tokens": 120,
+   "cache_read_tokens": 0,
+   "ms": 1135
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

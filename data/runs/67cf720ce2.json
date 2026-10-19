@@ -1,0 +1,271 @@
+{
+ "run_id": "67cf720ce2",
+ "session_id": "8erw88",
+ "turn": 5,
+ "created_at": "2026-10-18T21:37:09+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did the mass in kg of Luxembourg's imports from non-EU27 partners evolve each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "qty_kg",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  },
+  {
+   "id": "L08",
+   "key": "fixed_eu27",
+   "severity": "warn",
+   "message": "Intra/extra-EU uses the fixed EU27 (2020) composition; the United Kingdom counts as extra-EU throughout.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "35abf0ca6e941a824d36a8b68e49fe6c169b2ee5a72152a776a83c1447181151",
+ "row_count": 21,
+ "view_kind": "line",
+ "title": "imports: −60.2 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 430581700.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 607434200.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 493448600.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 364539300.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 221576200.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 209079248.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 239180280.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 217225691.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 220759190.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 234718033.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 274811588.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 247270414.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 260463159.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 253930278.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 248529731.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 220858963.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 235377898.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 196596322.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 190485580.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 165721144.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 171233556.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The mass in kilograms of Luxembourg's imports from non-EU27 partners decreased from 430.6 million kg in 2005 to 171.2 million kg in 2025.",
+  "The imports peaked at 607.4 million kg in 2006, which was the largest change between consecutive years from 2005 to 2006.",
+  "The two largest import years, 2006 and 2007, accounted for 19.3% of the total imports over the 2005 to 2025 period.",
+  "The imports in 2024 were 165.7 million kg, slightly lower than in 2025.",
+  "The data only covers trade rows with known quantities, so some trade volumes may be missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2005: 430.6 M kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 171.2 M kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2005–2025: −60.2 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2006: 607.4 M kg"
+  },
+  {
+   "key": "imports.prev",
+   "text": "imports 2024: 165.7 M kg"
+  },
+  {
+   "key": "imports.move",
+   "text": "imports: largest change between consecutive periods 2005–2006: 430.6 M kg to 607.4 M kg"
+  },
+  {
+   "key": "imports.median",
+   "text": "imports: median over 2005–2025: 235.4 M kg"
+  },
+  {
+   "key": "imports.top2",
+   "text": "imports: the two largest periods (2006, 2007) make 19.3 % of the total over 2005–2025"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn, L08:warn"
+  },
+  {
+   "node": "query",
+   "ms": 401,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07, L08"
+  },
+  {
+   "node": "analyse",
+   "ms": 2,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1440,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 919,
+   "output_tokens": 152,
+   "cache_read_tokens": 0,
+   "ms": 1386
+  }
+ ],
+ "code_version": "311676c",
+ "error": null
+}

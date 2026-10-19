@@ -1,0 +1,454 @@
+{
+ "run_id": "2ec7f617cc",
+ "session_id": "c5yyq3",
+ "turn": 4,
+ "created_at": "2026-10-19T05:34:44+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Each year from 2005 to 2025, what share of all Luxembourg's fuel imports (HS 27) came from Belgium?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [
+   "BE"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('BE')\n  AND hs2 IN ('27')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "7992c065801a0e525ea566966e9715ce6c126ea4721411df1532fd652dbff144",
+ "row_count": 21,
+ "view_kind": "area",
+ "title": "Belgium · imports: −15.5 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "BE",
+    "flow": "import",
+    "value": 59.4887541555,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2006,
+    "key": "BE",
+    "flow": "import",
+    "value": 62.5884176896,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2007,
+    "key": "BE",
+    "flow": "import",
+    "value": 58.8552107506,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2008,
+    "key": "BE",
+    "flow": "import",
+    "value": 58.3184019704,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2009,
+    "key": "BE",
+    "flow": "import",
+    "value": 55.545262945,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2010,
+    "key": "BE",
+    "flow": "import",
+    "value": 65.1649302085,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2011,
+    "key": "BE",
+    "flow": "import",
+    "value": 66.3432110056,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2012,
+    "key": "BE",
+    "flow": "import",
+    "value": 59.705181812,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2013,
+    "key": "BE",
+    "flow": "import",
+    "value": 59.0057738084,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2014,
+    "key": "BE",
+    "flow": "import",
+    "value": 54.1010480346,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2015,
+    "key": "BE",
+    "flow": "import",
+    "value": 51.4165357714,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2016,
+    "key": "BE",
+    "flow": "import",
+    "value": 54.7926220726,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2017,
+    "key": "BE",
+    "flow": "import",
+    "value": 55.5090560373,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2018,
+    "key": "BE",
+    "flow": "import",
+    "value": 54.5425863038,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2019,
+    "key": "BE",
+    "flow": "import",
+    "value": 56.5449713537,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2020,
+    "key": "BE",
+    "flow": "import",
+    "value": 51.9007104163,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2021,
+    "key": "BE",
+    "flow": "import",
+    "value": 46.2325304686,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2022,
+    "key": "BE",
+    "flow": "import",
+    "value": 43.7774088321,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2023,
+    "key": "BE",
+    "flow": "import",
+    "value": 44.4007516116,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2024,
+    "key": "BE",
+    "flow": "import",
+    "value": 49.7877886465,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2025,
+    "key": "BE",
+    "flow": "import",
+    "value": 50.2900914925,
+    "label": "Belgium",
+    "iso3": "BEL"
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 1746248130.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 2050810911.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 2058752492.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 2623680441.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 1636905741.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 2043363057.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 2634416406.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 2877180020.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 2620033431.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 2284003850.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 1648896376.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 1319833424.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 1576754210.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 2024927648.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 2035703654.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 1278148938.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 2046239415.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 3995975403.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 3087501545.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 2638607411.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 2231635421.0
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE"
+  ]
+ },
+ "insight": [
+  "Each year from 2005 to 2025, Belgium supplied a significant share of Luxembourg's fuel imports, starting at 59.5% in 2005 and decreasing to 50.3% in 2025.",
+  "The median share over this period was 55.5%, with the highest share recorded in 2011 at 66.3%.",
+  "The largest year-to-year increase occurred between 2009 and 2010, rising from 55.5% to 65.2%.",
+  "The lowest share was in 2022 at 43.8%, and the share in 2024 was 49.8%.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Belgium · imports.start",
+   "text": "Belgium · imports 2005: 59.5 %"
+  },
+  {
+   "key": "Belgium · imports.end",
+   "text": "Belgium · imports 2025: 50.3 %"
+  },
+  {
+   "key": "Belgium · imports.change",
+   "text": "Belgium · imports change 2005–2025: −15.5 %"
+  },
+  {
+   "key": "Belgium · imports.peak",
+   "text": "Belgium · imports peak 2011: 66.3 %"
+  },
+  {
+   "key": "Belgium · imports.prev",
+   "text": "Belgium · imports 2024: 49.8 %"
+  },
+  {
+   "key": "Belgium · imports.low",
+   "text": "Belgium · imports low 2022: 43.8 %"
+  },
+  {
+   "key": "Belgium · imports.move",
+   "text": "Belgium · imports: largest change between consecutive periods 2009–2010: 55.5 % to 65.2 %"
+  },
+  {
+   "key": "Belgium · imports.median",
+   "text": "Belgium · imports: median over 2005–2025: 55.5 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all partners), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 1175,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 53,
+   "outcome": "ok",
+   "detail": "view=area; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all partners), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 2940,
+   "outcome": "ok",
+   "detail": "grounding failed: observed data described as projected or expected"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 908,
+   "output_tokens": 148,
+   "cache_read_tokens": 0,
+   "ms": 1313
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 924,
+   "output_tokens": 153,
+   "cache_read_tokens": 0,
+   "ms": 1473
+  }
+ ],
+ "code_version": "8387808",
+ "error": null
+}

@@ -1,0 +1,1720 @@
+{
+ "run_id": "9ab33db1d9",
+ "session_id": "succ3f",
+ "turn": 3,
+ "created_at": "2026-10-18T18:25:56+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What is the trend of import concentration by product chapters in Luxembourg from 2005 to 2025 every five years?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "4.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 4.763611938738446
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "30d55144a10483b628278e601970b74d8f9e6331f72f4f381969134230241e8e",
+ "row_count": 2037,
+ "view_kind": "line",
+ "title": "Mineral fuels and oils · imports: +27.8 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "27",
+    "flow": "import",
+    "value": 1746248130.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "39",
+    "flow": "import",
+    "value": 592594069.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "72",
+    "flow": "import",
+    "value": 1256235192.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "84",
+    "flow": "import",
+    "value": 3522369230.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "85",
+    "flow": "import",
+    "value": 2725205667.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "87",
+    "flow": "import",
+    "value": 1726285574.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "88",
+    "flow": "import",
+    "value": 388099898.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 6197582022.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "27",
+    "flow": "import",
+    "value": 2050810911.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "39",
+    "flow": "import",
+    "value": 625764448.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "72",
+    "flow": "import",
+    "value": 1696215896.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "84",
+    "flow": "import",
+    "value": 4393264239.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "85",
+    "flow": "import",
+    "value": 3939569892.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "87",
+    "flow": "import",
+    "value": 1851747430.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "88",
+    "flow": "import",
+    "value": 428166052.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 6625275320.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "27",
+    "flow": "import",
+    "value": 2058752492.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "39",
+    "flow": "import",
+    "value": 669946071.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "72",
+    "flow": "import",
+    "value": 1673661468.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "84",
+    "flow": "import",
+    "value": 4966190534.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "85",
+    "flow": "import",
+    "value": 1453912221.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "87",
+    "flow": "import",
+    "value": 2016423919.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "88",
+    "flow": "import",
+    "value": 634726905.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 6978006732.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "27",
+    "flow": "import",
+    "value": 2623680441.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "39",
+    "flow": "import",
+    "value": 736561106.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "72",
+    "flow": "import",
+    "value": 2016752671.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "84",
+    "flow": "import",
+    "value": 5585480075.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "85",
+    "flow": "import",
+    "value": 1198194090.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "87",
+    "flow": "import",
+    "value": 2139784460.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "88",
+    "flow": "import",
+    "value": 594966436.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 6968141596.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "27",
+    "flow": "import",
+    "value": 1636905741.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "39",
+    "flow": "import",
+    "value": 608003465.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "72",
+    "flow": "import",
+    "value": 1004251124.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "84",
+    "flow": "import",
+    "value": 4435977559.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "85",
+    "flow": "import",
+    "value": 1725609457.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "87",
+    "flow": "import",
+    "value": 1749255447.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "88",
+    "flow": "import",
+    "value": 261536618.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 6738894356.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "27",
+    "flow": "import",
+    "value": 2043363057.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "39",
+    "flow": "import",
+    "value": 770172094.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "72",
+    "flow": "import",
+    "value": 1452218384.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "84",
+    "flow": "import",
+    "value": 2062664399.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "85",
+    "flow": "import",
+    "value": 2134187138.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "87",
+    "flow": "import",
+    "value": 1903150429.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "88",
+    "flow": "import",
+    "value": 425033089.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 7922547425.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "27",
+    "flow": "import",
+    "value": 2634416406.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "39",
+    "flow": "import",
+    "value": 853946204.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "72",
+    "flow": "import",
+    "value": 1613786221.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "84",
+    "flow": "import",
+    "value": 1538433613.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "85",
+    "flow": "import",
+    "value": 2300137002.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "87",
+    "flow": "import",
+    "value": 2018262093.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "88",
+    "flow": "import",
+    "value": 841072806.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 8932533458.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "27",
+    "flow": "import",
+    "value": 2877180020.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "39",
+    "flow": "import",
+    "value": 811502619.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "72",
+    "flow": "import",
+    "value": 1422742303.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "84",
+    "flow": "import",
+    "value": 1639553222.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "85",
+    "flow": "import",
+    "value": 2471912352.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "87",
+    "flow": "import",
+    "value": 1980073405.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "88",
+    "flow": "import",
+    "value": 1336152782.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 8689104629.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "27",
+    "flow": "import",
+    "value": 2620033431.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "39",
+    "flow": "import",
+    "value": 856415011.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "72",
+    "flow": "import",
+    "value": 1314112714.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "84",
+    "flow": "import",
+    "value": 1546649881.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "85",
+    "flow": "import",
+    "value": 2075825737.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "87",
+    "flow": "import",
+    "value": 1950501947.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "88",
+    "flow": "import",
+    "value": 1203021697.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 8511197625.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "27",
+    "flow": "import",
+    "value": 2284003850.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "39",
+    "flow": "import",
+    "value": 903023179.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "72",
+    "flow": "import",
+    "value": 1264718370.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "84",
+    "flow": "import",
+    "value": 1682005121.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "85",
+    "flow": "import",
+    "value": 1989061781.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "87",
+    "flow": "import",
+    "value": 2150453914.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "88",
+    "flow": "import",
+    "value": 1133359370.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 8691499761.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "27",
+    "flow": "import",
+    "value": 1648896376.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "39",
+    "flow": "import",
+    "value": 956601317.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "72",
+    "flow": "import",
+    "value": 1102275426.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "84",
+    "flow": "import",
+    "value": 1805672458.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "85",
+    "flow": "import",
+    "value": 3212400306.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "87",
+    "flow": "import",
+    "value": 2151223241.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "88",
+    "flow": "import",
+    "value": 1086953890.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 9052115763.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "27",
+    "flow": "import",
+    "value": 1319833424.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "39",
+    "flow": "import",
+    "value": 966935856.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "72",
+    "flow": "import",
+    "value": 1026619674.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "84",
+    "flow": "import",
+    "value": 2055516105.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "85",
+    "flow": "import",
+    "value": 2009984505.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "87",
+    "flow": "import",
+    "value": 2430230799.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "88",
+    "flow": "import",
+    "value": 794454800.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 9158359727.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "27",
+    "flow": "import",
+    "value": 1576754210.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "39",
+    "flow": "import",
+    "value": 1065636720.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "72",
+    "flow": "import",
+    "value": 1198686372.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "84",
+    "flow": "import",
+    "value": 2068806013.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "85",
+    "flow": "import",
+    "value": 1269093528.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "87",
+    "flow": "import",
+    "value": 2593503276.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "88",
+    "flow": "import",
+    "value": 794947738.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 9706724283.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "27",
+    "flow": "import",
+    "value": 2024927648.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "39",
+    "flow": "import",
+    "value": 1157988179.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "72",
+    "flow": "import",
+    "value": 1348672383.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "84",
+    "flow": "import",
+    "value": 1906952736.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "85",
+    "flow": "import",
+    "value": 1483263702.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "87",
+    "flow": "import",
+    "value": 2796988744.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "88",
+    "flow": "import",
+    "value": 312157829.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 9432049547.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "27",
+    "flow": "import",
+    "value": 2035703654.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "39",
+    "flow": "import",
+    "value": 1171187020.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "72",
+    "flow": "import",
+    "value": 1158877451.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "84",
+    "flow": "import",
+    "value": 2077661687.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "85",
+    "flow": "import",
+    "value": 2579275828.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "87",
+    "flow": "import",
+    "value": 3145944827.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "88",
+    "flow": "import",
+    "value": 393835645.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 9095112045.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "27",
+    "flow": "import",
+    "value": 1278148938.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "39",
+    "flow": "import",
+    "value": 1090904140.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "72",
+    "flow": "import",
+    "value": 928252133.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "84",
+    "flow": "import",
+    "value": 1901639470.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "85",
+    "flow": "import",
+    "value": 1200797570.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "87",
+    "flow": "import",
+    "value": 2805838736.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "88",
+    "flow": "import",
+    "value": 479417105.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 8819348441.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "27",
+    "flow": "import",
+    "value": 2046239415.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "39",
+    "flow": "import",
+    "value": 1388154971.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "72",
+    "flow": "import",
+    "value": 1362471713.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "84",
+    "flow": "import",
+    "value": 2329084126.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "85",
+    "flow": "import",
+    "value": 1389638865.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "87",
+    "flow": "import",
+    "value": 2749078966.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "88",
+    "flow": "import",
+    "value": 716737936.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 10165259643.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "27",
+    "flow": "import",
+    "value": 3995975403.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "39",
+    "flow": "import",
+    "value": 1635562717.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "72",
+    "flow": "import",
+    "value": 1332508735.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "84",
+    "flow": "import",
+    "value": 2171924445.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "85",
+    "flow": "import",
+    "value": 1496298511.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "87",
+    "flow": "import",
+    "value": 3046655769.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "88",
+    "flow": "import",
+    "value": 262197768.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 11719228678.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "27",
+    "flow": "import",
+    "value": 3087501545.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "39",
+    "flow": "import",
+    "value": 1248069703.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "72",
+    "flow": "import",
+    "value": 1098966895.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "84",
+    "flow": "import",
+    "value": 2067514705.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "85",
+    "flow": "import",
+    "value": 1513882921.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "87",
+    "flow": "import",
+    "value": 3572526619.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "88",
+    "flow": "import",
+    "value": 414857191.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 11318805419.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "27",
+    "flow": "import",
+    "value": 2638607411.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "39",
+    "flow": "import",
+    "value": 1300009756.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "72",
+    "flow": "import",
+    "value": 1058894516.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "84",
+    "flow": "import",
+    "value": 1890585670.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "85",
+    "flow": "import",
+    "value": 1318519029.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "87",
+    "flow": "import",
+    "value": 3641879046.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "88",
+    "flow": "import",
+    "value": 889245112.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 11349973589.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "27",
+    "flow": "import",
+    "value": 2231635421.0,
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "39",
+    "flow": "import",
+    "value": 1292914757.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "72",
+    "flow": "import",
+    "value": 953804230.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "84",
+    "flow": "import",
+    "value": 2885716872.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "85",
+    "flow": "import",
+    "value": 1972062083.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "87",
+    "flow": "import",
+    "value": 3318048160.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "88",
+    "flow": "import",
+    "value": 471075770.0,
+    "label": "Aircraft, spacecraft, and parts thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "OTHER",
+    "flow": "import",
+    "value": 11972687188.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "27",
+   "39",
+   "72",
+   "84",
+   "85",
+   "87",
+   "88"
+  ]
+ },
+ "insight": [
+  "The trend of import concentration by product chapters in Luxembourg from 2005 to 2025 shows mixed changes across key products.",
+  "Imports of plastics and articles thereof increased significantly by 118.2%, from 592.6 million euros in 2005 to 1.29 billion euros in 2025, peaking at 1.64 billion euros in 2022.",
+  "In contrast, imports of iron and steel decreased by 24.1%, from 1.26 billion euros in 2005 to 953.8 million euros in 2025, with a peak of 2.02 billion euros in 2008.",
+  "Imports of mineral fuels and oils rose by 27.8%, from 1.75 billion euros in 2005 to 2.23 billion euros in 2025, peaking at 4.00 billion euros in 2022.",
+  "These values are nominal and not adjusted for price changes, and 4.8% of the import value is confidential at full product detail."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Mineral fuels and oils · imports.start",
+   "text": "Mineral fuels and oils · imports 2005: 1.75 bn €"
+  },
+  {
+   "key": "Mineral fuels and oils · imports.end",
+   "text": "Mineral fuels and oils · imports 2025: 2.23 bn €"
+  },
+  {
+   "key": "Mineral fuels and oils · imports.change",
+   "text": "Mineral fuels and oils · imports change 2005–2025: +27.8 %"
+  },
+  {
+   "key": "Mineral fuels and oils · imports.peak",
+   "text": "Mineral fuels and oils · imports peak 2022: 4.00 bn €"
+  },
+  {
+   "key": "Plastics and articles thereof · imports.start",
+   "text": "Plastics and articles thereof · imports 2005: 592.6 M€"
+  },
+  {
+   "key": "Plastics and articles thereof · imports.end",
+   "text": "Plastics and articles thereof · imports 2025: 1.29 bn €"
+  },
+  {
+   "key": "Plastics and articles thereof · imports.change",
+   "text": "Plastics and articles thereof · imports change 2005–2025: +118.2 %"
+  },
+  {
+   "key": "Plastics and articles thereof · imports.peak",
+   "text": "Plastics and articles thereof · imports peak 2022: 1.64 bn €"
+  },
+  {
+   "key": "Iron and steel · imports.start",
+   "text": "Iron and steel · imports 2005: 1.26 bn €"
+  },
+  {
+   "key": "Iron and steel · imports.end",
+   "text": "Iron and steel · imports 2025: 953.8 M€"
+  },
+  {
+   "key": "Iron and steel · imports.change",
+   "text": "Iron and steel · imports change 2005–2025: −24.1 %"
+  },
+  {
+   "key": "Iron and steel · imports.peak",
+   "text": "Iron and steel · imports peak 2008: 2.02 bn €"
+  },
+  {
+   "key": "Machinery and mechanical appliances · imports.start",
+   "text": "Machinery and mechanical appliances · imports 2005: 3.52 bn €"
+  },
+  {
+   "key": "Machinery and mechanical appliances · imports.end",
+   "text": "Machinery and mechanical appliances · imports 2025: 2.89 bn €"
+  },
+  {
+   "key": "Machinery and mechanical appliances · imports.change",
+   "text": "Machinery and mechanical appliances · imports change 2005–2025: −18.1 %"
+  },
+  {
+   "key": "Machinery and mechanical appliances · imports.peak",
+   "text": "Machinery and mechanical appliances · imports peak 2008: 5.59 bn €"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 1051,
+   "outcome": "ok",
+   "detail": "2037 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 105,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1747,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1300,
+   "output_tokens": 213,
+   "cache_read_tokens": 0,
+   "ms": 1648
+  }
+ ],
+ "code_version": "f097a28",
+ "error": null
+}

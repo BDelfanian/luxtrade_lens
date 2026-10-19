@@ -1,0 +1,174 @@
+{
+ "run_id": "ccc5218426",
+ "session_id": "8erw88",
+ "turn": 2,
+ "created_at": "2026-10-18T21:37:03+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the value per kg of Luxembourg's exports to EU27 and to non-EU27 partners in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "unit_value",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "13ad22b6d397363f030148a5473c795f3dbc02787f6d7b2e5feff9b1be758555",
+ "row_count": 2,
+ "view_kind": "line",
+ "title": "EU27 countries · exports: +0.0 % (2025–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2025,
+    "key": "EU27",
+    "flow": "export",
+    "value": 2.1411079727,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 4.1967933478,
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The value per kilogram of Luxembourg's exports in 2025 was 2.14 euros to EU27 countries and 4.20 euros to non-EU27 partners.",
+  "The export value per kilogram to non-EU27 countries was almost double that to EU27 countries in 2025.",
+  "There was no change in the export value per kilogram to either EU27 or non-EU27 countries during 2025.",
+  "Both values per kilogram reached their peak in 2025, with no variation throughout the year.",
+  "The data only includes trade rows where quantities are known, so some volumes and unit values may be missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "EU27 countries · exports.start",
+   "text": "EU27 countries · exports 2025: 2.14 €/kg"
+  },
+  {
+   "key": "EU27 countries · exports.end",
+   "text": "EU27 countries · exports 2025: 2.14 €/kg"
+  },
+  {
+   "key": "EU27 countries · exports.change",
+   "text": "EU27 countries · exports change 2025–2025: +0.0 %"
+  },
+  {
+   "key": "EU27 countries · exports.peak",
+   "text": "EU27 countries · exports peak 2025: 2.14 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · exports.start",
+   "text": "Non-EU27 countries · exports 2025: 4.20 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · exports.end",
+   "text": "Non-EU27 countries · exports 2025: 4.20 €/kg"
+  },
+  {
+   "key": "Non-EU27 countries · exports.change",
+   "text": "Non-EU27 countries · exports change 2025–2025: +0.0 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.peak",
+   "text": "Non-EU27 countries · exports peak 2025: 4.20 €/kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 145,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 7,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1243,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 929,
+   "output_tokens": 130,
+   "cache_read_tokens": 0,
+   "ms": 1185
+  }
+ ],
+ "code_version": "311676c",
+ "error": null
+}

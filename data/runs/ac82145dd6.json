@@ -1,0 +1,1720 @@
+{
+ "run_id": "ac82145dd6",
+ "session_id": "succ3f",
+ "turn": 1,
+ "created_at": "2026-10-18T18:25:50+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What is the trend of export concentration by product chapters in Luxembourg from 2005 to 2025 every five years?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.6 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.5567016833838823
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "e2b9a644a1a5f45e36be7617a342680f771533cfbbf9d2843fd48859b75226ea",
+ "row_count": 2037,
+ "view_kind": "line",
+ "title": "Plastics and articles thereof · exports: +117.9 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "39",
+    "flow": "export",
+    "value": 723110797.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "40",
+    "flow": "export",
+    "value": 389240840.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "72",
+    "flow": "export",
+    "value": 1723331797.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "73",
+    "flow": "export",
+    "value": 591027554.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "84",
+    "flow": "export",
+    "value": 4126531580.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "85",
+    "flow": "export",
+    "value": 3239330211.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "87",
+    "flow": "export",
+    "value": 604016505.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 3997557466.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "39",
+    "flow": "export",
+    "value": 759871439.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "40",
+    "flow": "export",
+    "value": 436499301.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "72",
+    "flow": "export",
+    "value": 2164781506.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "73",
+    "flow": "export",
+    "value": 688051047.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "84",
+    "flow": "export",
+    "value": 4856643810.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "85",
+    "flow": "export",
+    "value": 4320196992.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "87",
+    "flow": "export",
+    "value": 729894697.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4381043807.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "39",
+    "flow": "export",
+    "value": 739108098.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "40",
+    "flow": "export",
+    "value": 478058587.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "72",
+    "flow": "export",
+    "value": 2378768753.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "73",
+    "flow": "export",
+    "value": 833172227.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "84",
+    "flow": "export",
+    "value": 5480839313.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "85",
+    "flow": "export",
+    "value": 1427249934.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "87",
+    "flow": "export",
+    "value": 837178936.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4559149304.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "39",
+    "flow": "export",
+    "value": 829229055.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "40",
+    "flow": "export",
+    "value": 471927051.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "72",
+    "flow": "export",
+    "value": 2667333282.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "73",
+    "flow": "export",
+    "value": 976799218.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "84",
+    "flow": "export",
+    "value": 6089835949.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "85",
+    "flow": "export",
+    "value": 1392419674.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "87",
+    "flow": "export",
+    "value": 813015660.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4228959125.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "39",
+    "flow": "export",
+    "value": 766617769.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "40",
+    "flow": "export",
+    "value": 329108975.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "72",
+    "flow": "export",
+    "value": 1376979447.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "73",
+    "flow": "export",
+    "value": 639146736.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "84",
+    "flow": "export",
+    "value": 4791170099.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "85",
+    "flow": "export",
+    "value": 2511944076.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "87",
+    "flow": "export",
+    "value": 637014061.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4246803908.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "39",
+    "flow": "export",
+    "value": 917519582.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "40",
+    "flow": "export",
+    "value": 298132852.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "72",
+    "flow": "export",
+    "value": 1796016424.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "73",
+    "flow": "export",
+    "value": 693970069.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "84",
+    "flow": "export",
+    "value": 2026033170.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "85",
+    "flow": "export",
+    "value": 3243624071.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "87",
+    "flow": "export",
+    "value": 585837792.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4619194941.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "39",
+    "flow": "export",
+    "value": 962538074.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "40",
+    "flow": "export",
+    "value": 487843798.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "72",
+    "flow": "export",
+    "value": 1976826045.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "73",
+    "flow": "export",
+    "value": 738586295.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "84",
+    "flow": "export",
+    "value": 1363869591.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "85",
+    "flow": "export",
+    "value": 3407772952.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "87",
+    "flow": "export",
+    "value": 664001113.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5388700996.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "39",
+    "flow": "export",
+    "value": 943701147.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "40",
+    "flow": "export",
+    "value": 500513241.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "72",
+    "flow": "export",
+    "value": 1574611146.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "73",
+    "flow": "export",
+    "value": 728640456.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "84",
+    "flow": "export",
+    "value": 1379821180.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "85",
+    "flow": "export",
+    "value": 3619436695.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "87",
+    "flow": "export",
+    "value": 674152812.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5237762320.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "39",
+    "flow": "export",
+    "value": 1000426616.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "40",
+    "flow": "export",
+    "value": 719391562.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "72",
+    "flow": "export",
+    "value": 1461874970.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "73",
+    "flow": "export",
+    "value": 725607562.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "84",
+    "flow": "export",
+    "value": 1345310361.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "85",
+    "flow": "export",
+    "value": 2741575388.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "87",
+    "flow": "export",
+    "value": 716285140.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5157725254.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "39",
+    "flow": "export",
+    "value": 1008594292.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "40",
+    "flow": "export",
+    "value": 569534776.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "72",
+    "flow": "export",
+    "value": 1588326254.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "73",
+    "flow": "export",
+    "value": 706515511.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "84",
+    "flow": "export",
+    "value": 1436667959.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "85",
+    "flow": "export",
+    "value": 2595420240.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "87",
+    "flow": "export",
+    "value": 789914848.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5705981179.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "39",
+    "flow": "export",
+    "value": 1105277321.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "40",
+    "flow": "export",
+    "value": 572576046.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "72",
+    "flow": "export",
+    "value": 1476392970.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "73",
+    "flow": "export",
+    "value": 636714093.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "84",
+    "flow": "export",
+    "value": 1651696345.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "85",
+    "flow": "export",
+    "value": 2920730400.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "87",
+    "flow": "export",
+    "value": 826762778.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6270217137.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "39",
+    "flow": "export",
+    "value": 1096636491.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "40",
+    "flow": "export",
+    "value": 568863439.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "72",
+    "flow": "export",
+    "value": 1363791078.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "73",
+    "flow": "export",
+    "value": 663152527.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "84",
+    "flow": "export",
+    "value": 1867994085.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "85",
+    "flow": "export",
+    "value": 1749152339.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "87",
+    "flow": "export",
+    "value": 892258145.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6057933248.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "39",
+    "flow": "export",
+    "value": 1152246879.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "40",
+    "flow": "export",
+    "value": 665863321.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "72",
+    "flow": "export",
+    "value": 1508624089.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "73",
+    "flow": "export",
+    "value": 683050435.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "84",
+    "flow": "export",
+    "value": 1799777305.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "85",
+    "flow": "export",
+    "value": 771773974.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "87",
+    "flow": "export",
+    "value": 999388679.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6392171767.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "39",
+    "flow": "export",
+    "value": 1317529856.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "40",
+    "flow": "export",
+    "value": 662507124.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "72",
+    "flow": "export",
+    "value": 1724352829.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "73",
+    "flow": "export",
+    "value": 731446695.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "84",
+    "flow": "export",
+    "value": 1739943713.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "85",
+    "flow": "export",
+    "value": 972284228.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "87",
+    "flow": "export",
+    "value": 1026070096.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5709271206.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "39",
+    "flow": "export",
+    "value": 1379076804.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "40",
+    "flow": "export",
+    "value": 635321665.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "72",
+    "flow": "export",
+    "value": 1557546988.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "73",
+    "flow": "export",
+    "value": 760086470.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "84",
+    "flow": "export",
+    "value": 1857551617.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "85",
+    "flow": "export",
+    "value": 2123461468.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "87",
+    "flow": "export",
+    "value": 1164117900.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5195935561.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "39",
+    "flow": "export",
+    "value": 1302838714.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "40",
+    "flow": "export",
+    "value": 568600710.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "72",
+    "flow": "export",
+    "value": 1152874669.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "73",
+    "flow": "export",
+    "value": 681914587.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "84",
+    "flow": "export",
+    "value": 1625352500.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "85",
+    "flow": "export",
+    "value": 637402641.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "87",
+    "flow": "export",
+    "value": 1117985801.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5026321583.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "39",
+    "flow": "export",
+    "value": 1524458428.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "40",
+    "flow": "export",
+    "value": 568776825.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "72",
+    "flow": "export",
+    "value": 1582222271.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "73",
+    "flow": "export",
+    "value": 801613882.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "84",
+    "flow": "export",
+    "value": 1843269599.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "85",
+    "flow": "export",
+    "value": 733843184.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "87",
+    "flow": "export",
+    "value": 1232584960.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5921661099.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "39",
+    "flow": "export",
+    "value": 1781303678.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "40",
+    "flow": "export",
+    "value": 702754679.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "72",
+    "flow": "export",
+    "value": 1900042798.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "73",
+    "flow": "export",
+    "value": 992399287.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "84",
+    "flow": "export",
+    "value": 2183221141.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "85",
+    "flow": "export",
+    "value": 835159881.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "87",
+    "flow": "export",
+    "value": 1320328950.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6791036473.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "39",
+    "flow": "export",
+    "value": 1489169516.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "40",
+    "flow": "export",
+    "value": 857710924.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "72",
+    "flow": "export",
+    "value": 1385123207.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "73",
+    "flow": "export",
+    "value": 904936876.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "84",
+    "flow": "export",
+    "value": 2213543563.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "85",
+    "flow": "export",
+    "value": 864198049.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "87",
+    "flow": "export",
+    "value": 1523341350.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6660873200.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "39",
+    "flow": "export",
+    "value": 1483554389.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "40",
+    "flow": "export",
+    "value": 786649493.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "72",
+    "flow": "export",
+    "value": 1223353473.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "73",
+    "flow": "export",
+    "value": 884635758.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "84",
+    "flow": "export",
+    "value": 2015359170.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "85",
+    "flow": "export",
+    "value": 660613617.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "87",
+    "flow": "export",
+    "value": 1493481389.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6419316399.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "39",
+    "flow": "export",
+    "value": 1575495176.0,
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "40",
+    "flow": "export",
+    "value": 851809335.0,
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "72",
+    "flow": "export",
+    "value": 1120321110.0,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "73",
+    "flow": "export",
+    "value": 817024273.0,
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "84",
+    "flow": "export",
+    "value": 2038490470.0,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "85",
+    "flow": "export",
+    "value": 1506781023.0,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "87",
+    "flow": "export",
+    "value": 1556322926.0,
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 6787615986.0,
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "39",
+   "40",
+   "72",
+   "73",
+   "84",
+   "85",
+   "87"
+  ]
+ },
+ "insight": [
+  "The trend of export concentration by product chapters in Luxembourg from 2005 to 2025 shows mixed changes across different products.",
+  "Exports of Plastics and articles thereof increased by 117.9 %, from 723.1 million euros in 2005 to 1.58 billion euros in 2025, peaking at 1.78 billion euros in 2022.",
+  "Rubber and articles thereof exports also rose by 118.8 %, from 389.2 million euros in 2005 to 851.8 million euros in 2025, with a peak of 857.7 million euros in 2023.",
+  "In contrast, Iron and steel exports declined by 35.0 %, from 1.72 billion euros in 2005 to 1.12 billion euros in 2025, after peaking at 2.67 billion euros in 2008.",
+  "These values are nominal and not adjusted for price changes, and 2.6 % of the data is confidential and shown separately, which may affect detailed analysis."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Plastics and articles thereof · exports.start",
+   "text": "Plastics and articles thereof · exports 2005: 723.1 M€"
+  },
+  {
+   "key": "Plastics and articles thereof · exports.end",
+   "text": "Plastics and articles thereof · exports 2025: 1.58 bn €"
+  },
+  {
+   "key": "Plastics and articles thereof · exports.change",
+   "text": "Plastics and articles thereof · exports change 2005–2025: +117.9 %"
+  },
+  {
+   "key": "Plastics and articles thereof · exports.peak",
+   "text": "Plastics and articles thereof · exports peak 2022: 1.78 bn €"
+  },
+  {
+   "key": "Rubber and articles thereof · exports.start",
+   "text": "Rubber and articles thereof · exports 2005: 389.2 M€"
+  },
+  {
+   "key": "Rubber and articles thereof · exports.end",
+   "text": "Rubber and articles thereof · exports 2025: 851.8 M€"
+  },
+  {
+   "key": "Rubber and articles thereof · exports.change",
+   "text": "Rubber and articles thereof · exports change 2005–2025: +118.8 %"
+  },
+  {
+   "key": "Rubber and articles thereof · exports.peak",
+   "text": "Rubber and articles thereof · exports peak 2023: 857.7 M€"
+  },
+  {
+   "key": "Iron and steel · exports.start",
+   "text": "Iron and steel · exports 2005: 1.72 bn €"
+  },
+  {
+   "key": "Iron and steel · exports.end",
+   "text": "Iron and steel · exports 2025: 1.12 bn €"
+  },
+  {
+   "key": "Iron and steel · exports.change",
+   "text": "Iron and steel · exports change 2005–2025: −35.0 %"
+  },
+  {
+   "key": "Iron and steel · exports.peak",
+   "text": "Iron and steel · exports peak 2008: 2.67 bn €"
+  },
+  {
+   "key": "Articles of iron or steel · exports.start",
+   "text": "Articles of iron or steel · exports 2005: 591.0 M€"
+  },
+  {
+   "key": "Articles of iron or steel · exports.end",
+   "text": "Articles of iron or steel · exports 2025: 817.0 M€"
+  },
+  {
+   "key": "Articles of iron or steel · exports.change",
+   "text": "Articles of iron or steel · exports change 2005–2025: +38.2 %"
+  },
+  {
+   "key": "Articles of iron or steel · exports.peak",
+   "text": "Articles of iron or steel · exports peak 2022: 992.4 M€"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 888,
+   "outcome": "ok",
+   "detail": "2037 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 128,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 2010,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1300,
+   "output_tokens": 218,
+   "cache_read_tokens": 0,
+   "ms": 1916
+  }
+ ],
+ "code_version": "f097a28",
+ "error": null
+}

@@ -1,0 +1,318 @@
+{
+ "run_id": "2002f6a285",
+ "session_id": "kb4tqt",
+ "turn": 7,
+ "created_at": "2026-10-18T21:41:17+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which non-EU27 countries had the largest changes in Luxembourg's imports between 2024 and 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2024",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "4.1 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 4.10853896288103
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2024-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\n  AND year IN (2024, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "f1672cb0ed7423b1ced894e215aaf873d715282d58a6d7b35a1adb8e35ffd0d7",
+ "row_count": 293,
+ "view_kind": "change",
+ "title": "Largest changes by partner — imports 2024–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "JP",
+    "base": 222884310.0,
+    "value": 1127125868.0,
+    "change": 904241558.0,
+    "change_pct": 405.6999606657,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "flow": "import",
+    "key": "CN",
+    "base": 154001636.0,
+    "value": 761309825.0,
+    "change": 607308189.0,
+    "change_pct": 394.3517775357,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "flow": "import",
+    "key": "BR",
+    "base": 24686555.0,
+    "value": 53571721.0,
+    "change": 28885166.0,
+    "change_pct": 117.007682927,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "flow": "import",
+    "key": "TR",
+    "base": 126736458.0,
+    "value": 150031853.0,
+    "change": 23295395.0,
+    "change_pct": 18.3809736895,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Türkiye",
+    "iso3": "TUR"
+   },
+   {
+    "flow": "import",
+    "key": "KR",
+    "base": 41402555.0,
+    "value": 47481021.0,
+    "change": 6078466.0,
+    "change_pct": 14.6813789632,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "South Korea",
+    "iso3": "KOR"
+   },
+   {
+    "flow": "import",
+    "key": "VN",
+    "base": 47859231.0,
+    "value": 17527667.0,
+    "change": -30331564.0,
+    "change_pct": -63.3766221609,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Viet Nam",
+    "iso3": "VNM"
+   },
+   {
+    "flow": "import",
+    "key": "GB",
+    "base": 172551228.0,
+    "value": 136047158.0,
+    "change": -36504070.0,
+    "change_pct": -21.1554970794,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "flow": "import",
+    "key": "SM",
+    "base": 39359867.0,
+    "value": 4150.0,
+    "change": -39355717.0,
+    "change_pct": -99.9894562652,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "San Marino",
+    "iso3": "SMR"
+   },
+   {
+    "flow": "import",
+    "key": "US",
+    "base": 683104663.0,
+    "value": 638055574.0,
+    "change": -45049089.0,
+    "change_pct": -6.5947564758,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "flow": "import",
+    "key": "CA",
+    "base": 128763151.0,
+    "value": 53940957.0,
+    "change": -74822194.0,
+    "change_pct": -58.1083900316,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Canada",
+    "iso3": "CAN"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "JP",
+   "CN",
+   "BR",
+   "TR",
+   "KR",
+   "VN",
+   "GB",
+   "SM",
+   "US",
+   "CA"
+  ]
+ },
+ "insight": [
+  "The largest changes in Luxembourg's imports between 2024 and 2025 among non-EU27 countries were from Japan and China.",
+  "Imports from Japan increased by 904.2 million euros, reaching 1.13 billion euros in 2025.",
+  "Imports from China rose by 607.3 million euros, reaching 761.3 million euros in 2025.",
+  "Imports from Canada decreased by 74.8 million euros, falling to 53.9 million euros in 2025.",
+  "These values are nominal and not adjusted for price changes, and 4.1% of trade involves undisclosed partners not included in country rankings."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.JP",
+   "text": "imports Japan: 222.9 M€ 2024 → 1.13 bn € 2025 (904.2 M€, +405.7 %)"
+  },
+  {
+   "key": "import.CN",
+   "text": "imports China: 154.0 M€ 2024 → 761.3 M€ 2025 (607.3 M€, +394.4 %)"
+  },
+  {
+   "key": "import.BR",
+   "text": "imports Brazil: 24.7 M€ 2024 → 53.6 M€ 2025 (28.9 M€, +117.0 %)"
+  },
+  {
+   "key": "import.TR",
+   "text": "imports Türkiye: 126.7 M€ 2024 → 150.0 M€ 2025 (23.3 M€, +18.4 %)"
+  },
+  {
+   "key": "import.KR",
+   "text": "imports South Korea: 41.4 M€ 2024 → 47.5 M€ 2025 (6.1 M€, +14.7 %)"
+  },
+  {
+   "key": "import.VN",
+   "text": "imports Viet Nam: 47.9 M€ 2024 → 17.5 M€ 2025 (-30.3 M€, −63.4 %)"
+  },
+  {
+   "key": "import.GB",
+   "text": "imports United Kingdom: 172.6 M€ 2024 → 136.0 M€ 2025 (-36.5 M€, −21.2 %)"
+  },
+  {
+   "key": "import.SM",
+   "text": "imports San Marino: 39.4 M€ 2024 → 4 k € 2025 (-39.4 M€, −100.0 %)"
+  },
+  {
+   "key": "import.US",
+   "text": "imports United States: 683.1 M€ 2024 → 638.1 M€ 2025 (-45.0 M€, −6.6 %)"
+  },
+  {
+   "key": "import.CA",
+   "text": "imports Canada: 128.8 M€ 2024 → 53.9 M€ 2025 (-74.8 M€, −58.1 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2024 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 185,
+   "outcome": "ok",
+   "detail": "293 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 19,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2024 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1286,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1195,
+   "output_tokens": 135,
+   "cache_read_tokens": 1024,
+   "ms": 1238
+  }
+ ],
+ "code_version": "311676c",
+ "error": null
+}

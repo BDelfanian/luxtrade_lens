@@ -1,0 +1,465 @@
+{
+ "run_id": "4c0da21e29",
+ "session_id": "zyhbpm",
+ "turn": 5,
+ "created_at": "2026-10-18T22:10:44+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What share of Luxembourg's imports were computers (HS 8471) each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "8471"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "no EU27 split: the question does not ask for one"
+  ]
+ },
+ "assumptions": [
+  "no EU27 split: the question does not ask for one"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('8471')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "348caa9f7ca5ffc7d7fa3e9f1694195a9c66c05e8a27fb782f9578b258ed4cfc",
+ "row_count": 21,
+ "view_kind": "area",
+ "title": "Computers · imports: −89.8 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "8471",
+    "flow": "import",
+    "value": 13.1066414917,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2006,
+    "key": "8471",
+    "flow": "import",
+    "value": 14.6956226516,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2007,
+    "key": "8471",
+    "flow": "import",
+    "value": 17.5906512337,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2008,
+    "key": "8471",
+    "flow": "import",
+    "value": 19.6312196377,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2009,
+    "key": "8471",
+    "flow": "import",
+    "value": 18.614897983,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2010,
+    "key": "8471",
+    "flow": "import",
+    "value": 5.5447865852,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2011,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.9755725088,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2012,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.9391136665,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2013,
+    "key": "8471",
+    "flow": "import",
+    "value": 2.0304556421,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2014,
+    "key": "8471",
+    "flow": "import",
+    "value": 2.2105655296,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2015,
+    "key": "8471",
+    "flow": "import",
+    "value": 2.4879146143,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2016,
+    "key": "8471",
+    "flow": "import",
+    "value": 2.3973576962,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2017,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.7747397993,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2018,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.1702948151,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2019,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.230747242,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2020,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.4705171972,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2021,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.2963467311,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2022,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.149601341,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2023,
+    "key": "8471",
+    "flow": "import",
+    "value": 0.9869166449,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2024,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.2283162753,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2025,
+    "key": "8471",
+    "flow": "import",
+    "value": 1.3367120333,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 18154619782.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 21610814188.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 20451620342.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 21863560875.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 18160433767.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 18713336015.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 20732587803.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 21228221332.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 20077758043.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 20098125346.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 21016138777.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 19761934890.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 20274152140.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 20463000768.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 21657598157.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 18504346533.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 22146665635.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 25660352026.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 24322124998.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 24087714129.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 25097944481.0
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "8471"
+  ]
+ },
+ "insight": [
+  "The share of computers in Luxembourg's imports decreased from 13.1% in 2005 to 1.3% in 2025.",
+  "The largest share was 19.6% in 2008, and the median share over 2005 to 2025 was 2.0%.",
+  "The biggest drop between consecutive years was from 18.6% in 2009 to 5.5% in 2010.",
+  "The share in 2024 was 1.2%, close to the 2025 value, showing a stable low level recently.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Computers · imports.start",
+   "text": "Computers · imports 2005: 13.1 %"
+  },
+  {
+   "key": "Computers · imports.end",
+   "text": "Computers · imports 2025: 1.3 %"
+  },
+  {
+   "key": "Computers · imports.change",
+   "text": "Computers · imports change 2005–2025: −89.8 %"
+  },
+  {
+   "key": "Computers · imports.peak",
+   "text": "Computers · imports peak 2008: 19.6 %"
+  },
+  {
+   "key": "Computers · imports.prev",
+   "text": "Computers · imports 2024: 1.2 %"
+  },
+  {
+   "key": "Computers · imports.move",
+   "text": "Computers · imports: largest change between consecutive periods 2009–2010: 18.6 % to 5.5 %"
+  },
+  {
+   "key": "Computers · imports.median",
+   "text": "Computers · imports: median over 2005–2025: 2.0 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all products), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 333,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 14,
+   "outcome": "ok",
+   "detail": "view=area; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all products), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1328,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 865,
+   "output_tokens": 142,
+   "cache_read_tokens": 0,
+   "ms": 1289
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

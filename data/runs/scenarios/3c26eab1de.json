@@ -1,0 +1,869 @@
+{
+ "scenario_id": "3c26eab1de",
+ "session_id": "kb4tqt",
+ "created_at": "2026-10-18T21:41:34+00:00",
+ "question": "A kilo imported from outside the EU is worth about 16 kilos from inside (2025). Is that gap stable over time, what drives it, and does a price shock show in value before mass?",
+ "language": "en",
+ "title": "A kilo imported from outside the EU is worth about 16 kilos ",
+ "name": "Final output-A kilo imported from outside the EU is worth about 16 kilos",
+ "favorite": true,
+ "hidden": false,
+ "based_on": "",
+ "approach": "",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "What was the value per kg of Luxembourg's imports from EU27 and from non-EU27 partners in 2025?",
+   "purpose": "Reproduce the Overview: a kilo from outside the EU against one from inside.",
+   "builds_on": [],
+   "run_id": "9c8920b4b5",
+   "status": "answered",
+   "queried": "imports · EU27 vs non-EU27 · 2025 · value per kg",
+   "note": "In 2025, imports from non-EU27 partners were worth 19.71 €/kg, much higher than 1.23 €/kg from EU27 countries."
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "What was the value per kg of Luxembourg's exports to EU27 and to non-EU27 partners in 2025?",
+   "purpose": "Whether the export side shows the same gap.",
+   "builds_on": [],
+   "run_id": "300001ae54",
+   "status": "answered",
+   "queried": "exports · EU27 vs non-EU27 · 2025, yearly · value per kg",
+   "note": "Exports in 2025 showed a smaller value per kg gap: 4.20 €/kg for non-EU27 and 2.14 €/kg for EU27."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "How did the value per kg of Luxembourg's imports from non-EU27 partners evolve each year from 2005 to 2025?",
+   "purpose": "Whether a kilo from outside the EU kept its value.",
+   "builds_on": [],
+   "run_id": "d45d32eff5",
+   "status": "answered",
+   "queried": "imports · EU27 vs non-EU27 · 2005–2025, yearly · value per kg",
+   "note": "From 2005 to 2025, the value per kg of imports from non-EU27 partners rose from 11.86 €/kg to 19.71 €/kg, with large fluctuations including a peak in 2009."
+  },
+  {
+   "n": 4,
+   "kind": "own",
+   "question": "How did the value per kg of Luxembourg's intra-EU imports (from the EU27 partner group) evolve each year from 2005 to 2025?",
+   "purpose": "Whether a kilo from the EU became dearer.",
+   "builds_on": [],
+   "run_id": "672a3520dc",
+   "status": "answered",
+   "queried": "imports · EU27 vs non-EU27 · 2005–2025, yearly · value per kg",
+   "note": "The value per kg of intra-EU imports increased from 0.51 €/kg in 2005 to 1.23 €/kg in 2025, more than doubling over the period."
+  },
+  {
+   "n": 5,
+   "kind": "own",
+   "question": "How did the mass in kg of Luxembourg's imports from non-EU27 partners evolve each year from 2005 to 2025?",
+   "purpose": "Whether imports from outside the EU became lighter.",
+   "builds_on": [],
+   "run_id": "857d055ad8",
+   "status": "answered",
+   "queried": "imports · non-EU27 partners · 2005–2025, yearly · mass in kg",
+   "note": "The mass of imports from non-EU27 partners fell by 60.2% from 430.6 million kg in 2005 to 171.2 million kg in 2025."
+  },
+  {
+   "n": 6,
+   "kind": "own",
+   "question": "Which product headings (HS4) imported from non-EU27 partners changed most in value between 2024 and 2025?",
+   "purpose": "Which products moved the 2025 value per kg.",
+   "builds_on": [],
+   "run_id": "96f886c72e",
+   "status": "answered",
+   "queried": "imports · non-EU27 partners · by HS4 product (top 10) · 2024–2025 · change between the two years",
+   "note": ""
+  },
+  {
+   "n": 7,
+   "kind": "own",
+   "question": "Which non-EU27 countries had the largest changes in Luxembourg's imports between 2024 and 2025?",
+   "purpose": "Which partners moved the 2025 value per kg.",
+   "builds_on": [],
+   "run_id": "2002f6a285",
+   "status": "answered",
+   "queried": "imports · non-EU27 partners · by partner (top 10) · 2024–2025 · change between the two years",
+   "note": "Imports from Japan and China increased strongly between 2024 and 2025, while some partners like Viet Nam and Canada saw large decreases."
+  },
+  {
+   "n": 8,
+   "kind": "own",
+   "question": "How did the value per kg of Luxembourg's fuel imports (HS 27) evolve each year from 2015 to 2025?",
+   "purpose": "The price of a kilo of fuel around the 2022 energy price shock.",
+   "builds_on": [],
+   "run_id": "e191683ab0",
+   "status": "answered",
+   "queried": "imports · products 27 · 2015–2025, yearly · value per kg",
+   "note": "Fuel import prices per kg rose sharply in 2022, peaking at 0.93 €/kg, up from 0.60 €/kg in 2021."
+  },
+  {
+   "n": 9,
+   "kind": "own",
+   "question": "How much were Luxembourg's fuel imports (HS 27) worth in euros each year from 2021 to 2022?",
+   "purpose": "The 2022 shock in value.",
+   "builds_on": [],
+   "run_id": "c62d866aa4",
+   "status": "answered",
+   "queried": "imports · products 27 · 2021–2022, yearly · value in €",
+   "note": "Fuel import values nearly doubled from 2.05 billion € in 2021 to 4.00 billion € in 2022."
+  },
+  {
+   "n": 10,
+   "kind": "own",
+   "question": "How did the mass in kg of Luxembourg's fuel imports (HS 27) change between 2021 and 2022?",
+   "purpose": "The 2022 shock in mass.",
+   "builds_on": [],
+   "run_id": "b35374a4b0",
+   "status": "answered",
+   "queried": "imports · products 27 · 2021–2022, yearly · mass in kg",
+   "note": "Fuel import mass increased by 34.7% from 3.42 billion kg in 2021 to 4.61 billion kg in 2022."
+  }
+ ],
+ "headline": "In 2025, a kilo imported from outside the EU was worth about 16 times more than one from inside, a gap that has narrowed since 2005 but shows large fluctuations driven by product and partner changes, with the 2022 energy price shock visible first in value and then in mass.",
+ "points": [
+  {
+   "text": "The value per kg of imports from non-EU27 partners was 19.71 €/kg in 2025, compared to 1.23 €/kg from EU27 countries, confirming the large price gap of about 16 times; this gap has decreased from 23.1 times in 2005, showing a narrowing over two decades but with notable fluctuations such as a peak ratio of 43.1 times in 2009 and a low of 9.8 times in 2024, indicating instability rather than a stable gap.",
+   "steps": [
+    1,
+    3,
+    4
+   ]
+  },
+  {
+   "text": "On the export side in 2025, the value per kg gap between non-EU27 and EU27 partners was smaller, with non-EU27 exports at 4.20 €/kg and EU27 exports at 2.14 €/kg, a ratio of 2.0 times, showing that the large import price gap is not mirrored in exports.",
+   "steps": [
+    2
+   ]
+  },
+  {
+   "text": "The mass of imports from non-EU27 partners fell sharply by 60.2% from 430.6 million kg in 2005 to 171.2 million kg in 2025, suggesting that the higher value per kg partly reflects a shift towards lighter, more valuable goods or changes in trade composition.",
+   "steps": [
+    5
+   ]
+  },
+  {
+   "text": "Between 2024 and 2025, large increases in import values of high-value products such as lifting and handling machinery and telephone sets, and from partners like Japan and China, drove the 2025 value per kg upward, while some products and partners saw large decreases, indicating that product and partner composition strongly influence the value per kg.",
+   "steps": [
+    6,
+    7
+   ]
+  },
+  {
+   "text": "The 2022 energy price shock is visible in fuel imports where the value per kg jumped from 0.60 €/kg in 2021 to 0.87 €/kg in 2022, a large increase before the mass rose by 34.7% from 3.42 billion kg to 4.61 billion kg, showing that value reacted before mass to the price shock.",
+   "steps": [
+    8,
+    9,
+    10
+   ]
+  }
+ ],
+ "conclusion": "The gap in value per kg between imports from outside and inside the EU has narrowed since 2005 but remains large and volatile, driven by changes in product and partner composition. The export side shows a much smaller gap, indicating different trade dynamics. The 2022 energy price shock is clearly reflected first in import values and then in mass, demonstrating that price changes can precede volume changes. However, the data cannot fully explain the causes of these changes or the detailed impact of missing quantity data on unit values.",
+ "charts": [
+  3,
+  6,
+  9
+ ],
+ "figures": [
+  {
+   "kind": "series",
+   "title": "Year by year, 2005–2025",
+   "flow": "import",
+   "steps": [
+    3,
+    5,
+    8
+   ],
+   "rows": [
+    {
+     "group": 2005,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.5137161459,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2006,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.5196417167,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2007,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.5497457539,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2008,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.6449867269,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2009,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.5597267647,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2010,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.798411127,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2011,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.8360782122,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2012,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.8901515016,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2013,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.8970740279,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2014,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.8824223335,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2015,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.7604975064,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2016,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.7801248789,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2017,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.8334424845,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2018,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.8666816455,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2019,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.9052467273,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2020,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.9100868032,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2021,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 0.9251426258,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2022,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 1.0194926105,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2023,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 1.1328321429,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2024,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 1.2587473474,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2025,
+     "series": "EU27 countries, imports: value per kg",
+     "value": 1.2261520431,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2005,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 11.8616390803,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2006,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 10.7754926871,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2007,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 11.2701915215,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2008,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 15.7489571851,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2009,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 24.0971501226,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2010,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 18.6285066895,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2011,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 17.0837959133,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2012,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 23.5886778466,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2013,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 20.1182679054,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2014,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 18.1382966089,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2015,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 22.0203775141,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2016,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 18.8989796329,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2017,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 14.1357886894,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2018,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 10.6630776933,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2019,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 14.3400241076,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2020,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 9.142270658,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2021,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 10.5600672456,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2022,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 11.9441810768,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2023,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 11.8712626909,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2024,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 12.3312467418,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2025,
+     "series": "Non-EU27 countries, imports: value per kg",
+     "value": 19.7050467258,
+     "step": 3,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2005,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 430581700.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2006,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 607434200.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2007,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 493448600.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2008,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 364539300.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2009,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 221576200.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2010,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 209079248.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2011,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 239180280.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2012,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 217225691.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2013,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 220759190.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2014,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 234718033.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2015,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 274811588.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2016,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 247270414.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2017,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 260463159.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2018,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 253930278.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2019,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 248529731.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2020,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 220858963.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2021,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 235377898.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2022,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 196596322.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2023,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 190485580.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2024,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 165721144.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2025,
+     "series": "Non-EU27 countries, imports: mass",
+     "value": 171233556.0,
+     "step": 5,
+     "flow": "import",
+     "unit": "qty_kg"
+    },
+    {
+     "group": 2015,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5428231638,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2016,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4712297953,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2017,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5288770127,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2018,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5901860872,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2019,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5768990292,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2020,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4751993618,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2021,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5965442258,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2022,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.8661968305,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2023,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.9305846071,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2024,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.8863365044,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2025,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.7935207441,
+     "step": 8,
+     "flow": "import",
+     "unit": "unit_value"
+    }
+   ],
+   "tiles": [
+    {
+     "value": "1.23 €/kg",
+     "label": "EU27 countries, imports: value per kg, 2025",
+     "detail": "0.51 €/kg in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "19.71 €/kg",
+     "label": "Non-EU27 countries, imports: value per kg, 2025",
+     "detail": "11.86 €/kg in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "171.2 M kg",
+     "label": "Non-EU27 countries, imports: mass, 2025",
+     "detail": "430.6 M kg in 2005",
+     "tone": "down"
+    },
+    {
+     "value": "0.79 €/kg",
+     "label": "Mineral fuels and oils, imports: value per kg, 2025",
+     "detail": "0.54 €/kg in 2015",
+     "tone": "up"
+    }
+   ],
+   "note": "Each panel is one step's yearly series (steps 3, 5, 8), computed by code from its own SQL; panels have their own scales."
+  }
+ ],
+ "share": {
+  "title": "Luxembourg's non-EU imports cost 16 times more per kilo than EU ones in 2025",
+  "subtitle": "Since 2005 the price gap per kilo between non-EU and EU imports narrowed from 23.1 to 16 times but fluctuated widely; the 2022 energy price shock raised fuel import values before volumes increased.",
+  "source": "llm",
+  "notes": [
+   "share title and subtitle passed the number, country and wording checks"
+  ],
+  "earlier": []
+ },
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "2.4 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L03",
+   "message": "4.1 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  },
+  {
+   "id": "L07",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity."
+  },
+  {
+   "id": "L08",
+   "message": "Intra/extra-EU uses the fixed EU27 (2020) composition; the United Kingdom counts as extra-EU throughout."
+  }
+ ],
+ "notes": [
+  "removed from the answer: note on step 6: number 27 is not in the facts",
+  "combined answer passed the number, country, wording and reasoning checks",
+  "share title and subtitle passed the number, country and wording checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5272,
+   "output_tokens": 1046,
+   "cache_read_tokens": 0,
+   "ms": 6852
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5663,
+   "output_tokens": 768,
+   "cache_read_tokens": 0,
+   "ms": 5049
+  },
+  {
+   "step": "scenario_share",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1453,
+   "output_tokens": 174,
+   "cache_read_tokens": 0,
+   "ms": 2228
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "311676c",
+ "status": "answered"
+}

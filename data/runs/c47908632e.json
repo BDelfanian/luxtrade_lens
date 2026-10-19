@@ -1,0 +1,372 @@
+{
+ "run_id": "c47908632e",
+ "session_id": "vv7ttv",
+ "turn": 6,
+ "created_at": "2026-10-18T21:59:07+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What share of Luxembourg's exports were computers (HS 8471) each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "8471"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "share",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND hs4 IN ('8471')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "1974f83e273bfee612747f61a3d0b218886c03f1d33a96637e29e6d75a78d52c",
+ "row_count": 21,
+ "view_kind": "area",
+ "title": "exports: −96.0 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 19.7076102058
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 19.7392447446
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 24.8449459049
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 28.0497723725
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 24.4630614041
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 7.8793176364
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 2.3600418663
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 1.9626798031
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 2.2214074495
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 2.2901791211
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 2.3663911527
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 2.8739615418
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 1.3672870024
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 0.4346738408
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 0.5795921915
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 0.5775894001
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 0.597441234
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 0.4757616467
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 0.3601586584
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 0.6434679271
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 0.7869148968
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 15394146750.0
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 18336982599.0
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 16733525152.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 17469519014.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 15298785071.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 14180328901.0
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 14990138864.0
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 14658638997.0
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 13868196853.0
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 14400955059.0
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 15460367090.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 14259781352.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 13972896449.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 13883405747.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 14673098473.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 12113291205.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 14208430248.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 16506246887.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 15898896685.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 14966963688.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 16253860299.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The share of Luxembourg's exports that were computers decreased from 19.7% in 2005 to 0.8% in 2025.",
+  "The median share over the period 2005 to 2025 was 2.2%.",
+  "The largest change between consecutive years was between 2009 and 2010, when the share dropped from 24.5% to 7.9%.",
+  "The peak share was 28.0% in 2008, after which it steadily declined.",
+  "These values are in current euros and are not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "exports.start",
+   "text": "exports 2005: 19.7 %"
+  },
+  {
+   "key": "exports.end",
+   "text": "exports 2025: 0.8 %"
+  },
+  {
+   "key": "exports.change",
+   "text": "exports change 2005–2025: −96.0 %"
+  },
+  {
+   "key": "exports.peak",
+   "text": "exports peak 2008: 28.0 %"
+  },
+  {
+   "key": "exports.prev",
+   "text": "exports 2024: 0.6 %"
+  },
+  {
+   "key": "exports.move",
+   "text": "exports: largest change between consecutive periods 2009–2010: 24.5 % to 7.9 %"
+  },
+  {
+   "key": "exports.median",
+   "text": "exports: median over 2005–2025: 2.2 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of the whole flow (all products), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 301,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 6,
+   "outcome": "ok",
+   "detail": "view=area; share of the whole flow (all products), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1171,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 823,
+   "output_tokens": 131,
+   "cache_read_tokens": 0,
+   "ms": 1124
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

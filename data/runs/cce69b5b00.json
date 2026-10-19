@@ -1,0 +1,380 @@
+{
+ "run_id": "cce69b5b00",
+ "session_id": "x9f5r3",
+ "turn": 2,
+ "created_at": "2026-10-18T22:41:51+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What combined share of Luxembourg's exports went to Belgium, Germany and France together, as one total, each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [
+   "BE",
+   "DE",
+   "FR"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "share",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "Belgium, Germany and France combined as one total share",
+   "no EU27 split: the question does not ask for one"
+  ]
+ },
+ "assumptions": [
+  "Belgium, Germany and France combined as one total share",
+  "no EU27 split: the question does not ask for one"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('BE', 'DE', 'FR')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "1cf55178ee65174ade0cf08b33a0bf115f0b6258072efcb5077b9747e18b35dc",
+ "row_count": 21,
+ "view_kind": "area",
+ "title": "exports: +21.6 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 46.3051153972
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 43.1063112883
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 46.359569299
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 48.2484722118
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 47.4144766812
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 47.6687113056
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 48.8305741422
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 49.9992829587
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 53.2587700138
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 55.4126419207
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 54.1815262357
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 54.2705062579
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 55.9477034453
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 55.1320623519
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 50.5749243124
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 55.3028716691
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 53.8200692513
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 52.9757021742
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 52.0021825338
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 52.7614482511
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 56.3234261067
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 15394146750.0
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 18336982599.0
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 16733525152.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 17469519014.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 15298785071.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 14180328901.0
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 14990138864.0
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 14658638997.0
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 13868196853.0
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 14400955059.0
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 15460367090.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 14259781352.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 13972896449.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 13883405747.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 14673098473.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 12113291205.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 14208430248.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 16506246887.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 15898896685.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 14966963688.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 16253860299.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The combined share of Luxembourg's exports to Belgium, Germany and France was 46.3% in 2005 and increased to 56.3% in 2025.",
+  "This represents a 21.6% increase in the share of exports to these three countries over the period from 2005 to 2025.",
+  "The largest change between consecutive periods occurred between 2019 and 2020, when the share rose from 50.6% to 55.3%.",
+  "The median share of exports to Belgium, Germany and France over 2005 to 2025 was 52.8%.",
+  "These values are in current euros and are not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "exports.start",
+   "text": "exports 2005: 46.3 %"
+  },
+  {
+   "key": "exports.end",
+   "text": "exports 2025: 56.3 %"
+  },
+  {
+   "key": "exports.change",
+   "text": "exports change 2005–2025: +21.6 %"
+  },
+  {
+   "key": "exports.peak",
+   "text": "exports peak 2025: 56.3 %"
+  },
+  {
+   "key": "exports.prev",
+   "text": "exports 2024: 52.8 %"
+  },
+  {
+   "key": "exports.move",
+   "text": "exports: largest change between consecutive periods 2019–2020: 50.6 % to 55.3 %"
+  },
+  {
+   "key": "exports.median",
+   "text": "exports: median over 2005–2025: 52.8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of the whole flow (all partners), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 770,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 8,
+   "outcome": "ok",
+   "detail": "view=area; share of the whole flow (all partners), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1414,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 842,
+   "output_tokens": 152,
+   "cache_read_tokens": 0,
+   "ms": 1372
+  }
+ ],
+ "code_version": "8387808",
+ "error": null
+}

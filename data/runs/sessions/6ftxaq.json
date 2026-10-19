@@ -1,0 +1,19 @@
+{
+ "session_id": "6ftxaq",
+ "created_at": "2026-10-19T05:44:28+00:00",
+ "updated_at": "2026-10-19T05:44:53+00:00",
+ "language": "en",
+ "title": "Scenario: 6 · Neighbour routes and fuel",
+ "runs": [
+  "5be25c9d7e",
+  "b5a8b4dd52",
+  "ca822fd367",
+  "7e26d3e41f",
+  "12614e8de9",
+  "581c6f57c2",
+  "d17fa52e24",
+  "800d101ee2",
+  "e8ed4623f3",
+  "103edd5215"
+ ]
+}

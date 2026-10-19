@@ -1,0 +1,157 @@
+{
+ "run_id": "2c92cbca29",
+ "session_id": "qkfw3a",
+ "turn": 3,
+ "created_at": "2026-10-18T18:19:08+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the composition by partner group of Luxembourg's imports in 2005?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2005",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2006-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "8858ad6ed2f51ca8667c181fb2d733b46827ca93bac42642acf1a60a4bfc23d3",
+ "row_count": 2,
+ "view_kind": "bar",
+ "title": "EU27 countries — imports 2005: 70.3 %",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "EU27",
+    "value": 12758598837.0,
+    "share": 70.2774224424,
+    "rank": 1,
+    "kind": "item",
+    "label": "EU27 countries"
+   },
+   {
+    "flow": "import",
+    "key": "NON_EU27",
+    "value": 5396020945.0,
+    "share": 29.7225775576,
+    "rank": 2,
+    "kind": "item",
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's imports in 2005 totaled 18.15 billion euros.",
+  "The largest share of imports, 70.3%, came from EU27 countries, amounting to 12.76 billion euros.",
+  "Imports from non-EU27 countries made up 29.7%, or 5.40 billion euros.",
+  "There is no seasonal or projection data available for this year.",
+  "The values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2005: 18.15 bn €"
+  },
+  {
+   "key": "import.eu27",
+   "text": "EU27 countries: 12.76 bn €, 70.3 %"
+  },
+  {
+   "key": "import.non_eu27",
+   "text": "Non-EU27 countries: 5.40 bn €, 29.7 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "share of each flow's total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 261,
+   "outcome": "ok",
+   "detail": "2 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 29,
+   "outcome": "ok",
+   "detail": "view=bar; share of each flow's total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1450,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 691,
+   "output_tokens": 102,
+   "cache_read_tokens": 0,
+   "ms": 1386
+  }
+ ],
+ "code_version": "f097a28",
+ "error": null
+}

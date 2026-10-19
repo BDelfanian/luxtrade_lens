@@ -1,0 +1,266 @@
+{
+ "run_id": "7a78f2d0c0",
+ "session_id": "8wmsst",
+ "turn": 8,
+ "created_at": "2026-10-18T22:35:36+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did the mass in kg of Luxembourg's fuel imports (HS 27) evolve each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "qty_kg",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "5406d71fb6545d8d0f4faa29f41cf8b37d9dbb3c89a107f85a459d70e9f0508c",
+ "row_count": 21,
+ "view_kind": "line",
+ "title": "imports: +1.9 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 2752600300.0
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 2768702000.0
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 2721558300.0
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 2822589100.0
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 2547808900.0
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 4270747765.0
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 4846134971.0
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 4386670570.0
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 3557949686.0
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 3248883931.0
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 3028207502.0
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 2788680625.0
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 2970501928.0
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 3421299939.0
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 3518778031.0
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 2677665452.0
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 3420560124.0
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 4606501433.0
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 3311657250.0
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 2970522966.0
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 2805106995.0
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The mass of Luxembourg's fuel imports increased slightly from 2.75 billion kg in 2005 to 2.81 billion kg in 2025.",
+  "The imports peaked at 4.85 billion kg in 2011, which is the highest value in the period.",
+  "The largest change between consecutive years was from 2.55 billion kg in 2009 to 4.27 billion kg in 2010.",
+  "The two largest import years, 2011 and 2022, together account for 13.6% of the total imports over 2005 to 2025.",
+  "The data only includes quantities where the volume is known, so some trade volumes may be missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2005: 2.75 bn kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 2.81 bn kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2005–2025: +1.9 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2011: 4.85 bn kg"
+  },
+  {
+   "key": "imports.prev",
+   "text": "imports 2024: 2.97 bn kg"
+  },
+  {
+   "key": "imports.move",
+   "text": "imports: largest change between consecutive periods 2009–2010: 2.55 bn kg to 4.27 bn kg"
+  },
+  {
+   "key": "imports.median",
+   "text": "imports: median over 2005–2025: 3.03 bn kg"
+  },
+  {
+   "key": "imports.top2",
+   "text": "imports: the two largest periods (2011, 2022) make 13.6 % of the total over 2005–2025"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 214,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 2,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1344,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 890,
+   "output_tokens": 146,
+   "cache_read_tokens": 0,
+   "ms": 1294
+  }
+ ],
+ "code_version": "8387808",
+ "error": null
+}

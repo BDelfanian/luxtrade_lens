@@ -1,0 +1,262 @@
+{
+ "run_id": "2cdda5af93",
+ "session_id": "mgrs4q",
+ "turn": 7,
+ "created_at": "2026-10-18T22:32:51+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did the value per kg of Luxembourg's fuel imports (HS 27) evolve each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "unit_value",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L07",
+   "key": "partial_quantities",
+   "severity": "warn",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  year,\n  flow\nORDER BY\n  period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "6063956e2d2152f03c15d4bb8dfda6ebf7509dd238b801211551c5a5091efe43",
+ "row_count": 21,
+ "view_kind": "line",
+ "title": "imports: +96.1 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "flow": "import",
+    "value": 0.4046987109
+   },
+   {
+    "period": 2006,
+    "flow": "import",
+    "value": 0.4556459605
+   },
+   {
+    "period": 2007,
+    "flow": "import",
+    "value": 0.4600968166
+   },
+   {
+    "period": 2008,
+    "flow": "import",
+    "value": 0.5997494811
+   },
+   {
+    "period": 2009,
+    "flow": "import",
+    "value": 0.3479034566
+   },
+   {
+    "period": 2010,
+    "flow": "import",
+    "value": 0.4771152644
+   },
+   {
+    "period": 2011,
+    "flow": "import",
+    "value": 0.5424288908
+   },
+   {
+    "period": 2012,
+    "flow": "import",
+    "value": 0.6546659744
+   },
+   {
+    "period": 2013,
+    "flow": "import",
+    "value": 0.7348775572
+   },
+   {
+    "period": 2014,
+    "flow": "import",
+    "value": 0.701254466
+   },
+   {
+    "period": 2015,
+    "flow": "import",
+    "value": 0.5428231638
+   },
+   {
+    "period": 2016,
+    "flow": "import",
+    "value": 0.4712297953
+   },
+   {
+    "period": 2017,
+    "flow": "import",
+    "value": 0.5288770127
+   },
+   {
+    "period": 2018,
+    "flow": "import",
+    "value": 0.5901860872
+   },
+   {
+    "period": 2019,
+    "flow": "import",
+    "value": 0.5768990292
+   },
+   {
+    "period": 2020,
+    "flow": "import",
+    "value": 0.4751993618
+   },
+   {
+    "period": 2021,
+    "flow": "import",
+    "value": 0.5965442258
+   },
+   {
+    "period": 2022,
+    "flow": "import",
+    "value": 0.8661968305
+   },
+   {
+    "period": 2023,
+    "flow": "import",
+    "value": 0.9305846071
+   },
+   {
+    "period": 2024,
+    "flow": "import",
+    "value": 0.8863365044
+   },
+   {
+    "period": 2025,
+    "flow": "import",
+    "value": 0.7935207441
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "The value per kg of Luxembourg's fuel imports increased from 0.40 €/kg in 2005 to 0.79 €/kg in 2025.",
+  "Over the period 2005 to 2025, the value per kg rose by 96.1%.",
+  "The largest year-to-year increase occurred between 2021 and 2022, when the value jumped from 0.60 €/kg to 0.87 €/kg.",
+  "The peak value was reached in 2023 at 0.93 €/kg, before slightly decreasing in 2024 to 0.89 €/kg.",
+  "The data only includes trade rows where quantities are known, so some volumes and unit values are missing."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "imports.start",
+   "text": "imports 2005: 0.40 €/kg"
+  },
+  {
+   "key": "imports.end",
+   "text": "imports 2025: 0.79 €/kg"
+  },
+  {
+   "key": "imports.change",
+   "text": "imports change 2005–2025: +96.1 %"
+  },
+  {
+   "key": "imports.peak",
+   "text": "imports peak 2023: 0.93 €/kg"
+  },
+  {
+   "key": "imports.prev",
+   "text": "imports 2024: 0.89 €/kg"
+  },
+  {
+   "key": "imports.move",
+   "text": "imports: largest change between consecutive periods 2021–2022: 0.60 €/kg to 0.87 €/kg"
+  },
+  {
+   "key": "imports.median",
+   "text": "imports: median over 2005–2025: 0.58 €/kg"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07:warn"
+  },
+  {
+   "node": "query",
+   "ms": 244,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L07"
+  },
+  {
+   "node": "analyse",
+   "ms": 3,
+   "outcome": "ok",
+   "detail": "view=line; "
+  },
+  {
+   "node": "insight",
+   "ms": 1319,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 841,
+   "output_tokens": 149,
+   "cache_read_tokens": 0,
+   "ms": 1295
+  }
+ ],
+ "code_version": "8387808",
+ "error": null
+}

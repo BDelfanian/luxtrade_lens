@@ -1,0 +1,299 @@
+{
+ "run_id": "e2d9351487",
+ "session_id": "e6ytca",
+ "turn": 10,
+ "created_at": "2026-10-18T22:07:10+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which countries supplied Luxembourg's imports of computers (HS 8471) in 2008?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "8471"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2008",
+  "period_end": "2008",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2008-01-01' AS DATE)\n  AND period < CAST('2009-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('8471')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "2c35139a618c56098d8c10712828292c7f9a3e21286c7d67415903bf89b2c87e",
+ "row_count": 54,
+ "view_kind": "map",
+ "title": "Main trading partners — imports 2008",
+ "frames": {
+  "main": [
+   {
+    "key": "CN",
+    "value": 3990687746.0,
+    "share": 92.9778649682,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "China",
+    "iso3": "CHN"
+   },
+   {
+    "key": "BE",
+    "value": 81219902.0,
+    "share": 1.8923187083,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "key": "US",
+    "value": 66092075.0,
+    "share": 1.5398598978,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "key": "NL",
+    "value": 54069057.0,
+    "share": 1.2597391228,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "key": "DE",
+    "value": 19275055.0,
+    "share": 0.449083861,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "key": "IE",
+    "value": 17368897.0,
+    "share": 0.4046728441,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Ireland",
+    "iso3": "IRL"
+   },
+   {
+    "key": "FR",
+    "value": 10756018.0,
+    "share": 0.2506013131,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "HK",
+    "value": 5821130.0,
+    "share": 0.1356248029,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Hong Kong",
+    "iso3": "HKG"
+   },
+   {
+    "key": "GB",
+    "value": 3231043.0,
+    "share": 0.0752791245,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "key": "SG",
+    "value": 2614234.0,
+    "share": 0.0609082723,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Singapore",
+    "iso3": "SGP"
+   },
+   {
+    "key": "OTHER",
+    "value": 9006302.0,
+    "share": 0.2098351925,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 31942197.0,
+    "share": 0.7442118924,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "CN",
+   "BE",
+   "US",
+   "NL",
+   "DE",
+   "IE",
+   "FR",
+   "HK",
+   "GB",
+   "SG"
+  ]
+ },
+ "insight": [
+  "In 2008, Luxembourg's imports of computers totaled 4.29 billion euros.",
+  "The largest supplier was China, providing 3.99 billion euros or 93.0% of the imports.",
+  "Belgium and the United States were the second and third largest suppliers, with 81.2 million euros and 66.1 million euros respectively.",
+  "The top three suppliers together accounted for 96.4% of the total imports.",
+  "These values are nominal and not adjusted for price changes, which is a limitation to consider."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2008: 4.29 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 China: 3.99 bn €, 93.0 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Belgium: 81.2 M€, 1.9 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 United States: 66.1 M€, 1.5 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Netherlands: 54.1 M€, 1.3 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Germany: 19.3 M€, 0.4 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 9.0 M€, 0.2 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 31.9 M€, 0.7 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 96.4 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 92,
+   "outcome": "ok",
+   "detail": "54 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 19,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1225,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 933,
+   "output_tokens": 111,
+   "cache_read_tokens": 0,
+   "ms": 1189
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

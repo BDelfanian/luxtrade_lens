@@ -1,0 +1,534 @@
+{
+ "run_id": "bd03ce13c9",
+ "session_id": "arxe8k",
+ "turn": 15,
+ "created_at": "2026-10-18T21:13:46+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did Luxembourg's exports to and imports from the United States evolve each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [
+   "US"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND partner IN ('US')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "a5110b584b057903db456d35d3728390569f73804bdd510c281dc1d63f9fe34b",
+ "row_count": 42,
+ "view_kind": "line",
+ "title": "United States · exports: +30.1 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "US",
+    "flow": "export",
+    "value": 323575777.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2005,
+    "key": "US",
+    "flow": "import",
+    "value": 572389774.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2006,
+    "key": "US",
+    "flow": "export",
+    "value": 362037836.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2006,
+    "key": "US",
+    "flow": "import",
+    "value": 637767911.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2007,
+    "key": "US",
+    "flow": "export",
+    "value": 314604832.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2007,
+    "key": "US",
+    "flow": "import",
+    "value": 723197695.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2008,
+    "key": "US",
+    "flow": "export",
+    "value": 299350915.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2008,
+    "key": "US",
+    "flow": "import",
+    "value": 527749811.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2009,
+    "key": "US",
+    "flow": "export",
+    "value": 312371669.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2009,
+    "key": "US",
+    "flow": "import",
+    "value": 397415733.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2010,
+    "key": "US",
+    "flow": "export",
+    "value": 261894584.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2010,
+    "key": "US",
+    "flow": "import",
+    "value": 656341648.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2011,
+    "key": "US",
+    "flow": "export",
+    "value": 395372882.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2011,
+    "key": "US",
+    "flow": "import",
+    "value": 1077020873.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2012,
+    "key": "US",
+    "flow": "export",
+    "value": 312362292.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2012,
+    "key": "US",
+    "flow": "import",
+    "value": 1755094175.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2013,
+    "key": "US",
+    "flow": "export",
+    "value": 352881418.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2013,
+    "key": "US",
+    "flow": "import",
+    "value": 1639256504.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2014,
+    "key": "US",
+    "flow": "export",
+    "value": 352755538.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2014,
+    "key": "US",
+    "flow": "import",
+    "value": 1374251680.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2015,
+    "key": "US",
+    "flow": "export",
+    "value": 396342519.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2015,
+    "key": "US",
+    "flow": "import",
+    "value": 1718541530.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2016,
+    "key": "US",
+    "flow": "export",
+    "value": 372508165.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2016,
+    "key": "US",
+    "flow": "import",
+    "value": 1340229619.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2017,
+    "key": "US",
+    "flow": "export",
+    "value": 367882883.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2017,
+    "key": "US",
+    "flow": "import",
+    "value": 1101492847.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2018,
+    "key": "US",
+    "flow": "export",
+    "value": 368158716.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2018,
+    "key": "US",
+    "flow": "import",
+    "value": 757848366.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2019,
+    "key": "US",
+    "flow": "export",
+    "value": 399497474.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2019,
+    "key": "US",
+    "flow": "import",
+    "value": 643334587.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2020,
+    "key": "US",
+    "flow": "export",
+    "value": 270136855.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2020,
+    "key": "US",
+    "flow": "import",
+    "value": 517859566.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2021,
+    "key": "US",
+    "flow": "export",
+    "value": 373441345.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2021,
+    "key": "US",
+    "flow": "import",
+    "value": 710485562.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2022,
+    "key": "US",
+    "flow": "export",
+    "value": 506501070.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2022,
+    "key": "US",
+    "flow": "import",
+    "value": 530830913.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2023,
+    "key": "US",
+    "flow": "export",
+    "value": 508254723.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2023,
+    "key": "US",
+    "flow": "import",
+    "value": 587615639.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2024,
+    "key": "US",
+    "flow": "export",
+    "value": 424821609.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2024,
+    "key": "US",
+    "flow": "import",
+    "value": 683104663.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2025,
+    "key": "US",
+    "flow": "export",
+    "value": 421010107.0,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "period": 2025,
+    "key": "US",
+    "flow": "import",
+    "value": 638055574.0,
+    "label": "United States",
+    "iso3": "USA"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "US"
+  ]
+ },
+ "insight": [
+  "Luxembourg's exports to the United States increased from 323.6 million euros in 2005 to 421.0 million euros in 2025, a rise of 30.1%.",
+  "The largest export value was in 2023, reaching 508.3 million euros.",
+  "Imports from the United States grew from 572.4 million euros in 2005 to 638.1 million euros in 2025, with a peak of 1.76 billion euros in 2012.",
+  "The two largest import periods, 2012 and 2015, accounted for 18.7% of total imports over 2005–2025.",
+  "These values are nominal and not adjusted for inflation or price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "United States · exports.start",
+   "text": "United States · exports 2005: 323.6 M€"
+  },
+  {
+   "key": "United States · exports.end",
+   "text": "United States · exports 2025: 421.0 M€"
+  },
+  {
+   "key": "United States · exports.change",
+   "text": "United States · exports change 2005–2025: +30.1 %"
+  },
+  {
+   "key": "United States · exports.peak",
+   "text": "United States · exports peak 2023: 508.3 M€"
+  },
+  {
+   "key": "United States · exports.prev",
+   "text": "United States · exports 2024: 424.8 M€"
+  },
+  {
+   "key": "United States · exports.move",
+   "text": "United States · exports: largest change between consecutive periods 2010–2011: 261.9 M€ to 395.4 M€"
+  },
+  {
+   "key": "United States · exports.median",
+   "text": "United States · exports: median over 2005–2025: 367.9 M€"
+  },
+  {
+   "key": "United States · exports.top2",
+   "text": "United States · exports: the two largest periods (2022, 2023) make 13.2 % of the total over 2005–2025"
+  },
+  {
+   "key": "United States · imports.start",
+   "text": "United States · imports 2005: 572.4 M€"
+  },
+  {
+   "key": "United States · imports.end",
+   "text": "United States · imports 2025: 638.1 M€"
+  },
+  {
+   "key": "United States · imports.change",
+   "text": "United States · imports change 2005–2025: +11.5 %"
+  },
+  {
+   "key": "United States · imports.peak",
+   "text": "United States · imports peak 2012: 1.76 bn €"
+  },
+  {
+   "key": "United States · imports.prev",
+   "text": "United States · imports 2024: 683.1 M€"
+  },
+  {
+   "key": "United States · imports.move",
+   "text": "United States · imports: largest change between consecutive periods 2011–2012: 1.08 bn € to 1.76 bn €"
+  },
+  {
+   "key": "United States · imports.median",
+   "text": "United States · imports: median over 2005–2025: 683.1 M€"
+  },
+  {
+   "key": "United States · imports.top2",
+   "text": "United States · imports: the two largest periods (2012, 2015) make 18.7 % of the total over 2005–2025"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 168,
+   "outcome": "ok",
+   "detail": "42 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 7,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1328,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1259,
+   "output_tokens": 154,
+   "cache_read_tokens": 0,
+   "ms": 1285
+  }
+ ],
+ "code_version": "58313fd",
+ "error": null
+}

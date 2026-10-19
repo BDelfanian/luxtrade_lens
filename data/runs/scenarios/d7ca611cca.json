@@ -1,0 +1,1023 @@
+{
+ "scenario_id": "d7ca611cca",
+ "session_id": "3amyn6",
+ "created_at": "2026-10-19T05:50:50+00:00",
+ "question": "From 2005 to 2025, how much of Luxembourg's trade ran through its three neighbours (Belgium, Germany, France), how dependent was its fuel on the Belgian route, who else supplied fuel (including undisclosed partners), and what did the 2022 price shock change?",
+ "language": "en",
+ "title": "From 2005 to 2025, how much of Luxembourg's trade ran throug",
+ "name": "Final output-Neighbour routes and fuel",
+ "favorite": true,
+ "hidden": false,
+ "based_on": "",
+ "approach": "",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "What combined share of Luxembourg's imports came from Belgium, Germany and France together each year from 2005 to 2025?",
+   "purpose": "How much of imports run through the neighbours.",
+   "builds_on": [],
+   "run_id": "9f50a9e554",
+   "status": "answered",
+   "queried": "imports · partners BE, DE, FR · 2005–2025, yearly · share of the whole flow in %",
+   "note": "The combined share of Luxembourg's imports from Belgium, Germany, and France rose from 56.6% in 2005 to 65.8% in 2025, peaking at 70.1% in 2020."
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "What combined share of Luxembourg's exports went to Belgium, Germany and France together, as one total, each year from 2005 to 2025?",
+   "purpose": "How much of exports run through the neighbours.",
+   "builds_on": [],
+   "run_id": "991306b59d",
+   "status": "answered",
+   "queried": "exports · partners BE, DE, FR · 2005–2025, yearly · share of the whole flow in %",
+   "note": "The combined share of Luxembourg's exports to Belgium, Germany, and France increased from 46.3% in 2005 to 56.3% in 2025, with a median of 52.8%."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "Compare the shares of Luxembourg's imports from Belgium, from Germany and from France each year from 2005 to 2025, one line per country.",
+   "purpose": "Which neighbour gained most.",
+   "builds_on": [],
+   "run_id": "63dd535e16",
+   "status": "answered",
+   "queried": "imports · partners BE, DE, FR · by partner (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Germany's share of imports grew most strongly from 20.3% in 2005 to 25.0% in 2025, Belgium's share rose from 26.9% to 30.0%, and France's share increased from 9.4% to 10.8%."
+  },
+  {
+   "n": 4,
+   "kind": "own",
+   "question": "Each year from 2005 to 2025, what share of all Luxembourg's fuel imports (HS 27) came from Belgium?",
+   "purpose": "How dependent fuel is on the Belgian route.",
+   "builds_on": [],
+   "run_id": "ab6653cba1",
+   "status": "answered",
+   "queried": "imports · products 27 · partners BE · by partner (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Belgium supplied a majority of Luxembourg's fuel imports but its share declined from 59.5% in 2005 to 50.3% in 2025, dropping to 43.8% in 2022."
+  },
+  {
+   "n": 5,
+   "kind": "own",
+   "question": "Which countries supplied Luxembourg's fuel imports (HS 27) in 2005?",
+   "purpose": "The fuel suppliers at the start.",
+   "builds_on": [],
+   "run_id": "f04bfd14e7",
+   "status": "answered",
+   "queried": "imports · products 27 · by partner (top 10) · 2005 · value in €",
+   "note": "In 2005, Belgium supplied 59.5% of fuel imports, with Germany, the Netherlands, France, and undisclosed partners also contributing significant shares."
+  },
+  {
+   "n": 6,
+   "kind": "own",
+   "question": "Which countries supplied Luxembourg's fuel imports (HS 27) in 2025?",
+   "purpose": "The fuel suppliers today.",
+   "builds_on": [],
+   "run_id": "b4b5626c51",
+   "status": "answered",
+   "queried": "imports · products 27 · by partner (top 10) · 2025 · value in €",
+   "note": "In 2025, Belgium supplied 50.3% of fuel imports, with undisclosed partners increasing to 39.3%, and Germany, the Netherlands, and France supplying smaller shares."
+  },
+  {
+   "n": 7,
+   "kind": "own",
+   "question": "How did the value per kg of Luxembourg's fuel imports (HS 27) evolve each year from 2005 to 2025?",
+   "purpose": "The price of a kilo of fuel, and the 2022 shock.",
+   "builds_on": [],
+   "run_id": "c132447ab7",
+   "status": "answered",
+   "queried": "imports · products 27 · 2005–2025, yearly · value per kg",
+   "note": "The value per kilogram of fuel imports nearly doubled from 0.40 €/kg in 2005 to 0.79 €/kg in 2025, with the largest increase between 2021 and 2022."
+  },
+  {
+   "n": 8,
+   "kind": "own",
+   "question": "How did the mass in kg of Luxembourg's fuel imports (HS 27) evolve each year from 2005 to 2025?",
+   "purpose": "The volume of fuel, and whether it followed the price.",
+   "builds_on": [],
+   "run_id": "d7540d33ac",
+   "status": "answered",
+   "queried": "imports · products 27 · 2005–2025, yearly · mass in kg",
+   "note": ""
+  },
+  {
+   "n": 9,
+   "kind": "own",
+   "question": "How much were Luxembourg's fuel imports (HS 27) worth in euros each year from 2021 to 2022?",
+   "purpose": "The 2022 shock in value.",
+   "builds_on": [],
+   "run_id": "1c3d3e809d",
+   "status": "answered",
+   "queried": "imports · products 27 · 2021–2022, yearly · value in €",
+   "note": "Fuel import value almost doubled from 2.05 bn € in 2021 to 4.00 bn € in 2022, reflecting the 2022 price shock."
+  },
+  {
+   "n": 10,
+   "kind": "own",
+   "question": "How did the mass in kg of Luxembourg's fuel imports (HS 27) change between 2021 and 2022?",
+   "purpose": "The 2022 shock in mass.",
+   "builds_on": [],
+   "run_id": "4b8739ad9c",
+   "status": "answered",
+   "queried": "imports · products 27 · 2021–2022, yearly · mass in kg",
+   "note": "Fuel import mass rose by about a third from 3.42 bn kg in 2021 to 4.61 bn kg in 2022, showing volume increased less than value."
+  }
+ ],
+ "headline": "From 2005 to 2025, Luxembourg's trade increasingly ran through its three neighbours Belgium, Germany, and France, with fuel imports heavily reliant on Belgium but also significantly supplied by undisclosed partners, and the 2022 energy price shock caused a sharp rise in fuel import values and prices.",
+ "points": [
+  {
+   "text": "The combined share of Luxembourg's imports from Belgium, Germany, and France rose from 56.6% in 2005 to 65.8% in 2025, showing growing dependence on these neighbours for imports, with a median share of 64.6% over the period. Exports to these neighbours also increased from 46.3% to 56.3%, indicating that more than half of Luxembourg's trade flows involve these three countries by 2025.",
+   "steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "text": "Among the three neighbours, Germany's share of imports grew most strongly from 20.3% in 2005 to 25.0% in 2025, followed by Belgium rising from 26.9% to 30.0%, while France's share remained smaller but increased from 9.4% to 10.8%. This shows that Germany and Belgium are the dominant import routes, with France playing a smaller but stable role.",
+   "steps": [
+    3
+   ]
+  },
+  {
+   "text": "Fuel imports were heavily dependent on Belgium, which supplied a majority but declining share, falling from 59.5% in 2005 to 50.3% in 2025 and dropping as low as 43.8% in 2022. Other suppliers included Germany, the Netherlands, France, and a large share of undisclosed partners, which grew from 24.5% in 2005 to 39.3% in 2025, indicating significant fuel sourcing from unknown or confidential origins.",
+   "steps": [
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "text": "The 2022 energy price shock caused a sharp increase in fuel import values and prices: the value per kilogram of fuel imports nearly doubled from 0.40 €/kg in 2005 to 0.79 €/kg in 2025, with the largest jump between 2021 and 2022 from 0.60 €/kg to 0.87 €/kg. Fuel import value almost doubled from 2.05 bn € in 2021 to 4.00 bn € in 2022, while the mass of fuel imported rose by about a third, showing that the price shock was the main driver of the value increase.",
+   "steps": [
+    7,
+    8,
+    9,
+    10
+   ]
+  }
+ ],
+ "conclusion": "Luxembourg's trade increasingly depends on its three neighbours Belgium, Germany, and France, especially for imports, with Belgium playing a key role in fuel supply but with a notable and growing share coming from undisclosed partners. The 2022 energy price shock sharply increased fuel import prices and values, reflecting external market conditions rather than volume changes alone. The data does not reveal the exact origins of undisclosed fuel imports nor explain the causes behind shifts in trade shares or the price shock beyond observed values.",
+ "charts": [
+  1,
+  4,
+  7
+ ],
+ "figures": [
+  {
+   "kind": "series",
+   "title": "Year by year, 2005–2025",
+   "flow": "both",
+   "steps": [
+    1,
+    2,
+    4,
+    7
+   ],
+   "rows": [
+    {
+     "group": 2005,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 56.5783561063,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 52.6087789109,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 58.1797902661,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 58.803595638,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 55.6148039225,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 64.227177075,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 64.696513409,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 61.1895098174,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 63.1694743648,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 64.5557654141,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 58.1666388708,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 62.493307147,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 66.6376654802,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 69.8011480913,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 66.9336003139,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 70.0837391522,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 68.8843800301,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 66.822063024,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 67.6674848285,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 69.7144885898,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Belgium, Germany & France, share of imports",
+     "value": 65.7850034631,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 46.3051153972,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 43.1063112883,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 46.359569299,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 48.2484722118,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 47.4144766812,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 47.6687113056,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 48.8305741422,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 49.9992829587,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 53.2587700138,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 55.4126419207,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 54.1815262357,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 54.2705062579,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 55.9477034453,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 55.1320623519,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 50.5749243124,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 55.3028716691,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 53.8200692513,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 52.9757021742,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 52.0021825338,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 52.7614482511,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Belgium, Germany & France, share of exports",
+     "value": 56.3234261067,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 59.4887541555,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 62.5884176896,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 58.8552107506,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 58.3184019704,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 55.545262945,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 65.1649302085,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 66.3432110056,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 59.705181812,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 59.0057738084,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 54.1010480346,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 51.4165357714,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 54.7926220726,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 55.5090560373,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 54.5425863038,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 56.5449713537,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 51.9007104163,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 46.2325304686,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 43.7774088321,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 44.4007516116,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 49.7877886465,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Belgium, share of mineral fuels and oils imports",
+     "value": 50.2900914925,
+     "step": 4,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4046987109,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2006,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4556459605,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2007,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4600968166,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2008,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5997494811,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2009,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.3479034566,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2010,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4771152644,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2011,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5424288908,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2012,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.6546659744,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2013,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.7348775572,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2014,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.701254466,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2015,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5428231638,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2016,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4712297953,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2017,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5288770127,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2018,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5901860872,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2019,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5768990292,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2020,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.4751993618,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2021,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.5965442258,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2022,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.8661968305,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2023,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.9305846071,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2024,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.8863365044,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    },
+    {
+     "group": 2025,
+     "series": "Mineral fuels and oils, imports: value per kg",
+     "value": 0.7935207441,
+     "step": 7,
+     "flow": "import",
+     "unit": "unit_value"
+    }
+   ],
+   "tiles": [
+    {
+     "value": "65.8 %",
+     "label": "Belgium, Germany & France, share of imports, 2025",
+     "detail": "56.6 % in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "56.3 %",
+     "label": "Belgium, Germany & France, share of exports, 2025",
+     "detail": "46.3 % in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "50.3 %",
+     "label": "Belgium, share of mineral fuels and oils imports, 2025",
+     "detail": "59.5 % in 2005",
+     "tone": "down"
+    },
+    {
+     "value": "0.79 €/kg",
+     "label": "Mineral fuels and oils, imports: value per kg, 2025",
+     "detail": "0.40 €/kg in 2005",
+     "tone": "up"
+    }
+   ],
+   "note": "Each panel is one step's yearly series (steps 1, 2, 4, 7), computed by code from its own SQL; panels have their own scales."
+  },
+  {
+   "kind": "share",
+   "title": "Share of mineral fuels and oils imports, 2005 and 2025",
+   "flow": "import",
+   "steps": [
+    5,
+    6
+   ],
+   "rows": [
+    {
+     "group": "Belgium",
+     "series": "2005",
+     "value": 59.488754155459,
+     "step": 5
+    },
+    {
+     "group": "Germany",
+     "series": "2005",
+     "value": 8.456644761016866,
+     "step": 5
+    },
+    {
+     "group": "France",
+     "series": "2005",
+     "value": 0.3428330657682651,
+     "step": 5
+    },
+    {
+     "group": "Belgium",
+     "series": "2025",
+     "value": 50.290091492502796,
+     "step": 6
+    },
+    {
+     "group": "Germany",
+     "series": "2025",
+     "value": 6.431782120382468,
+     "step": 6
+    },
+    {
+     "group": "France",
+     "series": "2025",
+     "value": 0.7330695617238995,
+     "step": 6
+    }
+   ],
+   "tiles": [
+    {
+     "value": "50.3 %",
+     "label": "Belgium, share of mineral fuels and oils imports 2025",
+     "detail": "59.5 % in 2005",
+     "tone": ""
+    },
+    {
+     "value": "−9.2 pp",
+     "label": "Belgium: change in share",
+     "detail": "2005 → 2025",
+     "tone": "down"
+    },
+    {
+     "value": "6.4 %",
+     "label": "Germany, share of mineral fuels and oils imports 2025",
+     "detail": "8.5 % in 2005",
+     "tone": ""
+    }
+   ],
+   "note": "Computed by code from the steps' own SQL (steps 5, 6); the whole flow is all mineral fuels and oils imports of each step's scope."
+  }
+ ],
+ "share": {
+  "title": "Luxembourg's trade increasingly flows through Belgium, Germany, and France",
+  "subtitle": "From 2005 to 2025, imports from these neighbours rose from 56.6% to 65.8%, fuel imports relied on Belgium (falling from 59.5% to 50.3%), and fuel prices nearly doubled after the 2022 shock.",
+  "source": "llm",
+  "notes": [
+   "share title and subtitle passed the number, country and wording checks"
+  ],
+  "earlier": []
+ },
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L03",
+   "message": "24.5 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  },
+  {
+   "id": "L07",
+   "message": "Quantities are missing for part of the trade, so volumes and unit values cover only rows with a known quantity."
+  }
+ ],
+ "notes": [
+  "removed from the answer: point 3: says over half throughout, but step 4 fell to 43.8 % in 2022",
+  "redrafting the removed points",
+  "removed from the answer: note on step 8: number 34.7 is not in the facts",
+  "combined answer passed the number, country, wording and reasoning checks",
+  "share title and subtitle passed the number, country and wording checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4464,
+   "output_tokens": 1159,
+   "cache_read_tokens": 4224,
+   "ms": 6762
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4712,
+   "output_tokens": 837,
+   "cache_read_tokens": 3968,
+   "ms": 5339
+  },
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5096,
+   "output_tokens": 1172,
+   "cache_read_tokens": 4224,
+   "ms": 7065
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 4855,
+   "output_tokens": 1029,
+   "cache_read_tokens": 3968,
+   "ms": 6649
+  },
+  {
+   "step": "scenario_share",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1485,
+   "output_tokens": 207,
+   "cache_read_tokens": 0,
+   "ms": 2641
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "8387808",
+ "status": "answered"
+}

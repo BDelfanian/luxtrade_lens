@@ -1,0 +1,316 @@
+{
+ "run_id": "c0a84d1ba3",
+ "session_id": "5424py",
+ "turn": 4,
+ "created_at": "2026-10-18T22:02:47+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the shares of the main product chapters in Luxembourg's imports in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "5.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 4.994863690725844
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "0ad815de029deb8d88c4f57f63edf339603ca082b840821d314af0ceb7f246b3",
+ "row_count": 97,
+ "view_kind": "treemap",
+ "title": "Main product groups — imports 2025",
+ "frames": {
+  "main": [
+   {
+    "key": "87",
+    "value": 3318048160.0,
+    "share": 13.220398039,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "84",
+    "value": 2885716872.0,
+    "share": 11.4978215614,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "27",
+    "value": 2231635421.0,
+    "share": 8.891705943,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Mineral fuels and oils",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "85",
+    "value": 1972062083.0,
+    "share": 7.8574645206,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "39",
+    "value": 1292914757.0,
+    "share": 5.1514766796,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "72",
+    "value": 953804230.0,
+    "share": 3.8003280736,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "30",
+    "value": 834155181.0,
+    "share": 3.3235995945,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Pharmaceutical products",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "40",
+    "value": 829620472.0,
+    "share": 3.3055315451,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "22",
+    "value": 638282641.0,
+    "share": 2.5431669971,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Beverages, spirits and vinegar",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "04",
+    "value": 563476858.0,
+    "share": 2.2451115805,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Dairy produce; eggs; honey",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "OTHER",
+    "value": 9563026470.0,
+    "share": 38.1028274138,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 15201336.0,
+    "share": 0.0605680517,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "87",
+   "84",
+   "27",
+   "85",
+   "39",
+   "72",
+   "30",
+   "40",
+   "22",
+   "04"
+  ]
+ },
+ "insight": [
+  "Luxembourg's imports in 2025 totaled 25.10 billion euros.",
+  "The main product chapters were Vehicles and parts at 13.2%, Machinery and mechanical appliances at 11.5%, and Mineral fuels and oils at 8.9%.",
+  "Together, the top three import categories accounted for 33.6% of total imports.",
+  "Other products made up 38.1% of imports, while confidential items represented 0.1%.",
+  "The values are nominal and not adjusted for price changes, and 5.0% of the import value is confidential at full product detail."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 25.10 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Vehicles and parts: 3.32 bn €, 13.2 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Machinery and mechanical appliances: 2.89 bn €, 11.5 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Mineral fuels and oils: 2.23 bn €, 8.9 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 Electrical machinery and equipment: 1.97 bn €, 7.9 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Plastics and articles thereof: 1.29 bn €, 5.2 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 9.56 bn €, 38.1 %"
+  },
+  {
+   "key": "import.confidential",
+   "text": "Confidential: 15.2 M€, 0.1 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 33.6 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 101,
+   "outcome": "ok",
+   "detail": "97 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 12,
+   "outcome": "ok",
+   "detail": "view=treemap; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1204,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 929,
+   "output_tokens": 127,
+   "cache_read_tokens": 0,
+   "ms": 1164
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

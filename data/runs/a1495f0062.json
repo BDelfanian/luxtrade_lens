@@ -1,0 +1,862 @@
+{
+ "run_id": "a1495f0062",
+ "session_id": "qkfw3a",
+ "turn": 5,
+ "created_at": "2026-10-18T18:19:25+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What was the time series of the share of the top 3 export product chapters in Luxembourg's exports from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "84",
+   "85",
+   "72"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND hs2 IN ('84', '85', '72')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "8eda7c71f4fb83a2bbbc363b79748071c07e9f5fc14403cb9709f794e798ef0a",
+ "row_count": 63,
+ "view_kind": "area",
+ "title": "Iron and steel · exports: −38.4 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "72",
+    "flow": "export",
+    "value": 11.194721117,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "84",
+    "flow": "export",
+    "value": 26.8058480084,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2005,
+    "key": "85",
+    "flow": "export",
+    "value": 21.0426096594,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "72",
+    "flow": "export",
+    "value": 11.805549219,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "84",
+    "flow": "export",
+    "value": 26.4855124543,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2006,
+    "key": "85",
+    "flow": "export",
+    "value": 23.5600212231,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "72",
+    "flow": "export",
+    "value": 14.2155865629,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "84",
+    "flow": "export",
+    "value": 32.753644335,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2007,
+    "key": "85",
+    "flow": "export",
+    "value": 8.5292843022,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "72",
+    "flow": "export",
+    "value": 15.2684986911,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "84",
+    "flow": "export",
+    "value": 34.8597803072,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2008,
+    "key": "85",
+    "flow": "export",
+    "value": 7.9705667505,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "72",
+    "flow": "export",
+    "value": 9.0005803769,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "84",
+    "flow": "export",
+    "value": 31.317324067,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2009,
+    "key": "85",
+    "flow": "export",
+    "value": 16.4192389418,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "72",
+    "flow": "export",
+    "value": 12.6655484265,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "84",
+    "flow": "export",
+    "value": 14.2876317196,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2010,
+    "key": "85",
+    "flow": "export",
+    "value": 22.8741102808,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "72",
+    "flow": "export",
+    "value": 13.1875098886,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "84",
+    "flow": "export",
+    "value": 9.0984453405,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2011,
+    "key": "85",
+    "flow": "export",
+    "value": 22.7334315107,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "72",
+    "flow": "export",
+    "value": 10.7418645505,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "84",
+    "flow": "export",
+    "value": 9.4130238168,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2012,
+    "key": "85",
+    "flow": "export",
+    "value": 24.6914921347,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "72",
+    "flow": "export",
+    "value": 10.5412043505,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "84",
+    "flow": "export",
+    "value": 9.7006869405,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2013,
+    "key": "85",
+    "flow": "export",
+    "value": 19.7687948697,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "72",
+    "flow": "export",
+    "value": 11.0293119275,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "84",
+    "flow": "export",
+    "value": 9.9761991695,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2014,
+    "key": "85",
+    "flow": "export",
+    "value": 18.0225563469,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "72",
+    "flow": "export",
+    "value": 9.5495337297,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "84",
+    "flow": "export",
+    "value": 10.6834225564,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2015,
+    "key": "85",
+    "flow": "export",
+    "value": 18.8917273632,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "72",
+    "flow": "export",
+    "value": 9.563898943,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "84",
+    "flow": "export",
+    "value": 13.0997386207,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2016,
+    "key": "85",
+    "flow": "export",
+    "value": 12.266333514,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "72",
+    "flow": "export",
+    "value": 10.7967885864,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "84",
+    "flow": "export",
+    "value": 12.880488391,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2017,
+    "key": "85",
+    "flow": "export",
+    "value": 5.523364299,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "72",
+    "flow": "export",
+    "value": 12.4202437098,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "84",
+    "flow": "export",
+    "value": 12.5325424086,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2018,
+    "key": "85",
+    "flow": "export",
+    "value": 7.0032112129,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "72",
+    "flow": "export",
+    "value": 10.6149835419,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "84",
+    "flow": "export",
+    "value": 12.6595730303,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2019,
+    "key": "85",
+    "flow": "export",
+    "value": 14.4718000217,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "72",
+    "flow": "export",
+    "value": 9.517435431,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "84",
+    "flow": "export",
+    "value": 13.4179264123,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2020,
+    "key": "85",
+    "flow": "export",
+    "value": 5.2620103836,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "72",
+    "flow": "export",
+    "value": 11.1357992641,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "84",
+    "flow": "export",
+    "value": 12.9730699791,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2021,
+    "key": "85",
+    "flow": "export",
+    "value": 5.1648434851,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "72",
+    "flow": "export",
+    "value": 11.5110528214,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "84",
+    "flow": "export",
+    "value": 13.2266356849,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2022,
+    "key": "85",
+    "flow": "export",
+    "value": 5.0596594533,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "72",
+    "flow": "export",
+    "value": 8.712071249,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "84",
+    "flow": "export",
+    "value": 13.9226237321,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2023,
+    "key": "85",
+    "flow": "export",
+    "value": 5.4355850354,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "72",
+    "flow": "export",
+    "value": 8.1736917287,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "84",
+    "flow": "export",
+    "value": 13.4653842423,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2024,
+    "key": "85",
+    "flow": "export",
+    "value": 4.413811851,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "72",
+    "flow": "export",
+    "value": 6.8926463584,
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "84",
+    "flow": "export",
+    "value": 12.5415774007,
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "period": 2025,
+    "key": "85",
+    "flow": "export",
+    "value": 9.2702963806,
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 15394146750.0
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 18336982599.0
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 16733525152.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 17469519014.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 15298785071.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 14180328901.0
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 14990138864.0
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 14658638997.0
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 13868196853.0
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 14400955059.0
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 15460367090.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 14259781352.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 13972896449.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 13883405747.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 14673098473.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 12113291205.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 14208430248.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 16506246887.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 15898896685.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 14966963688.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 16253860299.0
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "72",
+   "84",
+   "85"
+  ]
+ },
+ "insight": [
+  "The share of the top 3 export product chapters in Luxembourg's exports decreased from 2005 to 2025.",
+  "In 2005, machinery and mechanical appliances accounted for 26.8%, electrical machinery and equipment for 21.0%, and iron and steel for 11.2% of exports.",
+  "By 2025, these shares declined to 12.5% for machinery and mechanical appliances, 9.3% for electrical machinery and equipment, and 6.9% for iron and steel.",
+  "The peak shares were 34.9% for machinery and mechanical appliances in 2008, 24.7% for electrical machinery and equipment in 2012, and 15.3% for iron and steel in 2008.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Iron and steel · exports.start",
+   "text": "Iron and steel · exports 2005: 11.2 %"
+  },
+  {
+   "key": "Iron and steel · exports.end",
+   "text": "Iron and steel · exports 2025: 6.9 %"
+  },
+  {
+   "key": "Iron and steel · exports.change",
+   "text": "Iron and steel · exports change 2005–2025: −38.4 %"
+  },
+  {
+   "key": "Iron and steel · exports.peak",
+   "text": "Iron and steel · exports peak 2008: 15.3 %"
+  },
+  {
+   "key": "Machinery and mechanical appliances · exports.start",
+   "text": "Machinery and mechanical appliances · exports 2005: 26.8 %"
+  },
+  {
+   "key": "Machinery and mechanical appliances · exports.end",
+   "text": "Machinery and mechanical appliances · exports 2025: 12.5 %"
+  },
+  {
+   "key": "Machinery and mechanical appliances · exports.change",
+   "text": "Machinery and mechanical appliances · exports change 2005–2025: −53.2 %"
+  },
+  {
+   "key": "Machinery and mechanical appliances · exports.peak",
+   "text": "Machinery and mechanical appliances · exports peak 2008: 34.9 %"
+  },
+  {
+   "key": "Electrical machinery and equipment · exports.start",
+   "text": "Electrical machinery and equipment · exports 2005: 21.0 %"
+  },
+  {
+   "key": "Electrical machinery and equipment · exports.end",
+   "text": "Electrical machinery and equipment · exports 2025: 9.3 %"
+  },
+  {
+   "key": "Electrical machinery and equipment · exports.change",
+   "text": "Electrical machinery and equipment · exports change 2005–2025: −55.9 %"
+  },
+  {
+   "key": "Electrical machinery and equipment · exports.peak",
+   "text": "Electrical machinery and equipment · exports peak 2012: 24.7 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all products), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 1557,
+   "outcome": "ok",
+   "detail": "63 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 89,
+   "outcome": "ok",
+   "detail": "view=area; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all products), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1689,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1077,
+   "output_tokens": 178,
+   "cache_read_tokens": 0,
+   "ms": 1598
+  }
+ ],
+ "code_version": "f097a28",
+ "error": null
+}

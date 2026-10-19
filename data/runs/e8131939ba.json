@@ -1,0 +1,306 @@
+{
+ "run_id": "e8131939ba",
+ "session_id": "8wmsst",
+ "turn": 5,
+ "created_at": "2026-10-18T22:35:30+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which countries supplied Luxembourg's fuel imports (HS 27) in 2005?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "27"
+  ],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2005",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "24.5 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 24.548055550387332
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2006-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs2 IN ('27')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "174cca2a18f7f5c33931b01b01c70c5f23efe7e46f69661dc1516c6859fedaf8",
+ "row_count": 18,
+ "view_kind": "map",
+ "title": "Main trading partners — imports 2005",
+ "frames": {
+  "main": [
+   {
+    "key": "BE",
+    "value": 1038821257.0,
+    "share": 59.4887541555,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "key": "DE",
+    "value": 147674001.0,
+    "share": 8.456644761,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "key": "NL",
+    "value": 124136167.0,
+    "share": 7.1087358587,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "key": "FR",
+    "value": 5986716.0,
+    "share": 0.3428330658,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "IT",
+    "value": 394109.0,
+    "share": 0.0225689003,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "key": "ES",
+    "value": 259542.0,
+    "share": 0.0148628362,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "key": "US",
+    "value": 247031.0,
+    "share": 0.0141463859,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "key": "GB",
+    "value": 16035.0,
+    "share": 0.0009182544,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "key": "CH",
+    "value": 15728.0,
+    "share": 0.0009006738,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Switzerland",
+    "iso3": "CHE"
+   },
+   {
+    "key": "AT",
+    "value": 10567.0,
+    "share": 0.0006051259,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Austria",
+    "iso3": "AUT"
+   },
+   {
+    "key": "OTHER",
+    "value": 17016.0,
+    "share": 0.000974432,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "UNDISCLOSED",
+    "value": 428669961.0,
+    "share": 24.5480555504,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Undisclosed / not specified",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "DE",
+   "NL",
+   "FR",
+   "IT",
+   "ES",
+   "US",
+   "GB",
+   "CH",
+   "AT"
+  ]
+ },
+ "insight": [
+  "In 2005, Luxembourg's fuel imports totaled 1.75 billion euros.",
+  "Belgium was the largest supplier, providing 1.04 billion euros or 59.5% of the imports.",
+  "Germany and the Netherlands were the second and third largest suppliers, with 147.7 million euros and 124.1 million euros respectively, together making up 75.1% of the top three imports.",
+  "A significant share of 24.5% of imports, amounting to 428.7 million euros, came from undisclosed partners.",
+  "The data are nominal values in current euros and include a large portion of imports from undisclosed sources, which are not specified by country."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2005: 1.75 bn €"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Belgium: 1.04 bn €, 59.5 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Germany: 147.7 M€, 8.5 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Netherlands: 124.1 M€, 7.1 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 France: 6.0 M€, 0.3 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Italy: 394 k €, 0.0 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 17 k €, 0.0 %"
+  },
+  {
+   "key": "import.undisclosed",
+   "text": "Undisclosed / not specified: 428.7 M€, 24.5 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 75.1 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 103,
+   "outcome": "ok",
+   "detail": "18 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 13,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1387,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 969,
+   "output_tokens": 144,
+   "cache_read_tokens": 0,
+   "ms": 1344
+  }
+ ],
+ "code_version": "8387808",
+ "error": null
+}

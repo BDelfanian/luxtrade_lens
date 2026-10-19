@@ -1,0 +1,330 @@
+{
+ "run_id": "fe2930e9fa",
+ "session_id": "yzrwvb",
+ "turn": 11,
+ "created_at": "2026-10-18T20:44:39+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which product headings (HS4) exported to the United Kingdom changed most between 2010 and 2013?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "GB"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2010",
+  "period_end": "2013",
+  "flow": "export",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "1.2 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 1.2124461047339514
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2010-01-01' AS DATE)\n  AND period < CAST('2014-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('GB')\n  AND year IN (2010, 2013)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "bd628b2861048f50e58921a1a6f6dfe1193befefce4ee4ed4b7dd2be5bf974f3",
+ "row_count": 746,
+ "view_kind": "change",
+ "title": "Largest changes by product group — exports 2010–2013",
+ "frames": {
+  "main": [
+   {
+    "flow": "export",
+    "key": "4011",
+    "base": 2766978.0,
+    "value": 22622560.0,
+    "change": 19855582.0,
+    "change_pct": 717.5908879651,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "New tyres",
+    "parent": "40",
+    "parent_label": "Rubber and articles thereof"
+   },
+   {
+    "flow": "export",
+    "key": "7112",
+    "base": 0.0,
+    "value": 19435922.0,
+    "change": 19435922.0,
+    "change_pct": null,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Waste and scrap of precious metal or of metal clad with precious metal; other waste and scrap containing precious metal or precious-metal compounds, of a kind used principally for the recovery of precious metal (excl. waste and scrap melted down into unworked blocks, ingots, or similar forms)",
+    "parent": "71",
+    "parent_label": "Natural or cultured pearls, precious or semi-precious stones, precious metals, metals clad with precious metal, and articles thereof; imitation jewellery; coin"
+   },
+   {
+    "flow": "export",
+    "key": "3918",
+    "base": 12950833.0,
+    "value": 20722386.0,
+    "change": 7771553.0,
+    "change_pct": 60.0081322954,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Floor coverings of plastics, whether or not self-adhesive, in rolls or in the form of tiles; wall or ceiling coverings of plastics, in rolls with a width of >= 45 cm, consisting of a layer of plastics fixed permanently on a backing of any material other than paper, the face side of which is grained, embossed, coloured, design-printed or otherwise decorated",
+    "parent": "39",
+    "parent_label": "Plastics and articles thereof"
+   },
+   {
+    "flow": "export",
+    "key": "4001",
+    "base": 0.0,
+    "value": 5882554.0,
+    "change": 5882554.0,
+    "change_pct": null,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Natural rubber, balata, gutta-percha, guayule, chicle and similar natural gums, in primary forms or in plates, sheets or strip",
+    "parent": "40",
+    "parent_label": "Rubber and articles thereof"
+   },
+   {
+    "flow": "export",
+    "key": "3402",
+    "base": 2465530.0,
+    "value": 7166072.0,
+    "change": 4700542.0,
+    "change_pct": 190.6503672638,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Organic surface-active agents (excl. soap); surface-active preparations, washing preparations, incl. auxiliary washing preparations, and cleaning preparations, whether or not containing soap (excl. those of heading 3401)",
+    "parent": "34",
+    "parent_label": "Soap, organic surface-active agents, washing preparations, lubricating preparations, artificial waxes, prepared waxes, polishing or scouring preparations, candles and similar articles, modelling pastes, ‘dental waxes’ and dental preparations with a basis of plaster"
+   },
+   {
+    "flow": "export",
+    "key": "7005",
+    "base": 8879713.0,
+    "value": 1458649.0,
+    "change": -7421064.0,
+    "change_pct": -83.5732416127,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Float glass and surface ground or polished glass, in sheets, whether or not having an absorbent, reflecting or non-reflecting layer, but not otherwise worked",
+    "parent": "70",
+    "parent_label": "Glass and glassware"
+   },
+   {
+    "flow": "export",
+    "key": "7301",
+    "base": 36290015.0,
+    "value": 23454240.0,
+    "change": -12835775.0,
+    "change_pct": -35.3699908914,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Sheet piling of iron or steel, whether or not drilled, punched or made from assembled elements; welded angles, shapes and sections, of iron or steel",
+    "parent": "73",
+    "parent_label": "Articles of iron or steel"
+   },
+   {
+    "flow": "export",
+    "key": "7216",
+    "base": 57877473.0,
+    "value": 12188062.0,
+    "change": -45689411.0,
+    "change_pct": -78.9416134322,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Steel angles and sections",
+    "parent": "72",
+    "parent_label": "Iron and steel"
+   },
+   {
+    "flow": "export",
+    "key": "8471",
+    "base": 118972723.0,
+    "value": 2173496.0,
+    "change": -116799227.0,
+    "change_pct": -98.1731140171,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Computers",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "export",
+    "key": "8517",
+    "base": 785370149.0,
+    "value": 6571219.0,
+    "change": -778798930.0,
+    "change_pct": -99.1632965668,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Telephone sets",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "4011",
+   "7112",
+   "3918",
+   "4001",
+   "3402",
+   "7005",
+   "7301",
+   "7216",
+   "8471",
+   "8517"
+  ]
+ },
+ "insight": [
+  "The product headings exported to the United Kingdom that changed most between 2010 and 2013 include telephone sets, computers, and steel angles and sections.",
+  "Telephone sets exports decreased from 785.4 million euros in 2010 to 6.6 million euros in 2013, a drop of 99.2%.",
+  "Computers exports also fell sharply from 119.0 million euros to 2.2 million euros, and steel angles and sections exports declined from 57.9 million euros to 12.2 million euros.",
+  "Meanwhile, exports of new tyres increased significantly from 2.8 million euros to 22.6 million euros, and waste and scrap of precious metal exports rose from zero to 19.4 million euros.",
+  "The data are in current euros and not adjusted for price changes, and 1.2% of the value is confidential and not detailed in the product codes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.4011",
+   "text": "exports New tyres: 2.8 M€ 2010 → 22.6 M€ 2013 (19.9 M€, +717.6 %)"
+  },
+  {
+   "key": "export.7112",
+   "text": "exports Waste and scrap of precious metal or of metal clad with precious metal; other waste and scrap containing precious metal or precious-metal compounds, of a kind used principally for the recovery of precious metal (excl. waste and scrap melted down into unworked blocks, ingots, or similar forms): 0 k € 2010 → 19.4 M€ 2013 (19.4 M€, –)"
+  },
+  {
+   "key": "export.3918",
+   "text": "exports Floor coverings of plastics, whether or not self-adhesive, in rolls or in the form of tiles; wall or ceiling coverings of plastics, in rolls with a width of >= 45 cm, consisting of a layer of plastics fixed permanently on a backing of any material other than paper, the face side of which is grained, embossed, coloured, design-printed or otherwise decorated: 13.0 M€ 2010 → 20.7 M€ 2013 (7.8 M€, +60.0 %)"
+  },
+  {
+   "key": "export.4001",
+   "text": "exports Natural rubber, balata, gutta-percha, guayule, chicle and similar natural gums, in primary forms or in plates, sheets or strip: 0 k € 2010 → 5.9 M€ 2013 (5.9 M€, –)"
+  },
+  {
+   "key": "export.3402",
+   "text": "exports Organic surface-active agents (excl. soap); surface-active preparations, washing preparations, incl. auxiliary washing preparations, and cleaning preparations, whether or not containing soap (excl. those of heading 3401): 2.5 M€ 2010 → 7.2 M€ 2013 (4.7 M€, +190.7 %)"
+  },
+  {
+   "key": "export.7005",
+   "text": "exports Float glass and surface ground or polished glass, in sheets, whether or not having an absorbent, reflecting or non-reflecting layer, but not otherwise worked: 8.9 M€ 2010 → 1.5 M€ 2013 (-7.4 M€, −83.6 %)"
+  },
+  {
+   "key": "export.7301",
+   "text": "exports Sheet piling of iron or steel, whether or not drilled, punched or made from assembled elements; welded angles, shapes and sections, of iron or steel: 36.3 M€ 2010 → 23.5 M€ 2013 (-12.8 M€, −35.4 %)"
+  },
+  {
+   "key": "export.7216",
+   "text": "exports Steel angles and sections: 57.9 M€ 2010 → 12.2 M€ 2013 (-45.7 M€, −78.9 %)"
+  },
+  {
+   "key": "export.8471",
+   "text": "exports Computers: 119.0 M€ 2010 → 2.2 M€ 2013 (-116.8 M€, −98.2 %)"
+  },
+  {
+   "key": "export.8517",
+   "text": "exports Telephone sets: 785.4 M€ 2010 → 6.6 M€ 2013 (-778.8 M€, −99.2 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2013 − value 2010 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 197,
+   "outcome": "ok",
+   "detail": "746 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 37,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2013 − value 2010 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1733,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1424,
+   "output_tokens": 188,
+   "cache_read_tokens": 0,
+   "ms": 1681
+  }
+ ],
+ "code_version": "ffce2e8",
+ "error": null
+}

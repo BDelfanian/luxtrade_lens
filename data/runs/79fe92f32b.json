@@ -1,0 +1,325 @@
+{
+ "run_id": "79fe92f32b",
+ "session_id": "7tpvww",
+ "turn": 5,
+ "created_at": "2026-10-18T20:40:07+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which non-EU27 countries had the largest changes in Luxembourg's imports between 2005 and 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "EXTRA_EU27_2020",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L08",
+   "key": "fixed_eu27",
+   "severity": "warn",
+   "message": "Intra/extra-EU uses the fixed EU27 (2020) composition; the United Kingdom counts as extra-EU throughout.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "2.8 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 2.7724281971704174
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND NOT (\n    partner_is_eu27_2020 OR (\n      partner_is_special AND trade_type = 'intra'\n    )\n  )\n  AND year IN (2005, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "48d9843f5542fc2b19e66f51fe125cd636a7be035c08b411b498e239e1fedd98",
+ "row_count": 248,
+ "view_kind": "change",
+ "title": "Largest changes by partner — imports 2005–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "JP",
+    "base": 127511150.0,
+    "value": 1127125868.0,
+    "change": 999614718.0,
+    "change_pct": 783.9429869466,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "flow": "import",
+    "key": "TR",
+    "base": 21328742.0,
+    "value": 150031853.0,
+    "change": 128703111.0,
+    "change_pct": 603.4257013377,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Türkiye",
+    "iso3": "TUR"
+   },
+   {
+    "flow": "import",
+    "key": "US",
+    "base": 572389774.0,
+    "value": 638055574.0,
+    "change": 65665800.0,
+    "change_pct": 11.4722175313,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "United States",
+    "iso3": "USA"
+   },
+   {
+    "flow": "import",
+    "key": "IN",
+    "base": 14375680.0,
+    "value": 34247534.0,
+    "change": 19871854.0,
+    "change_pct": 138.2324453522,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "flow": "import",
+    "key": "VN",
+    "base": 164121.0,
+    "value": 17527667.0,
+    "change": 17363546.0,
+    "change_pct": 10579.7222780753,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Viet Nam",
+    "iso3": "VNM"
+   },
+   {
+    "flow": "import",
+    "key": "GB",
+    "base": 407549266.0,
+    "value": 136047158.0,
+    "change": -271502108.0,
+    "change_pct": -66.6182301504,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "flow": "import",
+    "key": "AE",
+    "base": 299863142.0,
+    "value": 20238397.0,
+    "change": -279624745.0,
+    "change_pct": -93.2507887215,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "United Arab Emirates",
+    "iso3": "ARE"
+   },
+   {
+    "flow": "import",
+    "key": "MY",
+    "base": 326884903.0,
+    "value": 3218247.0,
+    "change": -323666656.0,
+    "change_pct": -99.0154800756,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Malaysia",
+    "iso3": "MYS"
+   },
+   {
+    "flow": "import",
+    "key": "CH",
+    "base": 474588894.0,
+    "value": 95319003.0,
+    "change": -379269891.0,
+    "change_pct": -79.9154585779,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Switzerland",
+    "iso3": "CHE"
+   },
+   {
+    "flow": "import",
+    "key": "CN",
+    "base": 2248814548.0,
+    "value": 761309825.0,
+    "change": -1487504723.0,
+    "change_pct": -66.1461712938,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "China",
+    "iso3": "CHN"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "JP",
+   "TR",
+   "US",
+   "IN",
+   "VN",
+   "GB",
+   "AE",
+   "MY",
+   "CH",
+   "CN"
+  ]
+ },
+ "insight": [
+  "The non-EU27 countries with the largest changes in Luxembourg's imports between 2005 and 2025 include Japan, Türkiye, and Viet Nam.",
+  "Imports from Japan increased by 783.9 %, reaching 1.13 billion euros in 2025.",
+  "Imports from Viet Nam showed the highest growth rate of 10,579.7 %, rising from 164 thousand euros in 2005 to 17.5 million euros in 2025.",
+  "Imports from the United Kingdom decreased by 66.6 %, falling to 136.0 million euros in 2025.",
+  "These values are in current euros and are not adjusted for price changes, and the United Kingdom is counted as extra-EU throughout the period."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.JP",
+   "text": "imports Japan: 127.5 M€ 2005 → 1.13 bn € 2025 (999.6 M€, +783.9 %)"
+  },
+  {
+   "key": "import.TR",
+   "text": "imports Türkiye: 21.3 M€ 2005 → 150.0 M€ 2025 (128.7 M€, +603.4 %)"
+  },
+  {
+   "key": "import.US",
+   "text": "imports United States: 572.4 M€ 2005 → 638.1 M€ 2025 (65.7 M€, +11.5 %)"
+  },
+  {
+   "key": "import.IN",
+   "text": "imports India: 14.4 M€ 2005 → 34.2 M€ 2025 (19.9 M€, +138.2 %)"
+  },
+  {
+   "key": "import.VN",
+   "text": "imports Viet Nam: 164 k € 2005 → 17.5 M€ 2025 (17.4 M€, +10,579.7 %)"
+  },
+  {
+   "key": "import.GB",
+   "text": "imports United Kingdom: 407.5 M€ 2005 → 136.0 M€ 2025 (-271.5 M€, −66.6 %)"
+  },
+  {
+   "key": "import.AE",
+   "text": "imports United Arab Emirates: 299.9 M€ 2005 → 20.2 M€ 2025 (-279.6 M€, −93.3 %)"
+  },
+  {
+   "key": "import.MY",
+   "text": "imports Malaysia: 326.9 M€ 2005 → 3.2 M€ 2025 (-323.7 M€, −99.0 %)"
+  },
+  {
+   "key": "import.CH",
+   "text": "imports Switzerland: 474.6 M€ 2005 → 95.3 M€ 2025 (-379.3 M€, −79.9 %)"
+  },
+  {
+   "key": "import.CN",
+   "text": "imports China: 2.25 bn € 2005 → 761.3 M€ 2025 (-1.49 bn €, −66.1 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn, L08:warn"
+  },
+  {
+   "node": "query",
+   "ms": 417,
+   "outcome": "ok",
+   "detail": "248 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L08, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 67,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2005 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1433,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1225,
+   "output_tokens": 151,
+   "cache_read_tokens": 0,
+   "ms": 1373
+  }
+ ],
+ "code_version": "ffce2e8",
+ "error": null
+}

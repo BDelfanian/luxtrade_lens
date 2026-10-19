@@ -1,0 +1,19 @@
+{
+ "session_id": "emcdqw",
+ "created_at": "2026-10-18T22:45:22+00:00",
+ "updated_at": "2026-10-18T22:45:43+00:00",
+ "language": "en",
+ "title": "Scenario: 6 · Neighbour routes and fuel",
+ "runs": [
+  "d4e7bb41f2",
+  "aef5870be7",
+  "d364bd3eb4",
+  "66d74b0561",
+  "61883c0a71",
+  "792d530b5d",
+  "c648a54aa6",
+  "2d604a9777",
+  "a219a67200",
+  "9686038402"
+ ]
+}

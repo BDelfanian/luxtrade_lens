@@ -1,0 +1,299 @@
+{
+ "run_id": "70377fb369",
+ "session_id": "e6ytca",
+ "turn": 9,
+ "created_at": "2026-10-18T22:07:09+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which countries supplied Luxembourg's imports of lifting and handling machinery (HS 8428) in 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "8428"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2025-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND hs4 IN ('8428')\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "345a64ff7cde12055f83637b875801a622f2d50f11881331a7ae5eb4815230c1",
+ "row_count": 32,
+ "view_kind": "map",
+ "title": "Main trading partners — imports 2025",
+ "frames": {
+  "main": [
+   {
+    "key": "JP",
+    "value": 744400826.0,
+    "share": 96.5622672411,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Japan",
+    "iso3": "JPN"
+   },
+   {
+    "key": "DE",
+    "value": 5826533.0,
+    "share": 0.7558068409,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "key": "SK",
+    "value": 3441052.0,
+    "share": 0.4463667573,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Slovakia",
+    "iso3": "SVK"
+   },
+   {
+    "key": "FR",
+    "value": 2567405.0,
+    "share": 0.3330389208,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "key": "BE",
+    "value": 2337690.0,
+    "share": 0.3032407255,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "key": "ES",
+    "value": 1847467.0,
+    "share": 0.2396499251,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "key": "IT",
+    "value": 1775036.0,
+    "share": 0.2302543127,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "key": "FI",
+    "value": 1749704.0,
+    "share": 0.2269682936,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Finland",
+    "iso3": "FIN"
+   },
+   {
+    "key": "CH",
+    "value": 1747500.0,
+    "share": 0.2266823949,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Switzerland",
+    "iso3": "CHE"
+   },
+   {
+    "key": "NL",
+    "value": 1272067.0,
+    "share": 0.1650101253,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "import",
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "key": "OTHER",
+    "value": 3932079.0,
+    "share": 0.510061851,
+    "rank": null,
+    "kind": "other",
+    "flow": "import",
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "key": "UNDISCLOSED",
+    "value": 5031.0,
+    "share": 0.0006526118,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "import",
+    "label": "Undisclosed / not specified",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "JP",
+   "DE",
+   "SK",
+   "FR",
+   "BE",
+   "ES",
+   "IT",
+   "FI",
+   "CH",
+   "NL"
+  ]
+ },
+ "insight": [
+  "Luxembourg's imports of lifting and handling machinery in 2025 were 770.9 million euros in total.",
+  "Japan was by far the largest supplier, providing 744.4 million euros worth, which is 96.6% of the imports.",
+  "Germany was the second largest supplier with 5.8 million euros, followed by Slovakia with 3.4 million euros.",
+  "The top three suppliers together accounted for 97.8% of the total imports.",
+  "These values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.total",
+   "text": "imports 2025: 770.9 M€"
+  },
+  {
+   "key": "import.rank1",
+   "text": "#1 Japan: 744.4 M€, 96.6 %"
+  },
+  {
+   "key": "import.rank2",
+   "text": "#2 Germany: 5.8 M€, 0.8 %"
+  },
+  {
+   "key": "import.rank3",
+   "text": "#3 Slovakia: 3.4 M€, 0.4 %"
+  },
+  {
+   "key": "import.rank4",
+   "text": "#4 France: 2.6 M€, 0.3 %"
+  },
+  {
+   "key": "import.rank5",
+   "text": "#5 Belgium: 2.3 M€, 0.3 %"
+  },
+  {
+   "key": "import.other",
+   "text": "Other: 3.9 M€, 0.5 %"
+  },
+  {
+   "key": "import.undisclosed",
+   "text": "Undisclosed / not specified: 5 k €, 0.0 %"
+  },
+  {
+   "key": "import.top3_share",
+   "text": "top 3 imports: 97.8 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 173,
+   "outcome": "ok",
+   "detail": "32 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 14,
+   "outcome": "ok",
+   "detail": "view=map; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1193,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 939,
+   "output_tokens": 118,
+   "cache_read_tokens": 0,
+   "ms": 1153
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

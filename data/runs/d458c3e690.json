@@ -1,0 +1,536 @@
+{
+ "run_id": "d458c3e690",
+ "session_id": "arxe8k",
+ "turn": 16,
+ "created_at": "2026-10-18T21:13:48+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did Luxembourg's exports to Canada and India evolve each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [
+   "CA",
+   "IN"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('CA', 'IN')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "e13372f94b153f20cd279097dc0f5c0ef7208ba6754c11f76d373b9a03ce9ed7",
+ "row_count": 42,
+ "view_kind": "line",
+ "title": "Canada · exports: +123.8 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "CA",
+    "flow": "export",
+    "value": 54611859.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2005,
+    "key": "IN",
+    "flow": "export",
+    "value": 14829720.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2006,
+    "key": "CA",
+    "flow": "export",
+    "value": 61239163.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2006,
+    "key": "IN",
+    "flow": "export",
+    "value": 26242287.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2007,
+    "key": "CA",
+    "flow": "export",
+    "value": 70150175.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2007,
+    "key": "IN",
+    "flow": "export",
+    "value": 29562785.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2008,
+    "key": "CA",
+    "flow": "export",
+    "value": 53833368.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2008,
+    "key": "IN",
+    "flow": "export",
+    "value": 26823594.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2009,
+    "key": "CA",
+    "flow": "export",
+    "value": 53737612.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2009,
+    "key": "IN",
+    "flow": "export",
+    "value": 33605892.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2010,
+    "key": "CA",
+    "flow": "export",
+    "value": 60124027.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2010,
+    "key": "IN",
+    "flow": "export",
+    "value": 43589069.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2011,
+    "key": "CA",
+    "flow": "export",
+    "value": 82642603.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2011,
+    "key": "IN",
+    "flow": "export",
+    "value": 53905352.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2012,
+    "key": "CA",
+    "flow": "export",
+    "value": 75969112.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2012,
+    "key": "IN",
+    "flow": "export",
+    "value": 51857903.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2013,
+    "key": "CA",
+    "flow": "export",
+    "value": 68272002.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2013,
+    "key": "IN",
+    "flow": "export",
+    "value": 39508295.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2014,
+    "key": "CA",
+    "flow": "export",
+    "value": 105613949.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2014,
+    "key": "IN",
+    "flow": "export",
+    "value": 31847168.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2015,
+    "key": "CA",
+    "flow": "export",
+    "value": 94266768.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2015,
+    "key": "IN",
+    "flow": "export",
+    "value": 39792115.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2016,
+    "key": "CA",
+    "flow": "export",
+    "value": 77298298.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2016,
+    "key": "IN",
+    "flow": "export",
+    "value": 42363230.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2017,
+    "key": "CA",
+    "flow": "export",
+    "value": 89781258.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2017,
+    "key": "IN",
+    "flow": "export",
+    "value": 29711563.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2018,
+    "key": "CA",
+    "flow": "export",
+    "value": 86215366.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2018,
+    "key": "IN",
+    "flow": "export",
+    "value": 37149678.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2019,
+    "key": "CA",
+    "flow": "export",
+    "value": 93777681.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2019,
+    "key": "IN",
+    "flow": "export",
+    "value": 52527912.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2020,
+    "key": "CA",
+    "flow": "export",
+    "value": 114727251.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2020,
+    "key": "IN",
+    "flow": "export",
+    "value": 39940560.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2021,
+    "key": "CA",
+    "flow": "export",
+    "value": 124789548.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2021,
+    "key": "IN",
+    "flow": "export",
+    "value": 40566986.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2022,
+    "key": "CA",
+    "flow": "export",
+    "value": 93514328.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2022,
+    "key": "IN",
+    "flow": "export",
+    "value": 52980531.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2023,
+    "key": "CA",
+    "flow": "export",
+    "value": 108349988.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2023,
+    "key": "IN",
+    "flow": "export",
+    "value": 78251317.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2024,
+    "key": "CA",
+    "flow": "export",
+    "value": 93060120.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2024,
+    "key": "IN",
+    "flow": "export",
+    "value": 63690056.0,
+    "label": "India",
+    "iso3": "IND"
+   },
+   {
+    "period": 2025,
+    "key": "CA",
+    "flow": "export",
+    "value": 122239635.0,
+    "label": "Canada",
+    "iso3": "CAN"
+   },
+   {
+    "period": 2025,
+    "key": "IN",
+    "flow": "export",
+    "value": 64182258.0,
+    "label": "India",
+    "iso3": "IND"
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "CA",
+   "IN"
+  ]
+ },
+ "insight": [
+  "Luxembourg's exports to Canada increased from 54.6 million euros in 2005 to 122.2 million euros in 2025.",
+  "Exports to Canada grew by 123.8% over this period, with the peak export value reaching 124.8 million euros in 2021.",
+  "The largest year-to-year increase for exports to Canada was between 2013 and 2014, rising from 68.3 million euros to 105.6 million euros.",
+  "Exports to India rose from 14.8 million euros in 2005 to 64.2 million euros in 2025, showing a growth of 332.8%.",
+  "These values are nominal and not adjusted for inflation or price changes, which may affect the interpretation of growth over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Canada · exports.start",
+   "text": "Canada · exports 2005: 54.6 M€"
+  },
+  {
+   "key": "Canada · exports.end",
+   "text": "Canada · exports 2025: 122.2 M€"
+  },
+  {
+   "key": "Canada · exports.change",
+   "text": "Canada · exports change 2005–2025: +123.8 %"
+  },
+  {
+   "key": "Canada · exports.peak",
+   "text": "Canada · exports peak 2021: 124.8 M€"
+  },
+  {
+   "key": "Canada · exports.prev",
+   "text": "Canada · exports 2024: 93.1 M€"
+  },
+  {
+   "key": "Canada · exports.move",
+   "text": "Canada · exports: largest change between consecutive periods 2013–2014: 68.3 M€ to 105.6 M€"
+  },
+  {
+   "key": "Canada · exports.median",
+   "text": "Canada · exports: median over 2005–2025: 86.2 M€"
+  },
+  {
+   "key": "Canada · exports.top2",
+   "text": "Canada · exports: the two largest periods (2021, 2025) make 13.8 % of the total over 2005–2025"
+  },
+  {
+   "key": "India · exports.start",
+   "text": "India · exports 2005: 14.8 M€"
+  },
+  {
+   "key": "India · exports.end",
+   "text": "India · exports 2025: 64.2 M€"
+  },
+  {
+   "key": "India · exports.change",
+   "text": "India · exports change 2005–2025: +332.8 %"
+  },
+  {
+   "key": "India · exports.peak",
+   "text": "India · exports peak 2023: 78.3 M€"
+  },
+  {
+   "key": "India · exports.prev",
+   "text": "India · exports 2024: 63.7 M€"
+  },
+  {
+   "key": "India · exports.move",
+   "text": "India · exports: largest change between consecutive periods 2022–2023: 53.0 M€ to 78.3 M€"
+  },
+  {
+   "key": "India · exports.median",
+   "text": "India · exports: median over 2005–2025: 39.9 M€"
+  },
+  {
+   "key": "India · exports.top2",
+   "text": "India · exports: the two largest periods (2023, 2025) make 16.0 % of the total over 2005–2025"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 213,
+   "outcome": "ok",
+   "detail": "42 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 7,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1351,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1228,
+   "output_tokens": 164,
+   "cache_read_tokens": 0,
+   "ms": 1309
+  }
+ ],
+ "code_version": "58313fd",
+ "error": null
+}

@@ -1,0 +1,1032 @@
+{
+ "scenario_id": "5c7eddaeb6",
+ "session_id": "wxwwtw",
+ "created_at": "2026-10-18T21:16:16+00:00",
+ "question": "Is Luxembourg's trade shifting from extra-EU to intra-EU partners between 2005 and 2025, for imports and for exports, and which extra-EU partners changed most (China, the United Kingdom, Japan, the United States, Canada, India, Brazil): lasting trends or one-off shipments?",
+ "language": "en",
+ "title": "Is Luxembourg's trade shifting from extra-EU to intra-EU par",
+ "name": "Final output-Is Luxembourg's trade shifting from extra-EU to intra-EU par",
+ "favorite": true,
+ "hidden": false,
+ "based_on": "609636a60d",
+ "approach": "",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "What were the shares of EU27 and non-EU27 partners in Luxembourg's imports each year from 2005 to 2025?",
+   "purpose": "The intra-EU vs extra-EU trend of imports.",
+   "builds_on": [],
+   "run_id": "f1f64dd99f",
+   "status": "answered",
+   "queried": "imports · EU27 vs non-EU27 · 2005–2025, yearly · share of the whole flow in %",
+   "note": "The share of imports from EU27 countries rose from 70.3% in 2005 to 86.6% in 2025, while non-EU27 shares fell from 29.7% to 13.4%."
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "What were the shares of EU27 and non-EU27 partners in Luxembourg's exports each year from 2005 to 2025?",
+   "purpose": "The intra-EU vs extra-EU trend of exports.",
+   "builds_on": [],
+   "run_id": "0922c56e2b",
+   "status": "answered",
+   "queried": "exports · EU27 vs non-EU27 · 2005–2025, yearly · share of the whole flow in %",
+   "note": "The share of exports to EU27 countries increased slightly from 80.9% in 2005 to 83.1% in 2025, with non-EU27 exports decreasing from 19.1% to 16.9%."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "How did the value of Luxembourg's imports from EU27 and from non-EU27 partners change between 2005 and 2025?",
+   "purpose": "Whether extra-EU imports shrank or only grew more slowly.",
+   "builds_on": [],
+   "run_id": "9834338824",
+   "status": "answered",
+   "queried": "imports · EU27 vs non-EU27 · 2005–2025, yearly · value in €",
+   "note": "Import values from EU27 countries grew by 70.3% from 12.76 bn € in 2005 to 21.72 bn € in 2025, while non-EU27 imports shrank by 37.5% from 5.40 bn € to 3.37 bn €."
+  },
+  {
+   "n": 4,
+   "kind": "own",
+   "question": "How did the value of Luxembourg's exports to EU27 and to non-EU27 partners change between 2005 and 2025?",
+   "purpose": "Whether extra-EU exports shrank or only grew more slowly.",
+   "builds_on": [],
+   "run_id": "717c022df8",
+   "status": "answered",
+   "queried": "exports · EU27 vs non-EU27 · 2005–2025, yearly · value in €",
+   "note": "Export values to EU27 countries rose by 8.4% from 12.46 bn € in 2005 to 13.51 bn € in 2025, whereas exports to non-EU27 countries declined by 6.5% from 2.94 bn € to 2.74 bn €."
+  },
+  {
+   "n": 5,
+   "kind": "own",
+   "question": "Which non-EU27 countries had the largest changes in Luxembourg's imports between 2005 and 2025?",
+   "purpose": "Who moved on the extra-EU import side.",
+   "builds_on": [],
+   "run_id": "223c4bf9d6",
+   "status": "answered",
+   "queried": "imports · non-EU27 partners · by partner (top 10) · 2005–2025 · change between the two years",
+   "note": "Imports from Japan rose by 783.9% to 1.13 bn € in 2025, while imports from China fell by 66.1% to 761.3 M€, and imports from the United Kingdom dropped by 66.6% to 136.0 M€."
+  },
+  {
+   "n": 6,
+   "kind": "own",
+   "question": "Which non-EU27 countries had the largest changes in Luxembourg's exports between 2005 and 2025?",
+   "purpose": "Who moved on the extra-EU export side.",
+   "builds_on": [],
+   "run_id": "3f79301a3e",
+   "status": "answered",
+   "queried": "exports · non-EU27 partners · by partner (top 10) · 2005–2025 · change between the two years",
+   "note": "Exports to the United Kingdom fell by 72.7% to 359.6 M€, while exports to Switzerland, the United States, China, Brazil, and Canada increased."
+  },
+  {
+   "n": 7,
+   "kind": "own",
+   "question": "What share of Luxembourg's imports came from China each year from 2005 to 2025?",
+   "purpose": "The largest extra-EU change on the import side.",
+   "builds_on": [],
+   "run_id": "33024c6853",
+   "status": "answered",
+   "queried": "imports · partners CN · by partner (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "China's share of imports declined from 12.4% in 2005 to 3.0% in 2025, with a peak at 18.6% in 2008."
+  },
+  {
+   "n": 8,
+   "kind": "own",
+   "question": "Compare Luxembourg's yearly imports from China of computers (HS 8471) and of telephone sets (HS 8517) from 2005 to 2025, one line per product.",
+   "purpose": "Which products made China's share rise and fall.",
+   "builds_on": [],
+   "run_id": "80162f6998",
+   "status": "answered",
+   "queried": "imports · products 8471, 8517 · partners CN · by HS4 product (top 10) · 2005–2025, yearly · value in €",
+   "note": "Imports of computers from China fell by 99.8% from 2.06 bn € in 2005 to 4.3 M€ in 2025, while telephone set imports rose sharply but were volatile."
+  },
+  {
+   "n": 9,
+   "kind": "own",
+   "question": "How did Luxembourg's monthly imports of telephone sets (HS 8517) from China evolve from January to December 2025?",
+   "purpose": "Whether China's 2025 rebound is spread over the year or a few months.",
+   "builds_on": [],
+   "run_id": "07cc950041",
+   "status": "answered",
+   "queried": "imports · products 8517 · partners CN · 2025-01–2025-12, monthly · value in €",
+   "note": "Monthly imports of telephone sets from China in 2025 peaked in November with 290.7 M€, concentrated in a few months rather than spread evenly."
+  },
+  {
+   "n": 10,
+   "kind": "own",
+   "question": "What share of Luxembourg's exports went to the United Kingdom each year from 2005 to 2025?",
+   "purpose": "When exports to the UK fell: before or after Brexit.",
+   "builds_on": [],
+   "run_id": "fd74e3517a",
+   "status": "answered",
+   "queried": "exports · partners GB · by partner (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Exports to the United Kingdom declined from 8.6% share in 2005 to 2.2% in 2025, with the largest drop between 2012 and 2013."
+  },
+  {
+   "n": 11,
+   "kind": "own",
+   "question": "Which product headings (HS4) exported to the United Kingdom changed most between 2010 and 2013?",
+   "purpose": "Which products made exports to the UK fall.",
+   "builds_on": [],
+   "run_id": "dfbd8a918c",
+   "status": "answered",
+   "queried": "exports · partners GB · by HS4 product (top 10) · 2010–2013 · change between the two years",
+   "note": "Exports of computers and telephone sets to the United Kingdom fell drastically between 2010 and 2013, contributing to the overall export decline."
+  },
+  {
+   "n": 12,
+   "kind": "own",
+   "question": "What share of Luxembourg's imports came from Japan each year from 2005 to 2025?",
+   "purpose": "Is Japan's rise a steady trend or a jump in one year?",
+   "builds_on": [],
+   "run_id": "c590e9ef97",
+   "status": "answered",
+   "queried": "imports · partners JP · by partner (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Japan's import share rose from 0.7% in 2005 to 4.5% in 2025, with the largest increase occurring between 2024 and 2025."
+  },
+  {
+   "n": 13,
+   "kind": "own",
+   "question": "Which product headings (HS4) imported from Japan changed most between 2024 and 2025?",
+   "purpose": "Which products drive the latest change in imports from Japan.",
+   "builds_on": [],
+   "run_id": "1710cf1bc8",
+   "status": "answered",
+   "queried": "imports · partners JP · by HS4 product (top 10) · 2024–2025 · change between the two years",
+   "note": "The 2025 import surge from Japan was driven mainly by lifting and handling machinery and other mechanical appliances."
+  },
+  {
+   "n": 14,
+   "kind": "own",
+   "question": "How did Luxembourg's monthly imports of lifting and handling machinery (HS 8428) from Japan evolve from January to December 2025?",
+   "purpose": "Whether the jump is spread over the year or a few shipments.",
+   "builds_on": [],
+   "run_id": "6ee4efc145",
+   "status": "answered",
+   "queried": "imports · products 8428 · partners JP · 2025-01–2025-12, monthly · value in €",
+   "note": "Monthly imports of lifting and handling machinery from Japan in 2025 peaked in October with 386.7 M€, concentrated in a few months."
+  },
+  {
+   "n": 15,
+   "kind": "own",
+   "question": "How did Luxembourg's exports to and imports from the United States evolve each year from 2005 to 2025?",
+   "purpose": "Whether trade with the United States changed.",
+   "builds_on": [],
+   "run_id": "3fe261134b",
+   "status": "answered",
+   "queried": "exports and imports · partners US · 2005–2025, yearly · value in €",
+   "note": "Trade with the United States grew moderately in both exports (+30.1%) and imports (+11.5%) between 2005 and 2025."
+  },
+  {
+   "n": 16,
+   "kind": "own",
+   "question": "How did Luxembourg's exports to Canada and India evolve each year from 2005 to 2025?",
+   "purpose": "Whether exports to Canada and India grew from their small base.",
+   "builds_on": [],
+   "run_id": "367b2b19bb",
+   "status": "answered",
+   "queried": "exports · partners CA, IN · by partner (top 10) · 2005–2025, yearly · value in €",
+   "note": "Exports to Canada and India increased significantly from small bases, by 123.8% and 332.8% respectively, between 2005 and 2025."
+  },
+  {
+   "n": 17,
+   "kind": "own",
+   "question": "What share of Luxembourg's exports went to Brazil each year from 2005 to 2025?",
+   "purpose": "Is Brazil's rise a steady trend or a few strong years?",
+   "builds_on": [],
+   "run_id": "0ef821a03e",
+   "status": "answered",
+   "queried": "exports · partners BR · by partner (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Exports to Brazil rose by 169.2% from 0.3% share in 2005 to 0.7% in 2025, with a peak in 2025."
+  }
+ ],
+ "headline": "Luxembourg's trade is shifting significantly from extra-EU to intra-EU partners for imports, with a strong lasting trend, while exports show a slight shift; among extra-EU partners, Japan's import share rose sharply in 2025 as a one-off, and the United Kingdom's trade fell notably over the period.",
+ "points": [
+  {
+   "text": "Luxembourg's imports from EU27 countries increased their share from 70.3% in 2005 to 86.6% in 2025, a lasting upward trend, while imports from non-EU27 countries fell from 29.7% to 13.4%, indicating a strong shift towards intra-EU imports. This is confirmed by the import values, where EU27 imports grew by 70.3% and non-EU27 imports shrank by 37.5% between 2005 and 2025.",
+   "steps": [
+    1,
+    3
+   ]
+  },
+  {
+   "text": "Exports show a smaller shift: the share of exports to EU27 partners rose slightly from 80.9% in 2005 to 83.1% in 2025, while exports to non-EU27 partners declined modestly from 19.1% to 16.9%. Export values to EU27 partners grew by 8.4%, whereas exports to non-EU27 partners decreased by 6.5%, indicating a mild intra-EU shift in exports.",
+   "steps": [
+    2,
+    4
+   ]
+  },
+  {
+   "text": "Among extra-EU partners, imports from Japan increased dramatically by 783.9% from 127.5 million € in 2005 to 1.13 billion € in 2025, but this rise was a one-off jump in 2025 rather than a steady trend, driven mainly by large shipments of lifting and handling machinery in late 2025.",
+   "steps": [
+    5,
+    12,
+    13,
+    14
+   ]
+  },
+  {
+   "text": "Imports from China fell sharply by 66.1% from 2.25 billion € in 2005 to 761.3 million € in 2025, with China's share of imports dropping from 12.4% to 3.0%. This decline was driven by a near disappearance of computer imports and a volatile pattern in telephone set imports, including a large but concentrated rebound in late 2025.",
+   "steps": [
+    5,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "text": "Trade with the United Kingdom declined notably: imports fell by 66.6% and exports by 72.7% between 2005 and 2025. Exports to the UK dropped sharply between 2012 and 2013, with major falls in computers and telephone sets, indicating a lasting decline rather than a one-off change.",
+   "steps": [
+    5,
+    6,
+    10,
+    11
+   ]
+  }
+ ],
+ "conclusion": "Overall, Luxembourg's imports have shifted strongly from extra-EU to intra-EU partners between 2005 and 2025, while exports show a smaller but still present shift. Among extra-EU partners, Japan's import increase in 2025 was a one-off surge, whereas the United Kingdom experienced a lasting decline in trade. The data cannot explain the causes of these shifts or the impact on specific sectors beyond the largest products mentioned, and nominal values are not adjusted for price changes.",
+ "charts": [
+  1,
+  5,
+  12
+ ],
+ "figures": [
+  {
+   "kind": "series",
+   "title": "Year by year, 2005–2025",
+   "flow": "both",
+   "steps": [
+    1,
+    2,
+    7,
+    10
+   ],
+   "rows": [
+    {
+     "group": 2005,
+     "series": "EU27 countries, share of imports",
+     "value": 70.2774224424,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "EU27 countries, share of imports",
+     "value": 64.9151810337,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "EU27 countries, share of imports",
+     "value": 71.9548903946,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "EU27 countries, share of imports",
+     "value": 73.2720681027,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "EU27 countries, share of imports",
+     "value": 70.0746181191,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "EU27 countries, share of imports",
+     "value": 79.1184634644,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "EU27 countries, share of imports",
+     "value": 80.2200783859,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "EU27 countries, share of imports",
+     "value": 75.8014721598,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "EU27 countries, share of imports",
+     "value": 77.8155516992,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "EU27 countries, share of imports",
+     "value": 78.7638184481,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "EU27 countries, share of imports",
+     "value": 71.1446853233,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "EU27 countries, share of imports",
+     "value": 76.2879101207,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "EU27 countries, share of imports",
+     "value": 81.7764314903,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "EU27 countries, share of imports",
+     "value": 86.673269278,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "EU27 countries, share of imports",
+     "value": 83.4549365076,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "EU27 countries, share of imports",
+     "value": 88.9799721305,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "EU27 countries, share of imports",
+     "value": 88.7340028421,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "EU27 countries, share of imports",
+     "value": 90.8489868119,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "EU27 countries, share of imports",
+     "value": 90.70267412,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "EU27 countries, share of imports",
+     "value": 91.516218002,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "EU27 countries, share of imports",
+     "value": 86.5560066022,
+     "step": 1,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "EU27 countries, share of exports",
+     "value": 80.9301754967,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "EU27 countries, share of exports",
+     "value": 80.4332482532,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "EU27 countries, share of exports",
+     "value": 80.723748184,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "EU27 countries, share of exports",
+     "value": 81.9449603079,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "EU27 countries, share of exports",
+     "value": 79.2832388762,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "EU27 countries, share of exports",
+     "value": 73.7901434942,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "EU27 countries, share of exports",
+     "value": 73.0527637426,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "EU27 countries, share of exports",
+     "value": 73.6075409948,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "EU27 countries, share of exports",
+     "value": 78.2493787334,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "EU27 countries, share of exports",
+     "value": 79.3910041602,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "EU27 countries, share of exports",
+     "value": 79.2636717464,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "EU27 countries, share of exports",
+     "value": 79.0319112812,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "EU27 countries, share of exports",
+     "value": 80.3592139324,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "EU27 countries, share of exports",
+     "value": 81.0196808188,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "EU27 countries, share of exports",
+     "value": 79.927567668,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "EU27 countries, share of exports",
+     "value": 80.4152029465,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "EU27 countries, share of exports",
+     "value": 80.7802534598,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "EU27 countries, share of exports",
+     "value": 80.3783325478,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "EU27 countries, share of exports",
+     "value": 79.4932685607,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "EU27 countries, share of exports",
+     "value": 80.9889845374,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "EU27 countries, share of exports",
+     "value": 83.1163812256,
+     "step": 2,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "China, share of imports",
+     "value": 12.3870098906,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "China, share of imports",
+     "value": 16.3617171581,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "China, share of imports",
+     "value": 16.6703472438,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "China, share of imports",
+     "value": 18.6169319777,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "China, share of imports",
+     "value": 18.2528962167,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "China, share of imports",
+     "value": 8.7467539389,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "China, share of imports",
+     "value": 6.870887665,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "China, share of imports",
+     "value": 7.1613961727,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "China, share of imports",
+     "value": 6.3660365229,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "China, share of imports",
+     "value": 5.9091828245,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "China, share of imports",
+     "value": 11.5994561982,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "China, share of imports",
+     "value": 5.7440232665,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "China, share of imports",
+     "value": 1.5293039524,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "China, share of imports",
+     "value": 2.1159671101,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "China, share of imports",
+     "value": 6.9911126434,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "China, share of imports",
+     "value": 1.5346583166,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "China, share of imports",
+     "value": 1.2181146157,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "China, share of imports",
+     "value": 1.0685951257,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "China, share of imports",
+     "value": 0.8223373657,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "China, share of imports",
+     "value": 0.6393368635,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "China, share of imports",
+     "value": 3.0333552836,
+     "step": 7,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "United Kingdom, share of exports",
+     "value": 8.5650205459,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "United Kingdom, share of exports",
+     "value": 8.8885253296,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "United Kingdom, share of exports",
+     "value": 7.0907812384,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "United Kingdom, share of exports",
+     "value": 6.5343321879,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "United Kingdom, share of exports",
+     "value": 8.0493679026,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "United Kingdom, share of exports",
+     "value": 9.2622830554,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "United Kingdom, share of exports",
+     "value": 7.1657868799,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "United Kingdom, share of exports",
+     "value": 5.3616256541,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "United Kingdom, share of exports",
+     "value": 2.7510568104,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "United Kingdom, share of exports",
+     "value": 3.0840964865,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "United Kingdom, share of exports",
+     "value": 4.7498081561,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "United Kingdom, share of exports",
+     "value": 3.7123333306,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "United Kingdom, share of exports",
+     "value": 3.9035903114,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "United Kingdom, share of exports",
+     "value": 3.300073558,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "United Kingdom, share of exports",
+     "value": 4.237228157,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "United Kingdom, share of exports",
+     "value": 3.3783555276,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "United Kingdom, share of exports",
+     "value": 2.4578350311,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "United Kingdom, share of exports",
+     "value": 2.6033736739,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "United Kingdom, share of exports",
+     "value": 2.4420715896,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "United Kingdom, share of exports",
+     "value": 2.287097598,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "United Kingdom, share of exports",
+     "value": 2.2121726801,
+     "step": 10,
+     "flow": "export",
+     "unit": "share"
+    }
+   ],
+   "tiles": [
+    {
+     "value": "86.6 %",
+     "label": "EU27 countries, share of imports, 2025",
+     "detail": "70.3 % in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "83.1 %",
+     "label": "EU27 countries, share of exports, 2025",
+     "detail": "80.9 % in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "3.0 %",
+     "label": "China, share of imports, 2025",
+     "detail": "12.4 % in 2005",
+     "tone": "down"
+    },
+    {
+     "value": "2.2 %",
+     "label": "United Kingdom, share of exports, 2025",
+     "detail": "8.6 % in 2005",
+     "tone": "down"
+    }
+   ],
+   "note": "Each panel is one step's yearly series (steps 1, 2, 7, 10), computed by code from its own SQL; panels have their own scales."
+  }
+ ],
+ "share": {
+  "title": "Luxembourg's imports shift strongly to EU27; exports shift slightly",
+  "subtitle": "Between 2005 and 2025, Luxembourg's imports from EU27 rose from 70.3% to 86.6%, while exports to EU27 increased from 80.9% to 83.1%. Japan's imports surged once in 2025; UK trade declined steadily.",
+  "source": "llm",
+  "notes": [
+   "share title and subtitle passed the number, country and wording checks"
+  ],
+  "earlier": []
+ },
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "1.2 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L03",
+   "message": "2.8 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  },
+  {
+   "id": "L08",
+   "message": "Intra/extra-EU uses the fixed EU27 (2020) composition; the United Kingdom counts as extra-EU throughout."
+  },
+  {
+   "id": "L11",
+   "message": "One month (Sep 2025, import) is far above the usual level; spikes like this often come from a few large shipments. It is flagged, not removed."
+  }
+ ],
+ "notes": [
+  "combined answer passed the number, country, wording and reasoning checks",
+  "share title and subtitle passed the number, country and wording checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 9345,
+   "output_tokens": 1508,
+   "cache_read_tokens": 8064,
+   "ms": 9407
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 9802,
+   "output_tokens": 1302,
+   "cache_read_tokens": 7040,
+   "ms": 7306
+  },
+  {
+   "step": "scenario_share",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1495,
+   "output_tokens": 233,
+   "cache_read_tokens": 0,
+   "ms": 2345
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "58313fd",
+ "status": "answered"
+}

@@ -1,0 +1,323 @@
+{
+ "run_id": "1710cf1bc8",
+ "session_id": "wxwwtw",
+ "turn": 13,
+ "created_at": "2026-10-18T21:15:52+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which product headings (HS4) imported from Japan changed most between 2024 and 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [
+   "JP"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2024",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "change",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year,\n  hs4 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg,\n  SUM(value_eur) FILTER(WHERE\n    NOT qty_kg IS NULL) AS value_eur_with_qty\nFROM v_lu_trade\nWHERE\n  period >= CAST('2024-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\n  AND partner IN ('JP')\n  AND year IN (2024, 2025)\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  year,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "a7f966000421322ebfde2b6ad970f64c085bd0b9a762a4fdadb5635f86fafa95",
+ "row_count": 825,
+ "view_kind": "change",
+ "title": "Largest changes by product group — imports 2024–2025",
+ "frames": {
+  "main": [
+   {
+    "flow": "import",
+    "key": "8428",
+    "base": 48851746.0,
+    "value": 744400826.0,
+    "change": 695549080.0,
+    "change_pct": 1423.795743145,
+    "rank": 1,
+    "kind": "item",
+    "share": null,
+    "label": "Lifting and handling machinery",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8479",
+    "base": 14693389.0,
+    "value": 108102936.0,
+    "change": 93409547.0,
+    "change_pct": 635.724998501,
+    "rank": 2,
+    "kind": "item",
+    "share": null,
+    "label": "Machines and mechanical appliances having individual functions, not specified or included elsewhere in this chapter; parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8457",
+    "base": 2934687.0,
+    "value": 46250544.0,
+    "change": 43315857.0,
+    "change_pct": 1475.9958046633,
+    "rank": 3,
+    "kind": "item",
+    "share": null,
+    "label": "Machining centres, unit construction machines \"single station\" and multi-station transfer machines for working metal",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8477",
+    "base": 8210680.0,
+    "value": 37751175.0,
+    "change": 29540495.0,
+    "change_pct": 359.7813457594,
+    "rank": 4,
+    "kind": "item",
+    "share": null,
+    "label": "Machinery for working rubber or plastics or for the manufacture of products from these materials, not specified or included elsewhere in this chapter, parts thereof",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8515",
+    "base": 2785356.0,
+    "value": 22588637.0,
+    "change": 19803281.0,
+    "change_pct": 710.9784530236,
+    "rank": 5,
+    "kind": "item",
+    "share": null,
+    "label": "Electric, incl. electrically heated gas, laser or other light or photon beam, ultrasonic, electron beam, magnetic pulse or plasma arc soldering, brazing or welding machines and apparatus, whether or not capable of cutting; electric machines and apparatus for hot spraying of metals, metal carbides or cermets; parts thereof (excl. guns for spraying hot materials of heading 8424)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "flow": "import",
+    "key": "8504",
+    "base": 10974187.0,
+    "value": 10322489.0,
+    "change": -651698.0,
+    "change_pct": -5.9384626852,
+    "rank": 6,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "flow": "import",
+    "key": "8464",
+    "base": 743000.0,
+    "value": 0.0,
+    "change": -743000.0,
+    "change_pct": -100.0,
+    "rank": 7,
+    "kind": "item",
+    "share": null,
+    "label": "Machine tools for working stone, ceramics, concrete, asbestos-cement or like mineral materials or for cold-working glass (excl. machines for working in the hand)",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8455",
+    "base": 1407000.0,
+    "value": 376000.0,
+    "change": -1031000.0,
+    "change_pct": -73.276474769,
+    "rank": 8,
+    "kind": "item",
+    "share": null,
+    "label": "Metal-rolling mills and rolls therefor; parts of metal-rolling mills",
+    "parent": "84",
+    "parent_label": "Machinery and mechanical appliances"
+   },
+   {
+    "flow": "import",
+    "key": "8537",
+    "base": 44557071.0,
+    "value": 43055479.0,
+    "change": -1501592.0,
+    "change_pct": -3.370041985,
+    "rank": 9,
+    "kind": "item",
+    "share": null,
+    "label": "Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy)",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   },
+   {
+    "flow": "import",
+    "key": "8543",
+    "base": 1997850.0,
+    "value": 480096.0,
+    "change": -1517754.0,
+    "change_pct": -75.9693670696,
+    "rank": 10,
+    "kind": "item",
+    "share": null,
+    "label": "Electrical machines and apparatus, having individual functions, n.e.s. in chapter 85 and parts thereof",
+    "parent": "85",
+    "parent_label": "Electrical machinery and equipment"
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "8428",
+   "8479",
+   "8457",
+   "8477",
+   "8515",
+   "8504",
+   "8464",
+   "8455",
+   "8537",
+   "8543"
+  ]
+ },
+ "insight": [
+  "The product headings imported from Japan that changed most between 2024 and 2025 were lifting and handling machinery, machining centres, and machines and mechanical appliances having individual functions.",
+  "Lifting and handling machinery imports increased from 48.9 million euros in 2024 to 744.4 million euros in 2025, a rise of 1,423.8%.",
+  "Machining centres imports rose from 2.9 million euros to 46.3 million euros, an increase of 1,476.0%, which is the largest percentage increase among the listed products.",
+  "Electrical transformers imports slightly decreased by 5.9%, from 11.0 million euros to 10.3 million euros, showing some variation among product categories.",
+  "The data values are in current euros and are not adjusted for price changes, which may affect the interpretation of the changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "import.8428",
+   "text": "imports Lifting and handling machinery: 48.9 M€ 2024 → 744.4 M€ 2025 (695.5 M€, +1,423.8 %)"
+  },
+  {
+   "key": "import.8479",
+   "text": "imports Machines and mechanical appliances having individual functions, not specified or included elsewhere in this chapter; parts thereof: 14.7 M€ 2024 → 108.1 M€ 2025 (93.4 M€, +635.7 %)"
+  },
+  {
+   "key": "import.8457",
+   "text": "imports Machining centres, unit construction machines \"single station\" and multi-station transfer machines for working metal: 2.9 M€ 2024 → 46.3 M€ 2025 (43.3 M€, +1,476.0 %)"
+  },
+  {
+   "key": "import.8477",
+   "text": "imports Machinery for working rubber or plastics or for the manufacture of products from these materials, not specified or included elsewhere in this chapter, parts thereof: 8.2 M€ 2024 → 37.8 M€ 2025 (29.5 M€, +359.8 %)"
+  },
+  {
+   "key": "import.8515",
+   "text": "imports Electric, incl. electrically heated gas, laser or other light or photon beam, ultrasonic, electron beam, magnetic pulse or plasma arc soldering, brazing or welding machines and apparatus, whether or not capable of cutting; electric machines and apparatus for hot spraying of metals, metal carbides or cermets; parts thereof (excl. guns for spraying hot materials of heading 8424): 2.8 M€ 2024 → 22.6 M€ 2025 (19.8 M€, +711.0 %)"
+  },
+  {
+   "key": "import.8504",
+   "text": "imports Electrical transformers, static converters, e.g. rectifiers, and inductors; parts thereof: 11.0 M€ 2024 → 10.3 M€ 2025 (-652 k €, −5.9 %)"
+  },
+  {
+   "key": "import.8464",
+   "text": "imports Machine tools for working stone, ceramics, concrete, asbestos-cement or like mineral materials or for cold-working glass (excl. machines for working in the hand): 743 k € 2024 → 0 k € 2025 (-743 k €, −100.0 %)"
+  },
+  {
+   "key": "import.8455",
+   "text": "imports Metal-rolling mills and rolls therefor; parts of metal-rolling mills: 1.4 M€ 2024 → 376 k € 2025 (-1.0 M€, −73.3 %)"
+  },
+  {
+   "key": "import.8537",
+   "text": "imports Boards, panels, consoles, desks, cabinets and other bases, equipped with two or more apparatus of heading 8535 or 8536, for electric control or the distribution of electricity, incl. those incorporating instruments or apparatus of chapter 90, and numerical control apparatus (excl. switching apparatus for line telephony or line telegraphy): 44.6 M€ 2024 → 43.1 M€ 2025 (-1.5 M€, −3.4 %)"
+  },
+  {
+   "key": "import.8543",
+   "text": "imports Electrical machines and apparatus, having individual functions, n.e.s. in chapter 85 and parts thereof: 2.0 M€ 2024 → 480 k € 2025 (-1.5 M€, −76.0 %)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "change = value 2025 − value 2024 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 74,
+   "outcome": "ok",
+   "detail": "825 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 18,
+   "outcome": "ok",
+   "detail": "view=change; change = value 2025 − value 2024 per item; the 5 largest rises and 5 largest falls per flow; masked and undisclosed codes are not ranked"
+  },
+  {
+   "node": "insight",
+   "ms": 1352,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1415,
+   "output_tokens": 180,
+   "cache_read_tokens": 1280,
+   "ms": 1312
+  }
+ ],
+ "code_version": "58313fd",
+ "error": null
+}

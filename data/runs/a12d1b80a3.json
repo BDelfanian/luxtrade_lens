@@ -1,0 +1,1592 @@
+{
+ "run_id": "a12d1b80a3",
+ "session_id": "7age4v",
+ "turn": 4,
+ "created_at": "2026-10-19T21:41:05+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How did Luxembourg's imports develop from 2005 to 2025 compared with Belgium, the Netherlands, Germany, France, Austria, Spain and Italy (index 2005 = 100)?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "benchmark",
+  "breakdown": "none",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [
+   "BE",
+   "NL",
+   "DE",
+   "FR",
+   "AT",
+   "ES",
+   "IT"
+  ],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "import",
+  "measure": "value_eur",
+  "top_n": null,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": [
+   "'index 2005 = 100' interpreted as a time series indexed to 2005 for comparison"
+  ]
+ },
+ "assumptions": [
+  "'index 2005 = 100' interpreted as a time series indexed to 2005 for comparison"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  reporter,\n  year AS period,\n  trade_type,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_eu_reporters_hs2\nWHERE\n  reporter IN ('LU', 'BE', 'NL', 'DE', 'FR', 'AT', 'ES', 'IT')\n  AND period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'import'\nGROUP BY\n  reporter,\n  year,\n  trade_type,\n  flow\nORDER BY\n  reporter,\n  year\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "e864405707629b12143f8dcaaa22493e5d88adeafd23a1f8d04dc7a0f3bcd135",
+ "row_count": 336,
+ "view_kind": "line",
+ "title": "Luxembourg 2005–2025: 138 (index 2005 = 100)",
+ "frames": {
+  "main": [
+   {
+    "reporter": "AT",
+    "period": 2005,
+    "value": 102344767398.0,
+    "index": 100.0,
+    "intra_share": 78.9230871578,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2006,
+    "value": 109279974101.0,
+    "index": 106.7763178122,
+    "intra_share": 78.2420445497,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2007,
+    "value": 118961918360.0,
+    "index": 116.2364441138,
+    "intra_share": 79.3142296802,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2008,
+    "value": 125301377122.0,
+    "index": 122.4306628542,
+    "intra_share": 78.0211052547,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2009,
+    "value": 102569142953.0,
+    "index": 100.2192350041,
+    "intra_share": 77.8796266891,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2010,
+    "value": 119943467929.0,
+    "index": 117.1955059144,
+    "intra_share": 77.4740921315,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2011,
+    "value": 137512536374.0,
+    "index": 134.362058628,
+    "intra_share": 76.8528248054,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2012,
+    "value": 138942402152.0,
+    "index": 135.7591654996,
+    "intra_share": 75.9072739671,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2013,
+    "value": 137999844105.0,
+    "index": 134.8382019066,
+    "intra_share": 76.3465627192,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2014,
+    "value": 137001202676.0,
+    "index": 133.8624398287,
+    "intra_share": 76.8211258268,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2015,
+    "value": 140699153152.0,
+    "index": 137.4756684969,
+    "intra_share": 76.7659476112,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2016,
+    "value": 142511948177.0,
+    "index": 139.2469315239,
+    "intra_share": 78.025804656,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2017,
+    "value": 155576289210.0,
+    "index": 152.0119622775,
+    "intra_share": 77.2958109289,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2018,
+    "value": 164007599533.0,
+    "index": 160.2501072626,
+    "intra_share": 77.5939031157,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2019,
+    "value": 165008279125.0,
+    "index": 161.2278608083,
+    "intra_share": 77.970364077,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2020,
+    "value": 150934698407.0,
+    "index": 147.4767125319,
+    "intra_share": 77.2498472701,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2021,
+    "value": 185732274434.0,
+    "index": 181.4770595078,
+    "intra_share": 76.3749087757,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2022,
+    "value": 221991799755.0,
+    "index": 216.9058618226,
+    "intra_share": 75.0608679865,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2023,
+    "value": 209277541331.0,
+    "index": 204.4828931187,
+    "intra_share": 75.5903504886,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2024,
+    "value": 195634739767.0,
+    "index": 191.1526546406,
+    "intra_share": 78.2508393327,
+    "label": "Austria"
+   },
+   {
+    "reporter": "AT",
+    "period": 2025,
+    "value": 203764175705.0,
+    "index": 199.0958413268,
+    "intra_share": 78.4241628216,
+    "label": "Austria"
+   },
+   {
+    "reporter": "BE",
+    "period": 2005,
+    "value": 256169029271.0,
+    "index": 100.0,
+    "intra_share": 71.6741128522,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2006,
+    "value": 280053402960.0,
+    "index": 109.3236773223,
+    "intra_share": 71.006084394,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2007,
+    "value": 300297678009.0,
+    "index": 117.2263793416,
+    "intra_share": 70.564237394,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2008,
+    "value": 317043370714.0,
+    "index": 123.7633493855,
+    "intra_share": 69.8910954504,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2009,
+    "value": 254367372435.0,
+    "index": 99.2966921719,
+    "intra_share": 70.3435498186,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2010,
+    "value": 295072113419.0,
+    "index": 115.1864900526,
+    "intra_share": 69.1060199713,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2011,
+    "value": 335447441256.0,
+    "index": 130.9476958283,
+    "intra_share": 67.6519304185,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2012,
+    "value": 341787455318.0,
+    "index": 133.4226296952,
+    "intra_share": 67.5470672311,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2013,
+    "value": 340092878609.0,
+    "index": 132.761122442,
+    "intra_share": 66.4171531497,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2014,
+    "value": 341426816514.0,
+    "index": 133.2818481163,
+    "intra_share": 64.9619893374,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2015,
+    "value": 338569839728.0,
+    "index": 132.1665779394,
+    "intra_share": 62.7888713353,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2016,
+    "value": 342831380309.0,
+    "index": 133.8301438252,
+    "intra_share": 63.772323808,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2017,
+    "value": 362585594369.0,
+    "index": 141.5415420829,
+    "intra_share": 64.4824577512,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2018,
+    "value": 385355124257.0,
+    "index": 150.4300208943,
+    "intra_share": 64.6018475086,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2019,
+    "value": 383385017145.0,
+    "index": 149.6609555948,
+    "intra_share": 64.2461655041,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2020,
+    "value": 346763027728.0,
+    "index": 135.3649302239,
+    "intra_share": 61.9957792653,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2021,
+    "value": 446063530250.0,
+    "index": 174.1285945141,
+    "intra_share": 63.0683185367,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2022,
+    "value": 594550013057.0,
+    "index": 232.0928547643,
+    "intra_share": 58.1420217252,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2023,
+    "value": 527988880283.0,
+    "index": 206.1095682743,
+    "intra_share": 61.0384310236,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2024,
+    "value": 492736566042.0,
+    "index": 192.348219238,
+    "intra_share": 61.5811640972,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "BE",
+    "period": 2025,
+    "value": 487467564588.0,
+    "index": 190.2913736197,
+    "intra_share": 61.6851617273,
+    "label": "Belgium"
+   },
+   {
+    "reporter": "DE",
+    "period": 2005,
+    "value": 624606354894.0,
+    "index": 100.0,
+    "intra_share": 63.7869295743,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2006,
+    "value": 722112045136.0,
+    "index": 115.6107425866,
+    "intra_share": 62.9702706289,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2007,
+    "value": 769779452024.0,
+    "index": 123.2423343106,
+    "intra_share": 64.6001917575,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2008,
+    "value": 805729525776.0,
+    "index": 128.9979711962,
+    "intra_share": 63.640216041,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2009,
+    "value": 664143345835.0,
+    "index": 106.3299053286,
+    "intra_share": 64.5793607211,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2010,
+    "value": 795665588101.0,
+    "index": 127.3867263544,
+    "intra_share": 63.2090832895,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2011,
+    "value": 901486615084.0,
+    "index": 144.3287613103,
+    "intra_share": 63.422643678,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2012,
+    "value": 898857429888.0,
+    "index": 143.9078265607,
+    "intra_share": 63.4618679408,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2013,
+    "value": 889415724826.0,
+    "index": 142.3962016808,
+    "intra_share": 64.6147987445,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2014,
+    "value": 908574605961.0,
+    "index": 145.4635545799,
+    "intra_share": 65.4667506892,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2015,
+    "value": 947626658483.0,
+    "index": 151.7158208619,
+    "intra_share": 65.5977381746,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2016,
+    "value": 953760941338.0,
+    "index": 152.6979246793,
+    "intra_share": 66.3001002873,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2017,
+    "value": 1029617149340.0,
+    "index": 164.842567046,
+    "intra_share": 66.2578860804,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2018,
+    "value": 1087431278216.0,
+    "index": 174.0986574497,
+    "intra_share": 66.4452138511,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2019,
+    "value": 1102153293247.0,
+    "index": 176.4556643735,
+    "intra_share": 66.7529852864,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2020,
+    "value": 1025490765649.0,
+    "index": 164.1819295647,
+    "intra_share": 63.4913343544,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2021,
+    "value": 1194375614719.0,
+    "index": 191.2205351996,
+    "intra_share": 63.39202754,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2022,
+    "value": 1505973124343.0,
+    "index": 241.1075571907,
+    "intra_share": 60.9357601734,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2023,
+    "value": 1357423831439.0,
+    "index": 217.324691112,
+    "intra_share": 65.1338269664,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2024,
+    "value": 1306615285374.0,
+    "index": 209.1902003776,
+    "intra_share": 65.3538334408,
+    "label": "Germany"
+   },
+   {
+    "reporter": "DE",
+    "period": 2025,
+    "value": 1361823005087.0,
+    "index": 218.0290024936,
+    "intra_share": 65.2443444328,
+    "label": "Germany"
+   },
+   {
+    "reporter": "ES",
+    "period": 2005,
+    "value": 232124247434.0,
+    "index": 100.0,
+    "intra_share": 63.7949675818,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2006,
+    "value": 261784259495.0,
+    "index": 112.7776448987,
+    "intra_share": 61.3983042155,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2007,
+    "value": 284057856781.0,
+    "index": 122.3731944944,
+    "intra_share": 63.0168196189,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2008,
+    "value": 286104923884.0,
+    "index": 123.2550787118,
+    "intra_share": 59.27751839,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2009,
+    "value": 210222057113.0,
+    "index": 90.5644539237,
+    "intra_share": 62.3436433374,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2010,
+    "value": 246673882794.0,
+    "index": 106.2680377086,
+    "intra_share": 59.0120429582,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2011,
+    "value": 270550273696.0,
+    "index": 116.5540768303,
+    "intra_share": 56.9029121955,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2012,
+    "value": 262561094148.0,
+    "index": 113.1123081929,
+    "intra_share": 54.2112682455,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2013,
+    "value": 256453424966.0,
+    "index": 110.4811013071,
+    "intra_share": 55.2440439728,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2014,
+    "value": 270172585237.0,
+    "index": 116.3913672198,
+    "intra_share": 57.3108170143,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2015,
+    "value": 281222104542.0,
+    "index": 121.1515417501,
+    "intra_share": 60.7480022658,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2016,
+    "value": 281056846061.0,
+    "index": 121.0803477741,
+    "intra_share": 61.8662511246,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2017,
+    "value": 311651204487.0,
+    "index": 134.2605126057,
+    "intra_share": 59.694910298,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2018,
+    "value": 330635838387.0,
+    "index": 142.439164388,
+    "intra_share": 58.7561611354,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2019,
+    "value": 332958517544.0,
+    "index": 143.4397833163,
+    "intra_share": 58.3949970315,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2020,
+    "value": 285215361336.0,
+    "index": 122.871851816,
+    "intra_share": 57.0472989501,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2021,
+    "value": 355441962053.0,
+    "index": 153.1257358859,
+    "intra_share": 54.6146911309,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2022,
+    "value": 469850460265.0,
+    "index": 202.4133477906,
+    "intra_share": 50.4654524383,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2023,
+    "value": 434602596357.0,
+    "index": 187.2284352717,
+    "intra_share": 55.4883083768,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2024,
+    "value": 443036365041.0,
+    "index": 190.8617345833,
+    "intra_share": 55.4919686406,
+    "label": "Spain"
+   },
+   {
+    "reporter": "ES",
+    "period": 2025,
+    "value": 460758652767.0,
+    "index": 198.4965628798,
+    "intra_share": 56.0875554883,
+    "label": "Spain"
+   },
+   {
+    "reporter": "FR",
+    "period": 2005,
+    "value": 405212142150.0,
+    "index": 100.0,
+    "intra_share": 67.0663443988,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2006,
+    "value": 431601878688.0,
+    "index": 106.512572994,
+    "intra_share": 68.6931973024,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2007,
+    "value": 460314758752.0,
+    "index": 113.5984613663,
+    "intra_share": 69.5152805946,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2008,
+    "value": 487350364288.0,
+    "index": 120.2704246971,
+    "intra_share": 68.1813041532,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2009,
+    "value": 404097783153.0,
+    "index": 99.7249936808,
+    "intra_share": 69.4779162789,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2010,
+    "value": 460941241482.0,
+    "index": 113.7530674763,
+    "intra_share": 68.4449992777,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2011,
+    "value": 517261847484.0,
+    "index": 127.6521095196,
+    "intra_share": 67.3354381076,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2012,
+    "value": 524918347981.0,
+    "index": 129.5416137325,
+    "intra_share": 67.0360054261,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2013,
+    "value": 513888852604.0,
+    "index": 126.8197072964,
+    "intra_share": 67.8080683777,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2014,
+    "value": 509231044306.0,
+    "index": 125.6702332768,
+    "intra_share": 68.2906521875,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2015,
+    "value": 514613087273.0,
+    "index": 126.9984370514,
+    "intra_share": 69.1036141481,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2016,
+    "value": 513099639652.0,
+    "index": 126.6249419204,
+    "intra_share": 69.9262324683,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2017,
+    "value": 548626393953.0,
+    "index": 135.3923875632,
+    "intra_share": 69.5403631889,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2018,
+    "value": 572576029168.0,
+    "index": 141.3027818293,
+    "intra_share": 68.5275607701,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2019,
+    "value": 584682474747.0,
+    "index": 144.2904626808,
+    "intra_share": 67.9509768202,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2020,
+    "value": 508499340306.0,
+    "index": 125.4896602081,
+    "intra_share": 66.5712978259,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2021,
+    "value": 605254533215.0,
+    "index": 149.3673239907,
+    "intra_share": 66.0035227351,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2022,
+    "value": 782854044370.0,
+    "index": 193.1960972878,
+    "intra_share": 61.5480952529,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2023,
+    "value": 729003818500.0,
+    "index": 179.9067063075,
+    "intra_share": 64.6725267282,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2024,
+    "value": 694866889885.0,
+    "index": 171.4822478414,
+    "intra_share": 63.6781858172,
+    "label": "France"
+   },
+   {
+    "reporter": "FR",
+    "period": 2025,
+    "value": 699998823870.0,
+    "index": 172.7487286427,
+    "intra_share": 62.7205770668,
+    "label": "France"
+   },
+   {
+    "reporter": "IT",
+    "period": 2005,
+    "value": 309292049032.0,
+    "index": 100.0,
+    "intra_share": 57.7270785353,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2006,
+    "value": 352464682563.0,
+    "index": 113.9585332588,
+    "intra_share": 55.9692219724,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2007,
+    "value": 373339814043.0,
+    "index": 120.7078601637,
+    "intra_share": 57.709499243,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2008,
+    "value": 382050168324.0,
+    "index": 123.5240833121,
+    "intra_share": 54.6482021879,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2009,
+    "value": 297608663094.0,
+    "index": 96.2225391909,
+    "intra_share": 57.4137111103,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2010,
+    "value": 367389805492.0,
+    "index": 118.7841092721,
+    "intra_share": 54.8094079789,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2011,
+    "value": 401427714083.0,
+    "index": 129.7892122799,
+    "intra_share": 53.740101682,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2012,
+    "value": 380292480869.0,
+    "index": 122.9557895391,
+    "intra_share": 53.0021416057,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2013,
+    "value": 361002213272.0,
+    "index": 116.7188792605,
+    "intra_share": 55.2848674198,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2014,
+    "value": 356938846843.0,
+    "index": 115.4051156375,
+    "intra_share": 57.1218420952,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2015,
+    "value": 370484379245.0,
+    "index": 119.7846438033,
+    "intra_share": 58.6773432367,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2016,
+    "value": 367625794934.0,
+    "index": 118.8604091455,
+    "intra_share": 60.7511799065,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2017,
+    "value": 401487195133.0,
+    "index": 129.8084436343,
+    "intra_share": 60.1674288349,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2018,
+    "value": 426045675802.0,
+    "index": 137.7486673632,
+    "intra_share": 58.8477489619,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2019,
+    "value": 424236226652.0,
+    "index": 137.1636380501,
+    "intra_share": 59.4147399469,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2020,
+    "value": 373428349381.0,
+    "index": 120.7364853218,
+    "intra_share": 58.5606291607,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2021,
+    "value": 480437388286.0,
+    "index": 155.3345421551,
+    "intra_share": 56.6601504935,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2022,
+    "value": 660210036588.0,
+    "index": 213.4584573558,
+    "intra_share": 51.2936665304,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2023,
+    "value": 591938823053.0,
+    "index": 191.3850759842,
+    "intra_share": 56.7148234259,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2024,
+    "value": 574319745562.0,
+    "index": 185.6884932411,
+    "intra_share": 56.7769544869,
+    "label": "Italy"
+   },
+   {
+    "reporter": "IT",
+    "period": 2025,
+    "value": 592451422369.0,
+    "index": 191.5508090891,
+    "intra_share": 56.6601012707,
+    "label": "Italy"
+   },
+   {
+    "reporter": "LU",
+    "period": 2005,
+    "value": 18154619782.0,
+    "index": 100.0,
+    "intra_share": 72.4727912729,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2006,
+    "value": 21610814188.0,
+    "index": 119.0375477289,
+    "intra_share": 70.5223925828,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2007,
+    "value": 20451620342.0,
+    "index": 112.6524300017,
+    "intra_share": 73.6714019087,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2008,
+    "value": 21863560875.0,
+    "index": 120.4297371002,
+    "intra_share": 74.6646705783,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2009,
+    "value": 18160433767.0,
+    "index": 100.0320248238,
+    "intra_share": 71.37592512,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2010,
+    "value": 18713336015.0,
+    "index": 103.077543015,
+    "intra_share": 80.2163943936,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2011,
+    "value": 20732587803.0,
+    "index": 114.2000661647,
+    "intra_share": 81.5531106375,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2012,
+    "value": 21228221332.0,
+    "index": 116.9301345162,
+    "intra_share": 76.9477103406,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2013,
+    "value": 20077758043.0,
+    "index": 110.593106791,
+    "intra_share": 78.974147806,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2014,
+    "value": 20098125346.0,
+    "index": 110.7052947808,
+    "intra_share": 80.0302373883,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2015,
+    "value": 21016138777.0,
+    "index": 115.761932937,
+    "intra_share": 72.2398230812,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2016,
+    "value": 19761934890.0,
+    "index": 108.8534771166,
+    "intra_share": 77.4735739047,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2017,
+    "value": 20274152140.0,
+    "index": 111.6748925808,
+    "intra_share": 83.1652216111,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2018,
+    "value": 20463000768.0,
+    "index": 112.7151161177,
+    "intra_share": 87.828909649,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2019,
+    "value": 21657598157.0,
+    "index": 119.2952450509,
+    "intra_share": 84.7240371485,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2020,
+    "value": 18504346533.0,
+    "index": 101.9263788237,
+    "intra_share": 89.0924455268,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2021,
+    "value": 22146665635.0,
+    "index": 121.9891460187,
+    "intra_share": 88.7340028421,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2022,
+    "value": 25660352026.0,
+    "index": 141.34337339,
+    "intra_share": 90.8489868119,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2023,
+    "value": 24322124998.0,
+    "index": 133.9720979567,
+    "intra_share": 90.70267412,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2024,
+    "value": 24087714129.0,
+    "index": 132.6809066686,
+    "intra_share": 91.516218002,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "LU",
+    "period": 2025,
+    "value": 25097944481.0,
+    "index": 138.2454977431,
+    "intra_share": 86.5560066022,
+    "label": "Luxembourg"
+   },
+   {
+    "reporter": "NL",
+    "period": 2005,
+    "value": 292438234485.0,
+    "index": 100.0,
+    "intra_share": 49.2411460596,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2006,
+    "value": 331978734251.0,
+    "index": 113.5209747233,
+    "intra_share": 48.4794326923,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2007,
+    "value": 359442665527.0,
+    "index": 122.9123360562,
+    "intra_share": 49.1389696763,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2008,
+    "value": 394980210684.0,
+    "index": 135.0644902434,
+    "intra_share": 48.1121661361,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2009,
+    "value": 317717891034.0,
+    "index": 108.6444430201,
+    "intra_share": 49.0489318083,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2010,
+    "value": 386833641970.0,
+    "index": 132.2787502979,
+    "intra_share": 46.9035872028,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2011,
+    "value": 426987086125.0,
+    "index": 146.009322918,
+    "intra_share": 46.646763377,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2012,
+    "value": 456823551901.0,
+    "index": 156.2119784732,
+    "intra_share": 45.4242641356,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2013,
+    "value": 444015487248.0,
+    "index": 151.8322281045,
+    "intra_share": 46.2959466626,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2014,
+    "value": 443688576240.0,
+    "index": 151.7204400517,
+    "intra_share": 45.8330286435,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2015,
+    "value": 461797051679.0,
+    "index": 157.9126794047,
+    "intra_share": 45.8410852119,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2016,
+    "value": 452763482749.0,
+    "index": 154.8236274735,
+    "intra_share": 46.8814850646,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2017,
+    "value": 508372596620.0,
+    "index": 173.8393057649,
+    "intra_share": 45.9934386481,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2018,
+    "value": 546826737797.0,
+    "index": 186.9887973985,
+    "intra_share": 45.6457242268,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2019,
+    "value": 567890236927.0,
+    "index": 194.191514638,
+    "intra_share": 45.2312655144,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2020,
+    "value": 520763726050.0,
+    "index": 178.0764840709,
+    "intra_share": 42.2881881321,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2021,
+    "value": 641476734941.0,
+    "index": 219.3546052795,
+    "intra_share": 41.2094838844,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2022,
+    "value": 853919650049.0,
+    "index": 292.0000018304,
+    "intra_share": 38.7203935165,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2023,
+    "value": 780164053718.0,
+    "index": 266.7790875882,
+    "intra_share": 41.0791940196,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2024,
+    "value": 754709767367.0,
+    "index": 258.074929462,
+    "intra_share": 42.4082152139,
+    "label": "Netherlands"
+   },
+   {
+    "reporter": "NL",
+    "period": 2025,
+    "value": 772690103427.0,
+    "index": 264.2233512276,
+    "intra_share": 42.2797816409,
+    "label": "Netherlands"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's imports index increased from 100 in 2005 to 138 in 2025, the lowest growth among the eight countries compared.",
+  "The Netherlands had the highest imports index growth, reaching 264 in 2025, while Luxembourg ranked 8th out of 8 in this measure.",
+  "Luxembourg's intra-EU share of imports rose by 14.1 percentage points to 86.6% in 2025, the highest increase and share among the countries compared.",
+  "In contrast, Belgium's intra-EU share fell by 10.0 percentage points to 61.7%, showing a notable decline.",
+  "The data are in current euros and are not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "AT.index",
+   "text": "Austria, imports index 2025 (2005 = 100): 199; lowest 100 in 2005, highest 217 in 2022"
+  },
+  {
+   "key": "AT.intra",
+   "text": "Austria, intra-EU share of imports: 78.9 % in 2005, 78.4 % in 2025 (−0.5 percentage points)"
+  },
+  {
+   "key": "AT.value",
+   "text": "Austria, imports 2025: 203.76 bn €"
+  },
+  {
+   "key": "BE.index",
+   "text": "Belgium, imports index 2025 (2005 = 100): 190; lowest 99 in 2009, highest 232 in 2022"
+  },
+  {
+   "key": "BE.intra",
+   "text": "Belgium, intra-EU share of imports: 71.7 % in 2005, 61.7 % in 2025 (−10.0 percentage points)"
+  },
+  {
+   "key": "BE.value",
+   "text": "Belgium, imports 2025: 487.47 bn €"
+  },
+  {
+   "key": "DE.index",
+   "text": "Germany, imports index 2025 (2005 = 100): 218; lowest 100 in 2005, highest 241 in 2022"
+  },
+  {
+   "key": "DE.intra",
+   "text": "Germany, intra-EU share of imports: 63.8 % in 2005, 65.2 % in 2025 (+1.4 percentage points)"
+  },
+  {
+   "key": "DE.value",
+   "text": "Germany, imports 2025: 1,361.82 bn €"
+  },
+  {
+   "key": "ES.index",
+   "text": "Spain, imports index 2025 (2005 = 100): 198; lowest 91 in 2009, highest 202 in 2022"
+  },
+  {
+   "key": "ES.intra",
+   "text": "Spain, intra-EU share of imports: 63.8 % in 2005, 56.1 % in 2025 (−7.7 percentage points)"
+  },
+  {
+   "key": "ES.value",
+   "text": "Spain, imports 2025: 460.76 bn €"
+  },
+  {
+   "key": "FR.index",
+   "text": "France, imports index 2025 (2005 = 100): 173; lowest 100 in 2009, highest 193 in 2022"
+  },
+  {
+   "key": "FR.intra",
+   "text": "France, intra-EU share of imports: 67.1 % in 2005, 62.7 % in 2025 (−4.4 percentage points)"
+  },
+  {
+   "key": "FR.value",
+   "text": "France, imports 2025: 700.00 bn €"
+  },
+  {
+   "key": "IT.index",
+   "text": "Italy, imports index 2025 (2005 = 100): 192; lowest 96 in 2009, highest 213 in 2022"
+  },
+  {
+   "key": "IT.intra",
+   "text": "Italy, intra-EU share of imports: 57.7 % in 2005, 56.7 % in 2025 (−1.0 percentage points)"
+  },
+  {
+   "key": "IT.value",
+   "text": "Italy, imports 2025: 592.45 bn €"
+  },
+  {
+   "key": "LU.index",
+   "text": "Luxembourg, imports index 2025 (2005 = 100): 138; lowest 100 in 2005, highest 141 in 2022"
+  },
+  {
+   "key": "LU.intra",
+   "text": "Luxembourg, intra-EU share of imports: 72.5 % in 2005, 86.6 % in 2025 (+14.1 percentage points)"
+  },
+  {
+   "key": "LU.value",
+   "text": "Luxembourg, imports 2025: 25.10 bn €"
+  },
+  {
+   "key": "NL.index",
+   "text": "Netherlands, imports index 2025 (2005 = 100): 264; lowest 100 in 2005, highest 292 in 2022"
+  },
+  {
+   "key": "NL.intra",
+   "text": "Netherlands, intra-EU share of imports: 49.2 % in 2005, 42.3 % in 2025 (−6.9 percentage points)"
+  },
+  {
+   "key": "NL.value",
+   "text": "Netherlands, imports 2025: 772.69 bn €"
+  },
+  {
+   "key": "LU.rank",
+   "text": "Luxembourg ranks 8 of 8 on the imports index 2025 (2005 = 100) and 1 of 8 on the intra-EU share"
+  },
+  {
+   "key": "others.intra",
+   "text": "Average intra-EU share of imports of the other 7 countries: 64.6 % in 2005, 60.4 % in 2025"
+  },
+  {
+   "key": "intra.moved",
+   "text": "Intra-EU share of imports, 2005 to 2025: rose in 2 of 8 countries (Luxembourg +14.1, Germany +1.4); fell in 6 (Austria −0.5, Italy −1.0, France −4.4, Netherlands −6.9, Spain −7.7, Belgium −10.0)"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "index 2005 = 100 per reporter; intra-EU share = intra / total"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 50,
+   "outcome": "ok",
+   "detail": "336 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 17,
+   "outcome": "ok",
+   "detail": "view=line; index 2005 = 100 per reporter; intra-EU share = intra / total"
+  },
+  {
+   "node": "insight",
+   "ms": 2274,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1947,
+   "output_tokens": 156,
+   "cache_read_tokens": 1792,
+   "ms": 2213
+  }
+ ],
+ "code_version": "2a7f5db",
+ "error": null
+}

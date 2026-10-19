@@ -1,0 +1,316 @@
+{
+ "run_id": "9508dba7bb",
+ "session_id": "5424py",
+ "turn": 1,
+ "created_at": "2026-10-18T22:02:43+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the shares of the main product chapters in Luxembourg's exports in 2005?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "composition",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2005",
+  "flow": "export",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "2.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 2.0283735959578273
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  hs2 AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2006-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  key,\n  flow\nORDER BY\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "dcbf73a75021205107f87f02e4ab24af1f3f680565847a53c6666bd645270f71",
+ "row_count": 97,
+ "view_kind": "treemap",
+ "title": "Main product groups — exports 2005",
+ "frames": {
+  "main": [
+   {
+    "key": "84",
+    "value": 4126531580.0,
+    "share": 26.8058480084,
+    "rank": 1.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Machinery and mechanical appliances",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "85",
+    "value": 3239330211.0,
+    "share": 21.0426096594,
+    "rank": 2.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Electrical machinery and equipment",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "72",
+    "value": 1723331797.0,
+    "share": 11.194721117,
+    "rank": 3.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Iron and steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "39",
+    "value": 723110797.0,
+    "share": 4.6973100149,
+    "rank": 4.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Plastics and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "87",
+    "value": 604016505.0,
+    "share": 3.9236764129,
+    "rank": 5.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Vehicles and parts",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "73",
+    "value": 591027554.0,
+    "share": 3.8393005056,
+    "rank": 6.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Articles of iron or steel",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "76",
+    "value": 402166238.0,
+    "share": 2.6124620255,
+    "rank": 7.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Aluminium and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "40",
+    "value": 389240840.0,
+    "share": 2.5284989569,
+    "rank": 8.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Rubber and articles thereof",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "48",
+    "value": 347608306.0,
+    "share": 2.2580550364,
+    "rank": 9.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Paper and paperboard",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "59",
+    "value": 264025706.0,
+    "share": 1.7151045153,
+    "rank": 10.0,
+    "kind": "item",
+    "flow": "export",
+    "label": "Impregnated, coated, covered or laminated textile fabrics; textile articles of a kind suitable for industrial use",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "OTHER",
+    "value": 2927290220.0,
+    "share": 19.0156055255,
+    "rank": null,
+    "kind": "other",
+    "flow": "export",
+    "label": "Other",
+    "parent": "",
+    "parent_label": ""
+   },
+   {
+    "key": "CONFIDENTIAL",
+    "value": 56466996.0,
+    "share": 0.3668082221,
+    "rank": null,
+    "kind": "confidential",
+    "flow": "export",
+    "label": "Confidential",
+    "parent": "",
+    "parent_label": ""
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "85",
+   "72",
+   "39",
+   "87",
+   "73",
+   "76",
+   "40",
+   "48",
+   "59"
+  ]
+ },
+ "insight": [
+  "In 2005, Luxembourg's main product chapters in exports were machinery and mechanical appliances, electrical machinery and equipment, and iron and steel.",
+  "The total exports reached 15.39 billion euros, with the top three product chapters accounting for 59.0% of exports.",
+  "Machinery and mechanical appliances was the largest export category at 4.13 billion euros or 26.8%, followed by electrical machinery and equipment at 3.24 billion euros or 21.0%.",
+  "Plastics and articles thereof and vehicles and parts made up smaller shares of 4.7% and 3.9%, respectively.",
+  "The data are nominal values in current euros and include 0.4% confidential exports, which are not detailed."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "export.total",
+   "text": "exports 2005: 15.39 bn €"
+  },
+  {
+   "key": "export.rank1",
+   "text": "#1 Machinery and mechanical appliances: 4.13 bn €, 26.8 %"
+  },
+  {
+   "key": "export.rank2",
+   "text": "#2 Electrical machinery and equipment: 3.24 bn €, 21.0 %"
+  },
+  {
+   "key": "export.rank3",
+   "text": "#3 Iron and steel: 1.72 bn €, 11.2 %"
+  },
+  {
+   "key": "export.rank4",
+   "text": "#4 Plastics and articles thereof: 723.1 M€, 4.7 %"
+  },
+  {
+   "key": "export.rank5",
+   "text": "#5 Vehicles and parts: 604.0 M€, 3.9 %"
+  },
+  {
+   "key": "export.other",
+   "text": "Other: 2.93 bn €, 19.0 %"
+  },
+  {
+   "key": "export.confidential",
+   "text": "Confidential: 56.5 M€, 0.4 %"
+  },
+  {
+   "key": "export.top3_share",
+   "text": "top 3 exports: 59.0 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 111,
+   "outcome": "ok",
+   "detail": "97 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 15,
+   "outcome": "ok",
+   "detail": "view=treemap; Top-10 per flow; the rest pooled as 'Other', masked/undisclosed kept separately"
+  },
+  {
+   "node": "insight",
+   "ms": 1437,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 928,
+   "output_tokens": 155,
+   "cache_read_tokens": 0,
+   "ms": 1381
+  }
+ ],
+ "code_version": "568f1b6",
+ "error": null
+}

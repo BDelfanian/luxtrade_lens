@@ -1,0 +1,479 @@
+{
+ "run_id": "365064b3f8",
+ "session_id": "yzrwvb",
+ "turn": 2,
+ "created_at": "2026-10-18T20:44:20+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What were the shares of EU27 and non-EU27 partners in Luxembourg's exports each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner_group",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE\n    WHEN (\n      partner_is_eu27_2020 OR (\n        partner_is_special AND trade_type = 'intra'\n      )\n    )\n    THEN 'EU27'\n    ELSE 'NON_EU27'\n  END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "ced6ed2b1517957f8d6a1a52dfd06374366f790a866fa19cce560186a0a7124b",
+ "row_count": 42,
+ "view_kind": "area",
+ "title": "EU27 countries · exports: +2.7 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.9301754967,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2005,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.0698245033,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2006,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.4332482532,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2006,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.5667517468,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2007,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.723748184,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2007,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.276251816,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2008,
+    "key": "EU27",
+    "flow": "export",
+    "value": 81.9449603079,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2008,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 18.0550396921,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2009,
+    "key": "EU27",
+    "flow": "export",
+    "value": 79.2832388762,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2009,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 20.7167611238,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2010,
+    "key": "EU27",
+    "flow": "export",
+    "value": 73.7901434942,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2010,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 26.2098565058,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2011,
+    "key": "EU27",
+    "flow": "export",
+    "value": 73.0527637426,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2011,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 26.9472362574,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2012,
+    "key": "EU27",
+    "flow": "export",
+    "value": 73.6075409948,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2012,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 26.3924590052,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2013,
+    "key": "EU27",
+    "flow": "export",
+    "value": 78.2493787334,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2013,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 21.7506212666,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2014,
+    "key": "EU27",
+    "flow": "export",
+    "value": 79.3910041602,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2014,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 20.6089958398,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2015,
+    "key": "EU27",
+    "flow": "export",
+    "value": 79.2636717464,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2015,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 20.7363282536,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2016,
+    "key": "EU27",
+    "flow": "export",
+    "value": 79.0319112812,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2016,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 20.9680887188,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2017,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.3592139324,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2017,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.6407860676,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2018,
+    "key": "EU27",
+    "flow": "export",
+    "value": 81.0196808188,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2018,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 18.9803191812,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2019,
+    "key": "EU27",
+    "flow": "export",
+    "value": 79.927567668,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2019,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 20.072432332,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2020,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.4152029465,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2020,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.5847970535,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2021,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.7802534598,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2021,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.2197465402,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2022,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.3783325478,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2022,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.6216674522,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2023,
+    "key": "EU27",
+    "flow": "export",
+    "value": 79.4932685607,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2023,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 20.5067314393,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2024,
+    "key": "EU27",
+    "flow": "export",
+    "value": 80.9889845374,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2024,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 19.0110154626,
+    "label": "Non-EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "EU27",
+    "flow": "export",
+    "value": 83.1163812256,
+    "label": "EU27 countries"
+   },
+   {
+    "period": 2025,
+    "key": "NON_EU27",
+    "flow": "export",
+    "value": 16.8836187744,
+    "label": "Non-EU27 countries"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's exports to EU27 countries increased from 80.9% in 2005 to 83.1% in 2025.",
+  "The median share of exports to EU27 countries over this period was 80.4%.",
+  "Exports to non-EU27 countries peaked at 26.9% in 2011 but declined to 16.9% by 2025.",
+  "The largest year-to-year change for EU27 exports was a drop from 79.3% to 73.8% between 2009 and 2010, while non-EU27 exports rose from 20.7% to 26.2% in the same period.",
+  "These values are nominal and not adjusted for price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "EU27 countries · exports.start",
+   "text": "EU27 countries · exports 2005: 80.9 %"
+  },
+  {
+   "key": "EU27 countries · exports.end",
+   "text": "EU27 countries · exports 2025: 83.1 %"
+  },
+  {
+   "key": "EU27 countries · exports.change",
+   "text": "EU27 countries · exports change 2005–2025: +2.7 %"
+  },
+  {
+   "key": "EU27 countries · exports.peak",
+   "text": "EU27 countries · exports peak 2025: 83.1 %"
+  },
+  {
+   "key": "EU27 countries · exports.prev",
+   "text": "EU27 countries · exports 2024: 81.0 %"
+  },
+  {
+   "key": "EU27 countries · exports.move",
+   "text": "EU27 countries · exports: largest change between consecutive periods 2009–2010: 79.3 % to 73.8 %"
+  },
+  {
+   "key": "EU27 countries · exports.median",
+   "text": "EU27 countries · exports: median over 2005–2025: 80.4 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.start",
+   "text": "Non-EU27 countries · exports 2005: 19.1 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.end",
+   "text": "Non-EU27 countries · exports 2025: 16.9 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.change",
+   "text": "Non-EU27 countries · exports change 2005–2025: −11.5 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.peak",
+   "text": "Non-EU27 countries · exports peak 2011: 26.9 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.prev",
+   "text": "Non-EU27 countries · exports 2024: 19.0 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.move",
+   "text": "Non-EU27 countries · exports: largest change between consecutive periods 2009–2010: 20.7 % to 26.2 %"
+  },
+  {
+   "key": "Non-EU27 countries · exports.median",
+   "text": "Non-EU27 countries · exports: median over 2005–2025: 19.6 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the period total in %"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 520,
+   "outcome": "ok",
+   "detail": "42 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 5,
+   "outcome": "ok",
+   "detail": "view=area; at most 8 series; smaller ones pooled as 'Other'; share of the period total in %"
+  },
+  {
+   "node": "insight",
+   "ms": 1480,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1190,
+   "output_tokens": 156,
+   "cache_read_tokens": 0,
+   "ms": 1405
+  }
+ ],
+ "code_version": "ffce2e8",
+ "error": null
+}

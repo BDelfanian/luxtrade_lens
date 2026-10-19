@@ -1,0 +1,440 @@
+{
+ "run_id": "d99eaab4bc",
+ "session_id": "arxe8k",
+ "turn": 17,
+ "created_at": "2026-10-18T21:13:49+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What share of Luxembourg's exports went to Brazil each year from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [
+   "BR"
+  ],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "share",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\n  AND partner IN ('BR')\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [
+  "SELECT\n  year AS period,\n  flow,\n  SUM(value_eur) AS value_eur\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  flow\nORDER BY\n  period,\n  flow\nLIMIT 10000"
+ ],
+ "custom_sql": false,
+ "result_hash": "b67f67aa5629ee2ce687a3519046257fe495d978bf4390eb84d6a84f5fb57efa",
+ "row_count": 21,
+ "view_kind": "area",
+ "title": "Brazil · exports: +169.2 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.254392404,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2006,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.1527866422,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2007,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.196417848,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2008,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.1246304548,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2009,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.1029454099,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2010,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.2358407991,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2011,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.2028688278,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2012,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.226589706,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2013,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.3197267206,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2014,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.2358964309,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2015,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.3686668089,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2016,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.1505764532,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2017,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.3321480852,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2018,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.267118758,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2019,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.1707768952,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2020,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.2411002304,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2021,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.2848346882,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2022,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.2932086702,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2023,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.6731738128,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2024,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.327606474,
+    "label": "Brazil",
+    "iso3": "BRA"
+   },
+   {
+    "period": 2025,
+    "key": "BR",
+    "flow": "export",
+    "value": 0.6847792952,
+    "label": "Brazil",
+    "iso3": "BRA"
+   }
+  ],
+  "totals": [
+   {
+    "period": 2005,
+    "flow": "export",
+    "value": 15394146750.0
+   },
+   {
+    "period": 2006,
+    "flow": "export",
+    "value": 18336982599.0
+   },
+   {
+    "period": 2007,
+    "flow": "export",
+    "value": 16733525152.0
+   },
+   {
+    "period": 2008,
+    "flow": "export",
+    "value": 17469519014.0
+   },
+   {
+    "period": 2009,
+    "flow": "export",
+    "value": 15298785071.0
+   },
+   {
+    "period": 2010,
+    "flow": "export",
+    "value": 14180328901.0
+   },
+   {
+    "period": 2011,
+    "flow": "export",
+    "value": 14990138864.0
+   },
+   {
+    "period": 2012,
+    "flow": "export",
+    "value": 14658638997.0
+   },
+   {
+    "period": 2013,
+    "flow": "export",
+    "value": 13868196853.0
+   },
+   {
+    "period": 2014,
+    "flow": "export",
+    "value": 14400955059.0
+   },
+   {
+    "period": 2015,
+    "flow": "export",
+    "value": 15460367090.0
+   },
+   {
+    "period": 2016,
+    "flow": "export",
+    "value": 14259781352.0
+   },
+   {
+    "period": 2017,
+    "flow": "export",
+    "value": 13972896449.0
+   },
+   {
+    "period": 2018,
+    "flow": "export",
+    "value": 13883405747.0
+   },
+   {
+    "period": 2019,
+    "flow": "export",
+    "value": 14673098473.0
+   },
+   {
+    "period": 2020,
+    "flow": "export",
+    "value": 12113291205.0
+   },
+   {
+    "period": 2021,
+    "flow": "export",
+    "value": 14208430248.0
+   },
+   {
+    "period": 2022,
+    "flow": "export",
+    "value": 16506246887.0
+   },
+   {
+    "period": 2023,
+    "flow": "export",
+    "value": 15898896685.0
+   },
+   {
+    "period": 2024,
+    "flow": "export",
+    "value": 14966963688.0
+   },
+   {
+    "period": 2025,
+    "flow": "export",
+    "value": 16253860299.0
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BR"
+  ]
+ },
+ "insight": [
+  "The share of Luxembourg's exports going to Brazil increased from 0.3% in 2005 to 0.7% in 2025.",
+  "This represents a change of +169.2% over the period.",
+  "The largest change between consecutive years was from 0.3% in 2022 to 0.7% in 2023.",
+  "The median share of exports to Brazil over 2005–2025 was 0.2%.",
+  "These values are in current euros and are not adjusted for price changes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Brazil · exports.start",
+   "text": "Brazil · exports 2005: 0.3 %"
+  },
+  {
+   "key": "Brazil · exports.end",
+   "text": "Brazil · exports 2025: 0.7 %"
+  },
+  {
+   "key": "Brazil · exports.change",
+   "text": "Brazil · exports change 2005–2025: +169.2 %"
+  },
+  {
+   "key": "Brazil · exports.peak",
+   "text": "Brazil · exports peak 2025: 0.7 %"
+  },
+  {
+   "key": "Brazil · exports.prev",
+   "text": "Brazil · exports 2024: 0.3 %"
+  },
+  {
+   "key": "Brazil · exports.move",
+   "text": "Brazil · exports: largest change between consecutive periods 2022–2023: 0.3 % to 0.7 %"
+  },
+  {
+   "key": "Brazil · exports.median",
+   "text": "Brazil · exports: median over 2005–2025: 0.2 %"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'",
+  "share of the whole flow (all partners), from a total query"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 375,
+   "outcome": "ok",
+   "detail": "21 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 10,
+   "outcome": "ok",
+   "detail": "view=area; at most 8 series; smaller ones pooled as 'Other'; share of the whole flow (all partners), from a total query"
+  },
+  {
+   "node": "insight",
+   "ms": 1002,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 851,
+   "output_tokens": 113,
+   "cache_read_tokens": 0,
+   "ms": 963
+  }
+ ],
+ "code_version": "58313fd",
+ "error": null
+}

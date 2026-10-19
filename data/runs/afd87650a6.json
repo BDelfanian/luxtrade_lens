@@ -1,0 +1,1552 @@
+{
+ "run_id": "afd87650a6",
+ "session_id": "succ3f",
+ "turn": 2,
+ "created_at": "2026-10-18T18:25:53+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "What is the trend of export concentration by partner countries in Luxembourg from 2005 to 2025 every five years?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "partner",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "TOTAL",
+  "freq": "A",
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "export",
+  "measure": "value_eur",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "line",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L03",
+   "key": "special_partners_kept",
+   "severity": "warn",
+   "message": "2.8 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country.",
+   "value": 2.7790594132283997
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "SELECT\n  year AS period,\n  CASE WHEN partner_is_special THEN 'UNDISCLOSED' ELSE partner END AS key,\n  flow,\n  SUM(value_eur) AS value_eur,\n  SUM(qty_kg) AS qty_kg\nFROM v_lu_trade_hs2\nWHERE\n  period >= CAST('2005-01-01' AS DATE)\n  AND period < CAST('2026-01-01' AS DATE)\n  AND flow = 'export'\nGROUP BY\n  year,\n  key,\n  flow\nORDER BY\n  period,\n  value_eur DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "197d72d1b1a1454aad1c9a420735696e2dc1cb5e213d0a9e592b06cd03550b74",
+ "row_count": 4112,
+ "view_kind": "line",
+ "title": "Belgium · exports: +54.2 % (2005–2025)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "key": "BE",
+    "flow": "export",
+    "value": 1385464130.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2005,
+    "key": "DE",
+    "flow": "export",
+    "value": 3077921183.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2005,
+    "key": "ES",
+    "flow": "export",
+    "value": 1233229008.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2005,
+    "key": "FR",
+    "flow": "export",
+    "value": 2664892104.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2005,
+    "key": "GB",
+    "flow": "export",
+    "value": 1318511832.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2005,
+    "key": "IT",
+    "flow": "export",
+    "value": 1123936190.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2005,
+    "key": "NL",
+    "flow": "export",
+    "value": 627638799.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2005,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 3962553504.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2006,
+    "key": "BE",
+    "flow": "export",
+    "value": 1596009800.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2006,
+    "key": "DE",
+    "flow": "export",
+    "value": 3392717784.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2006,
+    "key": "ES",
+    "flow": "export",
+    "value": 953250643.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2006,
+    "key": "FR",
+    "flow": "export",
+    "value": 2915669216.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2006,
+    "key": "GB",
+    "flow": "export",
+    "value": 1629887343.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2006,
+    "key": "IT",
+    "flow": "export",
+    "value": 1585541268.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2006,
+    "key": "NL",
+    "flow": "export",
+    "value": 819825877.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2006,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5444080668.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2007,
+    "key": "BE",
+    "flow": "export",
+    "value": 1674051701.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2007,
+    "key": "DE",
+    "flow": "export",
+    "value": 3387081018.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2007,
+    "key": "ES",
+    "flow": "export",
+    "value": 821323244.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2007,
+    "key": "FR",
+    "flow": "export",
+    "value": 2696457470.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2007,
+    "key": "GB",
+    "flow": "export",
+    "value": 1186537662.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2007,
+    "key": "IT",
+    "flow": "export",
+    "value": 1203835502.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2007,
+    "key": "NL",
+    "flow": "export",
+    "value": 874656481.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2007,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4889582074.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2008,
+    "key": "BE",
+    "flow": "export",
+    "value": 1769209451.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2008,
+    "key": "DE",
+    "flow": "export",
+    "value": 3650270404.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2008,
+    "key": "ES",
+    "flow": "export",
+    "value": 846642612.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2008,
+    "key": "FR",
+    "flow": "export",
+    "value": 3009296172.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2008,
+    "key": "GB",
+    "flow": "export",
+    "value": 1141516404.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2008,
+    "key": "IT",
+    "flow": "export",
+    "value": 1187576579.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2008,
+    "key": "NL",
+    "flow": "export",
+    "value": 1035767833.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2008,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4829239559.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2009,
+    "key": "BE",
+    "flow": "export",
+    "value": 1737732612.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2009,
+    "key": "DE",
+    "flow": "export",
+    "value": 2995192695.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2009,
+    "key": "ES",
+    "flow": "export",
+    "value": 602170622.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2009,
+    "key": "FR",
+    "flow": "export",
+    "value": 2520913573.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2009,
+    "key": "GB",
+    "flow": "export",
+    "value": 1231455495.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2009,
+    "key": "IT",
+    "flow": "export",
+    "value": 1152543347.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2009,
+    "key": "NL",
+    "flow": "export",
+    "value": 687728176.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2009,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4371048551.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2010,
+    "key": "BE",
+    "flow": "export",
+    "value": 1752058011.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2010,
+    "key": "DE",
+    "flow": "export",
+    "value": 2880627754.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2010,
+    "key": "ES",
+    "flow": "export",
+    "value": 335193435.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2010,
+    "key": "FR",
+    "flow": "export",
+    "value": 2126894281.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2010,
+    "key": "GB",
+    "flow": "export",
+    "value": 1313422201.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2010,
+    "key": "IT",
+    "flow": "export",
+    "value": 1041535869.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2010,
+    "key": "NL",
+    "flow": "export",
+    "value": 526087393.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2010,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4204509957.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2011,
+    "key": "BE",
+    "flow": "export",
+    "value": 2037160806.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2011,
+    "key": "DE",
+    "flow": "export",
+    "value": 3001793275.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2011,
+    "key": "ES",
+    "flow": "export",
+    "value": 258011139.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2011,
+    "key": "FR",
+    "flow": "export",
+    "value": 2280816791.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2011,
+    "key": "GB",
+    "flow": "export",
+    "value": 1074161404.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2011,
+    "key": "IT",
+    "flow": "export",
+    "value": 819786691.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2011,
+    "key": "NL",
+    "flow": "export",
+    "value": 612342229.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2011,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4906066529.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2012,
+    "key": "BE",
+    "flow": "export",
+    "value": 2166003142.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2012,
+    "key": "DE",
+    "flow": "export",
+    "value": 2895571071.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2012,
+    "key": "ES",
+    "flow": "export",
+    "value": 265628031.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2012,
+    "key": "FR",
+    "flow": "export",
+    "value": 2267640177.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2012,
+    "key": "GB",
+    "flow": "export",
+    "value": 785941349.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2012,
+    "key": "IT",
+    "flow": "export",
+    "value": 814171657.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2012,
+    "key": "NL",
+    "flow": "export",
+    "value": 571875264.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2012,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4891808306.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2013,
+    "key": "BE",
+    "flow": "export",
+    "value": 2200386374.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2013,
+    "key": "DE",
+    "flow": "export",
+    "value": 3003612323.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2013,
+    "key": "ES",
+    "flow": "export",
+    "value": 361185739.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2013,
+    "key": "FR",
+    "flow": "export",
+    "value": 2182032370.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2013,
+    "key": "GB",
+    "flow": "export",
+    "value": 381521974.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2013,
+    "key": "IT",
+    "flow": "export",
+    "value": 986374803.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2013,
+    "key": "NL",
+    "flow": "export",
+    "value": 547043708.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2013,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4206039562.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2014,
+    "key": "BE",
+    "flow": "export",
+    "value": 2325428138.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2014,
+    "key": "DE",
+    "flow": "export",
+    "value": 3190375548.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2014,
+    "key": "ES",
+    "flow": "export",
+    "value": 403978029.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2014,
+    "key": "FR",
+    "flow": "export",
+    "value": 2464145974.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2014,
+    "key": "GB",
+    "flow": "export",
+    "value": 444139349.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2014,
+    "key": "IT",
+    "flow": "export",
+    "value": 775271490.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2014,
+    "key": "NL",
+    "flow": "export",
+    "value": 558269014.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2014,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4239347517.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2015,
+    "key": "BE",
+    "flow": "export",
+    "value": 2574040573.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2015,
+    "key": "DE",
+    "flow": "export",
+    "value": 3235501744.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2015,
+    "key": "ES",
+    "flow": "export",
+    "value": 432054532.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2015,
+    "key": "FR",
+    "flow": "export",
+    "value": 2567120534.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2015,
+    "key": "GB",
+    "flow": "export",
+    "value": 734337777.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2015,
+    "key": "IT",
+    "flow": "export",
+    "value": 692641745.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2015,
+    "key": "NL",
+    "flow": "export",
+    "value": 617016004.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2015,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4607654181.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2016,
+    "key": "BE",
+    "flow": "export",
+    "value": 2373095302.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2016,
+    "key": "DE",
+    "flow": "export",
+    "value": 3177269299.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2016,
+    "key": "ES",
+    "flow": "export",
+    "value": 375925786.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2016,
+    "key": "FR",
+    "flow": "export",
+    "value": 2188490930.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2016,
+    "key": "GB",
+    "flow": "export",
+    "value": 529370616.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2016,
+    "key": "IT",
+    "flow": "export",
+    "value": 528002167.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2016,
+    "key": "NL",
+    "flow": "export",
+    "value": 725001693.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2016,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4362625559.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2017,
+    "key": "BE",
+    "flow": "export",
+    "value": 2429285476.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2017,
+    "key": "DE",
+    "flow": "export",
+    "value": 3412073616.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2017,
+    "key": "ES",
+    "flow": "export",
+    "value": 307326692.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2017,
+    "key": "FR",
+    "flow": "export",
+    "value": 1976155576.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2017,
+    "key": "GB",
+    "flow": "export",
+    "value": 545444632.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2017,
+    "key": "IT",
+    "flow": "export",
+    "value": 553790116.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2017,
+    "key": "NL",
+    "flow": "export",
+    "value": 704342032.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2017,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4044478309.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2018,
+    "key": "BE",
+    "flow": "export",
+    "value": 2014854667.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2018,
+    "key": "DE",
+    "flow": "export",
+    "value": 3596105878.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2018,
+    "key": "ES",
+    "flow": "export",
+    "value": 338238515.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2018,
+    "key": "FR",
+    "flow": "export",
+    "value": 2043247368.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2018,
+    "key": "GB",
+    "flow": "export",
+    "value": 458162602.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2018,
+    "key": "IT",
+    "flow": "export",
+    "value": 528231591.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2018,
+    "key": "NL",
+    "flow": "export",
+    "value": 778097568.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2018,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4126467558.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2019,
+    "key": "BE",
+    "flow": "export",
+    "value": 1632692250.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2019,
+    "key": "DE",
+    "flow": "export",
+    "value": 3499109868.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2019,
+    "key": "ES",
+    "flow": "export",
+    "value": 373691624.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2019,
+    "key": "FR",
+    "flow": "export",
+    "value": 2289106329.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2019,
+    "key": "GB",
+    "flow": "export",
+    "value": 621732660.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2019,
+    "key": "IT",
+    "flow": "export",
+    "value": 663308561.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2019,
+    "key": "NL",
+    "flow": "export",
+    "value": 786508749.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2019,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4806948432.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2020,
+    "key": "BE",
+    "flow": "export",
+    "value": 1485546859.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2020,
+    "key": "DE",
+    "flow": "export",
+    "value": 3209409509.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2020,
+    "key": "ES",
+    "flow": "export",
+    "value": 297457904.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2020,
+    "key": "FR",
+    "flow": "export",
+    "value": 2004041522.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2020,
+    "key": "GB",
+    "flow": "export",
+    "value": 409230043.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2020,
+    "key": "IT",
+    "flow": "export",
+    "value": 469305401.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2020,
+    "key": "NL",
+    "flow": "export",
+    "value": 649883577.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2020,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 3588416390.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2021,
+    "key": "BE",
+    "flow": "export",
+    "value": 1756531137.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2021,
+    "key": "DE",
+    "flow": "export",
+    "value": 3614420521.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2021,
+    "key": "ES",
+    "flow": "export",
+    "value": 334247050.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2021,
+    "key": "FR",
+    "flow": "export",
+    "value": 2276035341.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2021,
+    "key": "GB",
+    "flow": "export",
+    "value": 349219776.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2021,
+    "key": "IT",
+    "flow": "export",
+    "value": 587426571.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2021,
+    "key": "NL",
+    "flow": "export",
+    "value": 896782512.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2021,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4393767340.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2022,
+    "key": "BE",
+    "flow": "export",
+    "value": 2014215720.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2022,
+    "key": "DE",
+    "flow": "export",
+    "value": 4242628770.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2022,
+    "key": "ES",
+    "flow": "export",
+    "value": 435295969.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2022,
+    "key": "FR",
+    "flow": "export",
+    "value": 2487455701.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2022,
+    "key": "GB",
+    "flow": "export",
+    "value": 429719286.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2022,
+    "key": "IT",
+    "flow": "export",
+    "value": 675741472.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2022,
+    "key": "NL",
+    "flow": "export",
+    "value": 1082842106.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2022,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5138347863.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2023,
+    "key": "BE",
+    "flow": "export",
+    "value": 1881854189.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2023,
+    "key": "DE",
+    "flow": "export",
+    "value": 3984129983.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2023,
+    "key": "ES",
+    "flow": "export",
+    "value": 419275026.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2023,
+    "key": "FR",
+    "flow": "export",
+    "value": 2401789103.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2023,
+    "key": "GB",
+    "flow": "export",
+    "value": 388262439.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2023,
+    "key": "IT",
+    "flow": "export",
+    "value": 664843261.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2023,
+    "key": "NL",
+    "flow": "export",
+    "value": 1038728880.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2023,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 5120013804.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2024,
+    "key": "BE",
+    "flow": "export",
+    "value": 1904384144.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2024,
+    "key": "DE",
+    "flow": "export",
+    "value": 3711872820.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2024,
+    "key": "ES",
+    "flow": "export",
+    "value": 485371749.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2024,
+    "key": "FR",
+    "flow": "export",
+    "value": 2280529837.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2024,
+    "key": "GB",
+    "flow": "export",
+    "value": 342309067.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2024,
+    "key": "IT",
+    "flow": "export",
+    "value": 663919444.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2024,
+    "key": "NL",
+    "flow": "export",
+    "value": 925614883.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2024,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4652961744.0,
+    "label": "Other",
+    "iso3": null
+   },
+   {
+    "period": 2025,
+    "key": "BE",
+    "flow": "export",
+    "value": 2136972196.0,
+    "label": "Belgium",
+    "iso3": "BEL"
+   },
+   {
+    "period": 2025,
+    "key": "DE",
+    "flow": "export",
+    "value": 3914507497.0,
+    "label": "Germany",
+    "iso3": "DEU"
+   },
+   {
+    "period": 2025,
+    "key": "ES",
+    "flow": "export",
+    "value": 511133132.0,
+    "label": "Spain",
+    "iso3": "ESP"
+   },
+   {
+    "period": 2025,
+    "key": "FR",
+    "flow": "export",
+    "value": 3103251302.0,
+    "label": "France",
+    "iso3": "FRA"
+   },
+   {
+    "period": 2025,
+    "key": "GB",
+    "flow": "export",
+    "value": 359563457.0,
+    "label": "United Kingdom",
+    "iso3": "GBR"
+   },
+   {
+    "period": 2025,
+    "key": "IT",
+    "flow": "export",
+    "value": 652476939.0,
+    "label": "Italy",
+    "iso3": "ITA"
+   },
+   {
+    "period": 2025,
+    "key": "NL",
+    "flow": "export",
+    "value": 964214803.0,
+    "label": "Netherlands",
+    "iso3": "NLD"
+   },
+   {
+    "period": 2025,
+    "key": "OTHER",
+    "flow": "export",
+    "value": 4611740973.0,
+    "label": "Other",
+    "iso3": null
+   }
+  ]
+ },
+ "entities": {
+  "partners": [
+   "BE",
+   "DE",
+   "ES",
+   "FR",
+   "GB",
+   "IT",
+   "NL"
+  ]
+ },
+ "insight": [
+  "Luxembourg's exports to Belgium, Germany, France, and Spain show varied trends from 2005 to 2025 every five years.",
+  "Exports to Belgium increased by 54.2 %, from 1.39 billion euros in 2005 to 2.14 billion euros in 2025, peaking at 2.57 billion euros in 2015.",
+  "Exports to Germany rose by 27.2 %, from 3.08 billion euros in 2005 to 3.91 billion euros in 2025, with a peak of 4.24 billion euros in 2022.",
+  "Exports to Spain decreased by 58.6 %, from 1.23 billion euros in 2005 to 511.1 million euros in 2025, while exports to France increased by 16.4 %, reaching their peak of 3.10 billion euros in 2025.",
+  "The data are in current euros and include 2.8 % of trade with undisclosed partners, which are not ranked by country."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "Belgium · exports.start",
+   "text": "Belgium · exports 2005: 1.39 bn €"
+  },
+  {
+   "key": "Belgium · exports.end",
+   "text": "Belgium · exports 2025: 2.14 bn €"
+  },
+  {
+   "key": "Belgium · exports.change",
+   "text": "Belgium · exports change 2005–2025: +54.2 %"
+  },
+  {
+   "key": "Belgium · exports.peak",
+   "text": "Belgium · exports peak 2015: 2.57 bn €"
+  },
+  {
+   "key": "Germany · exports.start",
+   "text": "Germany · exports 2005: 3.08 bn €"
+  },
+  {
+   "key": "Germany · exports.end",
+   "text": "Germany · exports 2025: 3.91 bn €"
+  },
+  {
+   "key": "Germany · exports.change",
+   "text": "Germany · exports change 2005–2025: +27.2 %"
+  },
+  {
+   "key": "Germany · exports.peak",
+   "text": "Germany · exports peak 2022: 4.24 bn €"
+  },
+  {
+   "key": "Spain · exports.start",
+   "text": "Spain · exports 2005: 1.23 bn €"
+  },
+  {
+   "key": "Spain · exports.end",
+   "text": "Spain · exports 2025: 511.1 M€"
+  },
+  {
+   "key": "Spain · exports.change",
+   "text": "Spain · exports change 2005–2025: −58.6 %"
+  },
+  {
+   "key": "Spain · exports.peak",
+   "text": "Spain · exports peak 2005: 1.23 bn €"
+  },
+  {
+   "key": "France · exports.start",
+   "text": "France · exports 2005: 2.66 bn €"
+  },
+  {
+   "key": "France · exports.end",
+   "text": "France · exports 2025: 3.10 bn €"
+  },
+  {
+   "key": "France · exports.change",
+   "text": "France · exports change 2005–2025: +16.4 %"
+  },
+  {
+   "key": "France · exports.peak",
+   "text": "France · exports peak 2025: 3.10 bn €"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "at most 8 series; smaller ones pooled as 'Other'"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 904,
+   "outcome": "ok",
+   "detail": "4112 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L03"
+  },
+  {
+   "node": "analyse",
+   "ms": 116,
+   "outcome": "ok",
+   "detail": "view=line; at most 8 series; smaller ones pooled as 'Other'"
+  },
+  {
+   "node": "insight",
+   "ms": 1913,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1224,
+   "output_tokens": 216,
+   "cache_read_tokens": 0,
+   "ms": 1811
+  }
+ ],
+ "code_version": "f097a28",
+ "error": null
+}

@@ -1,0 +1,1007 @@
+{
+ "scenario_id": "3a58e12e67",
+ "session_id": "zyhbpm",
+ "created_at": "2026-10-18T22:11:10+00:00",
+ "question": "Which goods led Luxembourg's exports and imports in 2005 and in 2025, which goods drove the big changes in between (computers, telephone sets, lifting machinery), where did they come from and go, and are these lasting shifts, goods passing through, or one-off shipments?",
+ "language": "en",
+ "title": "Which goods led Luxembourg's exports and imports in 2005 and",
+ "name": "Final output-Which goods led Luxembourg's exports and imports in 2005 and",
+ "favorite": true,
+ "hidden": false,
+ "based_on": "",
+ "approach": "",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "What were the shares of the main product chapters in Luxembourg's exports in 2005?",
+   "purpose": "The export mix at the start.",
+   "builds_on": [],
+   "run_id": "33bf0418b1",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2005 · share of the whole flow in %",
+   "note": ""
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "What were the shares of the main product chapters in Luxembourg's exports in 2025?",
+   "purpose": "The export mix today.",
+   "builds_on": [],
+   "run_id": "ba28f134a8",
+   "status": "answered",
+   "queried": "exports · by HS2 product (top 10) · 2025 · share of the whole flow in %",
+   "note": "By 2025, machinery and electrical equipment shares in exports fell sharply, with plastics and vehicles rising, leading to a more diversified export mix."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "What were the shares of the main product chapters in Luxembourg's imports in 2005?",
+   "purpose": "The import mix at the start.",
+   "builds_on": [],
+   "run_id": "c8c051e204",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2005 · share of the whole flow in %",
+   "note": "Machinery and electrical equipment were also the largest import categories in 2005, with mineral fuels and vehicles significant."
+  },
+  {
+   "n": 4,
+   "kind": "own",
+   "question": "What were the shares of the main product chapters in Luxembourg's imports in 2025?",
+   "purpose": "The import mix today.",
+   "builds_on": [],
+   "run_id": "d22ff58257",
+   "status": "answered",
+   "queried": "imports · by HS2 product (top 10) · 2025 · share of the whole flow in %",
+   "note": "In 2025, vehicles became the largest import category, overtaking machinery and electrical equipment, indicating a shift in import composition."
+  },
+  {
+   "n": 5,
+   "kind": "own",
+   "question": "What share of Luxembourg's imports were computers (HS 8471) each year from 2005 to 2025?",
+   "purpose": "When computers left the import mix.",
+   "builds_on": [],
+   "run_id": "4c0da21e29",
+   "status": "answered",
+   "queried": "imports · products 8471 · by HS4 product (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Computers' share of imports fell from 13.1 % in 2005 to 1.3 % in 2025, with a peak in 2008 and a sharp decline thereafter."
+  },
+  {
+   "n": 6,
+   "kind": "own",
+   "question": "What share of Luxembourg's exports were computers (HS 8471) each year from 2005 to 2025?",
+   "purpose": "Whether computers left the export mix at the same time.",
+   "builds_on": [],
+   "run_id": "65968001d7",
+   "status": "answered",
+   "queried": "exports · products 8471 · by HS4 product (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Computers' export share dropped from 19.7 % in 2005 to 0.8 % in 2025, peaking in 2008 before a steep fall."
+  },
+  {
+   "n": 7,
+   "kind": "own",
+   "question": "What share of Luxembourg's exports were telephone sets (HS 8517) each year from 2005 to 2025?",
+   "purpose": "Whether telephone sets took the place computers left.",
+   "builds_on": [],
+   "run_id": "1c166c541a",
+   "status": "answered",
+   "queried": "exports · products 8517 · by HS4 product (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Telephone sets exports rose from 0.0 % in 2005 to 5.7 % in 2025, peaking at 20.8 % in 2012, showing a strong but volatile rise."
+  },
+  {
+   "n": 8,
+   "kind": "own",
+   "question": "What share of Luxembourg's imports were lifting and handling machinery (HS 8428) each year from 2005 to 2025?",
+   "purpose": "Whether the fastest riser is a lasting shift.",
+   "builds_on": [],
+   "run_id": "adafbd185d",
+   "status": "answered",
+   "queried": "imports · products 8428 · by HS4 product (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Lifting and handling machinery imports jumped from 0.1 % in 2005 to 3.1 % in 2025, with the largest increase occurring in the last year, indicating a recent one-off surge."
+  },
+  {
+   "n": 9,
+   "kind": "own",
+   "question": "Which countries supplied Luxembourg's imports of lifting and handling machinery (HS 8428) in 2025?",
+   "purpose": "How many partners the fastest riser rests on.",
+   "builds_on": [],
+   "run_id": "50ddbb113a",
+   "status": "answered",
+   "queried": "imports · products 8428 · by partner (top 10) · 2025 · value in €",
+   "note": "Japan supplied 96.6 % of Luxembourg's lifting machinery imports in 2025, showing heavy reliance on a single partner for this product."
+  },
+  {
+   "n": 10,
+   "kind": "own",
+   "question": "Which countries supplied Luxembourg's imports of computers (HS 8471) in 2008?",
+   "purpose": "Where computers came from at their peak.",
+   "builds_on": [],
+   "run_id": "7a246e84fb",
+   "status": "answered",
+   "queried": "imports · products 8471 · by partner (top 10) · 2008 · value in €",
+   "note": ""
+  },
+  {
+   "n": 11,
+   "kind": "own",
+   "question": "Which countries did Luxembourg's exports of computers (HS 8471) go to in 2008?",
+   "purpose": "Where computers went at their peak.",
+   "builds_on": [],
+   "run_id": "f3f479e70c",
+   "status": "answered",
+   "queried": "exports · products 8471 · by partner (top 10) · 2008 · value in €",
+   "note": ""
+  },
+  {
+   "n": 12,
+   "kind": "own",
+   "question": "What share of Luxembourg's imports were telephone sets (HS 8517) each year from 2005 to 2025?",
+   "purpose": "Whether telephone sets rose and fell on the import side too.",
+   "builds_on": [],
+   "run_id": "e9db8dcaf5",
+   "status": "answered",
+   "queried": "imports · products 8517 · by HS4 product (top 10) · 2005–2025, yearly · share of the whole flow in %",
+   "note": "Telephone sets imports rose from 0.3 % in 2005 to 3.6 % in 2025, peaking in 2015, indicating a less steady increase than in exports."
+  }
+ ],
+ "headline": "Luxembourg's exports in 2005 were led by machinery and electrical equipment, shifting by 2025 to a more diversified mix with plastics and vehicles gaining prominence, while imports saw a similar shift with vehicles rising to the top by 2025; computers sharply declined in both exports and imports, telephone sets rose notably in exports, and lifting machinery imports surged recently mainly from Japan, indicating a mix of lasting shifts and one-off jumps.",
+ "points": [
+  {
+   "text": "In 2005, Luxembourg's exports were dominated by machinery and mechanical appliances (26.8 %) and electrical machinery (21.0 %), but by 2025 these shares fell significantly, with plastics and vehicles rising to become top export categories, reflecting a diversification away from the earlier concentration on machinery and electrical equipment.",
+   "steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "text": "Imports in 2005 were led by machinery and electrical equipment as well, with mineral fuels and vehicles also significant; by 2025, vehicles became the largest import category (13.2 %), surpassing machinery, while electrical machinery's share declined, showing a shift in import composition towards vehicles and a more diversified import mix.",
+   "steps": [
+    3,
+    4
+   ]
+  },
+  {
+   "text": "Computers, once a major part of both exports (19.7 % in 2005) and imports (13.1 % in 2005), experienced a steep decline by 2025 to under 1 % in both flows, with their peak shares around 2008 followed by a sharp drop, indicating a lasting exit of computers from Luxembourg's trade mix.",
+   "steps": [
+    5,
+    6
+   ]
+  },
+  {
+   "text": "Telephone sets rose dramatically in exports from virtually zero in 2005 to 5.7 % in 2025, peaking at 20.8 % in 2012, but their import share also increased though less steadily, suggesting telephone sets partially replaced computers in exports but with some volatility; lifting and handling machinery imports surged sharply in 2025 mainly from Japan, but this jump is recent and not yet a confirmed trend.",
+   "steps": [
+    7,
+    8,
+    9,
+    12
+   ]
+  }
+ ],
+ "conclusion": "Overall, Luxembourg's trade in goods has shifted from a heavy reliance on machinery and computers in 2005 to a more diversified export and import structure by 2025, with plastics, vehicles, and telephone sets gaining importance. The sharp decline of computers is a lasting shift, while the recent surge in lifting machinery imports appears to be a one-off jump rather than a steady trend. The data does not clarify whether these changes reflect goods passing through Luxembourg or structural changes in production and trade patterns.",
+ "charts": [
+  2,
+  4,
+  5
+ ],
+ "figures": [
+  {
+   "kind": "series",
+   "title": "Year by year, 2005–2025",
+   "flow": "both",
+   "steps": [
+    5,
+    6,
+    7,
+    8
+   ],
+   "rows": [
+    {
+     "group": 2005,
+     "series": "Computers, share of imports",
+     "value": 13.1066414917,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Computers, share of imports",
+     "value": 14.6956226516,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Computers, share of imports",
+     "value": 17.5906512337,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Computers, share of imports",
+     "value": 19.6312196377,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Computers, share of imports",
+     "value": 18.614897983,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Computers, share of imports",
+     "value": 5.5447865852,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Computers, share of imports",
+     "value": 1.9755725088,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Computers, share of imports",
+     "value": 1.9391136665,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Computers, share of imports",
+     "value": 2.0304556421,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Computers, share of imports",
+     "value": 2.2105655296,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Computers, share of imports",
+     "value": 2.4879146143,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Computers, share of imports",
+     "value": 2.3973576962,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Computers, share of imports",
+     "value": 1.7747397993,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Computers, share of imports",
+     "value": 1.1702948151,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Computers, share of imports",
+     "value": 1.230747242,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Computers, share of imports",
+     "value": 1.4705171972,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Computers, share of imports",
+     "value": 1.2963467311,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Computers, share of imports",
+     "value": 1.149601341,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Computers, share of imports",
+     "value": 0.9869166449,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Computers, share of imports",
+     "value": 1.2283162753,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Computers, share of imports",
+     "value": 1.3367120333,
+     "step": 5,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "Computers, share of exports",
+     "value": 19.7076102058,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Computers, share of exports",
+     "value": 19.7392447446,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Computers, share of exports",
+     "value": 24.8449459049,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Computers, share of exports",
+     "value": 28.0497723725,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Computers, share of exports",
+     "value": 24.4630614041,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Computers, share of exports",
+     "value": 7.8793176364,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Computers, share of exports",
+     "value": 2.3600418663,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Computers, share of exports",
+     "value": 1.9626798031,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Computers, share of exports",
+     "value": 2.2214074495,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Computers, share of exports",
+     "value": 2.2901791211,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Computers, share of exports",
+     "value": 2.3663911527,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Computers, share of exports",
+     "value": 2.8739615418,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Computers, share of exports",
+     "value": 1.3672870024,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Computers, share of exports",
+     "value": 0.4346738408,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Computers, share of exports",
+     "value": 0.5795921915,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Computers, share of exports",
+     "value": 0.5775894001,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Computers, share of exports",
+     "value": 0.597441234,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Computers, share of exports",
+     "value": 0.4757616467,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Computers, share of exports",
+     "value": 0.3601586584,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Computers, share of exports",
+     "value": 0.6434679271,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Computers, share of exports",
+     "value": 0.7869148968,
+     "step": 6,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "Telephone sets, share of exports",
+     "value": 0.0410754237,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Telephone sets, share of exports",
+     "value": 0.0339143911,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Telephone sets, share of exports",
+     "value": 1.7865308612,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Telephone sets, share of exports",
+     "value": 2.3362008804,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Telephone sets, share of exports",
+     "value": 11.4871865435,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Telephone sets, share of exports",
+     "value": 18.6033857001,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Telephone sets, share of exports",
+     "value": 18.6275522684,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Telephone sets, share of exports",
+     "value": 20.7835338849,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Telephone sets, share of exports",
+     "value": 16.2633194128,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Telephone sets, share of exports",
+     "value": 14.7008292112,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Telephone sets, share of exports",
+     "value": 14.3772003088,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Telephone sets, share of exports",
+     "value": 8.3701358354,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Telephone sets, share of exports",
+     "value": 1.3517911314,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Telephone sets, share of exports",
+     "value": 2.3475830638,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Telephone sets, share of exports",
+     "value": 10.1445621914,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Telephone sets, share of exports",
+     "value": 0.4570021893,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Telephone sets, share of exports",
+     "value": 0.465070341,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Telephone sets, share of exports",
+     "value": 0.4201037248,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Telephone sets, share of exports",
+     "value": 0.4703799545,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Telephone sets, share of exports",
+     "value": 0.6034495365,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Telephone sets, share of exports",
+     "value": 5.7495276249,
+     "step": 7,
+     "flow": "export",
+     "unit": "share"
+    },
+    {
+     "group": 2005,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.0884550169,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2006,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.0863534749,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2007,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1002396517,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2008,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1033276744,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2009,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1192909667,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2010,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1040045024,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2011,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.0994224368,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2012,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1041520185,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2013,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1031097743,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2014,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1249547436,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2015,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.1860637409,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2016,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.9388424718,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2017,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 1.048449304,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2018,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.7202352513,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2019,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 1.0039954035,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2020,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.818481759,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2021,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.5510425362,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2022,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.5854978016,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2023,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.573833339,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2024,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 0.346142405,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    },
+    {
+     "group": 2025,
+     "series": "Lifting and handling machinery, share of imports",
+     "value": 3.0715758041,
+     "step": 8,
+     "flow": "import",
+     "unit": "share"
+    }
+   ],
+   "tiles": [
+    {
+     "value": "1.3 %",
+     "label": "Computers, share of imports, 2025",
+     "detail": "13.1 % in 2005",
+     "tone": "down"
+    },
+    {
+     "value": "0.8 %",
+     "label": "Computers, share of exports, 2025",
+     "detail": "19.7 % in 2005",
+     "tone": "down"
+    },
+    {
+     "value": "5.7 %",
+     "label": "Telephone sets, share of exports, 2025",
+     "detail": "0.0 % in 2005",
+     "tone": "up"
+    },
+    {
+     "value": "3.1 %",
+     "label": "Lifting and handling machinery, share of imports, 2025",
+     "detail": "0.1 % in 2005",
+     "tone": "up"
+    }
+   ],
+   "note": "Each panel is one step's yearly series (steps 5, 6, 7, 8), computed by code from its own SQL; panels have their own scales."
+  },
+  {
+   "kind": "share",
+   "title": "Share of exports, 2005 and 2025",
+   "flow": "export",
+   "steps": [
+    1,
+    2
+   ],
+   "rows": [
+    {
+     "group": "Machinery and mechanical appliances",
+     "series": "2005",
+     "value": 26.805848008432164,
+     "step": 1
+    },
+    {
+     "group": "Machinery and mechanical appliances",
+     "series": "2025",
+     "value": 12.541577400695488,
+     "step": 2
+    }
+   ],
+   "tiles": [
+    {
+     "value": "12.5 %",
+     "label": "Machinery and mechanical appliances, share of exports 2025",
+     "detail": "26.8 % in 2005",
+     "tone": ""
+    },
+    {
+     "value": "−14.3 pp",
+     "label": "Machinery and mechanical appliances: change in share",
+     "detail": "2005 → 2025",
+     "tone": "down"
+    }
+   ],
+   "note": "Computed by code from the steps' own SQL (steps 1, 2); the whole flow is all exports of each step's scope."
+  }
+ ],
+ "share": {
+  "title": "Luxembourg's trade shifts from computers to vehicles and plastics by 2025",
+  "subtitle": "From 2005 to 2025, computers fell from 19.7% to 0.8% in exports and vehicles rose to 13.2% of imports, while lifting machinery imports surged recently mainly from Japan.",
+  "source": "llm",
+  "notes": [
+   "share text check failed: subtitle: 6 figures (19.7, 0.8, 13.1, 1.3, 13.2, 5.7), at most 4; keep one or two that carry the insight and say the rest in words (e.g. \"fell in all three crises\", \"about three times as far\")",
+   "share title and subtitle passed the number, country and wording checks"
+  ],
+  "earlier": []
+ },
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "2.0 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L03",
+   "message": "1.6 % of this value goes to or comes from undisclosed partners (Q* codes). It stays in the totals but is never ranked or mapped as a country."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "removed from the answer: note on step 1: number 47.8 is not in the facts",
+  "combined answer passed the number, country, wording and reasoning checks",
+  "share text check failed: subtitle: 6 figures (19.7, 0.8, 13.1, 1.3, 13.2, 5.7), at most 4; keep one or two that carry the insight and say the rest in words (e.g. \"fell in all three crises\", \"about three times as far\")",
+  "share title and subtitle passed the number, country and wording checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5196,
+   "output_tokens": 950,
+   "cache_read_tokens": 4992,
+   "ms": 6118
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 5453,
+   "output_tokens": 1054,
+   "cache_read_tokens": 3968,
+   "ms": 7017
+  },
+  {
+   "step": "scenario_share",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1367,
+   "output_tokens": 256,
+   "cache_read_tokens": 0,
+   "ms": 2744
+  },
+  {
+   "step": "scenario_share",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1542,
+   "output_tokens": 191,
+   "cache_read_tokens": 1152,
+   "ms": 1894
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "568f1b6",
+ "status": "answered"
+}

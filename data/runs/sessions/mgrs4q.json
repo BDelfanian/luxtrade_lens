@@ -1,0 +1,17 @@
+{
+ "session_id": "mgrs4q",
+ "created_at": "2026-10-18T22:32:38+00:00",
+ "updated_at": "2026-10-18T22:32:53+00:00",
+ "language": "en",
+ "title": "Scenario: 6 · Neighbour routes and fuel",
+ "runs": [
+  "c6e5cb200e",
+  "c466672041",
+  "dd4448085f",
+  "23213aa57c",
+  "f8477f8abd",
+  "7cca627c94",
+  "2cdda5af93",
+  "7dccaff516"
+ ]
+}
