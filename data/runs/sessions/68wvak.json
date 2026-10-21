@@ -1,0 +1,15 @@
+{
+ "session_id": "68wvak",
+ "created_at": "2026-10-21T21:42:07+00:00",
+ "updated_at": "2026-10-21T21:42:24+00:00",
+ "language": "en",
+ "title": "Scenario: Goods that go both ways",
+ "runs": [
+  "0da65ebcc9",
+  "677574b771",
+  "dc1088f1a5",
+  "291810de1e",
+  "8e32645c1c",
+  "62f162f257"
+ ]
+}

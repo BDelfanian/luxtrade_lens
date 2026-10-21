@@ -1,0 +1,410 @@
+{
+ "run_id": "1ef0643ace",
+ "session_id": "jqyu66",
+ "turn": 6,
+ "created_at": "2026-10-21T21:49:44+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which CN8 products did Luxembourg both export and import most in 2025, and how two-way is the trade in each?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "CN8",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "two_way",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.752831184167725
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "WITH rows AS (\n  SELECT\n    year AS period,\n    cn8 AS key,\n    flow,\n    cn8 LIKE '%X%' AS masked,\n    value_eur\n  FROM v_lu_trade\n  WHERE\n    period >= CAST('2025-01-01' AS DATE) AND period < CAST('2026-01-01' AS DATE)\n), totals AS (\n  SELECT\n    period,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'export') AS x_total,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'import') AS m_total,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      masked), 0) AS confidential\n  FROM rows\n  GROUP BY\n    period\n), by_key AS (\n  SELECT\n    period,\n    key,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'export'), 0) AS x,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'import'), 0) AS m\n  FROM rows\n  WHERE\n    NOT masked\n  GROUP BY\n    period,\n    key\n)\nSELECT\n  b.period,\n  b.key,\n  b.x AS export,\n  b.m AS import,\n  100 * (\n    1 - ABS(b.x - b.m) / NULLIF(b.x + b.m, 0)\n  ) AS gl,\n  100 * SUM(b.x + b.m - ABS(b.x - b.m)) OVER w / SUM(b.x + b.m) OVER w AS gl_all,\n  COUNT(*) OVER w AS n,\n  t.x_total,\n  t.m_total,\n  t.confidential\nFROM by_key AS b\nJOIN totals AS t\n  USING (period)\nWINDOW w AS (PARTITION BY b.period)\nORDER BY\n  b.period,\n  b.x + b.m DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "de6b399e338a4aa150ef55da2377bbed7140583d4d1d7779298490b0200b6dc8",
+ "row_count": 8768,
+ "view_kind": "two_way",
+ "title": "Two-way trade 2025: 39.1 % (CN8 product level)",
+ "frames": {
+  "main": [
+   {
+    "period": 2025,
+    "key": "85171300",
+    "export": 898331987.0,
+    "import": 701316175.0,
+    "gl": 87.6838034338,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Smartphones for wireless networks",
+    "short": "Smartphones for wireless networks",
+    "value": 1599648162.0,
+    "share_x": 5.5268838939,
+    "share_m": 2.7943171822,
+    "top_both": true,
+    "top_x": true,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "84287000",
+    "export": 233825397.0,
+    "import": 747206091.0,
+    "gl": 47.6692949941,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Industrial robots",
+    "short": "Industrial robots",
+    "value": 981031488.0,
+    "share_x": 1.4385837746,
+    "share_m": 2.9771605064,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "30049000",
+    "export": 195497692.0,
+    "import": 700573222.0,
+    "gl": 43.6344242282,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Medicaments consisting of mixed or unmixed products for therapeutic or prophylactic purposes, put up in measured doses \"incl. those for transdermal administration\" or in forms or packings for retail sale (excl. containing antibiotics, hormones or steroids used as hormones, alkaloids, provitamins, vitamins, their derivatives or antimalarial active principles)",
+    "short": "Medicaments consisting of mixed or unmixed products for the…",
+    "value": 896070914.0,
+    "share_x": 1.2027769921,
+    "share_m": 2.7913569676,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "40112090",
+    "export": 520833245.0,
+    "import": 164755739.0,
+    "gl": 48.0625397563,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Pneumatic tyres, new, of rubber, of a kind used for buses or lorries, with a load index of > 121",
+    "short": "Pneumatic tyres",
+    "value": 685588984.0,
+    "share_x": 3.2043664423,
+    "share_m": 0.6564511254,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "72163390",
+    "export": 571924985.0,
+    "import": 2717890.0,
+    "gl": 0.9459405548,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "H sections of iron or non-alloy steel, simply hot-rolled, hot-drawn or extruded, of a height > 180 mm",
+    "short": "H sections of iron or non-alloy steel",
+    "value": 574642875.0,
+    "share_x": 3.5187024773,
+    "share_m": 0.0108291338,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "39199080",
+    "export": 462143414.0,
+    "import": 96464946.0,
+    "gl": 34.5375948187,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Self-adhesive plates, sheets, film, foil, tape, strip and other flat shapes, of plastics, whether or not in rolls > 20 cm wide (excl. floor, wall and ceiling coverings of heading 3918, and circular polishing pads used in semiconductor wafer production))",
+    "short": "Self-adhesive plates",
+    "value": 558608360.0,
+    "share_x": 2.8432840291,
+    "share_m": 0.38435397,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "56031290",
+    "export": 284038350.0,
+    "import": 174344590.0,
+    "gl": 76.0694060734,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Nonwovens, whether or not impregnated or laminated, n.e.s., of man-made filaments, weighing > 25 g/m² but <= 70 g/m² (excl. coated or covered)",
+    "short": "Nonwovens",
+    "value": 458382940.0,
+    "share_x": 1.7475131739,
+    "share_m": 0.6946568478,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "73011000",
+    "export": 426670441.0,
+    "import": 697648.0,
+    "gl": 0.3264857709,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Sheet piling of iron or steel, whether or not drilled, punched or made from assembled elements",
+    "short": "Sheet piling of iron or steel",
+    "value": 427368089.0,
+    "share_x": 2.6250406559,
+    "share_m": 0.0027797017,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "87038010",
+    "export": 14765148.0,
+    "import": 405070207.0,
+    "gl": 7.0337801827,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Motor cars and other motor vehicles principally designed for the transport of <10 persons, incl. station wagons and racing cars, with only electric motor for propulsion, new (excl. vehicles for travelling on snow and other specially designed vehicles of subheading 8703.10)",
+    "short": "Motor cars and other motor vehicles principally designed fo…",
+    "value": 419835355.0,
+    "share_x": 0.0908408694,
+    "share_m": 1.613957698,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "48114190",
+    "export": 341845565.0,
+    "import": 77603744.0,
+    "gl": 37.002680579,
+    "gl_all": 39.1013182939,
+    "n": 8768,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "label": "Self-adhesive paper and paperboard, surface-coloured, surface-decorated or printed, in rolls or in square or rectangular sheets, of any size (excl. of a width of <= 10 cm coated with unvulcanised natural or synthetic rubber and goods of heading 4810)",
+    "short": "Self-adhesive paper and paperboard",
+    "value": 419449309.0,
+    "share_x": 2.103165394,
+    "share_m": 0.3092035846,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "85171300",
+   "84287000",
+   "30049000",
+   "40112090",
+   "72163390",
+   "39199080",
+   "56031290",
+   "73011000",
+   "87038010",
+   "48114190"
+  ]
+ },
+ "insight": [
+  "In 2025, Luxembourg's most traded CN8 product both in exports and imports was smartphones for wireless networks, with exports of 898.3 million euros and imports of 701.3 million euros.",
+  "Two-way trade in smartphones was very balanced, with a two-way index of 88, indicating similar amounts exported and imported.",
+  "Industrial robots and medicaments were also traded both ways but mostly imported, with two-way indexes of 48 and 44 respectively.",
+  "Pneumatic tyres were traded both ways but mostly exported, with exports of 520.8 million euros and imports of 164.8 million euros.",
+  "The data are in current euros and do not account for price changes, and 3.8% of trade values are confidential and not detailed at the product level."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "two_way.85171300",
+   "text": "Smartphones for wireless networks (85171300): exports 898.3 M€ (5.5 % of exports), imports 701.3 M€ (2.8 % of imports); two-way index 88: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.84287000",
+   "text": "Industrial robots (84287000): exports 233.8 M€ (1.4 % of exports), imports 747.2 M€ (3.0 % of imports); two-way index 48: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.30049000",
+   "text": "Medicaments consisting of mixed or unmixed products for the… (30049000): exports 195.5 M€ (1.2 % of exports), imports 700.6 M€ (2.8 % of imports); two-way index 44: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.40112090",
+   "text": "Pneumatic tyres (40112090): exports 520.8 M€ (3.2 % of exports), imports 164.8 M€ (0.7 % of imports); two-way index 48: traded both ways, mostly exported"
+  },
+  {
+   "key": "two_way.72163390",
+   "text": "H sections of iron or non-alloy steel (72163390): exports 571.9 M€ (3.5 % of exports), imports 2.7 M€ (0.0 % of imports); two-way index 1: almost only exported (one-way)"
+  },
+  {
+   "key": "two_way.39199080",
+   "text": "Self-adhesive plates (39199080): exports 462.1 M€ (2.8 % of exports), imports 96.5 M€ (0.4 % of imports); two-way index 35: traded both ways, mostly exported"
+  },
+  {
+   "key": "two_way.56031290",
+   "text": "Nonwovens (56031290): exports 284.0 M€ (1.7 % of exports), imports 174.3 M€ (0.7 % of imports); two-way index 76: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.73011000",
+   "text": "Sheet piling of iron or steel (73011000): exports 426.7 M€ (2.6 % of exports), imports 698 k € (0.0 % of imports); two-way index 0: almost only exported (one-way)"
+  },
+  {
+   "key": "two_way.87038010",
+   "text": "Motor cars and other motor vehicles principally designed fo… (87038010): exports 14.8 M€ (0.1 % of exports), imports 405.1 M€ (1.6 % of imports); two-way index 7: almost only imported (one-way)"
+  },
+  {
+   "key": "two_way.48114190",
+   "text": "Self-adhesive paper and paperboard (48114190): exports 341.8 M€ (2.1 % of exports), imports 77.6 M€ (0.3 % of imports); two-way index 37: traded both ways, mostly exported"
+  },
+  {
+   "key": "two_way.all",
+   "text": "Two-way trade 2025, all 8768 CN8 products: 39.1 % of trade is matched (exports and imports of the same code); codes masked at this level (3.8 % of trade) left out"
+  },
+  {
+   "key": "two_way.both",
+   "text": "Among the 5 largest of both exports and imports in 2025: Smartphones for wireless networks"
+  },
+  {
+   "key": "method0",
+   "text": "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every CN8 code (CN8 products); codes masked at that level (confidential) are left out of the index"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every CN8 code (CN8 products); codes masked at that level (confidential) are left out of the index"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 219,
+   "outcome": "ok",
+   "detail": "8768 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 597,
+   "outcome": "ok",
+   "detail": "view=two_way; two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every CN8 code (CN8 products); codes masked at that level (confidential) are left out of the index"
+  },
+  {
+   "node": "insight",
+   "ms": 2726,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1609,
+   "output_tokens": 163,
+   "cache_read_tokens": 1408,
+   "ms": 2671
+  }
+ ],
+ "code_version": "f071b1f",
+ "error": null
+}

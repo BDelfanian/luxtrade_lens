@@ -1,0 +1,228 @@
+{
+ "run_id": "e526fdb352",
+ "session_id": "py8s7a",
+ "turn": 3,
+ "created_at": "2026-10-21T21:46:16+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How much of Luxembourg's trade went both ways at chapter level, every five years from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": 5,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "two_way",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.6 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.5964126536056935
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "WITH rows AS (\n  SELECT\n    year AS period,\n    hs2 AS key,\n    flow,\n    hs2 LIKE '%X%' AS masked,\n    value_eur\n  FROM v_lu_trade\n  WHERE\n    period >= CAST('2005-01-01' AS DATE)\n    AND period < CAST('2026-01-01' AS DATE)\n    AND (\n      year - 2005\n    ) % 5 = 0\n), totals AS (\n  SELECT\n    period,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'export') AS x_total,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'import') AS m_total,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      masked), 0) AS confidential\n  FROM rows\n  GROUP BY\n    period\n), by_key AS (\n  SELECT\n    period,\n    key,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'export'), 0) AS x,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'import'), 0) AS m\n  FROM rows\n  WHERE\n    NOT masked\n  GROUP BY\n    period,\n    key\n)\nSELECT\n  b.period,\n  100 * SUM(b.x + b.m - ABS(b.x - b.m)) / SUM(b.x + b.m) AS value,\n  COUNT(*) AS n,\n  ARG_MAX(b.key, LEAST(b.x, b.m)) AS top_key,\n  ARG_MAX(b.x, LEAST(b.x, b.m)) AS top_export,\n  ARG_MAX(b.m, LEAST(b.x, b.m)) AS top_import,\n  ANY_VALUE(t.x_total) AS x_total,\n  ANY_VALUE(t.m_total) AS m_total,\n  ANY_VALUE(t.confidential) AS confidential\nFROM by_key AS b\nJOIN totals AS t\n  USING (period)\nGROUP BY\n  b.period\nORDER BY\n  b.period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "0ea2862c9b4d526ed9f6de32a3e2e520e48bb21eed4f1c45af159caef98d08f7",
+ "row_count": 5,
+ "view_kind": "two_way",
+ "title": "Two-way trade 2025: 68.8 % (chapter level)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "value": 74.0444248414,
+    "n": 97,
+    "top_key": "84",
+    "top_export": 4126531580.0,
+    "top_import": 3522369230.0,
+    "x_total": 15394146750.0,
+    "m_total": 18154619782.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "top_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2010,
+    "value": 69.297787298,
+    "n": 97,
+    "top_key": "85",
+    "top_export": 3243624071.0,
+    "top_import": 2134187138.0,
+    "x_total": 14180328901.0,
+    "m_total": 18713336015.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "top_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2015,
+    "value": 73.8090887273,
+    "n": 97,
+    "top_key": "85",
+    "top_export": 2920730400.0,
+    "top_import": 3212400306.0,
+    "x_total": 15460367090.0,
+    "m_total": 21016138777.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "top_label": "Electrical machinery and equipment"
+   },
+   {
+    "period": 2020,
+    "value": 67.8634504719,
+    "n": 97,
+    "top_key": "84",
+    "top_export": 1625352500.0,
+    "top_import": 1901639470.0,
+    "x_total": 12113291205.0,
+    "m_total": 18504346533.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "top_label": "Machinery and mechanical appliances"
+   },
+   {
+    "period": 2025,
+    "value": 68.7658946285,
+    "n": 97,
+    "top_key": "84",
+    "top_export": 2038490470.0,
+    "top_import": 2885716872.0,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "top_label": "Machinery and mechanical appliances"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "Luxembourg's two-way trade at chapter level was 68.8% of total trade in 2025.",
+  "The highest share was 74.0% in 2005, and the lowest was 67.9% in 2020.",
+  "The largest same-product two-way trade in 2025 was Machinery and mechanical appliances, with exports of 2.04 billion euros and imports of 2.89 billion euros.",
+  "Two-way trade shares fluctuated over the years, with Electrical machinery and equipment being the largest same-product trade in 2010 and 2015.",
+  "The data are in current euros and exclude 3.6% of trade value that is confidential at full product detail."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "two_way.2005",
+   "text": "Two-way trade 2005 at chapter level: 74.0 % of trade; largest same-product two-way trade: Machinery and mechanical appliances (84), exports 4.13 bn €, imports 3.52 bn €"
+  },
+  {
+   "key": "two_way.2010",
+   "text": "Two-way trade 2010 at chapter level: 69.3 % of trade; largest same-product two-way trade: Electrical machinery and equipment (85), exports 3.24 bn €, imports 2.13 bn €"
+  },
+  {
+   "key": "two_way.2015",
+   "text": "Two-way trade 2015 at chapter level: 73.8 % of trade; largest same-product two-way trade: Electrical machinery and equipment (85), exports 2.92 bn €, imports 3.21 bn €"
+  },
+  {
+   "key": "two_way.2020",
+   "text": "Two-way trade 2020 at chapter level: 67.9 % of trade; largest same-product two-way trade: Machinery and mechanical appliances (84), exports 1.63 bn €, imports 1.90 bn €"
+  },
+  {
+   "key": "two_way.2025",
+   "text": "Two-way trade 2025 at chapter level: 68.8 % of trade; largest same-product two-way trade: Machinery and mechanical appliances (84), exports 2.04 bn €, imports 2.89 bn €"
+  },
+  {
+   "key": "two_way.change",
+   "text": "Two-way share of trade at chapter level: 74.0 % in 2005, 68.8 % in 2025; lowest 67.9 % in 2020, highest 74.0 % in 2005"
+  },
+  {
+   "key": "method0",
+   "text": "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS2 code (chapters); codes masked at that level (confidential) are left out of the index"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS2 code (chapters); codes masked at that level (confidential) are left out of the index"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 358,
+   "outcome": "ok",
+   "detail": "5 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 4,
+   "outcome": "ok",
+   "detail": "view=two_way; two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS2 code (chapters); codes masked at that level (confidential) are left out of the index"
+  },
+  {
+   "node": "insight",
+   "ms": 1535,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1150,
+   "output_tokens": 148,
+   "cache_read_tokens": 1024,
+   "ms": 1486
+  }
+ ],
+ "code_version": "f071b1f",
+ "error": null
+}

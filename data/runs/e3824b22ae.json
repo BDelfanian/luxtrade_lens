@@ -1,0 +1,240 @@
+{
+ "run_id": "e3824b22ae",
+ "session_id": "py8s7a",
+ "turn": 4,
+ "created_at": "2026-10-21T21:46:20+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "How much of Luxembourg's trade went both ways in the same CN8 product, every five years from 2005 to 2025?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "time_series",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "CN8",
+  "freq": "A",
+  "year_step": 5,
+  "period_start": "2005",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "two_way",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L05",
+   "key": "code_changes",
+   "severity": "warn",
+   "message": "CN8 and HS6 codes change over time, so series longer than 3 years at this level may break. HS4 or HS2 give a stable series.",
+   "value": null
+  },
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.6 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.5964126536056935
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "WITH rows AS (\n  SELECT\n    year AS period,\n    cn8 AS key,\n    flow,\n    cn8 LIKE '%X%' AS masked,\n    value_eur\n  FROM v_lu_trade\n  WHERE\n    period >= CAST('2005-01-01' AS DATE)\n    AND period < CAST('2026-01-01' AS DATE)\n    AND (\n      year - 2005\n    ) % 5 = 0\n), totals AS (\n  SELECT\n    period,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'export') AS x_total,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'import') AS m_total,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      masked), 0) AS confidential\n  FROM rows\n  GROUP BY\n    period\n), by_key AS (\n  SELECT\n    period,\n    key,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'export'), 0) AS x,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'import'), 0) AS m\n  FROM rows\n  WHERE\n    NOT masked\n  GROUP BY\n    period,\n    key\n)\nSELECT\n  b.period,\n  100 * SUM(b.x + b.m - ABS(b.x - b.m)) / SUM(b.x + b.m) AS value,\n  COUNT(*) AS n,\n  ARG_MAX(b.key, LEAST(b.x, b.m)) AS top_key,\n  ARG_MAX(b.x, LEAST(b.x, b.m)) AS top_export,\n  ARG_MAX(b.m, LEAST(b.x, b.m)) AS top_import,\n  ANY_VALUE(t.x_total) AS x_total,\n  ANY_VALUE(t.m_total) AS m_total,\n  ANY_VALUE(t.confidential) AS confidential\nFROM by_key AS b\nJOIN totals AS t\n  USING (period)\nGROUP BY\n  b.period\nORDER BY\n  b.period\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "3c22767bad7d379a71a9aa434e51b0173d064027e6bc3a2937201fd296d21431",
+ "row_count": 5,
+ "view_kind": "two_way",
+ "title": "Two-way trade 2025: 39.1 % (CN8 product level)",
+ "frames": {
+  "main": [
+   {
+    "period": 2005,
+    "value": 46.545077682,
+    "n": 8919,
+    "top_key": "84713000",
+    "top_export": 2962297556.0,
+    "top_import": 2154104521.0,
+    "x_total": 15394146750.0,
+    "m_total": 18154619782.0,
+    "confidential": 1097693619.0,
+    "flow": "both",
+    "top_label": "Computers"
+   },
+   {
+    "period": 2010,
+    "value": 38.4701767212,
+    "n": 8511,
+    "top_key": "85171200",
+    "top_export": 2607407180.0,
+    "top_import": 1188276858.0,
+    "x_total": 14180328901.0,
+    "m_total": 18713336015.0,
+    "confidential": 1169375796.0,
+    "flow": "both",
+    "top_label": "Telephone sets"
+   },
+   {
+    "period": 2015,
+    "value": 45.0096308463,
+    "n": 8425,
+    "top_key": "85171200",
+    "top_export": 2139116563.0,
+    "top_import": 2172406666.0,
+    "x_total": 15460367090.0,
+    "m_total": 21016138777.0,
+    "confidential": 1451958881.0,
+    "flow": "both",
+    "top_label": "Telephone sets"
+   },
+   {
+    "period": 2020,
+    "value": 37.3110298695,
+    "n": 8524,
+    "top_key": "84779080",
+    "top_export": 204746731.0,
+    "top_import": 221060319.0,
+    "x_total": 12113291205.0,
+    "m_total": 18504346533.0,
+    "confidential": 1018816101.0,
+    "flow": "both",
+    "top_label": "Machinery for working rubber or plastics…"
+   },
+   {
+    "period": 2025,
+    "value": 39.1013182939,
+    "n": 8768,
+    "top_key": "85171300",
+    "top_export": 898331987.0,
+    "top_import": 701316175.0,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 1551863425.0,
+    "flow": "both",
+    "top_label": "Telephone sets"
+   }
+  ]
+ },
+ "entities": {},
+ "insight": [
+  "In 2025, 39.1 % of Luxembourg's trade was two-way at CN8 product level.",
+  "See the notes below for the data limits that apply."
+ ],
+ "insight_source": "template",
+ "facts": [
+  {
+   "key": "two_way.2005",
+   "text": "Two-way trade 2005 at CN8 product level: 46.5 % of trade; largest same-product two-way trade: Computers (84713000), exports 2.96 bn €, imports 2.15 bn €"
+  },
+  {
+   "key": "two_way.2010",
+   "text": "Two-way trade 2010 at CN8 product level: 38.5 % of trade; largest same-product two-way trade: Telephone sets (85171200), exports 2.61 bn €, imports 1.19 bn €"
+  },
+  {
+   "key": "two_way.2015",
+   "text": "Two-way trade 2015 at CN8 product level: 45.0 % of trade; largest same-product two-way trade: Telephone sets (85171200), exports 2.14 bn €, imports 2.17 bn €"
+  },
+  {
+   "key": "two_way.2020",
+   "text": "Two-way trade 2020 at CN8 product level: 37.3 % of trade; largest same-product two-way trade: Machinery for working rubber or plastics… (84779080), exports 204.7 M€, imports 221.1 M€"
+  },
+  {
+   "key": "two_way.2025",
+   "text": "Two-way trade 2025 at CN8 product level: 39.1 % of trade; largest same-product two-way trade: Telephone sets (85171300), exports 898.3 M€, imports 701.3 M€"
+  },
+  {
+   "key": "two_way.change",
+   "text": "Two-way share of trade at CN8 product level: 46.5 % in 2005, 39.1 % in 2025; lowest 37.3 % in 2020, highest 46.5 % in 2005"
+  },
+  {
+   "key": "method0",
+   "text": "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every CN8 code (CN8 products); codes masked at that level (confidential) are left out of the index"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every CN8 code (CN8 products); codes masked at that level (confidential) are left out of the index"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L05:warn, L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 422,
+   "outcome": "ok",
+   "detail": "5 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L05, L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 4,
+   "outcome": "ok",
+   "detail": "view=two_way; two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every CN8 code (CN8 products); codes masked at that level (confidential) are left out of the index"
+  },
+  {
+   "node": "insight",
+   "ms": 4136,
+   "outcome": "fallback",
+   "detail": "grounding failed: number 2022 is not in the fact sheet; grounding failed: observed data described as projected or expected; fell back to the template insight"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1205,
+   "output_tokens": 172,
+   "cache_read_tokens": 1024,
+   "ms": 2045
+  },
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1224,
+   "output_tokens": 190,
+   "cache_read_tokens": 1024,
+   "ms": 1899
+  }
+ ],
+ "code_version": "f071b1f",
+ "error": null
+}

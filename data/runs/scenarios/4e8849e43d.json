@@ -1,0 +1,468 @@
+{
+ "scenario_id": "4e8849e43d",
+ "session_id": "py8s7a",
+ "created_at": "2026-10-21T21:46:53+00:00",
+ "question": "Luxembourg's largest export and import chapters overlap. Which goods does it both sell and buy, is it the same goods going both ways or different goods within the same chapter, and how has this changed from 2005 to 2025?",
+ "language": "en",
+ "title": "Luxembourg's largest export and import chapters overlap. Whi",
+ "name": "Goods that go both ways",
+ "favorite": false,
+ "hidden": false,
+ "based_on": "",
+ "approach": "",
+ "out_of_scope": [],
+ "steps": [
+  {
+   "n": 1,
+   "kind": "own",
+   "question": "Which product chapters did Luxembourg both export and import most in 2025, and how two-way is the trade in each?",
+   "purpose": "The largest export and import chapters of the Overview, set side by side.",
+   "builds_on": [],
+   "run_id": "1da8ef4949",
+   "status": "answered",
+   "queried": "exports and imports · by HS2 product (top 10) · 2025 · two-way trade index (Grubel-Lloyd)",
+   "note": "In 2025, Luxembourg's largest export and import chapters overlap with high two-way trade indexes, indicating similar amounts traded both ways in major chapters like machinery and electrical machinery."
+  },
+  {
+   "n": 2,
+   "kind": "own",
+   "question": "Which product chapters did Luxembourg both export and import most in 2005, and how two-way is the trade in each?",
+   "purpose": "The same twenty years earlier.",
+   "builds_on": [],
+   "run_id": "766cb5cea0",
+   "status": "answered",
+   "queried": "exports and imports · by HS2 product (top 10) · 2005 · two-way trade index (Grubel-Lloyd)",
+   "note": "In 2005, the same chapters dominated Luxembourg's trade with even higher two-way trade indexes, showing a long-standing pattern of balanced trade in these chapters."
+  },
+  {
+   "n": 3,
+   "kind": "own",
+   "question": "How much of Luxembourg's trade went both ways at chapter level, every five years from 2005 to 2025?",
+   "purpose": "The two-way share when goods are grouped in chapters.",
+   "builds_on": [],
+   "run_id": "e526fdb352",
+   "status": "answered",
+   "queried": "exports and imports · across all HS2 products · 2005–2025, yearly, every 5 years · two-way trade index (Grubel-Lloyd)",
+   "note": "The share of two-way trade at chapter level fell slightly from 74.0% in 2005 to 68.8% in 2025, with machinery and electrical machinery leading the largest same-product two-way trades."
+  },
+  {
+   "n": 4,
+   "kind": "own",
+   "question": "How much of Luxembourg's trade went both ways in the same CN8 product, every five years from 2005 to 2025?",
+   "purpose": "The two-way share at the finest product detail: the same goods going in and out.",
+   "builds_on": [],
+   "run_id": "e3824b22ae",
+   "status": "answered",
+   "queried": "exports and imports · across all CN8 products · 2005–2025, yearly, every 5 years · two-way trade index (Grubel-Lloyd)",
+   "note": "At CN8 product level, two-way trade is lower and declined from 46.5% in 2005 to 39.1% in 2025, showing less balanced trade in the exact same goods."
+  },
+  {
+   "n": 5,
+   "kind": "own",
+   "question": "Within iron and steel, how two-way is Luxembourg's trade in each heading in 2025: which headings are exported and which imported?",
+   "purpose": "A chapter that looks balanced: the same goods or different ones?",
+   "builds_on": [],
+   "run_id": "99621438e8",
+   "status": "answered",
+   "queried": "exports and imports · products 72 · by HS4 product (top 10) · 2025 · two-way trade index (Grubel-Lloyd)",
+   "note": "Within iron and steel in 2025, trade is mostly one-way at heading level, with some headings almost only exported and others almost only imported, resulting in low two-way trade."
+  },
+  {
+   "n": 6,
+   "kind": "own",
+   "question": "Which CN8 products did Luxembourg both export and import most in 2025, and how two-way is the trade in each?",
+   "purpose": "The goods that really go both ways.",
+   "builds_on": [],
+   "run_id": "99559414fe",
+   "status": "answered",
+   "queried": "exports and imports · by CN8 product (top 10) · 2025 · two-way trade index (Grubel-Lloyd)",
+   "note": "In 2025, the largest two-way traded CN8 products include smartphones and telephone sets, traded both ways in similar amounts, but many products are mostly exported or imported one-way."
+  }
+ ],
+ "headline": "Luxembourg both exports and imports many of the same product chapters, with a high share of two-way trade at chapter level but less so at detailed product level, and this pattern has slightly declined from 2005 to 2025.",
+ "points": [
+  {
+   "text": "In 2025, Luxembourg's largest export and import chapters overlap strongly, with machinery, electrical machinery, plastics, and iron and steel among the top traded chapters, all showing high two-way trade indexes (mostly above 80), meaning these chapters are traded both ways in similar amounts; however, mineral fuels are almost only imported. This indicates Luxembourg both sells and buys many of the same broad goods categories.",
+   "steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "text": "From 2005 to 2025, the share of Luxembourg's trade that is two-way at the chapter level fell from 74.0% to 68.8%, showing a slight decline in balanced two-way trade across chapters, with the largest same-product two-way trade consistently in machinery and electrical machinery.",
+   "steps": [
+    3
+   ]
+  },
+  {
+   "text": "At the finest product detail (CN8 level), the two-way share is much lower, dropping from 46.5% in 2005 to 39.1% in 2025, indicating that while Luxembourg trades the same chapters both ways, it is often different specific goods within those chapters rather than the exact same products. The largest same-product two-way trades in 2025 include smartphones and telephone sets, showing some detailed goods are traded both ways in similar amounts.",
+   "steps": [
+    4,
+    6
+   ]
+  },
+  {
+   "text": "Within the iron and steel chapter in 2025, trade is mostly one-way at the heading level: some headings like steel angles and sections are almost only exported, while ferrous waste and scrap is almost only imported, resulting in only 14.6% of trade matched at the heading level. This shows that even within a balanced chapter, Luxembourg exports and imports different specific goods.",
+   "steps": [
+    5
+   ]
+  }
+ ],
+ "conclusion": "Luxembourg's largest export and import chapters overlap substantially, with a high proportion of two-way trade at the chapter level, but this balance has slightly declined from 2005 to 2025. At detailed product levels, the two-way trade share is lower and has also declined, indicating that Luxembourg often trades different specific goods within the same chapters rather than the exact same products both ways. The data cannot explain the reasons behind these patterns or how confidential trade affects the detailed breakdown.",
+ "charts": [
+  1,
+  3,
+  4
+ ],
+ "figures": [
+  {
+   "kind": "two_way",
+   "title": "Exports and imports of the largest chapters, 2025, and the two-way share of trade",
+   "flow": "both",
+   "steps": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "rows": [
+    {
+     "panel": "items",
+     "group": "Machinery and mechanical appliances",
+     "series": "export",
+     "value": 2038490470.0,
+     "gl": 82.7946643356,
+     "code": "84",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Machinery and mechanical appliances",
+     "series": "import",
+     "value": 2885716872.0,
+     "gl": 82.7946643356,
+     "code": "84",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Vehicles and parts",
+     "series": "export",
+     "value": 1556322926.0,
+     "gl": 63.8573837954,
+     "code": "87",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Vehicles and parts",
+     "series": "import",
+     "value": 3318048160.0,
+     "gl": 63.8573837954,
+     "code": "87",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Electrical machinery and equipment",
+     "series": "export",
+     "value": 1506781023.0,
+     "gl": 86.6254083377,
+     "code": "85",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Electrical machinery and equipment",
+     "series": "import",
+     "value": 1972062083.0,
+     "gl": 86.6254083377,
+     "code": "85",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Plastics and articles thereof",
+     "series": "export",
+     "value": 1575495176.0,
+     "gl": 90.1485343587,
+     "code": "39",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Plastics and articles thereof",
+     "series": "import",
+     "value": 1292914757.0,
+     "gl": 90.1485343587,
+     "code": "39",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Mineral fuels and oils",
+     "series": "export",
+     "value": 18527351.0,
+     "gl": 1.646756513,
+     "code": "27",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Mineral fuels and oils",
+     "series": "import",
+     "value": 2231635421.0,
+     "gl": 1.646756513,
+     "code": "27",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Iron and steel",
+     "series": "export",
+     "value": 1120321110.0,
+     "gl": 91.9717060108,
+     "code": "72",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Iron and steel",
+     "series": "import",
+     "value": 953804230.0,
+     "gl": 91.9717060108,
+     "code": "72",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Rubber and articles thereof",
+     "series": "export",
+     "value": 851809335.0,
+     "gl": 98.6803574608,
+     "code": "40",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Rubber and articles thereof",
+     "series": "import",
+     "value": 829620472.0,
+     "gl": 98.6803574608,
+     "code": "40",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Articles of iron or steel",
+     "series": "export",
+     "value": 817024273.0,
+     "gl": 74.1179609933,
+     "code": "73",
+     "step": 1
+    },
+    {
+     "panel": "items",
+     "group": "Articles of iron or steel",
+     "series": "import",
+     "value": 481054912.0,
+     "gl": 74.1179609933,
+     "code": "73",
+     "step": 1
+    },
+    {
+     "panel": "share",
+     "group": 2005,
+     "series": "Chapters",
+     "value": 74.0444248414,
+     "top": "Machinery and mechanical appliances",
+     "code": "84",
+     "x": 4126531580.0,
+     "m": 3522369230.0,
+     "level": "HS2",
+     "step": 3
+    },
+    {
+     "panel": "share",
+     "group": 2010,
+     "series": "Chapters",
+     "value": 69.297787298,
+     "top": "Electrical machinery and equipment",
+     "code": "85",
+     "x": 3243624071.0,
+     "m": 2134187138.0,
+     "level": "HS2",
+     "step": 3
+    },
+    {
+     "panel": "share",
+     "group": 2015,
+     "series": "Chapters",
+     "value": 73.8090887273,
+     "top": "Electrical machinery and equipment",
+     "code": "85",
+     "x": 2920730400.0,
+     "m": 3212400306.0,
+     "level": "HS2",
+     "step": 3
+    },
+    {
+     "panel": "share",
+     "group": 2020,
+     "series": "Chapters",
+     "value": 67.8634504719,
+     "top": "Machinery and mechanical appliances",
+     "code": "84",
+     "x": 1625352500.0,
+     "m": 1901639470.0,
+     "level": "HS2",
+     "step": 3
+    },
+    {
+     "panel": "share",
+     "group": 2025,
+     "series": "Chapters",
+     "value": 68.7658946285,
+     "top": "Machinery and mechanical appliances",
+     "code": "84",
+     "x": 2038490470.0,
+     "m": 2885716872.0,
+     "level": "HS2",
+     "step": 3
+    },
+    {
+     "panel": "share",
+     "group": 2005,
+     "series": "CN8 products",
+     "value": 46.545077682,
+     "top": "Computers",
+     "code": "84713000",
+     "x": 2962297556.0,
+     "m": 2154104521.0,
+     "level": "CN8",
+     "step": 4
+    },
+    {
+     "panel": "share",
+     "group": 2010,
+     "series": "CN8 products",
+     "value": 38.4701767212,
+     "top": "Telephone sets",
+     "code": "85171200",
+     "x": 2607407180.0,
+     "m": 1188276858.0,
+     "level": "CN8",
+     "step": 4
+    },
+    {
+     "panel": "share",
+     "group": 2015,
+     "series": "CN8 products",
+     "value": 45.0096308463,
+     "top": "Telephone sets",
+     "code": "85171200",
+     "x": 2139116563.0,
+     "m": 2172406666.0,
+     "level": "CN8",
+     "step": 4
+    },
+    {
+     "panel": "share",
+     "group": 2020,
+     "series": "CN8 products",
+     "value": 37.3110298695,
+     "top": "Machinery for working rubber or plastics…",
+     "code": "84779080",
+     "x": 204746731.0,
+     "m": 221060319.0,
+     "level": "CN8",
+     "step": 4
+    },
+    {
+     "panel": "share",
+     "group": 2025,
+     "series": "CN8 products",
+     "value": 39.1013182939,
+     "top": "Telephone sets",
+     "code": "85171300",
+     "x": 898331987.0,
+     "m": 701316175.0,
+     "level": "CN8",
+     "step": 4
+    }
+   ],
+   "tiles": [
+    {
+     "value": "68.8 %",
+     "label": "of trade two-way at chapter level, 2025",
+     "detail": "2005: 74.0 %",
+     "tone": ""
+    },
+    {
+     "value": "39.1 %",
+     "label": "of trade two-way at CN8 product level, 2025",
+     "detail": "2005: 46.5 %",
+     "tone": ""
+    },
+    {
+     "value": "4 / 5",
+     "label": "largest export chapters also among the 5 largest imports, 2025",
+     "detail": "Machinery and mechanical appliances, Vehicles and parts, Electrical machinery and equipment, Plastics and articles thereof",
+     "tone": ""
+    },
+    {
+     "value": "14.6 %",
+     "label": "Iron and steel: two-way share by heading, 2025",
+     "detail": "as one chapter: index 92",
+     "tone": ""
+    }
+   ],
+   "note": "Computed by code from steps 1, 3, 4, 5: exports and imports per product code; the two-way share is the part of trade matched by trade the other way in the same code, Σ(X + M − |X − M|) / Σ(X + M) (Grubel-Lloyd). The finer the codes, the less is matched: different goods in one chapter no longer count. Codes masked at a level are left out at that level.",
+   "caption": "Two-way share: exports matched by imports of the same product code (Grubel-Lloyd); Comext DS-045409",
+   "panels": [
+    "Exports ◀ ▶ imports, 2025",
+    "Share of trade that goes both ways"
+   ]
+  }
+ ],
+ "share": {},
+ "answer_source": "llm",
+ "caveats": [
+  {
+   "id": "L02",
+   "message": "3.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped."
+  },
+  {
+   "id": "L05",
+   "message": "CN8 and HS6 codes change over time, so series longer than 3 years at this level may break. HS4 or HS2 give a stable series."
+  },
+  {
+   "id": "L06",
+   "message": "Values are in current euros (nominal), not adjusted for price changes."
+  }
+ ],
+ "notes": [
+  "combined answer passed the number, country, wording and reasoning checks"
+ ],
+ "llm_usage": [
+  {
+   "step": "scenario_answer",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 6752,
+   "output_tokens": 818,
+   "cache_read_tokens": 0,
+   "ms": 12299
+  },
+  {
+   "step": "scenario_review",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 6608,
+   "output_tokens": 1044,
+   "cache_read_tokens": 4992,
+   "ms": 6237
+  }
+ ],
+ "vintage": "2026-10-14",
+ "code_version": "f071b1f",
+ "status": "answered"
+}

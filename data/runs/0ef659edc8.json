@@ -1,0 +1,409 @@
+{
+ "run_id": "0ef659edc8",
+ "session_id": "jqyu66",
+ "turn": 5,
+ "created_at": "2026-10-21T21:49:41+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Within iron and steel, how two-way is Luxembourg's trade in each heading in 2025: which headings are exported and which imported?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [
+   "72"
+  ],
+  "product_level": "HS4",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "two_way",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": [
+   "'headings' interpreted as HS4 level products within HS2 'Iron and steel'"
+  ]
+ },
+ "assumptions": [
+  "'headings' interpreted as HS4 level products within HS2 'Iron and steel'"
+ ],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "WITH rows AS (\n  SELECT\n    year AS period,\n    hs4 AS key,\n    flow,\n    hs4 LIKE '%X%' AS masked,\n    value_eur\n  FROM v_lu_trade\n  WHERE\n    period >= CAST('2025-01-01' AS DATE)\n    AND period < CAST('2026-01-01' AS DATE)\n    AND hs2 IN ('72')\n), totals AS (\n  SELECT\n    period,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'export') AS x_total,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'import') AS m_total,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      masked), 0) AS confidential\n  FROM rows\n  GROUP BY\n    period\n), by_key AS (\n  SELECT\n    period,\n    key,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'export'), 0) AS x,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'import'), 0) AS m\n  FROM rows\n  WHERE\n    NOT masked\n  GROUP BY\n    period,\n    key\n)\nSELECT\n  b.period,\n  b.key,\n  b.x AS export,\n  b.m AS import,\n  100 * (\n    1 - ABS(b.x - b.m) / NULLIF(b.x + b.m, 0)\n  ) AS gl,\n  100 * SUM(b.x + b.m - ABS(b.x - b.m)) OVER w / SUM(b.x + b.m) OVER w AS gl_all,\n  COUNT(*) OVER w AS n,\n  t.x_total,\n  t.m_total,\n  t.confidential\nFROM by_key AS b\nJOIN totals AS t\n  USING (period)\nWINDOW w AS (PARTITION BY b.period)\nORDER BY\n  b.period,\n  b.x + b.m DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "1fe2a5d72b173aef77ecf731e446aacdd6b5673308403011a165beb32884d3a5",
+ "row_count": 29,
+ "view_kind": "two_way",
+ "title": "Two-way trade 2025: 14.6 % (heading level)",
+ "frames": {
+  "main": [
+   {
+    "period": 2025,
+    "key": "7216",
+    "export": 904980468.0,
+    "import": 32803796.0,
+    "gl": 6.9960218484,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Steel angles and sections",
+    "short": "Steel angles and sections",
+    "value": 937784264.0,
+    "share_x": 80.7786678232,
+    "share_m": 3.4392588089,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "7204",
+    "export": 22791764.0,
+    "import": 578875072.0,
+    "gl": 7.5762075076,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Ferrous waste and scrap; remelting scrap ingots of iron or steel (excl. slag, scale and other waste from the production of iron or steel; radioactive waste and scrap; fragments of pigs, blocks or other primary forms of pig iron or spiegeleisen)",
+    "short": "Ferrous waste and scrap",
+    "value": 601666836.0,
+    "share_x": 2.0343956564,
+    "share_m": 60.6911831372,
+    "top_both": true,
+    "top_x": true,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "7219",
+    "export": 10483138.0,
+    "import": 55644879.0,
+    "gl": 31.7055870585,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Flat-rolled products of stainless steel, of a width of >= 600 mm, hot-rolled or cold-rolled \"cold-reduced",
+    "short": "Flat-rolled products of stainless steel",
+    "value": 66128017.0,
+    "share_x": 0.9357261866,
+    "share_m": 5.8339937327,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "7207",
+    "export": 11204492.0,
+    "import": 48138492.0,
+    "gl": 37.76180854,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Semi-finished products of iron or non-alloy steel",
+    "short": "Semi-finished products of iron or non-alloy steel",
+    "value": 59342984.0,
+    "share_x": 1.0001143333,
+    "share_m": 5.0469992149,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "7217",
+    "export": 40010092.0,
+    "import": 12296895.0,
+    "gl": 47.0181736906,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Wire of iron or non-alloy steel, in coils (excl. bars and rods)",
+    "short": "Wire of iron or non-alloy steel",
+    "value": 52306987.0,
+    "share_x": 3.5713057304,
+    "share_m": 1.2892472704,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "7214",
+    "export": 6192954.0,
+    "import": 39647603.0,
+    "gl": 27.0195407966,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Bars and rods, of iron or non-alloy steel, not further worked than forged, hot-rolled, hot-drawn or hot-extruded, but incl. those twisted after rolling (excl. in irregularly wound coils)",
+    "short": "Bars and rods",
+    "value": 45840557.0,
+    "share_x": 0.5527838353,
+    "share_m": 4.1567862411,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "7202",
+    "export": 15511.0,
+    "import": 44691737.0,
+    "gl": 0.0693891961,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Ferro-alloys",
+    "short": "Ferro-alloys",
+    "value": 44707248.0,
+    "share_x": 0.0013845138,
+    "share_m": 4.6856299851,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "7208",
+    "export": 14558101.0,
+    "import": 24917986.0,
+    "gl": 73.756555456,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Hot-rolled flat steel",
+    "short": "Hot-rolled flat steel",
+    "value": 39476087.0,
+    "share_x": 1.2994578849,
+    "share_m": 2.612484325,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "7222",
+    "export": 32675621.0,
+    "import": 6488883.0,
+    "gl": 33.1365514038,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Other bars and rods of stainless steel; angles, shapes and sections of stainless steel, n.e.s.",
+    "short": "Other bars and rods of stainless steel",
+    "value": 39164504.0,
+    "share_x": 2.9166299473,
+    "share_m": 0.6803160225,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "7213",
+    "export": 375539.0,
+    "import": 36238799.0,
+    "gl": 2.0513220804,
+    "gl_all": 14.6070126759,
+    "n": 29,
+    "x_total": 1120321110.0,
+    "m_total": 953804230.0,
+    "confidential": 4750248.0,
+    "flow": "both",
+    "label": "Bars and rods of iron or non-alloy steel, hot-rolled, in irregularly wound coils",
+    "short": "Bars and rods of iron or non-alloy steel",
+    "value": 36614338.0,
+    "share_x": 0.0335206573,
+    "share_m": 3.7993959201,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "7216",
+   "7204",
+   "7219",
+   "7207",
+   "7217",
+   "7214",
+   "7202",
+   "7208",
+   "7222",
+   "7213"
+  ]
+ },
+ "insight": [
+  "Luxembourg's trade in iron and steel in 2025 shows a mix of one-way and two-way flows depending on the product heading.",
+  "The two-way trade index for all 29 headings combined is 14.6%, indicating that only a small portion of trade is balanced between exports and imports.",
+  "Steel angles and sections are almost only exported with exports of 905.0 million euros and imports of 32.8 million euros, while ferrous waste and scrap is almost only imported with imports of 578.9 million euros and exports of 22.8 million euros.",
+  "Some products like hot-rolled flat steel and wire of iron or non-alloy steel are traded both ways but mostly imported or exported respectively.",
+  "The data values are nominal and not adjusted for price changes, which may affect comparisons over time."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "two_way.7216",
+   "text": "Steel angles and sections (7216): exports 905.0 M€ (80.8 % of these exports), imports 32.8 M€ (3.4 % of these imports); two-way index 7: almost only exported (one-way)"
+  },
+  {
+   "key": "two_way.7204",
+   "text": "Ferrous waste and scrap (7204): exports 22.8 M€ (2.0 % of these exports), imports 578.9 M€ (60.7 % of these imports); two-way index 8: almost only imported (one-way)"
+  },
+  {
+   "key": "two_way.7219",
+   "text": "Flat-rolled products of stainless steel (7219): exports 10.5 M€ (0.9 % of these exports), imports 55.6 M€ (5.8 % of these imports); two-way index 32: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.7207",
+   "text": "Semi-finished products of iron or non-alloy steel (7207): exports 11.2 M€ (1.0 % of these exports), imports 48.1 M€ (5.0 % of these imports); two-way index 38: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.7217",
+   "text": "Wire of iron or non-alloy steel (7217): exports 40.0 M€ (3.6 % of these exports), imports 12.3 M€ (1.3 % of these imports); two-way index 47: traded both ways, mostly exported"
+  },
+  {
+   "key": "two_way.7214",
+   "text": "Bars and rods (7214): exports 6.2 M€ (0.6 % of these exports), imports 39.6 M€ (4.2 % of these imports); two-way index 27: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.7202",
+   "text": "Ferro-alloys (7202): exports 16 k € (0.0 % of these exports), imports 44.7 M€ (4.7 % of these imports); two-way index 0: almost only imported (one-way)"
+  },
+  {
+   "key": "two_way.7208",
+   "text": "Hot-rolled flat steel (7208): exports 14.6 M€ (1.3 % of these exports), imports 24.9 M€ (2.6 % of these imports); two-way index 74: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.7222",
+   "text": "Other bars and rods of stainless steel (7222): exports 32.7 M€ (2.9 % of these exports), imports 6.5 M€ (0.7 % of these imports); two-way index 33: traded both ways, mostly exported"
+  },
+  {
+   "key": "two_way.7213",
+   "text": "Bars and rods of iron or non-alloy steel (7213): exports 376 k € (0.0 % of these exports), imports 36.2 M€ (3.8 % of these imports); two-way index 2: almost only imported (one-way)"
+  },
+  {
+   "key": "two_way.all",
+   "text": "Two-way trade 2025, all 29 headings: 14.6 % of trade is matched (exports and imports of the same code); codes masked at this level (0.2 % of trade) left out"
+  },
+  {
+   "key": "two_way.both",
+   "text": "Among the 5 largest of both exports and imports in 2025: Ferrous waste and scrap"
+  },
+  {
+   "key": "method0",
+   "text": "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS4 code (headings); codes masked at that level (confidential) are left out of the index"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS4 code (headings); codes masked at that level (confidential) are left out of the index"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 132,
+   "outcome": "ok",
+   "detail": "29 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06"
+  },
+  {
+   "node": "analyse",
+   "ms": 18,
+   "outcome": "ok",
+   "detail": "view=two_way; two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS4 code (headings); codes masked at that level (confidential) are left out of the index"
+  },
+  {
+   "node": "insight",
+   "ms": 1765,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1569,
+   "output_tokens": 170,
+   "cache_read_tokens": 1408,
+   "ms": 1718
+  }
+ ],
+ "code_version": "f071b1f",
+ "error": null
+}

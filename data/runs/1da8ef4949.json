@@ -1,0 +1,410 @@
+{
+ "run_id": "1da8ef4949",
+ "session_id": "py8s7a",
+ "turn": 1,
+ "created_at": "2026-10-21T21:46:11+00:00",
+ "origin": "scenario",
+ "status": "answered",
+ "question": "Which product chapters did Luxembourg both export and import most in 2025, and how two-way is the trade in each?",
+ "language": "en",
+ "followup_of": null,
+ "inherited": [],
+ "parent_run_id": null,
+ "interpretation": null,
+ "spec": {
+  "language": "en",
+  "intent": "ranking",
+  "breakdown": "product",
+  "partners": [],
+  "partner_group": "WORLD",
+  "compare_reporters": [],
+  "products": [],
+  "product_level": "HS2",
+  "freq": "A",
+  "year_step": null,
+  "period_start": "2025",
+  "period_end": "2025",
+  "flow": "both",
+  "measure": "two_way",
+  "top_n": 10,
+  "seasonal_adjust": false,
+  "forecast_horizon": null,
+  "view": "auto",
+  "assumptions": []
+ },
+ "assumptions": [],
+ "limitations": [
+  {
+   "id": "L06",
+   "key": "nominal_values",
+   "severity": "warn",
+   "message": "Values are in current euros (nominal), not adjusted for price changes.",
+   "value": null
+  },
+  {
+   "id": "L02",
+   "key": "confidential_in_chapters",
+   "severity": "warn",
+   "message": "3.8 % of this value is confidential at full product detail (masked codes); it is shown as a separate 'Confidential' slice, never dropped.",
+   "value": 3.752831184167725
+  }
+ ],
+ "suggestions": [],
+ "missing_hint": "",
+ "sql": "WITH rows AS (\n  SELECT\n    year AS period,\n    hs2 AS key,\n    flow,\n    hs2 LIKE '%X%' AS masked,\n    value_eur\n  FROM v_lu_trade\n  WHERE\n    period >= CAST('2025-01-01' AS DATE) AND period < CAST('2026-01-01' AS DATE)\n), totals AS (\n  SELECT\n    period,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'export') AS x_total,\n    SUM(value_eur) FILTER(WHERE\n      flow = 'import') AS m_total,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      masked), 0) AS confidential\n  FROM rows\n  GROUP BY\n    period\n), by_key AS (\n  SELECT\n    period,\n    key,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'export'), 0) AS x,\n    COALESCE(SUM(value_eur) FILTER(WHERE\n      flow = 'import'), 0) AS m\n  FROM rows\n  WHERE\n    NOT masked\n  GROUP BY\n    period,\n    key\n)\nSELECT\n  b.period,\n  b.key,\n  b.x AS export,\n  b.m AS import,\n  100 * (\n    1 - ABS(b.x - b.m) / NULLIF(b.x + b.m, 0)\n  ) AS gl,\n  100 * SUM(b.x + b.m - ABS(b.x - b.m)) OVER w / SUM(b.x + b.m) OVER w AS gl_all,\n  COUNT(*) OVER w AS n,\n  t.x_total,\n  t.m_total,\n  t.confidential\nFROM by_key AS b\nJOIN totals AS t\n  USING (period)\nWINDOW w AS (PARTITION BY b.period)\nORDER BY\n  b.period,\n  b.x + b.m DESC\nLIMIT 10000",
+ "support_sql": [],
+ "custom_sql": false,
+ "result_hash": "a84be690bc2de53047ccf54ffa7e0976ba8adc3e1bbe019b97f44315a6923a14",
+ "row_count": 97,
+ "view_kind": "two_way",
+ "title": "Two-way trade 2025: 68.8 % (chapter level)",
+ "frames": {
+  "main": [
+   {
+    "period": 2025,
+    "key": "84",
+    "export": 2038490470.0,
+    "import": 2885716872.0,
+    "gl": 82.7946643356,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Machinery and mechanical appliances",
+    "short": "Machinery and mechanical appliances",
+    "value": 4924207342.0,
+    "share_x": 12.5415774007,
+    "share_m": 11.4978215614,
+    "top_both": true,
+    "top_x": true,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "87",
+    "export": 1556322926.0,
+    "import": 3318048160.0,
+    "gl": 63.8573837954,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Vehicles and parts",
+    "short": "Vehicles and parts",
+    "value": 4874371086.0,
+    "share_x": 9.5750972223,
+    "share_m": 13.220398039,
+    "top_both": true,
+    "top_x": true,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "85",
+    "export": 1506781023.0,
+    "import": 1972062083.0,
+    "gl": 86.6254083377,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Electrical machinery and equipment",
+    "short": "Electrical machinery and equipment",
+    "value": 3478843106.0,
+    "share_x": 9.2702963806,
+    "share_m": 7.8574645206,
+    "top_both": true,
+    "top_x": true,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "39",
+    "export": 1575495176.0,
+    "import": 1292914757.0,
+    "gl": 90.1485343587,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Plastics and articles thereof",
+    "short": "Plastics and articles thereof",
+    "value": 2868409933.0,
+    "share_x": 9.6930522782,
+    "share_m": 5.1514766796,
+    "top_both": true,
+    "top_x": true,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "27",
+    "export": 18527351.0,
+    "import": 2231635421.0,
+    "gl": 1.646756513,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Mineral fuels and oils",
+    "short": "Mineral fuels and oils",
+    "value": 2250162772.0,
+    "share_x": 0.1139873892,
+    "share_m": 8.891705943,
+    "top_both": false,
+    "top_x": false,
+    "top_m": true
+   },
+   {
+    "period": 2025,
+    "key": "72",
+    "export": 1120321110.0,
+    "import": 953804230.0,
+    "gl": 91.9717060108,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Iron and steel",
+    "short": "Iron and steel",
+    "value": 2074125340.0,
+    "share_x": 6.8926463584,
+    "share_m": 3.8003280736,
+    "top_both": false,
+    "top_x": true,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "40",
+    "export": 851809335.0,
+    "import": 829620472.0,
+    "gl": 98.6803574608,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Rubber and articles thereof",
+    "short": "Rubber and articles thereof",
+    "value": 1681429807.0,
+    "share_x": 5.2406586456,
+    "share_m": 3.3055315451,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "73",
+    "export": 817024273.0,
+    "import": 481054912.0,
+    "gl": 74.1179609933,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Articles of iron or steel",
+    "short": "Articles of iron or steel",
+    "value": 1298079185.0,
+    "share_x": 5.0266475654,
+    "share_m": 1.9167103998,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "04",
+    "export": 720667101.0,
+    "import": 563476858.0,
+    "gl": 87.7591416524,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Dairy produce; eggs; honey",
+    "short": "Dairy produce; eggs; honey",
+    "value": 1284143959.0,
+    "share_x": 4.433821183,
+    "share_m": 2.2451115805,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   },
+   {
+    "period": 2025,
+    "key": "30",
+    "export": 229263917.0,
+    "import": 834155181.0,
+    "gl": 43.1182621097,
+    "gl_all": 68.7658946285,
+    "n": 97,
+    "x_total": 16253860299.0,
+    "m_total": 25097944481.0,
+    "confidential": 0.0,
+    "flow": "both",
+    "label": "Pharmaceutical products",
+    "short": "Pharmaceutical products",
+    "value": 1063419098.0,
+    "share_x": 1.4105197952,
+    "share_m": 3.3235995945,
+    "top_both": false,
+    "top_x": false,
+    "top_m": false
+   }
+  ]
+ },
+ "entities": {
+  "products": [
+   "84",
+   "87",
+   "85",
+   "39",
+   "27",
+   "72",
+   "40",
+   "73",
+   "04",
+   "30"
+  ]
+ },
+ "insight": [
+  "In 2025, Luxembourg both exported and imported most in the product chapters of Machinery and mechanical appliances, Vehicles and parts, Electrical machinery and equipment, and Plastics and articles thereof.",
+  "Machinery and mechanical appliances had exports of 2.04 billion euros and imports of 2.89 billion euros, with a two-way trade index of 83, indicating similar amounts traded both ways.",
+  "Vehicles and parts were mostly imported, with exports of 1.56 billion euros and imports of 3.32 billion euros, and a two-way index of 64.",
+  "Rubber and articles thereof also showed very balanced two-way trade, with a two-way index of 99, exports of 851.8 million euros, and imports of 829.6 million euros.",
+  "The data are in current euros and not adjusted for price changes, and 3.8% of the trade value is confidential and not detailed in the product codes."
+ ],
+ "insight_source": "llm",
+ "facts": [
+  {
+   "key": "two_way.84",
+   "text": "Machinery and mechanical appliances (84): exports 2.04 bn € (12.5 % of exports), imports 2.89 bn € (11.5 % of imports); two-way index 83: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.87",
+   "text": "Vehicles and parts (87): exports 1.56 bn € (9.6 % of exports), imports 3.32 bn € (13.2 % of imports); two-way index 64: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.85",
+   "text": "Electrical machinery and equipment (85): exports 1.51 bn € (9.3 % of exports), imports 1.97 bn € (7.9 % of imports); two-way index 87: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.39",
+   "text": "Plastics and articles thereof (39): exports 1.58 bn € (9.7 % of exports), imports 1.29 bn € (5.2 % of imports); two-way index 90: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.27",
+   "text": "Mineral fuels and oils (27): exports 18.5 M€ (0.1 % of exports), imports 2.23 bn € (8.9 % of imports); two-way index 2: almost only imported (one-way)"
+  },
+  {
+   "key": "two_way.72",
+   "text": "Iron and steel (72): exports 1.12 bn € (6.9 % of exports), imports 953.8 M€ (3.8 % of imports); two-way index 92: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.40",
+   "text": "Rubber and articles thereof (40): exports 851.8 M€ (5.2 % of exports), imports 829.6 M€ (3.3 % of imports); two-way index 99: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.73",
+   "text": "Articles of iron or steel (73): exports 817.0 M€ (5.0 % of exports), imports 481.1 M€ (1.9 % of imports); two-way index 74: traded both ways, mostly exported"
+  },
+  {
+   "key": "two_way.04",
+   "text": "Dairy produce; eggs; honey (04): exports 720.7 M€ (4.4 % of exports), imports 563.5 M€ (2.2 % of imports); two-way index 88: traded both ways in similar amounts"
+  },
+  {
+   "key": "two_way.30",
+   "text": "Pharmaceutical products (30): exports 229.3 M€ (1.4 % of exports), imports 834.2 M€ (3.3 % of imports); two-way index 43: traded both ways, mostly imported"
+  },
+  {
+   "key": "two_way.all",
+   "text": "Two-way trade 2025, all 97 chapters: 68.8 % of trade is matched (exports and imports of the same code); codes masked at this level (0.0 % of trade) left out"
+  },
+  {
+   "key": "two_way.both",
+   "text": "Among the 5 largest of both exports and imports in 2025: Machinery and mechanical appliances, Vehicles and parts, Electrical machinery and equipment, Plastics and articles thereof"
+  },
+  {
+   "key": "method0",
+   "text": "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS2 code (chapters); codes masked at that level (confidential) are left out of the index"
+  }
+ ],
+ "methods": [
+  "SQL compiled from the QuerySpec template, checked by the SQL guard",
+  "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS2 code (chapters); codes masked at that level (confidential) are left out of the index"
+ ],
+ "provenance": {
+  "dataset": "DS-045409",
+  "source": "Eurostat Comext DS-045409, bulk monthly files full_v2_YYYYMM.7z",
+  "extraction_date": "2026-10-14",
+  "is_placeholder": false,
+  "vintage": "2026-10-14",
+  "first_period": "2002-01-01",
+  "latest_complete_period": "2026-06-01",
+  "manifest": "data\\raw\\manifest.json",
+  "database": "luxtrade.duckdb"
+ },
+ "trace": [
+  {
+   "node": "guard_pre",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06:warn"
+  },
+  {
+   "node": "query",
+   "ms": 226,
+   "outcome": "ok",
+   "detail": "97 rows"
+  },
+  {
+   "node": "guard_post",
+   "ms": 0,
+   "outcome": "ok",
+   "detail": "L06, L02"
+  },
+  {
+   "node": "analyse",
+   "ms": 84,
+   "outcome": "ok",
+   "detail": "view=two_way; two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / (exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every HS2 code (chapters); codes masked at that level (confidential) are left out of the index"
+  },
+  {
+   "node": "insight",
+   "ms": 2900,
+   "outcome": "ok",
+   "detail": "llm"
+  }
+ ],
+ "llm_usage": [
+  {
+   "step": "insight",
+   "model": "gpt-4.1-mini",
+   "input_tokens": 1560,
+   "output_tokens": 193,
+   "cache_read_tokens": 0,
+   "ms": 2845
+  }
+ ],
+ "code_version": "f071b1f",
+ "error": null
+}
