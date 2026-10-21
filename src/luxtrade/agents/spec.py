@@ -25,7 +25,10 @@ Level = Literal["TOTAL", "SECTION", "HS2", "HS4", "HS6", "CN8"]
 Flow = Literal["import", "export", "both", "balance"]
 # change: end of period minus start of period, per key (rankings of rises and falls)
 # hhi: concentration of a flow across the breakdown's items (Herfindahl-Hirschman, 0-10,000)
-Measure = Literal["value_eur", "qty_kg", "unit_value", "share", "growth_yoy", "change", "hhi"]
+# two_way: how much of trade goes both ways in the same product code (Grubel-Lloyd, 0-100)
+Measure = Literal[
+    "value_eur", "qty_kg", "unit_value", "share", "growth_yoy", "change", "hhi", "two_way"
+]
 View = Literal[
     "auto", "table", "bar", "line", "area", "stacked", "heatmap", "map", "treemap", "pivot", "kpi"
 ]

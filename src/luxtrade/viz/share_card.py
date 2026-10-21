@@ -316,6 +316,8 @@ def render_card(content: CardContent, size: str = "portrait", scale: int = 2) ->
         _projection_panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("kind") == "benchmark":
         _benchmark_panels(c, content.figure, box, lang)
+    elif content.figure and content.figure.get("kind") == "two_way":
+        _two_way_panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("kind") in ("concentration", "series"):
         _panels(c, content.figure, box, lang)
     elif content.figure and content.figure.get("rows"):
@@ -777,6 +779,136 @@ def _benchmark_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
         )
         c.draw.ellipse(c.p(sx(b) - 5.5, cy - 5.5, sx(b) + 5.5, cy + 5.5), fill=tone)
         c.text((rx1, cy), fmt_pct(b, lang), bold if own else name_font, tone, anchor="rm")
+
+
+_TW_LEGEND = {
+    "export": {"en": "exports", "fr": "exportations", "de": "Ausfuhren"},
+    "import": {"en": "imports", "fr": "importations", "de": "Einfuhren"},
+    "index": {"en": "index", "fr": "indice", "de": "Index"},
+}
+
+
+def _two_way_panels(c: _Canvas, fig: dict, box: tuple, lang: str) -> None:
+    """Exports against imports of the largest chapters, beside the two-way share of trade.
+
+    Left: a row per chapter, exports to the left of the centre line, imports to the right, and
+    its two-way index. Right: the share of trade that goes both ways, a line per product level;
+    the two largest same-product trades are named where they peaked.
+    """
+    x0, y0, x1, y1 = box
+    rows = fig["rows"]
+    titles = fig.get("panels") or ["", ""]
+    title_font = c.font("sans", 18, 600)
+    y = c.lines(
+        x0 + 20,
+        y0 + 16,
+        _wrap(fig["title"], title_font, (x1 - x0 - 40) * c.s, 1),
+        title_font,
+        INK,
+        24,
+    )
+    if fig.get("caption"):
+        cap = c.font("sans", 13, 400)
+        c.text(
+            (x0 + 20, y1 - 22), _wrap(fig["caption"], cap, (x1 - x0 - 40) * c.s, 1)[0], cap, MUTED
+        )
+        y1 -= 24
+    label_font, axis = c.font("sans", 16, 600), c.font("sans", 13, 400)
+    name_font, bold = c.font("sans", 13, 500), c.font("sans", 13, 700)
+    items = [r for r in rows if r["panel"] == "items"]
+    share = [r for r in rows if r["panel"] == "share"]
+    split = x0 + 20 + (x1 - x0 - 40) * (0.56 if share else 1.0)
+    xcol, mcol = PANEL_COLORS[0], PANEL_COLORS[1]
+
+    # left: a row per item, exports to the left of the centre line and imports to the right
+    if items:
+        c.text((x0 + 20, y + 6), titles[0], label_font, INK)
+        names = list(dict.fromkeys(r["group"] for r in items))
+        value = {(r["group"], r["series"]): r["value"] for r in items}
+        index = {r["group"]: r["gl"] for r in items}
+        lx = split - 20  # the legend, right-aligned on the panel title
+        for key in ("import", "export"):
+            text = _TW_LEGEND[key].get(lang, key)
+            lx -= c.length(text, name_font)
+            c.text((lx, y + 9), text, name_font, MUTED)
+            c.rect((lx - 20, y + 10, lx - 6, y + 22), xcol if key == "export" else mcol, radius=3)
+            lx -= 34
+        left, right = x0 + 20 + 262, split - 52  # names, then bars, then the index
+        mid = (left + right) / 2
+        top_y, bottom_y = y + 54, y1 - 18
+        row_h = (bottom_y - top_y) / max(len(names), 1)
+        most = max(value.values()) or 1.0
+        c.text(
+            (right + 30, top_y - 2),
+            _TW_LEGEND["index"].get(lang, "index"),
+            axis,
+            FAINT,
+            anchor="ms",
+        )
+        for k, name in enumerate(names):
+            cy = top_y + (k + 0.5) * row_h
+            bar = min(row_h * 0.62, 22)
+            c.text(
+                (x0 + 20, cy), _wrap(name, name_font, 256 * c.s, 1)[0], name_font, INK, anchor="lm"
+            )
+            ex = value.get((name, "export"), 0.0) / most * (mid - left)
+            im = value.get((name, "import"), 0.0) / most * (right - mid)
+            c.rect((mid - ex, cy - bar / 2, mid, cy + bar / 2), xcol, radius=3)
+            c.rect((mid, cy - bar / 2, mid + im, cy + bar / 2), mcol, radius=3)
+            gl = index.get(name, 0.0)
+            tone = TONE["up"] if gl >= 75 else (TONE["down"] if gl < 25 else MUTED)
+            c.text((right + 30, cy), fmt_number(gl, 0, lang), bold, tone, anchor="mm")
+        c.rect((mid, top_y - 4, mid + 1, bottom_y), MUTED)
+
+    # right: the share of trade that goes both ways, a line per product level
+    if not share:
+        return
+    rx0, rx1 = split + 28, x1 - 20
+    c.text((rx0, y + 6), titles[1], label_font, INK)
+    years = sorted({int(r["group"]) for r in share})
+    left_s, right_s = rx0 + 40, rx1 - 120  # room for the line names at their ends
+    top_s, bottom_s = y + 56, y1 - 30
+    hi = max(r["value"] for r in share) * 1.15
+
+    def sx(year: int) -> float:
+        return left_s + (year - years[0]) / ((years[-1] - years[0]) or 1) * (right_s - left_s)
+
+    def sy(v: float) -> float:
+        return bottom_s - v / (hi or 1.0) * (bottom_s - top_s)
+
+    for t in _ticks(0, hi):
+        c.rect((left_s, sy(t), right_s, sy(t) + 0.6), LINE)
+        c.text((left_s - 8, sy(t)), f"{t:g} %", axis, FAINT, anchor="rm")
+    step = 5 if years[-1] - years[0] > 12 else max(1, (years[-1] - years[0]) // 4 or 1)
+    for year in years:
+        if (year - years[0]) % step == 0 or year == years[-1]:
+            c.text((sx(year), bottom_s + 6), str(year), axis, FAINT, anchor="ma")
+    series = list(dict.fromkeys(r["series"] for r in share))
+    for k, name in enumerate(series):
+        mine = sorted((r for r in share if r["series"] == name), key=lambda r: r["group"])
+        color = PANEL_COLORS[2 + k % 2]
+        pts = [(sx(int(r["group"])), sy(r["value"])) for r in mine]
+        if len(pts) > 1:
+            c.draw.line([tuple(c.p(*pt)) for pt in pts], fill=color, width=3 * c.s, joint="curve")
+        for px_, py_ in pts if len(pts) <= 8 else pts[-1:]:
+            c.draw.ellipse(c.p(px_ - 4, py_ - 4, px_ + 4, py_ + 4), fill=color)
+        ex, ey = pts[-1]
+        c.text((ex + 10, ey - 8), name, bold, color, anchor="lm")
+        c.text((ex + 10, ey + 9), fmt_pct(mine[-1]["value"], lang), name_font, color, anchor="lm")
+    # the two largest same-product two-way trades, named where they peaked (finest level)
+    finest = [r for r in share if r["series"] == series[-1] and r.get("top")]
+    peaks: dict[str, dict] = {}
+    for r in finest:
+        both = min(r.get("x", 0.0), r.get("m", 0.0))
+        if both > peaks.get(r["top"], {}).get("both", -1):
+            peaks[r["top"]] = {"both": both, "row": r}
+    for label, p in sorted(peaks.items(), key=lambda kv: -kv[1]["both"])[:2]:
+        r = p["row"]
+        px_, py_ = sx(int(r["group"])), sy(r["value"])
+        text = _wrap(label, name_font, 130 * c.s, 1)[0]
+        first = int(r["group"]) == years[0]  # the first year: start the name at the point
+        anchor = "ls" if first else "ms"
+        c.text((px_ - 4 if first else px_, py_ - 12), text, name_font, INK, anchor=anchor)
 
 
 _PROJ_LEGEND = {

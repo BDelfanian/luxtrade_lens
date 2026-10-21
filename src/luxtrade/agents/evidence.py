@@ -32,7 +32,14 @@ from pydantic import BaseModel, Field
 
 from luxtrade.runs.store import RunRecord
 from luxtrade.semantic.layer import QueryError, SemanticLayer
-from luxtrade.viz.format import flow_label, fmt_measure, fmt_number, fmt_pct, month_name
+from luxtrade.viz.format import (
+    flow_label,
+    fmt_eur,
+    fmt_measure,
+    fmt_number,
+    fmt_pct,
+    month_name,
+)
 
 MAX_FIGURES = 2
 MAX_FOCUS = {"change": 2, "share": 3}
@@ -244,6 +251,72 @@ _T = {
         "fr": "{m} en baisse : {least} à {most} points",
         "de": "{m} gesunken: {least} bis {most} Punkte",
     },
+    "t_tw": {
+        "en": "Exports and imports of the largest chapters, {year}, and the two-way share of trade",
+        "fr": "Exportations et importations des principaux chapitres, {year}, et part du commerce "
+        "croisé",
+        "de": "Aus- und Einfuhren der größten Kapitel, {year}, und Anteil des "
+        "Intra-Branchen-Handels",
+    },
+    "p_tw_items": {
+        "en": "Exports and imports, {year}",
+        "fr": "Exportations et importations, {year}",
+        "de": "Aus- und Einfuhren, {year}",
+    },
+    "p_tw_share": {
+        "en": "Share of trade that goes both ways",
+        "fr": "Part des échanges dans les deux sens",
+        "de": "Anteil des Handels in beide Richtungen",
+    },
+    "k_tw_share": {
+        "en": "of trade two-way at {level} level, {year}",
+        "fr": "des échanges croisés au niveau {level}, {year}",
+        "de": "des Handels in beide Richtungen auf Ebene {level}, {year}",
+    },
+    "k_tw_both": {
+        "en": "largest export chapters also among the 5 largest imports, {year}",
+        "fr": "premiers chapitres d'exportation aussi parmi les 5 premiers à l'importation, {year}",
+        "de": "größte Ausfuhrkapitel auch unter den 5 größten Einfuhren, {year}",
+    },
+    "k_tw_drill": {
+        "en": "{name}: two-way share by {level}, {year}",
+        "fr": "{name} : part croisée par {level}, {year}",
+        "de": "{name}: Anteil in beide Richtungen je {level}, {year}",
+    },
+    "k_tw_drill_d": {
+        "en": "as one chapter: index {gl}",
+        "fr": "comme un seul chapitre : indice {gl}",
+        "de": "als ein Kapitel: Index {gl}",
+    },
+    "k_tw_one": {
+        "en": "{name}: two-way index, {year} (0 = one way only)",
+        "fr": "{name} : indice de commerce croisé, {year} (0 = un seul sens)",
+        "de": "{name}: Index, {year} (0 = nur eine Richtung)",
+    },
+    "note_tw": {
+        "en": "Computed by code from steps {steps}: exports and imports per product code; the "
+        "two-way share is the part of trade matched by trade the other way in the same code, "
+        "Σ(X + M − |X − M|) / Σ(X + M) (Grubel-Lloyd). The finer the codes, the less is matched: "
+        "different goods in one chapter no longer count. Codes masked at a level are left out "
+        "at that level.",
+        "fr": "Calculé par le code à partir des étapes {steps} : exportations et importations par "
+        "code produit ; la part croisée est la part des échanges appariée à des échanges dans "
+        "l'autre sens pour le même code, Σ(X + M − |X − M|) / Σ(X + M) (Grubel-Lloyd). Plus les "
+        "codes sont fins, moins elle est élevée. Les codes masqués à un niveau sont exclus à ce "
+        "niveau.",
+        "de": "Vom Code aus Schritten {steps} berechnet: Aus- und Einfuhren je Produktcode; der "
+        "Anteil in beide Richtungen ist der Teil des Handels, dem Handel in die Gegenrichtung "
+        "im selben Code gegenübersteht, Σ(X + M − |X − M|) / Σ(X + M) (Grubel-Lloyd). Je feiner "
+        "die Codes, desto kleiner. Auf einer Ebene maskierte Codes bleiben dort außen vor.",
+    },
+    "cap_tw": {
+        "en": "Two-way share: exports matched by imports of the same product code (Grubel-Lloyd); "
+        "Comext DS-045409",
+        "fr": "Part croisée : exportations appariées aux importations du même code produit "
+        "(Grubel-Lloyd) ; Comext DS-045409",
+        "de": "Anteil in beide Richtungen: Ausfuhren, denen Einfuhren desselben Produktcodes "
+        "gegenüberstehen (Grubel-Lloyd); Comext DS-045409",
+    },
     "cap_bench": {
         "en": "Each country as a reporter in Comext DS-045409 (HS2 totals over all partners), "
         "values in current euros",
@@ -291,7 +364,9 @@ def _t(key: str, lang: str, **values: object) -> str:
 class EvidenceFigure(BaseModel):
     """One chart of a scenario's answer and the key figures read from it."""
 
-    kind: Literal["change", "share", "concentration", "series", "projection", "benchmark"]
+    kind: Literal[
+        "change", "share", "concentration", "series", "projection", "benchmark", "two_way"
+    ]
     title: str
     flow: str
     steps: list[int]
@@ -394,6 +469,14 @@ def compose(
     if ahead:
         try:
             fig = _projection(ahead, season, records, lang)
+        except (KeyError, ValueError, TypeError):
+            fig = None
+        if fig is not None:
+            figures.append(fig)
+    two_way = [n for n in answered if (records[n].spec or {}).get("measure") == "two_way"]
+    if two_way and len(figures) < MAX_FIGURES:
+        try:
+            fig = _two_way(two_way, records, lang)
         except (KeyError, ValueError, TypeError):
             fig = None
         if fig is not None:
@@ -692,6 +775,159 @@ def _benchmark(steps: list[int], records: dict[int, RunRecord], lang: str) -> Ev
         note=_t("note_bench", lang, step=n, y0=y0),
         caption=_t("cap_bench", lang),
         panels=[_t("p_index", lang, y0=y0), _t("p_intra", lang, y0=y0, y1=y1)],
+    )
+
+
+_LEVEL_WORDS = {
+    "HS2": {"en": "chapter", "fr": "chapitre", "de": "Kapitel"},
+    "HS4": {"en": "heading", "fr": "position", "de": "Position"},
+    "HS6": {"en": "subheading", "fr": "sous-position", "de": "Unterposition"},
+    "CN8": {"en": "CN8 product", "fr": "produit NC8", "de": "KN8-Produkt"},
+}
+_LEVEL_SERIES = {
+    "HS2": {"en": "Chapters", "fr": "Chapitres", "de": "Kapitel"},
+    "HS4": {"en": "Headings", "fr": "Positions", "de": "Positionen"},
+    "HS6": {"en": "Subheadings", "fr": "Sous-positions", "de": "Unterpositionen"},
+    "CN8": {"en": "CN8 products", "fr": "Produits NC8", "de": "KN8-Produkte"},
+}
+_FINENESS = {"HS2": 2, "HS4": 4, "HS6": 6, "CN8": 8}
+TWO_WAY_ITEMS = 8  # chapters on the butterfly
+
+
+def _two_way(steps: list[int], records: dict[int, RunRecord], lang: str) -> EvidenceFigure | None:
+    """Exports against imports of the largest products, and the two-way share over time.
+
+    The butterfly comes from the ranking step over all products with the latest year; the lines
+    from the yearly steps, one per product level, so chapters and CN8 products sit side by side.
+    """
+
+    def spec(n: int) -> dict:
+        return records[n].spec or {}
+
+    ranked = [n for n in steps if spec(n).get("intent") != "time_series"]
+    yearly = sorted(
+        (n for n in steps if spec(n).get("intent") == "time_series"),
+        key=lambda n: _FINENESS.get(spec(n).get("product_level") or "HS2", 2),
+    )
+    rows, tiles, used = [], [], []
+    whole = [n for n in ranked if not spec(n).get("products")]
+    items = max(whole or ranked, key=lambda n: spec(n).get("period_end") or "", default=None)
+    year = None
+    if items is not None:
+        main = records[items].frame("main")
+        if not main.empty and {"export", "import", "gl"} <= set(main.columns):
+            year = int(main["period"].max())
+            top = main[main["period"] == year].head(TWO_WAY_ITEMS)
+            for r in top.to_dict("records"):
+                for flow in ("export", "import"):
+                    rows.append(
+                        {
+                            "panel": "items",
+                            "group": r.get("short") or r["label"],
+                            "series": flow,
+                            "value": float(r[flow]),
+                            "gl": float(r["gl"]),
+                            "code": str(r["key"]),
+                            "step": items,
+                        }
+                    )
+            used.append(items)
+    for n in yearly:
+        main = records[n].frame("main")
+        if main.empty or "value" not in main.columns:
+            continue
+        level = spec(n).get("product_level") or "HS2"
+        series = _LEVEL_SERIES.get(level, _LEVEL_SERIES["HS2"]).get(lang, level)
+        for r in main.sort_values("period").to_dict("records"):
+            rows.append(
+                {
+                    "panel": "share",
+                    "group": int(r["period"]),
+                    "series": series,
+                    "value": float(r["value"]),
+                    "top": str(r.get("top_label") or ""),
+                    "code": str(r.get("top_key") or ""),
+                    "x": float(r.get("top_export") or 0.0),
+                    "m": float(r.get("top_import") or 0.0),
+                    "level": level,
+                    "step": n,
+                }
+            )
+        used.append(n)
+        g = main.sort_values("period")
+        first, last = g.iloc[0], g.iloc[-1]
+        word = _LEVEL_WORDS.get(level, _LEVEL_WORDS["HS2"]).get(lang, level)
+        tiles.append(
+            {
+                "value": fmt_pct(float(last["value"]), lang),
+                "label": _t("k_tw_share", lang, level=word, year=int(last["period"])),
+                "detail": f"{int(first['period'])}: {fmt_pct(float(first['value']), lang)}",
+                "tone": "",
+            }
+        )
+    if not rows:
+        return None
+    if items is not None and year is not None:
+        main = records[items].frame("main")
+        latest = main[main["period"] == year]
+        if "top_x" in latest.columns:
+            both = int(latest["top_both"].sum())
+            tiles.append(
+                {
+                    "value": f"{both} / 5",
+                    "label": _t("k_tw_both", lang, year=year),
+                    "detail": ", ".join(  # a word each: the tile has one line
+                        t.split()[0].rstrip(",;") for t in latest.loc[latest["top_both"], "short"]
+                    ),
+                    "tone": "",
+                }
+            )
+        drill = [n for n in ranked if spec(n).get("products") and n != items]
+        for n in drill[:1]:  # one chapter by heading: matched as a chapter, not by heading
+            sub = records[n].frame("main")
+            code = (spec(n).get("products") or [""])[0]
+            row = latest[latest["key"].astype(str) == code]
+            if sub.empty or row.empty:
+                continue
+            level = spec(n).get("product_level") or "HS4"
+            tiles.append(
+                {
+                    "value": fmt_pct(float(sub["gl_all"].iloc[0]), lang),
+                    "label": _t(
+                        "k_tw_drill",
+                        lang,
+                        name=row["short"].iloc[0],
+                        level=_LEVEL_WORDS.get(level, _LEVEL_WORDS["HS4"]).get(lang, level),
+                        year=int(sub["period"].max()),
+                    ),
+                    "detail": _t(
+                        "k_tw_drill_d", lang, gl=fmt_number(float(row["gl"].iloc[0]), 0, lang)
+                    ),
+                    "tone": "",
+                }
+            )
+            used.append(n)
+        if len(tiles) < 4 and not latest.empty:
+            one = latest.loc[latest["gl"].idxmin()]
+            tiles.append(
+                {
+                    "value": fmt_number(float(one["gl"]), 0, lang),
+                    "label": _t("k_tw_one", lang, name=one["short"], year=year),
+                    "detail": f"{fmt_eur(float(one['export']), lang)} / "
+                    f"{fmt_eur(float(one['import']), lang)}",
+                    "tone": "",
+                }
+            )
+    return EvidenceFigure(
+        kind="two_way",
+        title=_t("t_tw", lang, year=year or ""),
+        flow="both",
+        steps=sorted(set(used)),
+        rows=rows,
+        tiles=tiles[:4],
+        note=_t("note_tw", lang, steps=", ".join(map(str, sorted(set(used))))),
+        caption=_t("cap_tw", lang),
+        panels=[_t("p_tw_items", lang, year=year or ""), _t("p_tw_share", lang)],
     )
 
 

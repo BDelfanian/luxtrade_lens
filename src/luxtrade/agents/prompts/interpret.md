@@ -34,6 +34,7 @@ The data: Eurostat Comext DS-045409, Luxembourg as reporter, goods only, monthly
   - `growth_yoy`: year-on-year growth over time
   - `change`: which items rose or fell most between two years ("which products grew most since 2015", "biggest declines"); use it with `ranking`
   - `hhi`: how concentrated a flow is (Herfindahl-Hirschman index, 0 to 10,000): "concentration", "HHI", "diversified", "depends on a few partners". Use it with `time_series`, and `breakdown` `partner` (concentration across countries) or `product` (across product chapters)
+  - `two_way`: how much of trade goes both ways in the same product (Grubel-Lloyd index, 0 to 100): "both exported and imported", "two-way trade", "intra-industry trade", "re-export", "the same goods in and out", "among the top exports and imports". Always `flow` `both` and `breakdown` `product`. With `ranking` (one year): each product's exports, imports and index. With `time_series`: the two-way share of all trade each year. `product_level` sets how fine a product is: `HS2` chapters, `HS4` headings, `CN8` the most detailed
 - `top_n`
 - `seasonal_adjust`
 - `forecast_horizon`: months ahead.
@@ -102,6 +103,12 @@ Q: "What share of Luxembourg's imports came from EU27 countries each year from 2
 
 Q: "How concentrated are Luxembourg's imports by partner, every five years since 2005?"
 → intent `time_series`, breakdown `partner`, flow `import`, measure `hhi`, period_start `2005`, year_step 5.
+
+Q: "Which chapters does Luxembourg both export and import most in 2025?"
+→ intent `ranking`, breakdown `product`, product_level `HS2`, flow `both`, measure `two_way`, period 2025, top_n 10.
+
+Q: "How much of Luxembourg's trade went both ways in the same CN8 product, every five years since 2005?"
+→ intent `time_series`, breakdown `product`, product_level `CN8`, flow `both`, measure `two_way`, period 2005–2025, year_step 5.
 
 Q (follow-up; previous turn r1 ranked export partners in 2025): "And for imports?"
 → followup_of `r1`, the same spec with flow `import`, inherited [`intent`, `breakdown`, `period_start`, `period_end`].

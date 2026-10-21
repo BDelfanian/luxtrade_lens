@@ -179,6 +179,41 @@ _T = {
         "fr": "Part intra-UE moyenne {what} des {n} autres pays : {a} en {start}, {b} en {end}",
         "de": "Durchschnittlicher Intra-EU-Anteil {what} der anderen {n} Länder: {a} {start}, {b} {end}",
     },
+    "tw_item": {
+        "en": "{label} ({code}): exports {x} ({sx} of {scope}exports), imports {m} ({sm} of {scope}imports); two-way index {gl}: {reading}",
+        "fr": "{label} ({code}) : exportations {x} ({sx} des exportations{scope_fr}), importations {m} ({sm} des importations{scope_fr}) ; indice de commerce croisé {gl} : {reading}",
+        "de": "{label} ({code}): Ausfuhren {x} ({sx} der Ausfuhren{scope_de}), Einfuhren {m} ({sm} der Einfuhren{scope_de}); Index des Intra-Branchen-Handels {gl}: {reading}",
+    },
+    "tw_all": {
+        "en": "Two-way trade {year}, all {n} {plural}: {gl} % of trade is matched (exports and imports of the same code); codes masked at this level ({c} of trade) left out",
+        "fr": "Commerce croisé {year}, ensemble des {n} {plural} : {gl} % des échanges sont appariés (exportations et importations du même code) ; codes masqués à ce niveau ({c} des échanges) exclus",
+        "de": "Intra-Branchen-Handel {year}, alle {n} {plural}: {gl} % des Handels sind gepaart (Aus- und Einfuhren desselben Codes); auf dieser Ebene maskierte Codes ({c} des Handels) ausgenommen",
+    },
+    "tw_both": {
+        "en": "Among the {k} largest of both exports and imports in {year}: {names}",
+        "fr": "Parmi les {k} premiers à la fois des exportations et des importations en {year} : {names}",
+        "de": "Unter den {k} größten sowohl der Aus- als auch der Einfuhren {year}: {names}",
+    },
+    "tw_year": {
+        "en": "Two-way trade {year} at {level} level: {gl} % of trade; largest two-way {level}: {top} ({code}), exports {x}, imports {m}",
+        "fr": "Commerce croisé {year} au niveau {level} : {gl} % des échanges ; premier {level} échangé dans les deux sens : {top} ({code}), exportations {x}, importations {m}",
+        "de": "Intra-Branchen-Handel {year} auf Ebene {level}: {gl} % des Handels; größte(s) {level} in beide Richtungen: {top} ({code}), Ausfuhren {x}, Einfuhren {m}",
+    },
+    "tw_relay": {
+        "en": "Largest two-way {level} by year: {runs}",
+        "fr": "Premier {level} échangé dans les deux sens, par année : {runs}",
+        "de": "Größte(s) {level} in beide Richtungen je Jahr: {runs}",
+    },
+    "tw_change": {
+        "en": "Two-way share of trade at {level} level: {a} % in {y0}, {b} % in {y1}; lowest {lo} % in {ly}, highest {hi} % in {hy}",
+        "fr": "Part du commerce croisé au niveau {level} : {a} % en {y0}, {b} % en {y1} ; plus bas {lo} % en {ly}, plus haut {hi} % en {hy}",
+        "de": "Anteil des Intra-Branchen-Handels auf Ebene {level}: {a} % {y0}, {b} % {y1}; Tiefstwert {lo} % {ly}, Höchstwert {hi} % {hy}",
+    },
+    "tw_sent": {
+        "en": "In {year}, {gl} % of Luxembourg's trade was two-way at {level} level.",
+        "fr": "En {year}, {gl} % des échanges du Luxembourg étaient croisés au niveau {level}.",
+        "de": "{year} waren {gl} % des Handels Luxemburgs auf Ebene {level} Intra-Branchen-Handel.",
+    },
     "pivot": {
         "en": "Over {start}–{end}, the largest value is {name} in {period} with {value}.",
         "fr": "Sur {start}–{end}, la valeur la plus élevée est {name} en {period} avec {value}.",
@@ -669,6 +704,154 @@ def _shape_facts(g: pd.DataFrame, label: str, flow: object, lang: str) -> list[F
     return out
 
 
+_TW_READ = {
+    "both": {
+        "en": "traded both ways in similar amounts",
+        "fr": "échangé dans les deux sens en montants proches",
+        "de": "in beide Richtungen in ähnlichem Umfang gehandelt",
+    },
+    "mostly": {
+        "en": "traded both ways, mostly {dir}",
+        "fr": "échangé dans les deux sens, surtout {dir}",
+        "de": "in beide Richtungen gehandelt, überwiegend {dir}",
+    },
+    "one": {
+        "en": "almost only {dir} (one-way)",
+        "fr": "presque uniquement {dir} (sens unique)",
+        "de": "fast nur {dir} (einseitig)",
+    },
+    "exported": {"en": "exported", "fr": "exporté", "de": "ausgeführt"},
+    "imported": {"en": "imported", "fr": "importé", "de": "eingeführt"},
+}
+TWO_WAY_BOTH, TWO_WAY_ONE = 75, 25  # index readings: similar amounts, or one way only
+
+
+def two_way_reading(gl: float, exported: bool, lang: str) -> str:
+    """The two-way index in words: 'traded both ways, mostly imported'."""
+    direction = _TW_READ["exported" if exported else "imported"][lang]
+    if gl >= TWO_WAY_BOTH:
+        return _TW_READ["both"][lang]
+    key = "mostly" if gl >= TWO_WAY_ONE else "one"
+    return _TW_READ[key][lang].format(dir=direction)
+
+
+def _two_way_facts(spec: QuerySpec, a: Analysis, lang: str):  # noqa: ANN202
+    """Two-way trade: per product (one year) or the share of all trade (each year)."""
+    from luxtrade.agents.analyse import LEVEL_NAMES, TWO_WAY_TOP  # noqa: PLC0415
+
+    facts, sents, title = [], [], ""
+    level = spec.product_level or "HS2"
+    singular, plural = LEVEL_NAMES.get(level, (level, level))
+    main = a.main
+    if spec.intent == "time_series":
+        g = main.sort_values("period").reset_index(drop=True)
+        for r in g.itertuples():
+            facts.append(
+                Fact(
+                    key=f"two_way.{int(r.period)}",
+                    text=_t(
+                        "tw_year",
+                        lang,
+                        year=int(r.period),
+                        level=singular,
+                        gl=fmt_number(r.value, 1, lang),
+                        top=r.top_label,
+                        code=r.top_key,
+                        x=fmt_eur(r.top_export, lang),
+                        m=fmt_eur(r.top_import, lang),
+                    ),
+                )
+            )
+        runs: list[list] = []  # consecutive years with the same leading product, joined
+        for r in g.itertuples():
+            if runs and runs[-1][2] == r.top_label:
+                runs[-1][1] = int(r.period)
+            else:
+                runs.append([int(r.period), int(r.period), r.top_label])
+        if len(runs) > 1:
+            text = "; ".join(f"{a}{'–' + str(b) if b != a else ''} {label}" for a, b, label in runs)
+            facts.append(
+                Fact(key="two_way.relay", text=_t("tw_relay", lang, level=singular, runs=text))
+            )
+        first, last = g.iloc[0], g.iloc[-1]
+        lo, hi = g.loc[g["value"].idxmin()], g.loc[g["value"].idxmax()]
+        facts.append(
+            Fact(
+                key="two_way.change",
+                text=_t(
+                    "tw_change",
+                    lang,
+                    level=singular,
+                    a=fmt_number(first["value"], 1, lang),
+                    y0=int(first["period"]),
+                    b=fmt_number(last["value"], 1, lang),
+                    y1=int(last["period"]),
+                    lo=fmt_number(lo["value"], 1, lang),
+                    ly=int(lo["period"]),
+                    hi=fmt_number(hi["value"], 1, lang),
+                    hy=int(hi["period"]),
+                ),
+            )
+        )
+        year, gl = int(last["period"]), fmt_number(last["value"], 1, lang)
+    else:
+        year = int(main["period"].max())
+        g = main[main["period"] == year]
+        scoped = bool(spec.products)  # shares of the selection, not of all trade
+        for _, r in g.iterrows():  # "import" is a keyword: no attribute access
+            facts.append(
+                Fact(
+                    key=f"two_way.{r['key']}",
+                    text=_t(
+                        "tw_item",
+                        lang,
+                        label=r["short"],
+                        code=r["key"],
+                        x=fmt_eur(r["export"], lang),
+                        sx=fmt_pct(r["share_x"], lang),
+                        m=fmt_eur(r["import"], lang),
+                        sm=fmt_pct(r["share_m"], lang),
+                        gl=fmt_number(r["gl"], 0, lang),
+                        reading=two_way_reading(float(r["gl"]), r["export"] >= r["import"], lang),
+                        scope="these " if scoped else "",
+                        scope_fr=" de cette sélection" if scoped else "",
+                        scope_de=" dieser Auswahl" if scoped else "",
+                    ),
+                )
+            )
+        first = g.iloc[0]
+        total = first["x_total"] + first["m_total"]
+        facts.append(
+            Fact(
+                key="two_way.all",
+                text=_t(
+                    "tw_all",
+                    lang,
+                    year=year,
+                    n=int(first["n"]),
+                    plural=plural,
+                    gl=fmt_number(first["gl_all"], 1, lang),
+                    c=fmt_pct(100 * first["confidential"] / total if total else 0, lang),
+                ),
+            )
+        )
+        both = g[g["top_both"]]
+        if len(both):
+            facts.append(
+                Fact(
+                    key="two_way.both",
+                    text=_t(
+                        "tw_both", lang, k=TWO_WAY_TOP, year=year, names=", ".join(both["short"])
+                    ),
+                )
+            )
+        gl = fmt_number(first["gl_all"], 1, lang)
+    sents.append(_t("tw_sent", lang, year=year, gl=gl, level=singular))
+    title = f"Two-way trade {year}: {gl} % ({singular} level)"
+    facts += [Fact(key=f"method{i}", text=m) for i, m in enumerate(a.methods)]
+    return facts, sents, title
+
+
 def _concentration_facts(spec: QuerySpec, a: Analysis, lang: str):  # noqa: ANN202
     """Each year's index and its reading, the change, and the largest item at both ends.
 
@@ -1055,6 +1238,8 @@ def build_fact_sheet(
         sents.append(_t("nodata", lang))
     elif spec.measure == "hhi":
         facts, sents, title = _concentration_facts(spec, a, lang)
+    elif spec.measure == "two_way":
+        facts, sents, title = _two_way_facts(spec, a, lang)
     elif spec.intent in ("ranking", "composition") and spec.breakdown in SPLIT_BREAKDOWNS:
         facts, sents, title = _split_facts(spec, a, sem, lang)
     elif spec.intent in ("ranking", "composition", "drilldown") and spec.measure == "change":

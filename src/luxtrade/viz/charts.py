@@ -648,6 +648,8 @@ def build_figures(
         return [projection(main, title, lang)]
     if kind == "bench":
         return bench(main, title, lang)
+    if kind == "two_way":
+        return two_way_chart(main, title, lang)
     return []
 
 
@@ -1101,6 +1103,8 @@ def evidence_bars(
         return evidence_projection(rows, lang)
     if kind == "benchmark":
         return evidence_benchmark(rows, lang, titles)
+    if kind == "two_way":
+        return evidence_two_way(rows, lang, titles)
     groups = list(dict.fromkeys(rows["group"]))
     series = list(dict.fromkeys(rows["series"]))
     fig = go.Figure()
@@ -1368,6 +1372,117 @@ def evidence_benchmark(rows: pd.DataFrame, lang: str, titles: list[str] | None =
     fig.update_annotations(font={"size": 13, "color": TEXT})
     fig = _hero_layout(fig, height=460)
     fig.update_layout(  # the legend under the panels, clear of their titles
+        margin={"l": 8, "r": 8, "t": 30, "b": 70},
+        legend={"orientation": "h", "x": 0, "y": -0.12, "yanchor": "top"},
+    )
+    return fig
+
+
+def _butterfly(fig: go.Figure, items: pd.DataFrame, lang: str, row: int = 1, col: int = 1) -> None:
+    """Exports to the left, imports to the right, the largest item on top (values in M€)."""
+    names = list(dict.fromkeys(items["group"]))[::-1]
+    for flow, sign, color in (
+        ("export", -1, FLOW_COLOR["export"]),
+        ("import", 1, FLOW_COLOR["import"]),
+    ):
+        part = items[items["series"] == flow].set_index("group").reindex(names)
+        fig.add_bar(
+            x=sign * part["value"] / 1e6,
+            y=names,
+            orientation="h",
+            name=flow_label(flow, lang).capitalize(),
+            marker_color=color,
+            customdata=[
+                [fmt_eur(v, lang), fmt_number(g, 0, lang)]
+                for v, g in zip(part["value"], part["gl"], strict=True)
+            ],
+            hovertemplate="%{customdata[0]} · two-way index %{customdata[1]}<extra>%{y}</extra>",
+            row=row,
+            col=col,
+        )
+    most = float(items["value"].max()) / 1e6 if len(items) else 1.0
+    step = next(v for v in (100, 250, 500, 1000, 2000, 5000, 10000) if most / v <= 3)
+    ticks = [k * step for k in range(-int(most // step), int(most // step) + 1)]
+    fig.update_xaxes(  # exports drawn to the left, but read as amounts: no minus signs
+        tickvals=ticks,
+        ticktext=[fmt_number(abs(t), 0, lang) for t in ticks],
+        title="M€",
+        row=row,
+        col=col,
+    )
+
+
+def two_way_chart(main: pd.DataFrame, title: str, lang: str) -> list[go.Figure]:
+    """A two-way step: exports against imports per product, or the two-way share per year."""
+    if "export" in main.columns:
+        top = main.sort_values("value", ascending=False).head(12)
+        items = pd.concat(
+            [
+                pd.DataFrame(
+                    {
+                        "group": top.get("short", top["label"]),
+                        "series": flow,
+                        "value": top[flow],
+                        "gl": top["gl"],
+                    }
+                )
+                for flow in ("export", "import")
+            ]
+        )
+        fig = make_subplots(rows=1, cols=1)  # _butterfly places its bars by row and column
+        _butterfly(fig, items, lang)
+        fig.update_layout(barmode="relative", title=title)
+        return [_hero_layout(fig, height=420)]
+    fig = go.Figure()
+    fig.add_scatter(
+        x=main["period"],
+        y=main["value"],
+        mode="lines+markers",
+        line={"color": SERIES[0], "width": 2.4},
+        customdata=main[["top_label"]],
+        hovertemplate="%{y:.1f} %<br>largest two-way: %{customdata[0]}<extra></extra>",
+        name="two-way share",
+    )
+    fig.update_yaxes(ticksuffix=" %", rangemode="tozero")
+    fig.update_layout(title=title)
+    return [_hero_layout(fig, height=360)]
+
+
+def evidence_two_way(rows: pd.DataFrame, lang: str, titles: list[str] | None = None) -> go.Figure:
+    """The butterfly of the largest chapters beside the two-way share per product level."""
+    items, share = rows[rows["panel"] == "items"], rows[rows["panel"] == "share"]
+    cols = 2 if len(items) and len(share) else 1
+    fig = make_subplots(
+        rows=1,
+        cols=cols,
+        subplot_titles=(titles or ["", ""])[:cols] if cols == 2 else None,
+        column_widths=[0.55, 0.45] if cols == 2 else None,
+        horizontal_spacing=0.12,
+    )
+    if len(items):
+        _butterfly(fig, items, lang)
+    col = cols
+    for k, (series, part) in enumerate(share.groupby("series", sort=False)):
+        part = part.sort_values("group")
+        fig.add_scatter(
+            x=part["group"],
+            y=part["value"],
+            mode="lines+markers",
+            name=series,
+            line={"color": SERIES[2 + k], "width": 2.6},
+            customdata=part[["top"]],
+            hovertemplate="%{y:.1f} %<br>largest two-way: %{customdata[0]}<extra>"
+            + series
+            + "</extra>",
+            row=1,
+            col=col,
+        )
+    if len(share):
+        fig.update_yaxes(ticksuffix=" %", rangemode="tozero", row=1, col=col)
+    fig.update_layout(barmode="relative")
+    fig.update_annotations(font={"size": 13, "color": TEXT})
+    fig = _hero_layout(fig, height=460)
+    fig.update_layout(
         margin={"l": 8, "r": 8, "t": 30, "b": 70},
         legend={"orientation": "h", "x": 0, "y": -0.12, "yanchor": "top"},
     )

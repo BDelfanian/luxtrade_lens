@@ -434,6 +434,17 @@ A concern such as *"Has Luxembourg spread its risk, across the goods it sells an
 
 Imports drive the change: Luxembourg's intra-EU share of imports rose from 72.5 % to 86.6 % (+14.1 points) between 2005 and 2025, while its intra-EU share of exports fell from 89.3 % to 83.1 %.
 
+**Goods that go both ways (added 21 Oct).** The Overview's cards on what Luxembourg sells and buys (#3) and its main goods over time (#5) show the same chapters at the top of both flows: machinery, vehicles, electrical machinery and plastics. Merged, they ask what it means when a chapter is both a top export and a top import, which is two-way trade. There are three explanations: different goods within one broad chapter, parts in and products out, or the same goods passing through. The data can tell them apart by measuring at chapter level and again at CN8 level. The assistant now has `measure` `two_way`, the Grubel-Lloyd index computed in SQL. For each product code it is 100 × (1 − |X − M| / (X + M)). For all trade it is the matched part, Σ(X + M − |X − M|) / Σ(X + M), over every code of the level asked for. Codes masked at that level are left out; at a coarser level their chapter is known, so they count. As a ranking (one year) it gives each product's exports, imports and their shares, its index in words ("traded both ways in similar amounts", "almost only imported (one-way)") and the chapters among the five largest of both flows. As a yearly series it gives the share of all trade that goes both ways and the product carrying the most of it each year. The evidence figure sets a butterfly of the largest chapters (exports left, imports right, index beside) next to the two-way share by product level. Its tiles: the share at chapter and at CN8 level, the chapters in both top-5 lists, and a chapter drilled to headings. Drafts gave three code checks. A product called "traded in similar amounts" is held to its own reading (industrial robots, index 48, are mostly imported). "Mostly the same goods both ways" is held to the share at the finest level cited. The answer may not name causes the flows cannot show (re-export, transit, a hub). Result (scenario d9bbab630d, six steps):
+
+| | 2005 | 2025 |
+|---|---|---|
+| Two-way share at chapter level | 74.0 % | 68.8 % |
+| Two-way share at CN8 level (the same goods both ways) | 46.5 % | 39.1 % |
+
+- **Reproduces the Overview:** machinery is 12.5 % of exports; vehicles 13.2 % and mineral fuels 8.9 % of imports, and fuels are almost only imported (index 2).
+- **Different goods in one chapter:** iron and steel looks balanced as a chapter (index 92), but only 14.6 % of it is matched by heading. Sections go out (7216: exports 905.0 M€, imports 32.8 M€) and scrap comes in (7204: imports 578.9 M€, exports 22.8 M€).
+- **The same goods both ways:** the leading product was computers in 2005 (exports 2.96 bn €, imports 2.15 bn €), telephone sets in 2010–2015 (2.14 and 2.17 bn € in 2015), and smartphones in 2025 (898.3 M€ out, 701.3 M€ in).
+
 In one sentence for the jury: *"For a broad question, the assistant plans its own chain of checked questions, follows up on what it finds, and writes an answer in which every number is traced to the step it came from."*
 
 ## 6. Traceability: "where does this answer come from?"

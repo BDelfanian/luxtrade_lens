@@ -18,6 +18,7 @@ KINDS = (
     "season",
     "forecast",
     "bench",
+    "two_way",
     "table",
 )
 MAP_MIN_COUNTRIES = 5
@@ -50,6 +51,8 @@ def choose_view(
     spec: QuerySpec, main: pd.DataFrame, iso3_count: int = 0, undisclosed_pct: float = 0.0
 ) -> str:
     """Return the chart kind for this answer; a compatible user-requested view always wins."""
+    if spec.measure == "two_way":
+        return "two_way"  # exports against imports per product, or the two-way share per year
     if spec.intent == "benchmark" and spec.view in ("line", "area"):
         # seen on real data: "index 2015 = 100" read as a line chart; the benchmark chart is one
         return "bench"

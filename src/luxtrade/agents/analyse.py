@@ -25,6 +25,7 @@ from luxtrade.agents.spec import (
     QuerySpec,
 )
 from luxtrade.analytics import benchmark, forecast, rankings, seasonality, timeseries
+from luxtrade.config import DEFAULT_TOP_N
 from luxtrade.semantic.layer import SemanticLayer
 
 # The part a split question is about comes first (rank 1), whatever its size
@@ -259,6 +260,58 @@ def _concentration(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Ana
     return Analysis(main=main.reset_index(drop=True), methods=[method])
 
 
+LEVEL_NAMES = {
+    "HS2": ("chapter", "chapters"),
+    "HS4": ("heading", "headings"),
+    "HS6": ("subheading", "subheadings"),
+    "CN8": ("CN8 product", "CN8 products"),
+}
+TWO_WAY_TOP = 5  # "among the largest of both flows": the five largest exports and imports
+
+
+def short_label(text: str, most: int = 42) -> str:
+    """A product name short enough for a chart or a fact: its first clause, at most ``most``.
+
+    'Ferrous waste and scrap; remelting scrap ingots …' → 'Ferrous waste and scrap'.
+    """
+    head = text.split("; ")[0].split(" (")[0].split(", ")[0] if len(text) > most else text
+    return head if len(head) <= most else head[: most - 1].rstrip() + "…"
+
+
+def _two_way(df: pd.DataFrame, spec: QuerySpec, sem: SemanticLayer) -> Analysis:
+    """Exports, imports and the two-way index per product code (computed in SQL)."""
+    level = spec.product_level or "HS2"
+    lang = spec.language
+    if spec.intent == "time_series":
+        main = df.sort_values("period").reset_index(drop=True)
+        main["flow"] = "both"
+        heading = [str(k)[:4] if len(str(k)) > 4 else str(k) for k in main["top_key"]]
+        main["top_label"] = [short_label(sem.label(h, "product", lang)) for h in heading]
+    else:
+        main = df.copy()
+        main["flow"] = "both"
+        main["label"] = [sem.label(str(k), "product", lang) for k in main["key"]]
+        main["short"] = [short_label(t, 60) for t in main["label"]]
+        main["value"] = main["export"] + main["import"]
+        main["share_x"] = 100 * main["export"] / main["x_total"]
+        main["share_m"] = 100 * main["import"] / main["m_total"]
+        # among the largest of both flows, over every code (before the top rows are kept)
+        rank_x = main.groupby("period")["export"].rank(ascending=False, method="first")
+        rank_m = main.groupby("period")["import"].rank(ascending=False, method="first")
+        main["top_both"] = (rank_x <= TWO_WAY_TOP) & (rank_m <= TWO_WAY_TOP)
+        main["top_x"], main["top_m"] = rank_x <= TWO_WAY_TOP, rank_m <= TWO_WAY_TOP
+        keep = spec.top_n or DEFAULT_TOP_N
+        main = main.groupby("period", group_keys=False).head(keep).reset_index(drop=True)
+    plural = LEVEL_NAMES.get(level, (level, level))[1]
+    method = (
+        "two-way trade = Grubel-Lloyd index per product code: 100 × (1 − |exports − imports| / "
+        "(exports + imports)); 100 = exported and imported in equal amounts, 0 = one way only; "
+        f"for all trade, the matched part Σ(X + M − |X − M|) / Σ(X + M) over every {level} code "
+        f"({plural}); codes masked at that level (confidential) are left out of the index"
+    )
+    return Analysis(main=main, methods=[method])
+
+
 def _series(df: pd.DataFrame, flow: str) -> pd.Series:
     part = df[df["flow"] == flow]
     return pd.Series(part["value_eur"].to_numpy(), index=pd.DatetimeIndex(part["period"]))
@@ -331,6 +384,8 @@ def analyse(
     """
     if spec.measure == "hhi":
         result = _concentration(df, spec, sem)
+    elif spec.measure == "two_way":
+        result = _two_way(df, spec, sem)
     elif spec.intent in RANKED_INTENTS and spec.measure == "change":
         result = _change(df, spec, sem)
     elif spec.intent in RANKED_INTENTS:

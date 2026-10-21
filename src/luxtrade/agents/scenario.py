@@ -267,6 +267,7 @@ _MEASURE = {
     "growth_yoy": "year-on-year growth",
     "change": "change between the two years",
     "hhi": "concentration index (HHI)",
+    "two_way": "two-way trade index (Grubel-Lloyd)",
 }
 _GROUP = {"EU27_2020": "EU27 partners", "EXTRA_EU27_2020": "non-EU27 partners"}
 
@@ -286,7 +287,9 @@ def describe(spec: dict | None) -> str:
         parts.append("vs " + ", ".join(spec.get("compare_reporters") or []) + " as reporters")
     breakdown = spec.get("breakdown")
     top = f" (top {spec['top_n']})" if spec.get("top_n") else ""
-    if spec.get("measure") == "hhi":  # an index across every item, not a ranking
+    if spec.get("measure") == "hhi" or (
+        spec.get("measure") == "two_way" and spec.get("intent") == "time_series"
+    ):  # an index across every item, not a ranking
         across = "partners" if breakdown == "partner" else f"{spec.get('product_level')} products"
         parts.append(f"across all {across}")
     elif breakdown == "partner":
@@ -529,6 +532,109 @@ def value_as_volume(text: str, steps: set[int], records: dict[int, RunRecord]) -
         for sentence in _SENTENCE.split(text)
         if _VOLUME.search(sentence)
     ][:1]
+
+
+_CAUSE = re.compile(
+    r"\b(?:re-?export\w*|r[ée]export\w*|transit\w*|hub|entrep[oô]t\w*|assembl\w*|"
+    r"Wiederausfuhr\w*|Durchfuhr\w*|Drehscheibe)\b",
+    re.IGNORECASE,
+)
+
+
+def two_way_cause(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
+    """A cause of two-way trade the data do not show: re-exports, transit, a hub, assembly.
+
+    The flows show the same products going in and out, not why: that needs firm or partner
+    data the tool does not have.
+    """
+    if not any((records[n].spec or {}).get("measure") == "two_way" for n in steps if n in records):
+        return []
+    found = _CAUSE.search(text)
+    if found is None:
+        return []
+    return [
+        f"names a cause the data do not show ('{found[0]}'): say the same products are both "
+        "exported and imported, not why"
+    ]
+
+
+_SIMILAR = re.compile(
+    r"\b(?:similar\s+(?:export\s+and\s+import\s+)?amounts|in\s+similar|balanced|evenly|"
+    r"high\s+two-way|equal\s+amounts|montants\s+proches|parts\s+égales|ähnlichem\s+umfang|"
+    r"ausgeglichen\w*)",
+    re.IGNORECASE,
+)
+_MOSTLY = re.compile(
+    r"\b(?:mostly|most\s+of|majority|largely|predominantly|mainly|surtout|majoritairement|"
+    r"überwiegend|größtenteils)\b",
+    re.IGNORECASE,
+)
+_SAME_GOODS = re.compile(
+    r"\b(?:same|similar|identical|mêmes?|gleichen?|ähnlichen?)\s+(?:goods|products|produits|"
+    r"biens|waren|produkte)\b",
+    re.IGNORECASE,
+)
+_ONE_WAY = re.compile(  # a clause that already says which way a product mostly goes
+    r"\b(?:mostly|almost\s+only|only|mainly)\s+(?:imported|exported)|one-way|"
+    r"surtout\s+(?:importé|exporté)|uniquement|sens\s+unique|überwiegend|fast\s+nur|einseitig",
+    re.IGNORECASE,
+)
+_TW_ITEM = re.compile(r"^(?P<label>.+?) \((?P<code>\w+)\): .*?(?P<gl>\d+): (?P<reading>.+)$")
+
+
+def two_way_misread(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
+    """Two-way readings the facts do not give.
+
+    Seen on real data: industrial robots called "traded in similar amounts" with an index of 48
+    ("both ways, mostly imported"), and a headline saying Luxembourg is "mostly trading similar
+    goods both ways" while only 39.1 % of trade went both ways in the same CN8 product. A
+    clause that calls a product balanced is held to its own reading; a claim that most trade is
+    the same goods both ways, to the share at the finest product level cited.
+    """
+    cited = [
+        records[n]
+        for n in sorted(steps)
+        if n in records and (records[n].spec or {}).get("measure") == "two_way"
+    ]
+    if not cited:
+        return []
+    found = []
+    uneven = []  # products whose index is below "similar amounts"
+    for rec in cited:
+        for fact in rec.facts:
+            m = _TW_ITEM.match(fact["text"]) if fact["key"].count(".") == 1 else None
+            if m is not None and fact["key"].split(".")[1] == m["code"] and int(m["gl"]) < 75:
+                words = m["label"].split()
+                uneven.append((" ".join(words[:2]).lower(), m["label"], m["gl"], m["reading"]))
+    for clause in _CLAUSES.split(text):
+        if not clause or not _SIMILAR.search(clause) or _ONE_WAY.search(clause):
+            continue
+        low = clause.lower()
+        found += [
+            f"calls {label} traded in similar amounts, but its two-way index is {gl}: {reading}"
+            for key, label, gl, reading in uneven
+            if key and key in low
+        ]
+    finest = None  # the two-way share at the finest product level cited, latest year
+    for rec in cited:
+        level = (rec.spec or {}).get("product_level") or "HS2"
+        main = rec.frame("main")
+        if main.empty:
+            continue
+        share = main["value"].iloc[-1] if "gl_all" not in main.columns else main["gl_all"].iloc[0]
+        rank = {"HS2": 2, "HS4": 4, "HS6": 6, "CN8": 8}.get(level, 2)
+        if finest is None or rank > finest[0]:
+            finest = (rank, float(share), level)
+    if finest is not None and finest[1] < 50:
+        for sentence in _SENTENCE.split(text):
+            if _MOSTLY.search(sentence) and _SAME_GOODS.search(sentence):
+                found.append(
+                    f"says trade is mostly the same or similar goods both ways, but at {finest[2]} "
+                    f"level only {finest[1]:.1f} % of trade goes both ways: say how much goes "
+                    "both ways at chapter level and how much at the finest level"
+                )
+                break
+    return found
 
 
 def always_over_half(text: str, steps: set[int], records: dict[int, RunRecord]) -> list[str]:
@@ -857,6 +963,8 @@ def review_answer(
         found += always_over_half(text, steps, records)
         found += all_others_fell(text, steps, records)
         found += value_as_volume(text, steps, records)
+        found += two_way_cause(text, steps, records)
+        found += two_way_misread(text, steps, records)
         found += projection_without_range(text, steps, records, lang)
         return found
 

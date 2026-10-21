@@ -82,6 +82,20 @@ def apply_defaults(spec: QuerySpec, cov: Coverage) -> QuerySpec:
             notes.append("concentration of exports and of imports (a balance has no shares)")
         s.freq = "A"
 
+    if s.measure == "two_way":
+        # two-way trade sets exports against imports of the same product code: both flows, by
+        # product; one year ranked by trade, or the share of all trade for each year
+        if s.flow != "both":
+            s.flow = "both"
+            notes.append("exports and imports both kept: two-way trade compares them")
+        if s.breakdown != "product":
+            s.breakdown = "product"
+            notes.append("two-way trade per product code")
+        if s.intent != "time_series":
+            s.intent = "ranking"
+        else:
+            s.freq = "A"
+
     if s.intent in ("ranking", "composition", "pivot") and s.breakdown == "none":
         s.breakdown = "partner" if (s.products or not s.partners) else "product"
         notes.append(f"broken down by {s.breakdown} (not stated)")

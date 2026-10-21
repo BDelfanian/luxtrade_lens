@@ -247,3 +247,36 @@ def test_line_end_labels_keep_their_distance():
     placed = _spread([100, 104, 106, 200], 16, 90, 210)
     assert all(b - a >= 16 for a, b in zip(placed, placed[1:], strict=False))
     assert _spread([195, 200, 205], 16, 90, 210)[-1] <= 210  # pushed back up, not off the panel
+
+
+def test_two_way_trade_is_drawn_as_a_butterfly_beside_the_share_lines():
+    chapters = {"Machinery and mechanical appliances": (2.0e9, 2.9e9, 83), "Fuels": (1e7, 2.2e9, 2)}
+    rows = [
+        {"panel": "items", "group": name, "series": flow, "value": v, "gl": gl, "code": "84"}
+        for name, (x, m, gl) in chapters.items()
+        for flow, v in (("export", x), ("import", m))
+    ]
+    rows += [
+        {
+            "panel": "share",
+            "group": y,
+            "series": series,
+            "value": v,
+            "top": top,
+            "code": "84713000",
+            "x": 2.9e9 if top == "Computers" else 9e8,
+            "m": 2.1e9 if top == "Computers" else 7e8,
+        }
+        for series, values in (("Chapters", (74.0, 68.8)), ("CN8 products", (46.5, 39.1)))
+        for (y, top), v in zip(((2005, "Computers"), (2025, "Telephone sets")), values, strict=True)
+    ]
+    c = content_from(record(), [], "data to Jun 2026")
+    c.figure = {
+        "kind": "two_way",
+        "title": "Exports and imports of the largest chapters, 2025, and the two-way share",
+        "rows": rows,
+        "caption": "Two-way share: exports matched by imports of the same product code",
+        "panels": ["Exports and imports, 2025", "Share of trade that goes both ways"],
+    }
+    for size, expected in (("portrait", (1080, 1350)), ("square", (1080, 1080))):
+        assert size_of(render_card(c, size, scale=1)) == expected

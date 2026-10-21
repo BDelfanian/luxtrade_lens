@@ -181,6 +181,59 @@ ORDER BY period, flow
 LIMIT {SQL_ROW_LIMIT}"""
 
 
+def _two_way(spec: QuerySpec, where: list[str]) -> str:
+    """Exports and imports of the same product code, and how much of it goes both ways.
+
+    Grubel-Lloyd per code: 100 × (1 − |X − M| / (X + M)); for all trade, the matched part
+    100 × Σ(X + M − |X − M|) / Σ(X + M), over every code of the level asked for. A code masked
+    at that level ("87XX" for headings) mixes products and is left out of the index; at a
+    coarser level its chapter is known and it counts. The totals keep everything, so shares are
+    of all exports and imports. A ranking returns every code (the largest first); a series one
+    row per year with its largest two-way product.
+    """
+    key = _LEVEL_COL[spec.product_level or "HS2"]
+    filters = "\n    AND ".join(where)
+    head = f"""WITH rows AS (
+  SELECT year AS period, {key} AS key, flow, {key} LIKE '%X%' AS masked, value_eur
+  FROM v_lu_trade
+  WHERE {filters}
+), totals AS (
+  SELECT period,
+         sum(value_eur) FILTER (WHERE flow = 'export') AS x_total,
+         sum(value_eur) FILTER (WHERE flow = 'import') AS m_total,
+         coalesce(sum(value_eur) FILTER (WHERE masked), 0) AS confidential
+  FROM rows
+  GROUP BY period
+), by_key AS (
+  SELECT period, key,
+         coalesce(sum(value_eur) FILTER (WHERE flow = 'export'), 0) AS x,
+         coalesce(sum(value_eur) FILTER (WHERE flow = 'import'), 0) AS m
+  FROM rows
+  WHERE NOT masked
+  GROUP BY period, key
+)"""
+    if spec.intent == "time_series":
+        return f"""{head}
+SELECT b.period, 100 * sum(b.x + b.m - abs(b.x - b.m)) / sum(b.x + b.m) AS value,
+       count(*) AS n, arg_max(b.key, least(b.x, b.m)) AS top_key,
+       arg_max(b.x, least(b.x, b.m)) AS top_export, arg_max(b.m, least(b.x, b.m)) AS top_import,
+       any_value(t.x_total) AS x_total, any_value(t.m_total) AS m_total,
+       any_value(t.confidential) AS confidential
+FROM by_key AS b JOIN totals AS t USING (period)
+GROUP BY b.period
+ORDER BY b.period
+LIMIT {SQL_ROW_LIMIT}"""
+    return f"""{head}
+SELECT b.period, b.key, b.x AS export, b.m AS import,
+       100 * (1 - abs(b.x - b.m) / nullif(b.x + b.m, 0)) AS gl,
+       100 * sum(b.x + b.m - abs(b.x - b.m)) OVER w / sum(b.x + b.m) OVER w AS gl_all,
+       count(*) OVER w AS n, t.x_total, t.m_total, t.confidential
+FROM by_key AS b JOIN totals AS t USING (period)
+WINDOW w AS (PARTITION BY b.period)
+ORDER BY b.period, b.x + b.m DESC
+LIMIT {SQL_ROW_LIMIT}"""
+
+
 def compile_spec(spec: QuerySpec) -> CompiledQuery:
     """Compile a resolved spec into SQL over the semantic views."""
     if spec.intent == "benchmark":
@@ -195,6 +248,9 @@ def compile_spec(spec: QuerySpec) -> CompiledQuery:
 
     if spec.measure == "hhi":
         sql = _hhi(spec, view, where)
+    elif spec.measure == "two_way":
+        view = "v_lu_trade"  # the confidential flag is on the detail rows
+        sql = _two_way(spec, where)
     elif spec.intent in RANKED_INTENTS and spec.measure == "change":
         # only the two years compared: the change is computed per key in the analysis step
         years = sorted({int(spec.period_start[:4]), int(spec.period_end[:4])})
